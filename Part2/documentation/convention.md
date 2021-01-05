@@ -43,8 +43,8 @@ Some rules are established by the team in terms of naming, formating, comments a
 05 SCHOOL-ADDRESS.
 <ul>      
 10 CPNUM. </br>
-88 CPNUM-VALIDO &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VALUE 1000000 THRU 9999999.
 <ul>
+88 CPNUM-VALIDO &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VALUE 1000000 THRU 9999999. </br>
 15 CPNUM1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PIC 9(004).
 <ul>
 88 CPNUM1-VALIDO &nbsp;&nbsp; VALUE 1000 THRU 9999.
