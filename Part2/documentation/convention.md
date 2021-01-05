@@ -25,7 +25,7 @@ Some rules are established by the team in terms of naming, formating, comments a
 - All upper-case;
 - If more than one word, should be separated by a hyphen;
 - The program must be well structured with a good use of *PERFORM*;
-- The use of *GO TO* are strictly forbidden.
+- The use of *GO TO* is strictly forbidden.
 </br>
 
 ### COMMENTS
