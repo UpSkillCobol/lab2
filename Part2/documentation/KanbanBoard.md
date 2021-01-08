@@ -12,7 +12,7 @@
 | INM01 |     **X**     |                     |           |   Activity Diagram   |
 |       |               |                     |           |                      |
 |  SUM  |               |                     |   **X**   |    Assigned to FB    |
-| SUM01 |     **X**     |                     |           |   Activity Diagram   |
+| SUM01 |               |        **X**        |           |   Activity Diagram   |
 | SUM02 |               |        **X**        |           | Variables Definition |
 | SUM03 |     **X**     |                     |           |      Source Code     |
 |       |               |                     |           |                      |
