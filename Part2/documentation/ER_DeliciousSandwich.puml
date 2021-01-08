@@ -14,8 +14,9 @@ entity Schools {
 }
 
 entity Ingredients {
-  * Attribute
-  * Description
+  * InternalID
+  * Designation
+  * Active
 }
 
 entity Suppliers {
@@ -32,18 +33,15 @@ entity Suppliers {
 }
 
 entity Categories {
-  * Categorie1
-  * Description1
-  * Categorie2
-  * Description2
-  * Categorie3
-  * Description3
+  * InternalID
+  * Description
+  * Active
 }
 
-/' Bibliography:
-https://www.visual-paradigm.com/guide/data-modeling/what-is-entity-relationship-diagram/#erd-data-models-logical
-https://plantuml.com/ie-diagram
-https://plantuml.com/commons
-'/
+entity Calendar {
+  * InternalID
+  * BlackoutStartDate
+  * BlackoutEndDate
+}
 
 @enduml
