@@ -11,6 +11,7 @@ entity Schools {
   * ExternalId
   * Designation
   * Address
+  * Active
 }
 
 entity Ingredients {
@@ -30,6 +31,7 @@ entity Suppliers {
   * CompanyTelephone2
   * CompanyTelephone3
   * CompanyDescription
+  * Active
 }
 
 entity Categories {
