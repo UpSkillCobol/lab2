@@ -24,6 +24,7 @@ entity Suppliers {
   * SupplierID
   * CompanyName
   * CompanyAdress
+  * Description
   * CompanyEmail1
   * CompanyEmail2
   * CompanyEmail3
