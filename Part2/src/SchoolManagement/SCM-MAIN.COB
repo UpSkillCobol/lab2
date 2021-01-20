@@ -48,27 +48,57 @@
        01  KEY-ADD                                 PIC 9(003).
 
        SCREEN SECTION.
+       01  LIMPAR-ECRAN BACKGROUND-COLOR 0.
+           03 VALUE " " BLANK SCREEN LINE 01 COL 01.
 
+       01  MAIN-MENU
+           BACKGROUND-COLOR 7, FOREGROUND-COLOR 0.
+           03 VALUE ALL " " PIC X(120) LINE 02 COL 01.
+           03 VALUE ALL " " PIC X(120) LINE 03 COL 01.
+           03 VALUE ALL " " PIC X(120) LINE 04 COL 01.
+           03 VALUE "SCHOOL MANAGEMENT" LINE 03 COL 50.
+           03 VALUE ALL " " PIC X(120) LINE 24 COL 01.
+           03 VALUE ALL " " PIC X(120) LINE 25 COL 01.
+           03 VALUE ALL " " PIC X(120) LINE 26 COL 01.
+           03 VALUE "F3 - Go Back | F4 - Leave"
+           LINE 25 COL 95 FOREGROUND-COLOR 5.
+           03 VALUE "  " LINE 24 COL 92 BACKGROUND-COLOR 0.
+           03 VALUE "  " LINE 25 COL 92 BACKGROUND-COLOR 0.
+           03 VALUE "  " LINE 26 COL 92 BACKGROUND-COLOR 0.
+
+       01  MAIN-MENU-TEXT
+           BACKGROUND-COLOR 7, FOREGROUND-COLOR 0, AUTO, REQUIRED.
+           03 VALUE ALL " " PIC X(50) LINE 09 COL 35.
+           03 VALUE ALL " " PIC X(50) LINE 10 COL 35.
+           03 VALUE ALL " " PIC X(50) LINE 11 COL 35.
+           03 VALUE ALL " " PIC X(50) LINE 12 COL 35.
+           03 VALUE ALL " " PIC X(50) LINE 13 COL 35.
+           03 VALUE ALL " " PIC X(50) LINE 14 COL 35.
+           03 VALUE ALL " " PIC X(50) LINE 15 COL 35.
+           03 VALUE ALL " " PIC X(50) LINE 16 COL 35.
+           03 VALUE "1 - Register School" LINE 11 COL 50.
+           03 VALUE "2 - View School" LINE 12 COL 50.
+           03 VALUE "3 - Remove School" LINE 13 COL 50.
+           03 VALUE "4 - Change School" LINE 14 COL 50.
+           03 VALUE "What do you wish to do:" LINE 20 COL 45
+           REVERSE-VIDEO.
+           03 MP-OPCAO PIC 9(02) LINE 20 COL 68 TO WS-OPCAO
+               BLANK WHEN ZERO REVERSE-VIDEO.
+
+       01  ID-ERROR.
+           03 VALUE "ID ALREADY EXISTS!" LINE 25 COL 10
+               BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
+           03 VALUE "  " LINE 24 COL 92 BACKGROUND-COLOR 0.
+           03 VALUE "  " LINE 25 COL 92 BACKGROUND-COLOR 0.
+           03 VALUE "  " LINE 26 COL 92 BACKGROUND-COLOR 0.
 
        PROCEDURE DIVISION.
        MAIN SECTION.
-
-           OPEN INPUT SCHOOLS
-               IF FILE-STATUS = 35 THEN
-                   OPEN OUTPUT SCHOOLS
-                   CLOSE SCHOOLS
-               ELSE
-                   CLOSE SCHOOLS
-               END-IF
-
-
-           DISPLAY "CHOOSE WHAT TO DO"
-
-           MOVE ZEROS TO WS-OPCAO
-
-           PERFORM WITH TEST AFTER UNTIL OPCAO-VLD
-
-           ACCEPT WS-OPCAO
+           DISPLAY LIMPAR-ECRAN
+           DISPLAY MAIN-MENU
+           DISPLAY MAIN-MENU-TEXT
+           DISPLAY ID-ERROR
+           ACCEPT MP-OPCAO
 
            EVALUATE WS-OPCAO
 
@@ -83,9 +113,7 @@
                WHEN OTHER
                        ACCEPT WS-OPCAO
 
-           END-EVALUATE
-
-           END-PERFORM.
+           END-EVALUATE.
 
        REGISTER SECTION.
 
