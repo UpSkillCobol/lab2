@@ -1,0 +1,24 @@
+@startuml
+left to right direction
+
+header
+UPskillCobol: Breadwich
+endheader
+
+title \nDeliciousSandwich\n
+
+
+
+package Calendar {
+  usecase "UC1: Add downtime" as UC1
+  usecase "UC2: Update downtime" as UC2
+  usecase "UC3: Remove downtime" as UC3
+  usecase "UC4: View downtime" as UC4
+}
+
+Admin --> UC1
+Admin --> UC2
+Admin --> UC3
+Admin --> UC4
+
+@enduml
