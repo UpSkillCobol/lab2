@@ -8,7 +8,7 @@
 In this second part of the project there are 5 modules.
 We are going to assign one module to each team member.
 Even though each team member will be responsible for the respective module already assigned, the entire team will work together along the project.
-Some rules are established by the team in terms of naming, formating, comments and programming style which are describred below:
+Some rules are established by the team in terms of naming, formating, comments and programming style which are described below:
 </br>
 </br>
 
@@ -30,7 +30,7 @@ Some rules are established by the team in terms of naming, formating, comments a
 
 ### COMMENTS
 - Explicit and objective with only the necessary information to interpret the programm;
-- All the comments are separated by a line of "*" (up and down the comment) for better readability and visual harmony. 
+- All the comments are separated by a line of "*" (above and below the comment) for better readability and visual harmony. 
 </br>
 
 ### COMMON RULES
