@@ -1,11 +1,11 @@
       ******************************************************************
       *    LAB | SECOND PART | DELICIOUSSANDWICH
       ******************************************************************
-      *    BREADWICH | CALENDAR MANAGEMENT
+      *    BREADWICH | SUPPLIERS MANAGEMENT
       ******************************************************************
       *    SUPPLIERS MODULE - REGISTER SUPPLIER DLL
       ******************************************************************
-      *     V0.1 | EM ATUALIZAÇÃO | 20.01.2020
+      *     V0.1 | EM ATUALIZAÇÃO | 23.01.2020
       ******************************************************************
        IDENTIFICATION DIVISION.
        PROGRAM-ID. SUPPADD.
@@ -15,9 +15,9 @@
 
        COPY CONSTANTS.
 
-       01  ADD-OPTION                          PIC 9(002).
+       01  ADD-OPTION                              PIC 9(002).
            88 ADD-VALID-OPTION                     VALUE 1 THRU 3.
-       77  DUMMY                               PIC X(001).
+       77  DUMMY                                   PIC X(001).
 
        SCREEN SECTION.
 
@@ -38,7 +38,7 @@
            03 VALUE ALL " " PIC X(22) LINE 26 COL 98.
            03 VALUE BACK-EXIT LINE 25 COL 99 FOREGROUND-COLOR 5.
 
-           01 ADD-SUPPLIER-SCREEN
+       01 ADD-SUPPLIER-SCREEN
            BACKGROUND-COLOR 7, FOREGROUND-COLOR 0, AUTO, REQUIRED.
            03 VALUE ALL " " PIC X(50) LINE 09 COL 35.
            03 VALUE ALL " " PIC X(50) LINE 10 COL 35.
@@ -56,7 +56,7 @@
            03 MMS-OPTION PIC 9(002) LINE 20 COL 73 TO ADD-OPTION
                BLANK WHEN ZERO REVERSE-VIDEO.
 
-           01 ERROR-MESSAGE FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
+       01 ERROR-MESSAGE FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
            03 ERROR-LINE LINE 25 COL 15 PIC X(80).
            03 SCREEN-DUMMY LINE 26 COL 95 PIC X TO DUMMY AUTO.
 
