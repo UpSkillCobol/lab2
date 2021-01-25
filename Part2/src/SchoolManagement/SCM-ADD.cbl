@@ -5,7 +5,7 @@
       * Tectonics: cobc
       ******************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. SCM-REG.
+       PROGRAM-ID. SCM-ADD.
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
        REPOSITORY.
@@ -58,23 +58,43 @@
        01  WS-SCHOOL-DETAILS.
            05 WS-SCHOOL-INTERNAL-ID                PIC 9(003).
            05 WS-SCHOOL-EXTERNAL-ID                PIC X(008).
+               88 EXTERNAL-ID-VLD                  VALUE "A" THRU "Z",
+                                                   "a" THRU "z", SPACES.
            05 WS-SCHOOL-DESIGNATION.
                10 WS-SCHOOL-DESIGNATION1           PIC X(050).
+                   88 DESIGNATION1-VLD             VALUE "A" THRU "Z",
+                                                   "a" THRU "z", SPACES.
                10 WS-SCHOOL-DESIGNATION2           PIC X(050).
+                   88 DESIGNATION2-VLD             VALUE "A" THRU "Z",
+                                                   "a" THRU "z", SPACES.
                10 WS-SCHOOL-DESIGNATION3           PIC X(050).
+                   88 DESIGNATION3-VLD             VALUE "A" THRU "Z",
+                                                   "a" THRU "z", SPACES.
            05 WS-SCHOOL-ADRESS.
                10 WS-SCHL-ADR-MAIN.
+                   88 ADDRESS-VLD                  VALUE "A" THRU "Z",
+                                                   "a" THRU "z", SPACES,
+                                                   "0" THRU "9".
                    15 WS-SCHL-ADR-MAIN1            PIC X(050).
                    15 WS-SCHL-ADR-MAIN2            PIC X(050).
                10 WS-SCHOOL-POSTAL-CODE.
                    15 WS-SCHL-POSTAL-CODE1         PIC 9(004).
+                       88 POSTAL-CODE1-VLD         VALUE "1000" THRU
+                                                   "9999".
                    15 WS-SCHL-POSTAL-CODE2         PIC 9(003).
+                       88 POSTAL-CODE2-VLD         VALUE "000" THRU
+                                                   "999".
                10 WS-SCHOOL-TOWN                   PIC X(030).
-       01  WS-OPTION                                PIC 9(002).
-           88 OPTION-VLD                            VALUE
-                                                   "1","2","3","4".
+                   88 TOWN-VLD                     VALUE "A" THRU "Z",
+                                                   "a" THRU "z", SPACES.
+       01  WS-OPTION                               PIC 9(002).
        01  FILE-STATUS                             PIC 9(002).
        01  KEY-ADD                                 PIC 9(003).
+       01  KEY-STATUS                              PIC 9(004).
+       01  WS-ADD                                  PIC X(001).
+           88  ADD-VLD                             VALUE "Y", "S", "N".
+
+       COPY "CONSTANTS".
 
        SCREEN SECTION.
        01  CLEAR-SCREEN BACKGROUND-COLOR 0.
@@ -85,11 +105,11 @@
            05 VALUE ALL " " PIC X(120) LINE 02 COL 01.
            05 VALUE ALL " " PIC X(120) LINE 03 COL 01.
            05 VALUE ALL " " PIC X(120) LINE 04 COL 01.
-           05 VALUE "SCHOOL MANAGEMENT" LINE 03 COL 50.
+           05 VALUE MODULE-NAME LINE 03 COL 50.
            05 VALUE ALL " " PIC X(120) LINE 24 COL 01.
            05 VALUE ALL " " PIC X(120) LINE 25 COL 01.
            05 VALUE ALL " " PIC X(120) LINE 26 COL 01.
-           05 VALUE "F3 - BACK | F4 - EXIT"
+           05 VALUE BACK-EXIT
                LINE 25 COL 99 FOREGROUND-COLOR 5.
            05 VALUE "  " LINE 24 COL 96 BACKGROUND-COLOR 0.
            05 VALUE "  " LINE 25 COL 96 BACKGROUND-COLOR 0.
@@ -105,54 +125,52 @@
            05 VALUE ALL " " PIC X(50) LINE 14 COL 35.
            05 VALUE ALL " " PIC X(50) LINE 15 COL 35.
            05 VALUE ALL " " PIC X(50) LINE 16 COL 35.
-           05 VALUE "1 - Register School Manually" LINE 11 COL 42.
-           05 VALUE "2 - Register School Through CSV File"
-               LINE 12 COL 42.
-           05 VALUE "3 - Back to Main Menu" LINE 13 COL 42.
-           05 VALUE "What do you wish to do:" LINE 20 COL 45
-           REVERSE-VIDEO.
-           05 MP-OPTION PIC 9(02) LINE 20 COL 68 TO WS-OPTION
+           05 VALUE ADD-MENU-OPTION1 LINE 11 COL 42.
+           05 VALUE ADD-MENU-OPTION2 LINE 12 COL 42.
+           05 VALUE ADD-MENU-OPTION3 LINE 13 COL 42.
+           05 VALUE ADD-MENU-CHOICE LINE 20 COL 45 REVERSE-VIDEO.
+           05 MP-OPTION PIC 9(02) LINE 20 COL 73 TO WS-OPTION
                BLANK WHEN ZERO REVERSE-VIDEO.
 
        01  REGISTER-SCREEN
            BACKGROUND-COLOR 0, FOREGROUND-COLOR 7.
-           05 VALUE "Register New School" LINE 9 COL 25.
-           05 VALUE "Internal ID:" LINE 11 COL 26.
-           05 VALUE "External ID:" LINE 12 COL 26.
-           05 VALUE "Designation1:" LINE 13 COL 25.
-           05 VALUE "Designation2:" LINE 14 COL 25.
-           05 VALUE "Designation3:" LINE 15 COL 25.
-           05 VALUE "Address1:" LINE 16 COL 29.
-           05 VALUE "Address2:" LINE 17 COL 29.
-           05 VALUE "Postal Code:" LINE 18 COL 25.
-           05 VALUE "-" LINE 18 COL 44.
-           05 VALUE "Town:" LINE 19 COL 25.
+           05 VALUE ADD-MENU-TEXT LINE 9 COL 25.
+           05 VALUE ADD-MENU-TEXT1 LINE 11 COL 26.
+           05 VALUE ADD-MENU-TEXT2 LINE 12 COL 26.
+           05 VALUE ADD-MENU-TEXT3 LINE 13 COL 25.
+           05 VALUE ADD-MENU-TEXT4 LINE 14 COL 25.
+           05 VALUE ADD-MENU-TEXT5 LINE 15 COL 25.
+           05 VALUE ADD-MENU-TEXT6 LINE 16 COL 29.
+           05 VALUE ADD-MENU-TEXT7 LINE 17 COL 29.
+           05 VALUE ADD-MENU-TEXT8 LINE 18 COL 25.
+           05 VALUE "-" LINE 18 COL 45.
+           05 VALUE ADD-MENU-TEXT9 LINE 19 COL 25.
            05 REG-REC.
-               10 REG-IID PIC 9(003) LINE 11 COL 39
+               10 REG-IID PIC 9(003) LINE 11 COL 40
                    TO WS-SCHOOL-INTERNAL-ID
                    BLANK WHEN ZERO.
-               10 REG-EED PIC X(008) LINE 12 COL 39
-                   TO WS-SCHOOL-EXTERNAL-ID.
+               10 REG-EED PIC X(008) LINE 12 COL 40
+                   TO WS-SCHOOL-EXTERNAL-ID REQUIRED.
                10 REG-DESIGNATION.
-                   15 REG-DESIGNATION1 PIC X(050) LINE 13 COL 39
-                       TO WS-SCHOOL-DESIGNATION1.
-                   15 REG-DESIGNATION2 PIC X(050) LINE 14 COL 39
+                   15 REG-DESIGNATION1 PIC X(050) LINE 13 COL 40
+                       TO WS-SCHOOL-DESIGNATION1 REQUIRED.
+                   15 REG-DESIGNATION2 PIC X(050) LINE 14 COL 40
                        TO WS-SCHOOL-DESIGNATION2.
-                   15 REG-DESIGNATION3 PIC X(050) LINE 15 COL 39
+                   15 REG-DESIGNATION3 PIC X(050) LINE 15 COL 40
                        TO WS-SCHOOL-DESIGNATION3.
                10 REG-ADDRESS.
-                   15 REG-ADDRESS1 PIC X(050) LINE 16 COL 39
+                   15 REG-ADDRESS1 PIC X(050) LINE 16 COL 40
                        TO WS-SCHL-ADR-MAIN1.
-                   15 REG-ADDRESS2 PIC X(050) LINE 17 COL 39
+                   15 REG-ADDRESS2 PIC X(050) LINE 17 COL 40
                        TO WS-SCHL-ADR-MAIN2.
                10 REG-POSTAL-CODE.
-                   15 REG-PC1 PIC 9(004) LINE 18 COL 39
+                   15 REG-PC1 PIC 9(004) LINE 18 COL 40
                        TO WS-SCHL-POSTAL-CODE1
                        BLANK WHEN ZERO.
-                   15 REG-PC2 PIC 9(003) LINE 18 COL 46
+                   15 REG-PC2 PIC 9(003) LINE 18 COL 47
                        TO WS-SCHL-POSTAL-CODE2
                        BLANK WHEN ZERO.
-               10 REG-TOWN PIC X(030) LINE 19 COL 39
+               10 REG-TOWN PIC X(030) LINE 19 COL 40
                    TO WS-SCHOOL-TOWN.
            05 VALUE ALL " " PIC X(80) LINE 7 COL 18
                BACKGROUND-COLOR 7.
@@ -185,7 +203,21 @@
            05 VALUE "  " LINE 18 COL 96 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 19 COL 96 BACKGROUND-COLOR 7.
 
+       01  SAVE-RECORD-MENU1
+           REQUIRED, BACKGROUND-COLOR 7.
+           03 VALUE ADD-MENU-TEXT10
+               LINE 25 COL 10 FOREGROUND-COLOR 5.
+           03 SRM1-OPTION            PIC X(01) LINE 25 COL 54
+               TO WS-ADD
+                   FOREGROUND-COLOR 5 BACKGROUND-COLOR 7.
 
+       01  SAVE-RECORD-MENU2
+           REQUIRED, BACKGROUND-COLOR 7.
+           03 VALUE ADD-MENU-TEXT11
+               LINE 25 COL 10 FOREGROUND-COLOR 5.
+           03 SRM2-OPTION            PIC X(01) LINE 25 COL 61
+               TO WS-ADD
+                   FOREGROUND-COLOR 5 BACKGROUND-COLOR 7.
 
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
@@ -198,6 +230,7 @@
                DISPLAY MAIN-SCREEN
                DISPLAY MAIN-REGISTER-SCREEN
                ACCEPT MP-OPTION
+               PERFORM CHECK-KEY
 
                EVALUATE WS-OPTION
                    WHEN 1
@@ -213,30 +246,143 @@
            EXIT PROGRAM.
 
        REGISTER-MANUAL SECTION.
+           MOVE SPACES TO WS-ADD
+           PERFORM UNTIL WS-ADD = "N"
 
-           DISPLAY CLEAR-SCREEN
-           DISPLAY MAIN-SCREEN
-           ACCEPT REGISTER-SCREEN.
+               MOVE SPACES TO REG-EED, REG-DESIGNATION, REG-ADDRESS,
+                               REG-TOWN
+               MOVE ZEROS TO REG-IID, REG-POSTAL-CODE
+
+               DISPLAY CLEAR-SCREEN
+               DISPLAY MAIN-SCREEN
+               DISPLAY REGISTER-SCREEN
+               PERFORM REGISTER-INTERNAL-ID
+               PERFORM REGISTER-EXTERNAL-ID
+               PERFORM CHECK-KEY
+               PERFORM REGISTER-DESIGNATION
+               PERFORM CHECK-KEY
+               PERFORM REGISTER-ADRESS
+               PERFORM CHECK-KEY
+               PERFORM CONFIRM-REGISTER
+               PERFORM CHECK-KEY
+
+           END-PERFORM
+           EXIT SECTION.
 
        REGISTER-INTERNAL-ID.
+
+      *     CALL "KEYS"
            OPEN INPUT KEYS
                READ KEYS
-               ADD 1 TO REGKEY
+                   ADD 1 TO REGKEY
                MOVE REGKEY TO WS-SCHOOL-INTERNAL-ID
            CLOSE KEYS
-           DISPLAY WS-SCHOOL-INTERNAL-ID
-
-           OPEN I-O SCHOOLS
-           WRITE SCHOOL-DETAILS FROM WS-SCHOOL-DETAILS
-           CLOSE SCHOOLS
-
-           EXIT SECTION.
+           MOVE WS-SCHOOL-INTERNAL-ID TO REG-IID
+           DISPLAY REGISTER-SCREEN.
 
        REGISTER-EXTERNAL-ID.
 
+           PERFORM WITH TEST AFTER UNTIL EXTERNAL-ID-VLD
+
+               ACCEPT REG-EED
+               PERFORM CHECK-KEY
+
+           END-PERFORM.
+
        REGISTER-DESIGNATION.
 
+           PERFORM WITH TEST AFTER UNTIL (DESIGNATION1-VLD AND
+           DESIGNATION2-VLD AND DESIGNATION3-VLD)
+               ACCEPT REG-DESIGNATION1
+               PERFORM CHECK-KEY
+               ACCEPT REG-DESIGNATION2
+               PERFORM CHECK-KEY
+               ACCEPT REG-DESIGNATION3
+               PERFORM CHECK-KEY
+
+           END-PERFORM.
+
        REGISTER-ADRESS.
+
+           PERFORM WITH TEST AFTER UNTIL ADDRESS-VLD
+
+               ACCEPT REG-ADDRESS1
+               PERFORM CHECK-KEY
+               ACCEPT REG-ADDRESS2
+               PERFORM CHECK-KEY
+
+           END-PERFORM
+
+           PERFORM WITH TEST AFTER UNTIL POSTAL-CODE1-VLD AND
+               POSTAL-CODE2-VLD
+
+               ACCEPT REG-PC1
+               PERFORM CHECK-KEY
+               ACCEPT REG-PC2
+               PERFORM CHECK-KEY
+
+           END-PERFORM
+
+           CALL "CPS" USING BY REFERENCE WS-SCHOOL-DETAILS
+
+           MOVE WS-SCHOOL-TOWN TO REG-TOWN
+           DISPLAY REGISTER-SCREEN
+
+           PERFORM WITH TEST AFTER UNTIL TOWN-VLD
+
+                ACCEPT REG-TOWN
+                PERFORM CHECK-KEY
+
+           END-PERFORM.
+
+
+       CONFIRM-REGISTER SECTION.
+
+       MOVE "Y" TO SRM1-OPTION
+
+           PERFORM WITH TEST AFTER UNTIL ADD-VLD
+               ACCEPT SAVE-RECORD-MENU1
+               MOVE SPACES TO SRM1-OPTION
+               PERFORM CHECK-KEY
+           END-PERFORM.
+
+               MOVE FUNCTION UPPER-CASE(WS-ADD) TO WS-ADD
+
+           EVALUATE TRUE
+
+               WHEN WS-ADD = "S"
+                   CALL "SPACECHECK"
+                   OPEN I-O SCHOOLS
+                       MOVE WS-SCHOOL-DETAILS TO SCHOOL-DETAILS
+                       WRITE SCHOOL-DETAILS
+                   CLOSE SCHOOLS
+                   OPEN OUTPUT KEYS
+                       MOVE WS-SCHOOL-INTERNAL-ID TO REGKEY
+                       WRITE FD-KEYS
+                   CLOSE KEYS
+
+               WHEN WS-ADD = "Y"
+                   CALL "SPACECHECK"
+                   OPEN I-O SCHOOLS
+                       MOVE WS-SCHOOL-DETAILS TO SCHOOL-DETAILS
+                       WRITE SCHOOL-DETAILS
+                   CLOSE SCHOOLS
+                   OPEN OUTPUT KEYS
+                       MOVE WS-SCHOOL-INTERNAL-ID TO REGKEY
+                       WRITE FD-KEYS
+                   CLOSE KEYS
+
+           END-EVALUATE
+
+           MOVE SPACES TO WS-ADD
+
+           MOVE "N" TO SRM2-OPTION
+
+           PERFORM WITH TEST AFTER UNTIL ADD-VLD
+               ACCEPT SAVE-RECORD-MENU2
+               MOVE FUNCTION UPPER-CASE(WS-ADD) TO WS-ADD
+               PERFORM CHECK-KEY
+           END-PERFORM.
 
        REGISTER-CSV SECTION.
 
@@ -263,4 +409,14 @@
 
        CHECK-KEY SECTION.
 
-       END PROGRAM SCM-REG.
+           IF KEY-STATUS = 1003 THEN
+               MOVE "N" TO WS-ADD
+               MOVE 0 TO WS-OPTION
+               EXIT SECTION
+           END-IF
+           IF KEY-STATUS = 1004 THEN
+               STOP RUN
+           END-IF
+           EXIT SECTION.
+
+       END PROGRAM SCM-ADD.
