@@ -41,11 +41,7 @@
 
        WORKING-STORAGE SECTION.
        COPY CB-WS-SCHOOLS.
-       01  WS-OPTION                               PIC 9(002).
-           88 OPTION-VLD                           VALUE
-                                                   "1","2","3","4","5".
-       01  FILE-STATUS                             PIC 9(002).
-       01  KEY-ADD                                 PIC 9(003).
+       COPY CONSTANTS.
 
        SCREEN SECTION.
        01  CLEAR-SCREEN BACKGROUND-COLOR 0.
@@ -56,11 +52,11 @@
            03 VALUE ALL " " PIC X(120) LINE 02 COL 01.
            03 VALUE ALL " " PIC X(120) LINE 03 COL 01.
            03 VALUE ALL " " PIC X(120) LINE 04 COL 01.
-           03 VALUE "SCHOOL MANAGEMENT" LINE 03 COL 50.
+           03 VALUE MODULE-NAME LINE 03 COL 50.
            03 VALUE ALL " " PIC X(120) LINE 24 COL 01.
            03 VALUE ALL " " PIC X(120) LINE 25 COL 01.
            03 VALUE ALL " " PIC X(120) LINE 26 COL 01.
-           03 VALUE "F3 - BACK | F4 - EXIT"
+           03 VALUE BACK-EXIT
            LINE 25 COL 99 FOREGROUND-COLOR 5.
            03 VALUE "  " LINE 24 COL 96 BACKGROUND-COLOR 0.
            03 VALUE "  " LINE 25 COL 96 BACKGROUND-COLOR 0.
@@ -77,18 +73,18 @@
            03 VALUE ALL " " PIC X(50) LINE 15 COL 35.
            03 VALUE ALL " " PIC X(50) LINE 16 COL 35.
            03 VALUE ALL " " PIC X(50) LINE 17 COL 35.
-           03 VALUE "1 - Register School" LINE 11 COL 50.
-           03 VALUE "2 - View School" LINE 12 COL 50.
-           03 VALUE "3 - Remove School" LINE 13 COL 50.
-           03 VALUE "4 - Change School" LINE 14 COL 50.
-           03 VALUE "5 - Exit Program" LINE 15 COL 50.
-           03 VALUE "What do you wish to do:" LINE 20 COL 45
+           03 VALUE MAIN-MENU-OPTION1 LINE 11 COL 50.
+           03 VALUE MAIN-MENU-OPTION2 LINE 12 COL 50.
+           03 VALUE MAIN-MENU-OPTION3 LINE 13 COL 50.
+           03 VALUE MAIN-MENU-OPTION4 LINE 14 COL 50.
+           03 VALUE MAIN-MENU-OPTION5 LINE 15 COL 50.
+           03 VALUE MAIN-MENU-CHOICE LINE 20 COL 45
            REVERSE-VIDEO.
-           03 MP-OPTION PIC 9(02) LINE 20 COL 68 TO WS-OPTION
+           03 MP-OPTION PIC 9(02) LINE 20 COL 73 TO WS-OPTION
                BLANK WHEN ZERO REVERSE-VIDEO.
 
-       01  ID-ERROR.
-           03 VALUE "ID ALREADY EXISTS!" LINE 25 COL 10
+       01  MAIN-ERROR.
+           03 VALUE MAIN-MENU-ERROR LINE 25 COL 10
                BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
            03 VALUE "  " LINE 24 COL 96 BACKGROUND-COLOR 0.
            03 VALUE "  " LINE 25 COL 96 BACKGROUND-COLOR 0.
@@ -97,8 +93,8 @@
        01  LEAVE-SCREEN
            BACKGROUND-COLOR 7 FOREGROUND-COLOR 5.
            05 VALUE " " BLANK SCREEN LINE 01 COL 01.
-           05 VALUE "Leaving Program!" LINE 10 COL 45.
-           05 VALUE "THANK YOU!" LINE 11 COL 45.
+           05 VALUE LEAVE-MESSAGE LINE 10 COL 45.
+           05 VALUE LEAVE-THANKS LINE 11 COL 45.
 
        PROCEDURE DIVISION.
        MAIN SECTION.
@@ -113,13 +109,16 @@
            EVALUATE WS-OPTION
 
                WHEN 1
-                       CALL "SCM-REG"
+                       CALL "SCM-ADD"
                WHEN 2
                        CALL "SCM-CLT"
                WHEN 3
                        CALL "SCM-ELM"
                WHEN 4
                        CALL "SCM-ALT"
+               WHEN OTHER
+                   DISPLAY MAIN-ERROR
+                   ACCEPT OMITTED
 
            END-EVALUATE
 
