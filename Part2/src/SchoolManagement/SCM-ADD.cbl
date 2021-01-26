@@ -8,6 +8,8 @@
        PROGRAM-ID. SCM-ADD.
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
+       SPECIAL-NAMES.
+           CRT STATUS IS KEY-STATUS.
        REPOSITORY.
            FUNCTION ALL INTRINSIC.
        INPUT-OUTPUT SECTION.
@@ -30,23 +32,7 @@
        FILE SECTION.
 
        FD SCHOOLS.
-       01  SCHOOL-DETAILS.
-           88 EOFSCHOOLS                           VALUE HIGH-VALUES.
-           05 SCHOOL-INTERNAL-ID                   PIC 9(003).
-           05 SCHOOL-EXTERNAL-ID                   PIC X(008).
-           05 SCHOOL-DESIGNATION.
-               10 SCHOOL-DESIGNATION1              PIC X(050).
-               10 SCHOOL-DESIGNATION2              PIC X(050).
-               10 SCHOOL-DESIGNATION3              PIC X(050).
-           05 SCHOOL-ADRESS.
-               10 SCHL-ADR-MAIN.
-                   15 SCHL-ADR-MAIN1               PIC X(050).
-                   15 SCHL-ADR-MAIN2               PIC X(050).
-               10 SCHOOL-POSTAL-CODE.
-                   15 SCHL-POSTAL-CODE1            PIC 9(004).
-                   15 SCHL-POSTAL-CODE2            PIC 9(003).
-               10 SCHOOL-TOWN                      PIC X(030).
-           05 SCHOOL-IS-ACTIVE                     PIC 9(009).
+       COPY "CB-SCHOOLS".
 
        FD  SCHOOLS1.
            01 SCHOOL1                              PIC X(200).
@@ -55,42 +41,7 @@
            01 FD-KEYS.
                05 REGKEY                           PIC 9(003).
        WORKING-STORAGE SECTION.
-       01  WS-SCHOOL-DETAILS.
-           05 WS-SCHOOL-INTERNAL-ID                PIC 9(003).
-           05 WS-SCHOOL-EXTERNAL-ID                PIC X(008).
-               88 EXTERNAL-ID-VLD                  VALUE "A" THRU "Z",
-                                                   "a" THRU "z", SPACES.
-           05 WS-SCHOOL-DESIGNATION.
-               10 WS-SCHOOL-DESIGNATION1           PIC X(050).
-                   88 DESIGNATION1-VLD             VALUE "A" THRU "Z",
-                                                   "a" THRU "z", SPACES.
-               10 WS-SCHOOL-DESIGNATION2           PIC X(050).
-                   88 DESIGNATION2-VLD             VALUE "A" THRU "Z",
-                                                   "a" THRU "z", SPACES.
-               10 WS-SCHOOL-DESIGNATION3           PIC X(050).
-                   88 DESIGNATION3-VLD             VALUE "A" THRU "Z",
-                                                   "a" THRU "z", SPACES.
-           05 WS-SCHOOL-ADRESS.
-               10 WS-SCHL-ADR-MAIN.
-                   88 ADDRESS-VLD                  VALUE "A" THRU "Z",
-                                                   "a" THRU "z", SPACES,
-                                                   "0" THRU "9".
-                   15 WS-SCHL-ADR-MAIN1            PIC X(050).
-                   15 WS-SCHL-ADR-MAIN2            PIC X(050).
-               10 WS-SCHOOL-POSTAL-CODE.
-                   15 WS-SCHL-POSTAL-CODE1         PIC 9(004).
-                       88 POSTAL-CODE1-VLD         VALUE "1000" THRU
-                                                   "9999".
-                   15 WS-SCHL-POSTAL-CODE2         PIC 9(003).
-                       88 POSTAL-CODE2-VLD         VALUE "000" THRU
-                                                   "999".
-               10 WS-SCHOOL-TOWN                   PIC X(030).
-                   88 TOWN-VLD                     VALUE "A" THRU "Z",
-                                                   "a" THRU "z", SPACES.
-       01  WS-OPTION                               PIC 9(002).
-       01  FILE-STATUS                             PIC 9(002).
-       01  KEY-ADD                                 PIC 9(003).
-       01  KEY-STATUS                              PIC 9(004).
+       COPY "CB-WS-SCHOOLS".
        01  WS-ADD                                  PIC X(001).
            88  ADD-VLD                             VALUE "Y", "S", "N".
 
@@ -150,28 +101,28 @@
                    TO WS-SCHOOL-INTERNAL-ID
                    BLANK WHEN ZERO.
                10 REG-EED PIC X(008) LINE 12 COL 40
-                   TO WS-SCHOOL-EXTERNAL-ID REQUIRED.
+                   TO WS-SCHOOL-EXTERNAL-ID REQUIRED, AUTO.
                10 REG-DESIGNATION.
                    15 REG-DESIGNATION1 PIC X(050) LINE 13 COL 40
-                       TO WS-SCHOOL-DESIGNATION1 REQUIRED.
+                       TO WS-SCHOOL-DESIGNATION1 REQUIRED, AUTO.
                    15 REG-DESIGNATION2 PIC X(050) LINE 14 COL 40
-                       TO WS-SCHOOL-DESIGNATION2.
+                       TO WS-SCHOOL-DESIGNATION2 AUTO.
                    15 REG-DESIGNATION3 PIC X(050) LINE 15 COL 40
-                       TO WS-SCHOOL-DESIGNATION3.
+                       TO WS-SCHOOL-DESIGNATION3 AUTO.
                10 REG-ADDRESS.
                    15 REG-ADDRESS1 PIC X(050) LINE 16 COL 40
-                       TO WS-SCHL-ADR-MAIN1.
+                       TO WS-SCHL-ADR-MAIN1 REQUIRED, AUTO.
                    15 REG-ADDRESS2 PIC X(050) LINE 17 COL 40
-                       TO WS-SCHL-ADR-MAIN2.
+                       TO WS-SCHL-ADR-MAIN2 AUTO.
                10 REG-POSTAL-CODE.
                    15 REG-PC1 PIC 9(004) LINE 18 COL 40
                        TO WS-SCHL-POSTAL-CODE1
-                       BLANK WHEN ZERO.
+                       BLANK WHEN ZERO, AUTO.
                    15 REG-PC2 PIC 9(003) LINE 18 COL 47
                        TO WS-SCHL-POSTAL-CODE2
                        BLANK WHEN ZERO.
                10 REG-TOWN PIC X(030) LINE 19 COL 40
-                   TO WS-SCHOOL-TOWN.
+                   TO WS-SCHOOL-TOWN, AUTO.
            05 VALUE ALL " " PIC X(80) LINE 7 COL 18
                BACKGROUND-COLOR 7.
            05 VALUE ALL " " PIC X(80) LINE 21 COL 18
@@ -261,7 +212,7 @@
                PERFORM CHECK-KEY
                PERFORM REGISTER-DESIGNATION
                PERFORM CHECK-KEY
-               PERFORM REGISTER-ADRESS
+               PERFORM REGISTER-ADDRESS
                PERFORM CHECK-KEY
                PERFORM CONFIRM-REGISTER
                PERFORM CHECK-KEY
@@ -269,9 +220,8 @@
            END-PERFORM
            EXIT SECTION.
 
-       REGISTER-INTERNAL-ID.
+       REGISTER-INTERNAL-ID SECTION.
 
-      *     CALL "KEYS"
            OPEN INPUT KEYS
                READ KEYS
                    ADD 1 TO REGKEY
@@ -280,38 +230,36 @@
            MOVE WS-SCHOOL-INTERNAL-ID TO REG-IID
            DISPLAY REGISTER-SCREEN.
 
-       REGISTER-EXTERNAL-ID.
+       REGISTER-EXTERNAL-ID SECTION.
 
            PERFORM WITH TEST AFTER UNTIL EXTERNAL-ID-VLD
 
                ACCEPT REG-EED
                PERFORM CHECK-KEY
 
-           END-PERFORM.
+           END-PERFORM
+           CALL "SPACECHECK" USING BY REFERENCE WS-SCHOOL-EXTERNAL-ID.
 
-       REGISTER-DESIGNATION.
 
-           PERFORM WITH TEST AFTER UNTIL (DESIGNATION1-VLD AND
-           DESIGNATION2-VLD AND DESIGNATION3-VLD)
-               ACCEPT REG-DESIGNATION1
-               PERFORM CHECK-KEY
-               ACCEPT REG-DESIGNATION2
-               PERFORM CHECK-KEY
-               ACCEPT REG-DESIGNATION3
-               PERFORM CHECK-KEY
+       REGISTER-DESIGNATION SECTION.
 
-           END-PERFORM.
-
-       REGISTER-ADRESS.
-
-           PERFORM WITH TEST AFTER UNTIL ADDRESS-VLD
-
-               ACCEPT REG-ADDRESS1
-               PERFORM CHECK-KEY
-               ACCEPT REG-ADDRESS2
+           PERFORM WITH TEST AFTER UNTIL DESIGNATION-VLD
+               ACCEPT REG-DESIGNATION
                PERFORM CHECK-KEY
 
            END-PERFORM
+           CALL "SPACECHECK" USING BY REFERENCE WS-SCHOOL-DESIGNATION.
+
+       REGISTER-ADDRESS SECTION.
+
+           PERFORM WITH TEST AFTER UNTIL ADDRESS-VLD
+
+               ACCEPT REG-ADDRESS
+               PERFORM CHECK-KEY
+
+           END-PERFORM
+
+           CALL "SPACECHECK" USING BY REFERENCE WS-SCHL-ADR-MAIN
 
            PERFORM WITH TEST AFTER UNTIL POSTAL-CODE1-VLD AND
                POSTAL-CODE2-VLD
@@ -335,6 +283,8 @@
 
            END-PERFORM.
 
+           CALL "SPACECHECK" USING BY REFERENCE WS-SCHOOL-TOWN.
+
 
        CONFIRM-REGISTER SECTION.
 
@@ -351,7 +301,6 @@
            EVALUATE TRUE
 
                WHEN WS-ADD = "S"
-                   CALL "SPACECHECK"
                    OPEN I-O SCHOOLS
                        MOVE WS-SCHOOL-DETAILS TO SCHOOL-DETAILS
                        WRITE SCHOOL-DETAILS
@@ -362,7 +311,6 @@
                    CLOSE KEYS
 
                WHEN WS-ADD = "Y"
-                   CALL "SPACECHECK"
                    OPEN I-O SCHOOLS
                        MOVE WS-SCHOOL-DETAILS TO SCHOOL-DETAILS
                        WRITE SCHOOL-DETAILS
