@@ -5,7 +5,7 @@
       ******************************************************************
       *    SUPPLIERS MODULE - ADD SUPPLIER MANUALLY
       ******************************************************************
-      *     V0.1 | EM ATUALIZAÇÃO | 25.01.2020
+      *     V0.1 | EM ATUALIZAÇÃO | 27.01.2020
       ******************************************************************
        IDENTIFICATION DIVISION.
        PROGRAM-ID. ADDSUPMAN.
@@ -21,8 +21,8 @@
                    ORGANIZATION IS INDEXED
                    ACCESS MODE IS DYNAMIC
                    RECORD KEY IS SUPPLIER-ID
-                   ALTERNATE KEY IS SUPPLIER-TOWN
-                   ALTERNATE KEY IS SUPPLIER-NAME
+                   ALTERNATE KEY IS SUPPLIER-TOWN WITH DUPLICATES
+                   ALTERNATE KEY IS SUPPLIER-NAME WITH DUPLICATES
                    FILE STATUS SUPP-STATUS.
 
                SELECT CODPOST ASSIGN TO "CPTODOS"
@@ -198,8 +198,6 @@
                FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
            05 WANT-TO-SAVE1 LINE 25 COL 67
                FOREGROUND-COLOR 4 BACKGROUND-COLOR 7 TO SAVE-IT.
-
-
 
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
