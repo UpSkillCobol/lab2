@@ -3,10 +3,10 @@
       ******************************************************************
       *    BREADWICH | CALENDAR MANAGEMENT
       ******************************************************************
-      *    REGISTER MODULE | V0.3 | IN UPDATE | 24.01.2020
+      *    ADD MODULE | V0.4 | IN UPDATE | 27.01.2020
       ******************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. CAM-REG.
+       PROGRAM-ID. CAM-ADD.
 
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
@@ -19,11 +19,11 @@
            ORGANIZATION IS INDEXED
            ACCESS MODE IS DYNAMIC
            RECORD KEY IS FD-DOWNTIME-ID
-           FILE STATUS IS FILE-NOT-EXIST.
+           FILE STATUS IS FS-TEST.
 
            SELECT KEYS ASSIGN TO "KEYSFILE"
            ORGANIZATION IS SEQUENTIAL
-           FILE STATUS IS FILE-NOT-EXIST.
+           FILE STATUS IS FS-TEST.
 
        DATA DIVISION.
        FILE SECTION.
@@ -34,16 +34,18 @@
        01  FDKEYS                               PIC 9(003).
 
        WORKING-STORAGE SECTION.
-       COPY ENLANGUAGE.
+       COPY LANGUAGE.
        COPY WSCALENDAR.
 
-       01  ADD-OPTION1                          PIC X(002).
+       01  NEW-ADD-OPTION1                      PIC X(002).
            88 ADD-VALID-OPTION1                 VALUE "Y" "y" "N" "n".
            88 ADD-OPTION1-NO                    VALUE "N" "n".
-       01  SAVE-IT                              PIC X(002).
-           88 SAVE-IT-YES                       VALUE "Y" "y".
-           88 SAVE-IT-VALID                     VALUE "Y" "y" "N" "n".
-       77  FILE-NOT-EXIST                       PIC 9(002).
+           88 ADD-OPTION1-YES                   VALUE "Y" "y".
+       01  SAVE                                 PIC X(002).
+           88 SAVE-YES                          VALUE "Y" "y".
+           88 SAVE-NO                           VALUE "N" "n".
+           88 SAVE-VALID                        VALUE "Y" "y" "N" "n".
+       77  FS-TEST                              PIC 9(002).
        77  PRESS-KEY                            PIC X.
 
        SCREEN SECTION.
@@ -69,7 +71,6 @@
            05 VALUE REGISTER-TEXT-DATE        LINE 14 COL 22.
            05 VALUE REGISTER-TEXT-DATE1       LINE 15 COL 22.
            05 VALUE REGISTER-TEXT-DESCRIPTION LINE 17 COL 22.
-           05 VALUE REGISTER-TEXT-DESCRIPTION LINE 18 COL 22.
            05 REG-REC.
               10 REG-ID PIC 9(003) LINE 12 COL 36
                  USING WS-DOWNTIME-ID.
@@ -128,7 +129,7 @@
            05 VALUE "  " LINE 18 COL 96 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 19 COL 96 BACKGROUND-COLOR 7.
 
-       01  INVALID-ZONE BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
+       01  INVALID-SCREEN BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
            05 VALUE ALL " " PIC X(095) LINE 24 COL 01.
            05 VALUE ALL " " PIC X(095) LINE 25 COL 01.
            05 VALUE ALL " " PIC X(095) LINE 26 COL 01.
@@ -136,19 +137,43 @@
               FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
            05 LINE 01 COL 01 PIC X TO PRESS-KEY AUTO.
 
-       01 INSTRUCTIONS-ZONE BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
+       01  INSTRUCTIONS-SCREEN BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
            05 VALUE ALL " " PIC X(095) LINE 24 COL 01.
            05 VALUE ALL " " PIC X(095) LINE 25 COL 01.
            05 VALUE ALL " " PIC X(095) LINE 26 COL 01.
            05 INSTRUCTIONS-TEXT LINE 25 COL 03 PIC X(085)
               FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
 
+       01  SAVE-SCREEN
+           BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
+           05 VALUE ALL " " PIC X(095) LINE 24 COL 01.
+           05 VALUE ALL " " PIC X(095) LINE 25 COL 01.
+           05 VALUE ALL " " PIC X(095) LINE 26 COL 01.
+           05 VALUE MESSAGE-SAVE LINE 25 COL 15
+              FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
+           05 SC-SAVE LINE 25 COL 67
+              FOREGROUND-COLOR 4 BACKGROUND-COLOR 7 TO SAVE.
+
+       01  NEW-ADD-SCREEN
+           BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
+           05 VALUE ALL " " PIC X(095) LINE 24 COL 01.
+           05 VALUE ALL " " PIC X(095) LINE 25 COL 01.
+           05 VALUE ALL " " PIC X(095) LINE 26 COL 01.
+           05 VALUE MESSAGE-NEW-ADD LINE 25 COL 15
+              FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
+           05 SC-NEW-ADD-OPTION1 LINE 25 COL 67
+              FOREGROUND-COLOR 4 BACKGROUND-COLOR 7 TO NEW-ADD-OPTION1.
+
        PROCEDURE DIVISION.
        REGISTER-DOWNTIME SECTION.
            PERFORM CREATE-FILE
-           OPEN I-O CALENDAR
+           PERFORM UNTIL ADD-OPTION1-NO
 
-              MOVE ZEROS TO  REG-START-DATE, REG-END-DATE
+              OPEN I-O CALENDAR
+              OPEN I-O KEYS
+
+              MOVE ZEROS TO  REG-END-DAY, REG-END-MONTH, REG-END-YEAR,
+              REG-START-DAY, REG-START-MONTH, REG-START-YEAR
               MOVE SPACES TO REG-DESCRIPTION
 
               PERFORM DOWNTIME-ID
@@ -161,36 +186,58 @@
               PERFORM DOWNTIME-END-DATE
               PERFORM DOWNTIME-DESCRIPTION
 
-              REWRITE FDKEYS
-              END-REWRITE
-              CLOSE KEYS
+              PERFORM WITH TEST AFTER UNTIL SAVE-VALID
+              ACCEPT SAVE-SCREEN
+              IF NOT SAVE-VALID THEN
+                 MOVE INVALID-OPTION TO INVALID-TEXT
+                 ACCEPT INVALID-SCREEN
 
-              WRITE FD-CALENDAR FROM WS-CALENDAR
-              END-WRITE
-           CLOSE CALENDAR
+                 IF SAVE-YES THEN
+                    PERFORM WRITE-RECORD
+                    MOVE MESSAGE-WRITE-YES TO INVALID-TEXT
+                    ACCEPT INVALID-SCREEN
 
+                    IF SAVE-NO THEN
+                       CLOSE KEYS
+                       CLOSE CALENDAR
+                       MOVE MESSAGE-WRITE-NO TO INVALID-TEXT
+                       ACCEPT INVALID-SCREEN
+                    END-IF
+                 END-IF
+              END-IF
+              END-PERFORM
+
+              PERFORM WITH TEST AFTER UNTIL ADD-OPTION1-YES
+                 ACCEPT NEW-ADD-SCREEN
+                 IF NOT ADD-VALID-OPTION1 THEN
+                    MOVE INVALID-OPTION TO INVALID-TEXT
+                    ACCEPT INVALID-SCREEN
+                 END-IF
+              END-PERFORM
+
+           END-PERFORM
            STOP RUN.
 
        DOWNTIME-ID SECTION.
-           OPEN I-O KEYS
-              READ KEYS
-              ADD 1 TO FDKEYS
-              MOVE FDKEYS TO WS-DOWNTIME-ID
+           READ KEYS
+           ADD 1 TO FDKEYS
+           MOVE FDKEYS TO WS-DOWNTIME-ID
 
            EXIT SECTION.
 
        DOWNTIME-START-DATE SECTION.
            PERFORM WITH TEST AFTER UNTIL VALID-DAY AND VALID-MONTH
            AND VALID-YEAR
-              MOVE ZEROS TO REG-START-DATE
+              MOVE ZEROS TO REG-START-DAY, REG-START-MONTH,
+              REG-START-YEAR
               MOVE INSTRUCTIONS-DATE TO INSTRUCTIONS-TEXT
-              DISPLAY INSTRUCTIONS-ZONE
+              DISPLAY INSTRUCTIONS-SCREEN
               ACCEPT REG-START-DAY
               ACCEPT REG-START-MONTH
               ACCEPT REG-START-YEAR
               IF NOT VALID-DAY OR NOT VALID-MONTH OR NOT VALID-YEAR THEN
                  MOVE INVALID-DATE TO INVALID-TEXT
-                 ACCEPT INVALID-ZONE
+                 ACCEPT INVALID-SCREEN
               END-IF
            END-PERFORM
 
@@ -199,16 +246,16 @@
        DOWNTIME-END-DATE SECTION.
            PERFORM WITH TEST AFTER UNTIL VALID-DAY1 AND VALID-MONTH1
            AND VALID-YEAR1
-              MOVE ZEROS TO REG-END-DATE
+              MOVE ZEROS TO REG-END-DAY, REG-END-MONTH, REG-END-YEAR
               MOVE INSTRUCTIONS-DATE TO INSTRUCTIONS-TEXT
-              DISPLAY INSTRUCTIONS-ZONE
+              DISPLAY INSTRUCTIONS-SCREEN
               ACCEPT REG-END-DAY
               ACCEPT REG-END-MONTH
               ACCEPT REG-END-YEAR
               IF NOT VALID-DAY1 OR NOT VALID-MONTH1 OR NOT VALID-YEAR1
               THEN
                  MOVE INVALID-DATE TO INVALID-TEXT
-                 ACCEPT INVALID-ZONE
+                 ACCEPT INVALID-SCREEN
               END-IF
            END-PERFORM
 
@@ -217,31 +264,41 @@
        DOWNTIME-DESCRIPTION SECTION.
            MOVE SPACES TO REG-DESCRIPTION
            MOVE INSTRUCTIONS-DESCRIPTION TO INSTRUCTIONS-TEXT
-           DISPLAY INSTRUCTIONS-ZONE
-           ACCEPT REG-DESCRIPTION1
+           DISPLAY INSTRUCTIONS-SCREEN
+           ACCEPT REG-DESCRIPTION
            CALL "LOWERUPPER" USING BY REFERENCE WS-DOWNTIME-DESCRIPTION1
            CALL "RMVEXTSPACES" USING BY
               REFERENCE WS-DOWNTIME-DESCRIPTION1
-           ACCEPT REG-DESCRIPTION2
            CALL "LOWERUPPER" USING BY REFERENCE WS-DOWNTIME-DESCRIPTION2
            CALL "RMVEXTSPACES" USING BY
               REFERENCE WS-DOWNTIME-DESCRIPTION2
 
            EXIT SECTION.
 
+       WRITE-RECORD SECTION.
+           REWRITE FDKEYS
+           END-REWRITE
+           CLOSE KEYS
+
+           WRITE FD-CALENDAR FROM WS-CALENDAR
+           END-WRITE
+           CLOSE CALENDAR
+
+           EXIT SECTION.
+
        CREATE-FILE SECTION.
            OPEN I-O CALENDAR
-           IF FILE-NOT-EXIST = "35"
+           IF FS-TEST = "35"
               OPEN OUTPUT CALENDAR
               CLOSE CALENDAR
            ELSE
               CLOSE CALENDAR
            END-IF
 
-           MOVE ZEROS TO FILE-NOT-EXIST
+           MOVE ZEROS TO FS-TEST
 
            OPEN I-O KEYS
-           IF FILE-NOT-EXIST = "35"
+           IF FS-TEST = "35"
               OPEN OUTPUT KEYS
                  MOVE 0 TO FDKEYS
                  WRITE FDKEYS
@@ -252,4 +309,4 @@
 
            EXIT SECTION.
 
-       END PROGRAM CAM-REG.
+       END PROGRAM CAM-ADD.

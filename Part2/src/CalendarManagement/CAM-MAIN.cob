@@ -3,7 +3,7 @@
       ******************************************************************
       *    BREADWICH | CALENDAR MANAGEMENT
       ******************************************************************
-      *    MAIN PROGRAM | V0.3 | IN UPDATE | 24.01.2020
+      *    MAIN PROGRAM | V0.4 | IN UPDATE | 27.01.2020
       ******************************************************************
        IDENTIFICATION DIVISION.
        PROGRAM-ID. CAM-MAIN.
@@ -12,8 +12,8 @@
        FILE SECTION.
 
        WORKING-STORAGE SECTION.
-           COPY WSCALENDAR.
-           COPY ENLANGUAGE.
+       COPY LANGUAGE.
+       COPY WSCALENDAR.
 
        01  OPTION                               PIC 9(002).
            88  VALID-OPTION                     VALUE 1 THRU 5.
@@ -79,7 +79,7 @@
                END-IF
 
               EVALUATE OPTION
-                 WHEN 1     CALL "CAM-REG"
+                 WHEN 1     CALL "CAM-ADD"
                  WHEN 2     CALL "CAM-VIEW"
                  WHEN 3     CALL "CAM-EDIT"
                  WHEN 4     CALL "CAM-DELETE"
