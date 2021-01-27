@@ -8,7 +8,7 @@
       *     V1 | EM ATUALIZAÇÃO | 27.01.2020
       ******************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. ADD-INGREDIENTS.
+       PROGRAM-ID. ADD-INGREDS.
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
        SPECIAL-NAMES.
