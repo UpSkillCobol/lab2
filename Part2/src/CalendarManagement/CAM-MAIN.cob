@@ -3,7 +3,7 @@
       ******************************************************************
       *    BREADWICH | CALENDAR MANAGEMENT
       ******************************************************************
-      *    MAIN PROGRAM | V0.4 | IN UPDATE | 27.01.2020
+      *    MAIN PROGRAM | V0.5 | IN UPDATE | 27.01.2020
       ******************************************************************
        IDENTIFICATION DIVISION.
        PROGRAM-ID. CAM-MAIN.
@@ -20,8 +20,8 @@
        77  PRESS-KEY                            PIC X.
 
        SCREEN SECTION.
-       01  CLEAR-SCREEN BACKGROUND-COLOR 0.
-           05 VALUE " " BLANK SCREEN LINE 01 COL 01.
+       01  CLEAR-SCREEN.
+           05 BLANK SCREEN.
 
        01  MAIN-SCREEN BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
            05 VALUE ALL " " PIC X(120) LINE 02 COL 01.
@@ -53,23 +53,50 @@
            05 VALUE OPTION-DELETE4   LINE 14 COL 50.
            05 VALUE OPTION-EXIT5     LINE 15 COL 50.
            05 VALUE ACCEPT-OPTION    LINE 20 COL 45 REVERSE-VIDEO.
-           05 SC-OPTION PIC 9(002) LINE 20 COL 69 TO OPTION
+           05 SC-OPTION PIC 9(002) LINE 20 COL 70 TO OPTION
               BLANK WHEN ZERO REVERSE-VIDEO.
 
        01  ERROR-MESSAGE-SCREEN FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
            05 ERROR-LINE LINE 25 COL 12 PIC X(080).
            05 LINE 01 COL 01 PIC X TO PRESS-KEY AUTO.
 
-       01  LEAVE-SCREEN BACKGROUND-COLOR 7 FOREGROUND-COLOR 5.
-           05 VALUE " " BLANK SCREEN LINE 01 COL 01.
-           05 VALUE EXIT-TEXT        LINE 10 COL 45.
-           05 VALUE EXIT-TEXT1       LINE 11 COL 45.
+       01  LEAVE-SCREEN BACKGROUND-COLOR 0 FOREGROUND-COLOR 7.
+           05 BLANK SCREEN.
+           05 VALUE ALL " " PIC X(050) LINE 08 COL 35 REVERSE-VIDEO.
+           05 VALUE ALL " " PIC X(050) LINE 09 COL 35 REVERSE-VIDEO.
+           05 VALUE ALL " " PIC X(050) LINE 10 COL 35 REVERSE-VIDEO.
+           05 VALUE ALL " " PIC X(050) LINE 11 COL 35 REVERSE-VIDEO.
+           05 VALUE ALL " " PIC X(050) LINE 12 COL 35 REVERSE-VIDEO.
+           05 VALUE ALL " " PIC X(050) LINE 13 COL 35 REVERSE-VIDEO.
+           05 VALUE ALL " " PIC X(050) LINE 14 COL 35 REVERSE-VIDEO.
+           05 VALUE ALL " " PIC X(050) LINE 15 COL 35 REVERSE-VIDEO.
+           05 VALUE ALL " " PIC X(050) LINE 16 COL 35 REVERSE-VIDEO.
+           05 VALUE ALL " " PIC X(050) LINE 17 COL 35 REVERSE-VIDEO.
+           05 VALUE ALL " " PIC X(050) LINE 18 COL 35 REVERSE-VIDEO.
+           05 VALUE EXIT-TEXT          LINE 13 COL 47 REVERSE-VIDEO.
+           05 VALUE ALL " " PIC X(048) LINE 09 COL 36.
+           05 VALUE " "                LINE 10 COL 36.
+           05 VALUE " "                LINE 11 COL 36.
+           05 VALUE " "                LINE 12 COL 36.
+           05 VALUE " "                LINE 13 COL 36.
+           05 VALUE " "                LINE 14 COL 36.
+           05 VALUE " "                LINE 15 COL 36.
+           05 VALUE " "                LINE 16 COL 36.
+           05 VALUE " "                LINE 10 COL 83.
+           05 VALUE " "                LINE 11 COL 83.
+           05 VALUE " "                LINE 12 COL 83.
+           05 VALUE " "                LINE 13 COL 83.
+           05 VALUE " "                LINE 14 COL 83.
+           05 VALUE " "                LINE 15 COL 83.
+           05 VALUE " "                LINE 16 COL 83.
+           05 VALUE ALL " " PIC X(048) LINE 17 COL 36.
            05 LINE 01 COL 01 PIC X TO PRESS-KEY AUTO.
 
        PROCEDURE DIVISION.
        MAIN SECTION.
            PERFORM UNTIL OPTION = 5
 
+              DISPLAY CLEAR-SCREEN
               MOVE ZERO TO SC-OPTION
               DISPLAY MAIN-SCREEN
               ACCEPT MAIN-MENU-SCREEN

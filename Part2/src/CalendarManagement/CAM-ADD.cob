@@ -3,7 +3,7 @@
       ******************************************************************
       *    BREADWICH | CALENDAR MANAGEMENT
       ******************************************************************
-      *    ADD MODULE | V0.4 | IN UPDATE | 27.01.2020
+      *    ADD MODULE | V0.5 | IN UPDATE | 27.01.2020
       ******************************************************************
        IDENTIFICATION DIVISION.
        PROGRAM-ID. CAM-ADD.
@@ -16,14 +16,14 @@
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
            SELECT CALENDAR ASSIGN TO "CALENDARFILE"
-           ORGANIZATION IS INDEXED
-           ACCESS MODE IS DYNAMIC
-           RECORD KEY IS FD-DOWNTIME-ID
-           FILE STATUS IS FS-TEST.
+              ORGANIZATION IS INDEXED
+              ACCESS MODE IS DYNAMIC
+              RECORD KEY IS FD-DOWNTIME-ID
+              FILE STATUS IS CALENDAR-TEST.
 
            SELECT KEYS ASSIGN TO "KEYSFILE"
-           ORGANIZATION IS SEQUENTIAL
-           FILE STATUS IS FS-TEST.
+              ORGANIZATION IS SEQUENTIAL
+              FILE STATUS IS KEYS-TEST.
 
        DATA DIVISION.
        FILE SECTION.
@@ -37,20 +37,17 @@
        COPY LANGUAGE.
        COPY WSCALENDAR.
 
-       01  NEW-ADD-OPTION1                      PIC X(002).
-           88 ADD-VALID-OPTION1                 VALUE "Y" "y" "N" "n".
-           88 ADD-OPTION1-NO                    VALUE "N" "n".
-           88 ADD-OPTION1-YES                   VALUE "Y" "y".
        01  SAVE                                 PIC X(002).
            88 SAVE-YES                          VALUE "Y" "y".
            88 SAVE-NO                           VALUE "N" "n".
            88 SAVE-VALID                        VALUE "Y" "y" "N" "n".
-       77  FS-TEST                              PIC 9(002).
+       77  CALENDAR-TEST                        PIC 9(002).
+       77  KEYS-TEST                            PIC 9(002).
        77  PRESS-KEY                            PIC X.
 
        SCREEN SECTION.
-       01  CLEAR-SCREEN BACKGROUND-COLOR 0.
-           05 VALUE " " BLANK SCREEN LINE 01 COL 01.
+       01  CLEAR-SCREEN.
+           05 BLANK SCREEN.
 
        01  MAIN-SCREEN BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
            05 VALUE ALL " " PIC X(120) LINE 02 COL 01.
@@ -66,37 +63,6 @@
            05 VALUE MAIN-TEXT1 LINE 25 COL 99 FOREGROUND-COLOR 5.
 
        01  REGISTER-SCREEN BACKGROUND-COLOR 0 FOREGROUND-COLOR 7.
-           05 VALUE REGISTER-TEXT             LINE 09 COL 48.
-           05 VALUE REGISTER-TEXT-ID          LINE 12 COL 22.
-           05 VALUE REGISTER-TEXT-DATE        LINE 14 COL 22.
-           05 VALUE REGISTER-TEXT-DATE1       LINE 15 COL 22.
-           05 VALUE REGISTER-TEXT-DESCRIPTION LINE 17 COL 22.
-           05 REG-REC.
-              10 REG-ID PIC 9(003) LINE 12 COL 36
-                 USING WS-DOWNTIME-ID.
-              10 REG-START-DATE.
-                 15 REG-START-DAY PIC 9(002) LINE 14 COL 43 TO
-                    WS-START-DT-DAY BLANK WHEN ZERO AUTO REQUIRED.
-                 15 LINE 14 COL 45 VALUE "/".
-                 15 REG-START-MONTH PIC 9(002) LINE 14 COL 46 TO
-                    WS-START-DT-MONTH BLANK WHEN ZERO AUTO REQUIRED.
-                 15 LINE 14 COL 48 VALUE "/".
-                 15 REG-START-YEAR PIC 9(004) LINE 14 COL 49 TO
-                    WS-START-DT-YEAR BLANK WHEN ZERO AUTO REQUIRED.
-              10 REG-END-DATE.
-                 15 REG-END-DAY PIC 9(002) LINE 15 COL 43 TO
-                    WS-END-DT-DAY BLANK WHEN ZERO AUTO.
-                 15 LINE 15 COL 45 VALUE "/".
-                 15 REG-END-MONTH PIC 9(002) LINE 15 COL 46 TO
-                    WS-END-DT-MONTH BLANK WHEN ZERO AUTO.
-                 15 LINE 15 COL 48 VALUE "/".
-                 15 REG-END-YEAR PIC 9(004) LINE 15 COL 49 TO
-                    WS-END-DT-YEAR BLANK WHEN ZERO AUTO.
-              10 REG-DESCRIPTION.
-                 15 REG-DESCRIPTION1 PIC X(050) LINE 17 COL 44
-                    TO WS-DOWNTIME-DESCRIPTION1 AUTO.
-                 15 REG-DESCRIPTION2 PIC X(050) LINE 18 COL 44
-                    TO WS-DOWNTIME-DESCRIPTION2 AUTO.
            05 VALUE ALL "_" PIC X(080) LINE 10 COL 18.
            05 VALUE ALL " " PIC X(080) LINE 7 COL 18
               BACKGROUND-COLOR 7.
@@ -128,6 +94,36 @@
            05 VALUE "  " LINE 17 COL 96 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 18 COL 96 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 19 COL 96 BACKGROUND-COLOR 7.
+           05 VALUE REGISTER-TEXT             LINE 09 COL 48.
+           05 VALUE REGISTER-TEXT-ID          LINE 13 COL 22.
+           05 VALUE REGISTER-TEXT-DATE        LINE 15 COL 22.
+           05 VALUE REGISTER-TEXT-DATE1       LINE 16 COL 22.
+           05 VALUE REGISTER-TEXT-DESCRIPTION LINE 18 COL 22.
+           05 REG-ID PIC 9(003) LINE 13 COL 44 USING WS-DOWNTIME-ID.
+           05 REG-REC.
+              10 REG-START-DATE.
+                 15 REG-START-DAY PIC 9(002) LINE 15 COL 44 TO
+                    WS-START-DT-DAY BLANK WHEN ZERO AUTO REQUIRED.
+                 15 LINE 15 COL 46 VALUE "/".
+                 15 REG-START-MONTH PIC 9(002) LINE 15 COL 47 TO
+                    WS-START-DT-MONTH BLANK WHEN ZERO AUTO REQUIRED.
+                 15 LINE 15 COL 49 VALUE "/".
+                 15 REG-START-YEAR PIC 9(004) LINE 15 COL 50 TO
+                    WS-START-DT-YEAR BLANK WHEN ZERO AUTO REQUIRED.
+              10 REG-END-DATE.
+                 15 REG-END-DAY PIC 9(002) LINE 16 COL 44 TO
+                    WS-END-DT-DAY BLANK WHEN ZERO AUTO.
+                 15 LINE 16 COL 46 VALUE "/".
+                 15 REG-END-MONTH PIC 9(002) LINE 16 COL 47 TO
+                    WS-END-DT-MONTH BLANK WHEN ZERO AUTO.
+                 15 LINE 16 COL 49 VALUE "/".
+                 15 REG-END-YEAR PIC 9(004) LINE 16 COL 50 TO
+                    WS-END-DT-YEAR BLANK WHEN ZERO AUTO.
+              10 REG-DESCRIPTION.
+                 15 REG-DESCRIPTION1 PIC X(050) LINE 18 COL 44
+                    TO WS-DOWNTIME-DESCRIPTION1 AUTO.
+                 15 REG-DESCRIPTION2 PIC X(050) LINE 19 COL 44
+                    TO WS-DOWNTIME-DESCRIPTION2 AUTO.
 
        01  INVALID-SCREEN BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
            05 VALUE ALL " " PIC X(095) LINE 24 COL 01.
@@ -149,79 +145,63 @@
            05 VALUE ALL " " PIC X(095) LINE 24 COL 01.
            05 VALUE ALL " " PIC X(095) LINE 25 COL 01.
            05 VALUE ALL " " PIC X(095) LINE 26 COL 01.
-           05 VALUE MESSAGE-SAVE LINE 25 COL 15
+           05 VALUE MESSAGE-SAVE LINE 25 COL 10
               FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
-           05 SC-SAVE LINE 25 COL 67
+           05 SC-SAVE LINE 25 COL 69
               FOREGROUND-COLOR 4 BACKGROUND-COLOR 7 TO SAVE.
-
-       01  NEW-ADD-SCREEN
-           BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
-           05 VALUE ALL " " PIC X(095) LINE 24 COL 01.
-           05 VALUE ALL " " PIC X(095) LINE 25 COL 01.
-           05 VALUE ALL " " PIC X(095) LINE 26 COL 01.
-           05 VALUE MESSAGE-NEW-ADD LINE 25 COL 15
-              FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
-           05 SC-NEW-ADD-OPTION1 LINE 25 COL 67
-              FOREGROUND-COLOR 4 BACKGROUND-COLOR 7 TO NEW-ADD-OPTION1.
 
        PROCEDURE DIVISION.
        REGISTER-DOWNTIME SECTION.
            PERFORM CREATE-FILE
-           PERFORM UNTIL ADD-OPTION1-NO
 
-              OPEN I-O CALENDAR
-              OPEN I-O KEYS
+           PERFORM DOWNTIME-ID
 
-              MOVE ZEROS TO  REG-END-DAY, REG-END-MONTH, REG-END-YEAR,
-              REG-START-DAY, REG-START-MONTH, REG-START-YEAR
-              MOVE SPACES TO REG-DESCRIPTION
+           OPEN I-O CALENDAR
 
-              PERFORM DOWNTIME-ID
+           MOVE ZEROS TO  REG-END-DAY, REG-END-MONTH, REG-END-YEAR,
+                          REG-START-DAY, REG-START-MONTH, REG-START-YEAR
+           MOVE SPACES TO REG-DESCRIPTION
 
-              DISPLAY CLEAR-SCREEN
-              DISPLAY MAIN-SCREEN
-              DISPLAY REGISTER-SCREEN
+           MOVE FDKEYS TO WS-DOWNTIME-ID
 
-              PERFORM DOWNTIME-START-DATE
-              PERFORM DOWNTIME-END-DATE
-              PERFORM DOWNTIME-DESCRIPTION
+           DISPLAY CLEAR-SCREEN
+           DISPLAY MAIN-SCREEN
+           DISPLAY REGISTER-SCREEN
 
-              PERFORM WITH TEST AFTER UNTIL SAVE-VALID
+           PERFORM DOWNTIME-START-DATE
+           PERFORM DOWNTIME-END-DATE
+           PERFORM DOWNTIME-DESCRIPTION
+
+           PERFORM WITH TEST AFTER UNTIL SAVE-VALID
               ACCEPT SAVE-SCREEN
               IF NOT SAVE-VALID THEN
                  MOVE INVALID-OPTION TO INVALID-TEXT
                  ACCEPT INVALID-SCREEN
-
-                 IF SAVE-YES THEN
-                    PERFORM WRITE-RECORD
-                    MOVE MESSAGE-WRITE-YES TO INVALID-TEXT
+              END-IF
+           END-PERFORM
+              IF SAVE = "Y" OR "y"
+                 REWRITE FDKEYS
+                 END-REWRITE
+                 WRITE FD-CALENDAR FROM WS-CALENDAR
+                 END-WRITE
+                 CLOSE CALENDAR
+                 CLOSE KEYS
+                 MOVE MESSAGE-WRITE-YES TO INVALID-TEXT
+                 ACCEPT INVALID-SCREEN
+              ELSE
+                 IF SAVE = "N" OR "n"
+                    CLOSE KEYS CALENDAR
+                    MOVE MESSAGE-WRITE-NO TO INVALID-TEXT
                     ACCEPT INVALID-SCREEN
-
-                    IF SAVE-NO THEN
-                       CLOSE KEYS
-                       CLOSE CALENDAR
-                       MOVE MESSAGE-WRITE-NO TO INVALID-TEXT
-                       ACCEPT INVALID-SCREEN
-                    END-IF
                  END-IF
               END-IF
-              END-PERFORM
 
-              PERFORM WITH TEST AFTER UNTIL ADD-OPTION1-YES
-                 ACCEPT NEW-ADD-SCREEN
-                 IF NOT ADD-VALID-OPTION1 THEN
-                    MOVE INVALID-OPTION TO INVALID-TEXT
-                    ACCEPT INVALID-SCREEN
-                 END-IF
-              END-PERFORM
-
-           END-PERFORM
-           STOP RUN.
+           EXIT PROGRAM.
 
        DOWNTIME-ID SECTION.
-           READ KEYS
-           ADD 1 TO FDKEYS
-           MOVE FDKEYS TO WS-DOWNTIME-ID
+           OPEN I-O KEYS
+              READ KEYS
+                 ADD 1 TO FDKEYS
 
            EXIT SECTION.
 
@@ -266,42 +246,24 @@
            MOVE INSTRUCTIONS-DESCRIPTION TO INSTRUCTIONS-TEXT
            DISPLAY INSTRUCTIONS-SCREEN
            ACCEPT REG-DESCRIPTION
-           CALL "LOWERUPPER" USING BY REFERENCE WS-DOWNTIME-DESCRIPTION1
-           CALL "RMVEXTSPACES" USING BY
-              REFERENCE WS-DOWNTIME-DESCRIPTION1
-           CALL "LOWERUPPER" USING BY REFERENCE WS-DOWNTIME-DESCRIPTION2
-           CALL "RMVEXTSPACES" USING BY
-              REFERENCE WS-DOWNTIME-DESCRIPTION2
-
-           EXIT SECTION.
-
-       WRITE-RECORD SECTION.
-           REWRITE FDKEYS
-           END-REWRITE
-           CLOSE KEYS
-
-           WRITE FD-CALENDAR FROM WS-CALENDAR
-           END-WRITE
-           CLOSE CALENDAR
 
            EXIT SECTION.
 
        CREATE-FILE SECTION.
            OPEN I-O CALENDAR
-           IF FS-TEST = "35"
+           IF CALENDAR-TEST = "35"
               OPEN OUTPUT CALENDAR
               CLOSE CALENDAR
            ELSE
               CLOSE CALENDAR
            END-IF
 
-           MOVE ZEROS TO FS-TEST
-
            OPEN I-O KEYS
-           IF FS-TEST = "35"
+           IF KEYS-TEST = "35"
               OPEN OUTPUT KEYS
                  MOVE 0 TO FDKEYS
                  WRITE FDKEYS
+                 END-WRITE
               CLOSE KEYS
            ELSE
               CLOSE KEYS
