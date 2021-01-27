@@ -5,7 +5,7 @@
       ******************************************************************
       *    SUPPLIERS MODULE - MAIN MENU
       ******************************************************************
-      *     V0.1 | EM ATUALIZAÇÃO | 23.01.2020
+      *     V0.1 | EM ATUALIZAÇÃO | 27.01.2020
       ******************************************************************
        IDENTIFICATION DIVISION.
        PROGRAM-ID. SUPMENU.
@@ -68,7 +68,7 @@
        MAIN-PROCEDURE.
            PERFORM WITH TEST AFTER UNTIL WS-OPTION = 5
                MOVE ZERO TO WS-OPTION MM-OPTION
-               DISPLAY MAIN-SCREEN
+               DISPLAY CLEAR-SCREEN DISPLAY MAIN-SCREEN
                ACCEPT MAIN-MENU-SCREEN
                IF NOT VALID-OPTION
                    MOVE MAIN-MENU-ERROR TO ERROR-LINE
