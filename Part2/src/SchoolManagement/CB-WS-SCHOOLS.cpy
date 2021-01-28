@@ -13,14 +13,14 @@
                88 EXTERNAL-ID-VLD                  VALUE "A" THRU "Z",
                                                    "a" THRU "z", SPACES.
            05 WS-SCHOOL-DESIGNATION.
-               88 DESIGNATION-VLD                  VALUE "Z" THRU "Z",
+               88 DESIGNATION-VLD                  VALUE "A" THRU "Z",
                                                    "a" THRU "z", SPACES.
                10 WS-SCHOOL-DESIGNATION1           PIC X(050).
                10 WS-SCHOOL-DESIGNATION2           PIC X(050).
                10 WS-SCHOOL-DESIGNATION3           PIC X(050).
            05 WS-SCHOOL-ADRESS.
                10 WS-SCHL-ADR-MAIN.
-                   88 ADRESS-VLD                   VALUE "Z" THRU "Z",
+                   88 ADDRESS-VLD                   VALUE "A" THRU "Z",
                                                    "a" THRU "z", SPACES,
                                                    "0" THRU "9".
                    15 WS-SCHL-ADR-MAIN1            PIC X(050).
@@ -33,7 +33,7 @@
                        88 POSTAL-CODE2-VLD         VALUE "000" THRU
                                                    "999".
                10 WS-SCHOOL-TOWN                   PIC X(030).
-                   88 TOWN-VLD                     VALUE "Z" THRU "Z",
+                   88 TOWN-VLD                     VALUE "A" THRU "Z",
                                                    "a" THRU "z", SPACES.
        01  WS-OPTION                               PIC 9(002).
        01  FILE-STATUS                             PIC 9(002).
