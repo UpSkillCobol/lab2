@@ -3,7 +3,7 @@
       ******************************************************************
       *    BREADWICH | CALENDAR MANAGEMENT
       ******************************************************************
-      *    ADD MODULE | V0.6 | IN UPDATE | 27.01.2020
+      *    ADD MODULE | V0.7 | IN UPDATE | 29.01.2020
       ******************************************************************
        IDENTIFICATION DIVISION.
        PROGRAM-ID. CAM-ADD.
@@ -37,6 +37,7 @@
        COPY LANGUAGE.
        COPY WSCALENDAR.
        COPY WSVAR.
+       COPY VAR-VALIDDATE.
 
        SCREEN SECTION.
        01  CLEAR-SCREEN.
@@ -95,23 +96,23 @@
            05 REG-ID PIC 9(003) LINE 13 COL 45 USING WS-DOWNTIME-ID.
            05 REG-REC.
               10 REG-START-DATE.
-                 15 REG-START-DAY PIC 9(002) LINE 15 COL 45 TO
-                    WS-START-DT-DAY BLANK WHEN ZERO AUTO REQUIRED.
+                 15 REG-START-DAY PIC X(002) LINE 15 COL 45 TO
+                    WS-START-DT-DAY AUTO REQUIRED.
                  15 LINE 15 COL 47 VALUE "/".
-                 15 REG-START-MONTH PIC 9(002) LINE 15 COL 48 TO
-                    WS-START-DT-MONTH BLANK WHEN ZERO AUTO REQUIRED.
+                 15 REG-START-MONTH PIC X(002) LINE 15 COL 48 TO
+                    WS-START-DT-MONTH AUTO REQUIRED.
                  15 LINE 15 COL 50 VALUE "/".
-                 15 REG-START-YEAR PIC 9(004) LINE 15 COL 51 TO
-                    WS-START-DT-YEAR BLANK WHEN ZERO AUTO REQUIRED.
+                 15 REG-START-YEAR PIC X(004) LINE 15 COL 51 TO
+                    WS-START-DT-YEAR AUTO REQUIRED.
               10 REG-END-DATE.
-                 15 REG-END-DAY PIC 9(002) LINE 16 COL 45 TO
-                    WS-END-DT-DAY BLANK WHEN ZERO AUTO.
+                 15 REG-END-DAY PIC X(002) LINE 16 COL 45 TO
+                    WS-END-DT-DAY AUTO.
                  15 LINE 16 COL 47 VALUE "/".
-                 15 REG-END-MONTH PIC 9(002) LINE 16 COL 48 TO
-                    WS-END-DT-MONTH BLANK WHEN ZERO AUTO.
+                 15 REG-END-MONTH PIC X(002) LINE 16 COL 48 TO
+                    WS-END-DT-MONTH AUTO.
                  15 LINE 16 COL 50 VALUE "/".
-                 15 REG-END-YEAR PIC 9(004) LINE 16 COL 51 TO
-                    WS-END-DT-YEAR BLANK WHEN ZERO AUTO.
+                 15 REG-END-YEAR PIC X(004) LINE 16 COL 51 TO
+                    WS-END-DT-YEAR AUTO.
               10 REG-DESCRIPTION.
                  15 REG-DESCRIPTION1 PIC X(050) LINE 18 COL 45
                     TO WS-DOWNTIME-DESCRIPTION1 AUTO.
@@ -150,9 +151,9 @@
            PERFORM DOWNTIME-ID
 
            OPEN I-O CALENDAR
-
-           MOVE ZEROS TO  REG-END-DAY, REG-END-MONTH, REG-END-YEAR,
-                          REG-START-DAY, REG-START-MONTH, REG-START-YEAR
+           MOVE "DD"   TO REG-START-DAY, REG-END-DAY
+           MOVE "MM"   TO REG-START-MONTH, REG-END-MONTH
+           MOVE "YYYY" TO REG-START-YEAR, REG-END-YEAR
            MOVE SPACES TO REG-DESCRIPTION
 
            MOVE FDKEYS TO WS-DOWNTIME-ID
@@ -200,8 +201,9 @@
        DOWNTIME-START-DATE SECTION.
            MOVE SPACE TO DATE-VALID
            PERFORM WITH TEST AFTER UNTIL DATE-VALID = "Y"
-              MOVE ZEROS TO REG-START-DAY, REG-START-MONTH,
-              REG-START-YEAR
+              MOVE "DD"   TO REG-START-DAY
+              MOVE "MM"   TO REG-START-MONTH
+              MOVE "YYYY" TO REG-START-YEAR
               DISPLAY REG-START-DATE
               MOVE INSTRUCTIONS-DATE TO INSTRUCTIONS-TEXT
               DISPLAY INSTRUCTIONS-SCREEN
@@ -222,7 +224,9 @@
        DOWNTIME-END-DATE SECTION.
            MOVE SPACE TO DATE-VALID
            PERFORM WITH TEST AFTER UNTIL DATE-VALID = "Y"
-              MOVE ZEROS TO REG-END-DAY, REG-END-MONTH, REG-END-YEAR
+              MOVE "DD"   TO REG-END-DAY
+              MOVE "MM"   TO REG-END-MONTH
+              MOVE "YYYY" TO REG-END-YEAR
               DISPLAY REG-END-DATE
               MOVE INSTRUCTIONS-DATE TO INSTRUCTIONS-TEXT
               DISPLAY INSTRUCTIONS-SCREEN
