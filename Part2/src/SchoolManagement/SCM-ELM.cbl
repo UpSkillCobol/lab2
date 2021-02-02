@@ -8,6 +8,8 @@
        PROGRAM-ID. SCM-ELM.
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
+       SPECIAL-NAMES.
+           CRT STATUS IS KEY-STATUS.
        REPOSITORY.
            FUNCTION ALL INTRINSIC.
        INPUT-OUTPUT SECTION.
@@ -16,7 +18,6 @@
            ORGANIZATION IS INDEXED
            RECORD KEY IS SCHOOL-INTERNAL-ID
            ACCESS IS DYNAMIC
-           ALTERNATE KEY IS SCHOOL-EXTERNAL-ID
            FILE STATUS IS FILE-STATUS.
 
            SELECT SCHOOLS1 ASSIGN TO "SCHOOLS1.csv"
@@ -75,6 +76,7 @@
                                                    "1","2","3","4".
        01  FILE-STATUS                             PIC 9(002).
        01  KEY-ADD                                 PIC 9(003).
+       01  KEY-STATUS                              PIC 9(004).
 
        SCREEN SECTION.
        01  CLEAR-SCREEN BACKGROUND-COLOR 0.
@@ -82,18 +84,18 @@
 
        01  MAIN-SCREEN
            BACKGROUND-COLOR 7, FOREGROUND-COLOR 0.
-           03 VALUE ALL " " PIC X(120) LINE 02 COL 01.
-           03 VALUE ALL " " PIC X(120) LINE 03 COL 01.
-           03 VALUE ALL " " PIC X(120) LINE 04 COL 01.
-           03 VALUE "SCHOOL MANAGEMENT" LINE 03 COL 50.
-           03 VALUE ALL " " PIC X(120) LINE 24 COL 01.
-           03 VALUE ALL " " PIC X(120) LINE 25 COL 01.
-           03 VALUE ALL " " PIC X(120) LINE 26 COL 01.
-           03 VALUE "F3 - BACK | F4 - EXIT"
+           05 VALUE ALL " " PIC X(120) LINE 02 COL 01.
+           05 VALUE ALL " " PIC X(120) LINE 03 COL 01.
+           05 VALUE ALL " " PIC X(120) LINE 04 COL 01.
+           05 VALUE "SCHOOL MANAGEMENT" LINE 03 COL 50.
+           05 VALUE ALL " " PIC X(95) LINE 24 COL 01.
+           05 VALUE ALL " " PIC X(95) LINE 25 COL 01.
+           05 VALUE ALL " " PIC X(95) LINE 26 COL 01.
+           05 VALUE ALL " " PIC X(23) LINE 24 COL 98.
+           05 VALUE ALL " " PIC X(23) LINE 25 COL 98.
+           05 VALUE ALL " " PIC X(23) LINE 26 COL 98.
+           05 VALUE "F3 - BACK | F4 - EXIT"
            LINE 25 COL 99 FOREGROUND-COLOR 5.
-           03 VALUE "  " LINE 24 COL 96 BACKGROUND-COLOR 0.
-           03 VALUE "  " LINE 25 COL 96 BACKGROUND-COLOR 0.
-           03 VALUE "  " LINE 26 COL 96 BACKGROUND-COLOR 0.
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
            DISPLAY "Hello world"
