@@ -3,10 +3,10 @@
       ******************************************************************
       *    BREADWICH | CALENDAR MANAGEMENT
       ******************************************************************
-      *    MAIN PROGRAM | V0.5 | IN UPDATE | 27.01.2020
+      *    MAIN PROGRAM | V0.6 | IN UPDATE | 01.02.2021
       ******************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. CAM-MAIN.
+       PROGRAM-ID. CAMMAIN.
 
        DATA DIVISION.
        FILE SECTION.
@@ -60,38 +60,6 @@
            05 ERROR-LINE LINE 25 COL 12 PIC X(080).
            05 LINE 01 COL 01 PIC X TO PRESS-KEY AUTO.
 
-       01  LEAVE-SCREEN BACKGROUND-COLOR 0 FOREGROUND-COLOR 7.
-           05 BLANK SCREEN.
-           05 VALUE ALL " " PIC X(050) LINE 08 COL 35 REVERSE-VIDEO.
-           05 VALUE ALL " " PIC X(050) LINE 09 COL 35 REVERSE-VIDEO.
-           05 VALUE ALL " " PIC X(050) LINE 10 COL 35 REVERSE-VIDEO.
-           05 VALUE ALL " " PIC X(050) LINE 11 COL 35 REVERSE-VIDEO.
-           05 VALUE ALL " " PIC X(050) LINE 12 COL 35 REVERSE-VIDEO.
-           05 VALUE ALL " " PIC X(050) LINE 13 COL 35 REVERSE-VIDEO.
-           05 VALUE ALL " " PIC X(050) LINE 14 COL 35 REVERSE-VIDEO.
-           05 VALUE ALL " " PIC X(050) LINE 15 COL 35 REVERSE-VIDEO.
-           05 VALUE ALL " " PIC X(050) LINE 16 COL 35 REVERSE-VIDEO.
-           05 VALUE ALL " " PIC X(050) LINE 17 COL 35 REVERSE-VIDEO.
-           05 VALUE ALL " " PIC X(050) LINE 18 COL 35 REVERSE-VIDEO.
-           05 VALUE EXIT-TEXT          LINE 13 COL 47 REVERSE-VIDEO.
-           05 VALUE ALL " " PIC X(048) LINE 09 COL 36.
-           05 VALUE " "                LINE 10 COL 36.
-           05 VALUE " "                LINE 11 COL 36.
-           05 VALUE " "                LINE 12 COL 36.
-           05 VALUE " "                LINE 13 COL 36.
-           05 VALUE " "                LINE 14 COL 36.
-           05 VALUE " "                LINE 15 COL 36.
-           05 VALUE " "                LINE 16 COL 36.
-           05 VALUE " "                LINE 10 COL 83.
-           05 VALUE " "                LINE 11 COL 83.
-           05 VALUE " "                LINE 12 COL 83.
-           05 VALUE " "                LINE 13 COL 83.
-           05 VALUE " "                LINE 14 COL 83.
-           05 VALUE " "                LINE 15 COL 83.
-           05 VALUE " "                LINE 16 COL 83.
-           05 VALUE ALL " " PIC X(048) LINE 17 COL 36.
-           05 LINE 01 COL 01 PIC X TO PRESS-KEY AUTO.
-
        PROCEDURE DIVISION.
        MAIN SECTION.
            PERFORM UNTIL OPTION = 5
@@ -106,15 +74,14 @@
                END-IF
 
               EVALUATE OPTION
-                 WHEN 1     CALL "CAM-ADD"
-                 WHEN 2     CALL "CAM-VIEW"
-                 WHEN 3     CALL "CAM-EDIT"
-                 WHEN 4     CALL "CAM-DELETE"
+                 WHEN 1     CALL "CAMADD"
+                 WHEN 2     CALL "CAMVIEW"
+                 WHEN 3     CALL "CAMEDIT"
+                 WHEN 4     CALL "CAMDELETE"
               END-EVALUATE
 
            END-PERFORM
 
-           DISPLAY LEAVE-SCREEN
            STOP RUN.
 
-       END PROGRAM CAM-MAIN.
+       END PROGRAM CAMMAIN.
