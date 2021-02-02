@@ -99,6 +99,5 @@
 
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
-           DISPLAY "Hello world"
-           STOP RUN.
+           DISPLAY MAIN-SCREEN.
        END PROGRAM SCM-ALT.
