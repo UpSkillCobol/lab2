@@ -46,83 +46,84 @@
            COPY CONSTANTS.
 
        01 WSSUPPLIER-DETAILS.
-           05 WSSUPPLIER-ID                        PIC 9(003).
-           05 WSSUPPLIER-NAME                      PIC X(030).
+           05 WSSUPPLIER-ID                    PIC 9(003).
+           05 WSSUPPLIER-NAME                  PIC X(030).
            05 WSSUPPLIER-DESCRIPTION.
-               10 WSSUPPLIER-DESCRIPTION1          PIC X(050).
-               10 WSSUPPLIER-DESCRIPTION2          PIC X(050).
-               10 WSSUPPLIER-DESCRIPTION3          PIC X(050).
+               10 WSSUPPLIER-DESCRIPTION1      PIC X(050).
+               10 WSSUPPLIER-DESCRIPTION2      PIC X(050).
+               10 WSSUPPLIER-DESCRIPTION3      PIC X(050).
            05 WSSUPPLIER-ADRESS.
                10 WSSUPP-ADR-MAIN.
-                   15 WSSUPP-ADR-MAIN1             PIC X(050).
-                   15 WSSUPP-ADR-MAIN2             PIC X(050).
+                   15 WSSUPP-ADR-MAIN1         PIC X(050).
+                   15 WSSUPP-ADR-MAIN2         PIC X(050).
                10 WSSUPPLIER-POSTAL-CODE.
-                   15 WSSUPPLIER-POSTAL-CODE1      PIC 9(004).
-                       88 VALID-POSTAL-CODE        VALUE 1000 THRU 9999.
-                   15 WSSUPPLIER-POSTAL-CODE2      PIC 9(003).
-               10 WSSUPPLIER-TOWN                  PIC X(030).
+                   15 WSSUPPLIER-POSTAL-CODE1  PIC 9(004).
+                       88 VALID-POSTAL-CODE    VALUE 1000 THRU 9999.
+                   15 WSSUPPLIER-POSTAL-CODE2  PIC 9(003).
+               10 WSSUPPLIER-TOWN              PIC X(030).
            05 WSSUPPLIER-EMAIL.
-               10 WSSUPPLIER-EMAIL1                PIC X(040).
-               10 WSSUPPLIER-EMAIL2                PIC X(040).
-               10 WSSUPPLIER-EMAIL3                PIC X(040).
+               10 WSSUPPLIER-EMAIL1            PIC X(040).
+               10 WSSUPPLIER-EMAIL2            PIC X(040).
+               10 WSSUPPLIER-EMAIL3            PIC X(040).
            05 WSSUPPLIER-TELEPHONE.
-               10 WSSUPPLIER-TELEPHONE1            PIC 9(009).
-                   88 VALID-PHONE1                 VALUE 200000000
-                                                   THRU 299999999
-                                                   300000000 THRU
-                                                   399999999
-                                                   910000000 THRU
-                                                   919999999
-                                                   920000000 THRU
-                                                   929999999
-                                                   930000000 THRU
-                                                   939999999
-                                                   960000000 THRU
-                                                   969999999.
-               10 WSSUPPLIER-TELEPHONE2            PIC 9(009).
-                   88 VALID-PHONE2                 VALUE ZERO
-                                                   200000000 THRU
-                                                   299999999
-                                                   300000000 THRU
-                                                   399999999
-                                                   910000000 THRU
-                                                   919999999
-                                                   920000000 THRU
-                                                   929999999
-                                                   930000000 THRU
-                                                   939999999
-                                                   960000000 THRU
-                                                   969999999.
-               10 WSSUPPLIER-TELEPHONE3            PIC 9(009).
-                   88 VALID-PHONE3                 VALUE ZERO
-                                                   200000000 THRU
-                                                   299999999
-                                                   300000000 THRU
-                                                   399999999
-                                                   910000000 THRU
-                                                   919999999
-                                                   920000000 THRU
-                                                   929999999
-                                                   930000000 THRU
-                                                   939999999
-                                                   960000000 THRU
-                                                   969999999.
-           05 WSSUPPLIER-IS-ACTIVE                 PIC 9(001).
+               10 WSSUPPLIER-TELEPHONE1        PIC 9(009).
+                   88 VALID-PHONE1             VALUE 200000000
+                                               THRU 299999999
+                                               300000000 THRU
+                                               399999999
+                                               910000000 THRU
+                                               919999999
+                                               920000000 THRU
+                                               929999999
+                                               930000000 THRU
+                                               939999999
+                                               960000000 THRU
+                                               969999999.
+               10 WSSUPPLIER-TELEPHONE2         PIC 9(009).
+                   88 VALID-PHONE2             VALUE ZERO
+                                               200000000 THRU
+                                               299999999
+                                               300000000 THRU
+                                               399999999
+                                               910000000 THRU
+                                               919999999
+                                               920000000 THRU
+                                               929999999
+                                               930000000 THRU
+                                               939999999
+                                               960000000 THRU
+                                               969999999.
+               10 WSSUPPLIER-TELEPHONE3        PIC 9(009).
+                   88 VALID-PHONE3             VALUE ZERO
+                                               200000000 THRU
+                                               299999999
+                                               300000000 THRU
+                                               399999999
+                                               910000000 THRU
+                                               919999999
+                                               920000000 THRU
+                                               929999999
+                                               930000000 THRU
+                                               939999999
+                                               960000000 THRU
+                                               969999999.
+           05 WSSUPPLIER-IS-ACTIVE             PIC 9(001).
 
-       01  DELETE-SUPP                             PIC X(002).
+       01  DELETE-SUPP                         PIC X(002).
            88 DELETE-SUPP-VALID                VALUE "Y" "y" "N" "n".
-       77  DUMMY                                   PIC X(001).
-       77  SUPP-STATUS                             PIC 9(002).
-       77  DEL-SUPP-STATUS                         PIC 9(002).
-       77  KEYSTATUS                               PIC 9(004).
-       77  FXKEY-STATUS                            PIC 9(002).
-       01  GET-VALID-ID                            PIC 9(003).
-           88 VALID-ID                             VALUE 1 THRU 999.
-       01  SUPPEXIST                               PIC X(002).
-           88 SUPPEXIST-YES                        VALUE "Y".
-       77 ILIN                                     PIC 9(002).
-       77 ICOL                                     PIC 9(002).
-       77 EOF                                      PIC X(001).
+       77  DUMMY                               PIC X(001).
+       77  SUPP-STATUS                         PIC 9(002).
+       77  DEL-SUPP-STATUS                     PIC 9(002).
+       77  KEYSTATUS                           PIC 9(004).
+       77  FXKEY-STATUS                        PIC 9(002).
+       01  GET-VALID-ID                        PIC 9(003).
+           88 VALID-ID                         VALUE 1 THRU 999.
+       01  SUPPEXIST                           PIC X(002).
+           88 SUPPEXIST-YES                    VALUE "Y".
+       77 ILIN                                 PIC 9(002).
+       77 ICOL                                 PIC 9(002).
+       77 EOF                                  PIC X(001).
+       77 TRUE-YES                             PIC X(001).
 
 
        SCREEN SECTION.
@@ -232,6 +233,61 @@
                    15 REG-SUPP-PHONE3 PIC 9(009) LINE 21 COL 29
                        FROM WSSUPPLIER-TELEPHONE3 AUTO BLANK WHEN ZERO.
       ******************************************************************
+       01 LIST-FRAME.
+           05 VALUE ALL " " PIC X(082) LINE 7 COL 07
+              BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(082) LINE 22 COL 07
+              BACKGROUND-COLOR 7.
+           05 VALUE LIST-FRAME1 LINE 08 COL 11 FOREGROUND-COLOR 5.
+           05 VALUE LIST-FRAME2 LINE 08 COL PLUS 4 FOREGROUND-COLOR 5.
+           05 VALUE LIST-FRAME1 LINE 08 COL 51 FOREGROUND-COLOR 5.
+           05 VALUE LIST-FRAME2 LINE 08 COL PLUS 4 FOREGROUND-COLOR 5.
+           05 VALUE "  " LINE 07 COL 07 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 08 COL 07 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 09 COL 07 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 07 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 07 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 07 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 07 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 07 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 07 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 07 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 07 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 07 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 07 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 07 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 07 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 07 COL 47 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 08 COL 47 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 09 COL 47 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 47 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 47 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 47 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 47 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 47 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 47 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 47 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 47 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 47 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 47 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 47 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 47 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 07 COL 87 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 08 COL 87 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 09 COL 87 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 87 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 87 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 87 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 87 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 87 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 87 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 87 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 87 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 87 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 87 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 87 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 87 BACKGROUND-COLOR 7.
+      ******************************************************************
        01 ERROR-ZONE
            BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
            05 VALUE ALL " " PIC X(095) LINE 24 COL 01.
@@ -249,23 +305,25 @@
            05 INSTRUCTIONS-TEXT LINE 25 COL 03 PIC X(085)
                FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
       ******************************************************************
-       01 GET-SUPPID-MESSAGE
+       01 GET-SUPPID
            BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
            05 VALUE ALL " " PIC X(095) LINE 24 COL 01.
            05 VALUE ALL " " PIC X(095) LINE 25 COL 01.
            05 VALUE ALL " " PIC X(095) LINE 26 COL 01.
            05 VALUE MESSAGE-GET-SUPPID LINE 25 COL 15
                FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
-           05 NEW-SUPPID LINE 25 COL 43 PIC 9(3)
+           05 VALUE " | " LINE 25 COL 46.
+           05 MESSAGE-LIST-PAGE LINE 25 COL 49 PIC X(030).
+           05 NEW-SUPPID LINE 25 COL 43 PIC 9(003)
                FOREGROUND-COLOR 4 BACKGROUND-COLOR 7 TO GET-VALID-ID
                BLANK WHEN ZERO.
       ******************************************************************
-       01 SUPPLIER-LIST-SMALL.
+       01 SUPPLIER-LIST.
            05 LIST-SUPP-ID PIC 9(003) LINE ILIN COL ICOL
-               FROM WSSUPPLIER-ID.
+               FROM SUPPLIER-ID.
            05 VALUE "|" LINE ILIN COL PLUS 1.
            05 LIST-SUPP-NAME PIC X(030) LINE ILIN COL PLUS 1
-               FROM WSSUPPLIER-NAME.
+               FROM SUPPLIER-NAME.
       ******************************************************************
        01 DELETE-SUPPLIER-SCREEN
            BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
@@ -283,25 +341,65 @@
            PERFORM 110-CHECK-IF-DEL-FILE-EXISTS
            MOVE SPACE TO SUPPEXIST
            PERFORM UNTIL SUPPEXIST-YES
-               PERFORM 100-GET-SUPPLIER-ID
+               PERFORM 100-SUPPLIERS-LIST
                PERFORM 105-CHECK-IF-SUPPID-EXISTS
            END-PERFORM
            PERFORM 120-DELETE-SUPPLIER
            EXIT PROGRAM.
 
-       100-GET-SUPPLIER-ID SECTION.
+       100-SUPPLIERS-LIST SECTION.
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
-      *     PERFORM 130-SHOW-SUPPLIER-LIST
-           PERFORM WITH TEST AFTER UNTIL VALID-ID
-               MOVE ZERO TO NEW-SUPPID
-               ACCEPT GET-SUPPID-MESSAGE
-               IF NOT VALID-ID THEN
-                   MOVE ERROR-GET-SUPPID TO ERROR-TEXT
+           DISPLAY LIST-FRAME
+           MOVE ZEROES TO NEW-SUPPID
+           MOVE SPACES TO TRUE-YES
+           MOVE 1 TO SUPPLIER-ID
+           OPEN INPUT FXSUPPLY
+           START FXSUPPLY KEY IS GREATER OR EQUAL SUPPLIER-ID
+               INVALID KEY
+                   MOVE EMPTY-LIST TO ERROR-TEXT
                    ACCEPT ERROR-ZONE
-               END-IF
+                   MOVE "Y" TO TRUE-YES
+                   EXIT SECTION
+           END-START
+           MOVE 09 TO ILIN
+           MOVE 11 TO ICOL
+           PERFORM UNTIL EOFSUPPLIER
+               READ FXSUPPLY NEXT RECORD
+                   AT END SET EOFSUPPLIER TO TRUE
+                   MOVE NO-MORE-SUPPLIERS TO MESSAGE-LIST-PAGE
+                   ACCEPT GET-SUPPID
+                   EXIT SECTION
+                   IF KEYSTATUS = 1003 THEN
+                       EXIT SECTION
+                   END-IF
+                   NOT AT END
+                   DISPLAY SUPPLIER-LIST
+                   ADD 1 TO ILIN
+                   IF ILIN = 21 AND ICOL = 11 THEN
+                       MOVE 09 TO ILIN
+                       MOVE 51 TO ICOL
+                   ELSE
+                       IF ILIN = 21 AND ICOL = 51 THEN
+                           MOVE NEXT-PAGE TO MESSAGE-LIST-PAGE
+                           ACCEPT GET-SUPPID
+                           IF KEYSTATUS = 1002 THEN
+                               DISPLAY CLEAR-SCREEN
+                               DISPLAY MAIN-SCREEN
+                               DISPLAY LIST-FRAME
+                               MOVE 09 TO ILIN
+                               MOVE 11 TO ICOL
+                           ELSE
+                               EXIT SECTION
+                           END-IF
+                           IF KEYSTATUS = 1003
+                               EXIT SECTION
+                           END-IF
+                       END-IF
+                   END-IF
+               END-READ
            END-PERFORM
-       EXIT SECTION.
+           EXIT SECTION.
 
        105-CHECK-IF-SUPPID-EXISTS SECTION.
            OPEN INPUT FXSUPPLY
@@ -354,36 +452,3 @@
            END-IF
            CLOSE FXSUPPLY FXSUPPLYDEL
        EXIT SECTION.
-
-       130-SHOW-SUPPLIER-LIST SECTION.
-           OPEN INPUT FXSUPPLY
-           MOVE 06 TO ILIN
-           MOVE 03 TO ICOL
-           MOVE SPACE TO EOF
-           PERFORM UNTIL EOF = "S"
-               READ FXSUPPLY INTO WSSUPPLIER-DETAILS
-                   AT END MOVE "S" TO EOF
-                   NOT AT END
-                       DISPLAY SUPPLIER-LIST-SMALL
-                       ADD 1 TO ILIN
-                       IF ILIN = 20 THEN
-                           IF ICOL = 03 THEN
-                               MOVE 06 TO ILIN MOVE 40 TO ICOL
-                           ELSE
-                               IF ICOL = 40 THEN
-                                   MOVE 06 TO ILIN MOVE 77 TO ICOL
-                               ELSE
-                                   IF ICOL = 77 THEN
-                                       MOVE LIST-NEXT-PAGE TO ERROR-TEXT
-                                       ACCEPT ERROR-ZONE
-                                       DISPLAY CLEAR-SCREEN
-                                       DISPLAY MAIN-SCREEN
-                                       MOVE 06 TO ILIN MOVE 03 TO ICOL
-                                   END-IF
-                               END-IF
-                           END-IF
-                       END-IF
-               END-READ
-           END-PERFORM
-           CLOSE FXSUPPLY
-           EXIT SECTION.
