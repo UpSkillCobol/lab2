@@ -17,8 +17,14 @@
            SELECT SCHOOLS ASSIGN TO "SCHOOLS"
            ORGANIZATION IS INDEXED
            RECORD KEY IS SCHOOL-INTERNAL-ID
+           ALTERNATE KEY IS SCHOOL-EXTERNAL-ID
+           ALTERNATE KEY IS SCHOOL-TOWN
+           WITH DUPLICATES
+           ALTERNATE KEY IS SCHOOL-POSTAL-CODE
+           WITH DUPLICATES
            ACCESS IS DYNAMIC
            FILE STATUS IS FILE-STATUS.
+
            SELECT SCHOOLS1 ASSIGN TO "SCHOOLS1.csv"
            ORGANIZATION IS LINE SEQUENTIAL.
            SELECT KEYS ASSIGN TO "KEYS-SCM.txt"
@@ -43,6 +49,7 @@
                    15 SCHL-POSTAL-CODE1            PIC 9(004).
                    15 SCHL-POSTAL-CODE2            PIC 9(003).
                10 SCHOOL-TOWN                      PIC X(030).
+           05 SCHOOL-IS-ACTIVE                     PIC 9(001).
 
        FD  SCHOOLS1.
            01 SCHOOL1                              PIC X(200).
@@ -78,6 +85,7 @@
                10 WS-SCHOOL-TOWN                   PIC X(030).
                    88 TOWN-VLD                     VALUE "A" THRU "Z",
                                                    "a" THRU "z", SPACES.
+           05 WS-SCHOOL-IS-ACTIVE                  PIC 9(001).
        01  WS-OPTION                               PIC 9(002).
        01  FILE-STATUS                             PIC 9(002).
        01  KEY-ADD                                 PIC 9(003).
@@ -196,10 +204,14 @@
        01  SAVE-RECORD-MENU1
            REQUIRED, BACKGROUND-COLOR 7.
            03 VALUE ADD-MENU-TEXT10
-               LINE 25 COL 10 FOREGROUND-COLOR 5.
+               LINE 25 COL 10 FOREGROUND-COLOR 4.
            03 SRM1-OPTION            PIC X(01) LINE 25 COL 54
                TO WS-ADD
-                   FOREGROUND-COLOR 5 BACKGROUND-COLOR 7.
+                   FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
+
+       01  OPTION-INVALID-SCREEN.
+           05 VALUE OPTION-INVALID-TEXT LINE 25 COL 10
+           FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
 
       * 01  SAVE-RECORD-MENU2
       *     REQUIRED, BACKGROUND-COLOR 7.
@@ -212,11 +224,11 @@
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
            PERFORM CHECK-FILE
+           DISPLAY CLEAR-SCREEN
+           DISPLAY MAIN-SCREEN
+           DISPLAY MAIN-REGISTER-SCREEN
            PERFORM WITH TEST AFTER UNTIL WS-OPTION = 3
                MOVE ZERO TO MP-OPTION
-               DISPLAY CLEAR-SCREEN
-               DISPLAY MAIN-SCREEN
-               DISPLAY MAIN-REGISTER-SCREEN
                ACCEPT MP-OPTION
                    IF KEY-STATUS = 1003 THEN
                        EXIT SECTION
@@ -229,6 +241,8 @@
                        PERFORM REGISTER-MANUAL
                    WHEN 2
                        PERFORM REGISTER-CSV
+                   WHEN OTHER
+                       DISPLAY OPTION-INVALID-SCREEN
            END-EVALUATE
            END-PERFORM
            EXIT PROGRAM.
@@ -241,6 +255,7 @@
                MOVE SPACES TO REG-EED, REG-DESIGNATION, REG-ADDRESS,
                                REG-TOWN
                MOVE ZEROS TO WS-SCHOOL-INTERNAL-ID,WS-SCHOOL-POSTAL-CODE
+                             WS-SCHOOL-IS-ACTIVE
                MOVE ZEROS TO REG-IID, REG-POSTAL-CODE
                DISPLAY CLEAR-SCREEN
                DISPLAY MAIN-SCREEN
@@ -373,6 +388,7 @@
                WHEN WS-ADD = "S"
                    OPEN I-O SCHOOLS
                        MOVE WS-SCHOOL-DETAILS TO SCHOOL-DETAILS
+                       MOVE 1 TO SCHOOL-IS-ACTIVE
                        WRITE SCHOOL-DETAILS
                    CLOSE SCHOOLS
                    OPEN OUTPUT KEYS

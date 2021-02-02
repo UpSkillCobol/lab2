@@ -47,7 +47,7 @@
                    15 SCHL-POSTAL-CODE1            PIC 9(004).
                    15 SCHL-POSTAL-CODE2            PIC 9(003).
                10 SCHOOL-TOWN                      PIC X(030).
-           05 SCHOOL-IS-ACTIVE                     PIC 9(009).
+           05 SCHOOL-IS-ACTIVE                     PIC 9(001).
 
        FD  SCHOOLS1.
            01 SCHOOL1                              PIC X(200).

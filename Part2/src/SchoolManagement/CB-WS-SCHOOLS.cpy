@@ -35,6 +35,7 @@
                10 WS-SCHOOL-TOWN                   PIC X(030).
                    88 TOWN-VLD                     VALUE "A" THRU "Z",
                                                    "a" THRU "z", SPACES.
+           05 WS-SCHOOL-IS-ACTIVE                  PIC 9(001).
        01  WS-OPTION                               PIC 9(002).
        01  FILE-STATUS                             PIC 9(002).
        01  KEY-ADD                                 PIC 9(003).
