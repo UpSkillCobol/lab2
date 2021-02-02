@@ -64,9 +64,14 @@
        78  EMPTY-LIST-TEXT     VALUE "NO RECORDS TO BE SHOWN".
        78  NEXT-LIST-TEXT      VALUE "F2 TO SHOW NEXT PAGE".
        78  WHAT-TO-EDIT        VALUE "WHAT TO EDIT".
-       78  EDIT1               VALUE "EXTERNAL-ID".
-       78  EDIT2               VALUE "DESIGNATION".
-       78  EDIT3               VALUE "ADDRESS".
-       78  EDIT4               VALUE "POSTAL-CODE".
-       78  EDIT5               VALUE "TOWN".
+       78  EDIT1               VALUE "1 - EXTERNAL-ID".
+       78  EDIT2               VALUE "2 - DESIGNATION".
+       78  EDIT3               VALUE "3 - ADDRESS".
+       78  EDIT4               VALUE "4 - POSTAL-CODE".
+       78  EDIT5               VALUE "5 - TOWN".
+       78  EDIT6               VALUE "6 - LEAVE".
        78  CHOOSE              VALUE "CHOOSE OPTION:".
+       78  ALT-MENU-OPTION     VALUE
+       "WHICH RECORD DO YOU WANT TO CHANGE:".
+       78  ALT-MENU-TEXT       VALUE "CHANGE SCHOOL".
+       78  VIEW-MENU-TEXT      VALUE "VIEW SCHOOLS".

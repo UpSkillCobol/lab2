@@ -67,10 +67,15 @@
        78  EMPTY-LIST-TEXT     VALUE "SEM REGISTOS PARA MOSTRAR".
        78  NEXT-LIST-TEXT      VALUE
                "F2 PARA SEGUIR PARA A PROXIMA PAGINA".
-       78  WHAT-TO-EDIT        VALUE "O QUE DITAR".
-       78  EDIT1               VALUE "ID EXTERNO".
-       78  EDIT2               VALUE "DESIGNACAO".
-       78  EDIT3               VALUE "MORADA".
-       78  EDIT4               VALUE "CODIGO POSTAL".
-       78  EDIT5               VALUE "LOCALIDADE".
+       78  WHAT-TO-EDIT        VALUE "O QUE EDITAR".
+       78  EDIT1               VALUE "1 - ID EXTERNO".
+       78  EDIT2               VALUE "2 - DESIGNACAO".
+       78  EDIT3               VALUE "3 - MORADA".
+       78  EDIT4               VALUE "4 - CODIGO POSTAL".
+       78  EDIT5               VALUE "5 - LOCALIDADE".
+       78  EDIT6               VALUE "6 - SAIR".
        78  CHOOSE              VALUE "ESCOLHA OPCAO:".
+       78  ALT-MENU-OPTION     VALUE
+               "         QUAL REGISTO QUER ALTERAR:".
+       78  ALT-MENU-TEXT       VALUE "ALTERAR ESCOLA".
+       78  VIEW-MENU-TEXT      VALUE "CONSULTAR ESCOLAS".
