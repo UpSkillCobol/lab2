@@ -68,17 +68,17 @@
        01  SAVE-IT                         PIC X(002).
            88 SAVE-IT-YES                  VALUE "Y" "y".
            88 SAVE-IT-VALID                VALUE "Y" "y" "N" "n".
-       77 UNSTR                        PIC X(100).
-       77 UNSTR1                       PIC X(015).
-       77 UNSTR2                       PIC X(015).
-       77 UNSTR3                       PIC X(015).
-       77 UNSTR4                       PIC X(015).
-       77 UNSTR5                       PIC X(015).
-       77 UNSTR6                       PIC X(015).
-       77 UNSTR7                       PIC X(015).
-       77 UNSTR8                       PIC X(015).
-       77 UNSTR9                       PIC X(015).
-       77 UNSTR10                      PIC X(015).
+       77 UNSTR                        PIC X(150).
+       77 UNSTR1                       PIC X(050).
+       77 UNSTR2                       PIC X(050).
+       77 UNSTR3                       PIC X(050).
+       77 UNSTR4                       PIC X(050).
+       77 UNSTR5                       PIC X(050).
+       77 UNSTR6                       PIC X(050).
+       77 UNSTR7                       PIC X(050).
+       77 UNSTR8                       PIC X(050).
+       77 UNSTR9                       PIC X(050).
+       77 UNSTR10                      PIC X(050).
 
       ******************************************************************
 
