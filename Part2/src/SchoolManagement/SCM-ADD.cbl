@@ -96,14 +96,14 @@
            05 VALUE ALL " " PIC X(120) LINE 03 COL 01.
            05 VALUE ALL " " PIC X(120) LINE 04 COL 01.
            05 VALUE MODULE-NAME LINE 03 COL 50.
-           05 VALUE ALL " " PIC X(120) LINE 24 COL 01.
-           05 VALUE ALL " " PIC X(120) LINE 25 COL 01.
-           05 VALUE ALL " " PIC X(120) LINE 26 COL 01.
+           05 VALUE ALL " " PIC X(95) LINE 24 COL 01.
+           05 VALUE ALL " " PIC X(95) LINE 25 COL 01.
+           05 VALUE ALL " " PIC X(95) LINE 26 COL 01.
+           05 VALUE ALL " " PIC X(23) LINE 24 COL 98.
+           05 VALUE ALL " " PIC X(23) LINE 25 COL 98.
+           05 VALUE ALL " " PIC X(23) LINE 26 COL 98.
            05 VALUE BACK-EXIT
                LINE 25 COL 99 FOREGROUND-COLOR 5.
-           05 VALUE "  " LINE 24 COL 96 BACKGROUND-COLOR 0.
-           05 VALUE "  " LINE 25 COL 96 BACKGROUND-COLOR 0.
-           05 VALUE "  " LINE 26 COL 96 BACKGROUND-COLOR 0.
 
        01  MAIN-REGISTER-SCREEN
            BACKGROUND-COLOR 7, FOREGROUND-COLOR 0, AUTO, REQUIRED.
@@ -404,7 +404,8 @@
            OPEN I-O KEYS
                IF FILE-STATUS = 35 THEN
                    OPEN OUTPUT KEYS
-                   MOVE ZEROS TO REGKEY
+                       MOVE ZEROS TO REGKEY
+                       WRITE REGKEY
                    CLOSE KEYS
                END-IF
            CLOSE KEYS
