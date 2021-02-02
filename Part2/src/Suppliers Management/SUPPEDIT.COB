@@ -252,46 +252,61 @@
                        FROM WSSUPPLIER-TELEPHONE2 AUTO.
                    15 REG-SUPP-PHONE3 PIC 9(009) LINE 21 COL 29
                        FROM WSSUPPLIER-TELEPHONE3 AUTO.
-************************************************************************
+      ******************************************************************
        01 LIST-FRAME.
-           05 VALUE ALL " " PIC X(080) LINE 7 COL 08
+           05 VALUE ALL " " PIC X(082) LINE 7 COL 07
               BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(080) LINE 22 COL 08
+           05 VALUE ALL " " PIC X(082) LINE 22 COL 07
               BACKGROUND-COLOR 7.
-      *>      05 VALUE "  " LINE 05 COL 08 BACKGROUND-COLOR 7.
-      *>      05 VALUE "  " LINE 06 COL 08 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 07 COL 08 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 08 COL 08 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 09 COL 08 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 10 COL 08 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 11 COL 08 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 12 COL 08 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 13 COL 08 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 14 COL 08 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 15 COL 08 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 16 COL 08 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 17 COL 08 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 18 COL 08 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 19 COL 08 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 20 COL 08 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 21 COL 08 BACKGROUND-COLOR 7.
-      *>      05 VALUE "  " LINE 05 COL 86 BACKGROUND-COLOR 7.
-      *>      05 VALUE "  " LINE 06 COL 86 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 07 COL 86 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 08 COL 86 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 09 COL 86 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 10 COL 86 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 11 COL 86 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 12 COL 86 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 13 COL 86 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 14 COL 86 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 15 COL 86 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 16 COL 86 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 17 COL 86 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 18 COL 86 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 19 COL 86 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 20 COL 86 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 21 COL 86 BACKGROUND-COLOR 7.
+           05 VALUE LIST-FRAME1 LINE 08 COL 11 FOREGROUND-COLOR 5.
+           05 VALUE LIST-FRAME2 LINE 08 COL PLUS 4 FOREGROUND-COLOR 5.
+           05 VALUE LIST-FRAME1 LINE 08 COL 51 FOREGROUND-COLOR 5.
+           05 VALUE LIST-FRAME2 LINE 08 COL PLUS 4 FOREGROUND-COLOR 5.
+           05 VALUE "  " LINE 07 COL 07 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 08 COL 07 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 09 COL 07 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 07 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 07 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 07 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 07 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 07 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 07 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 07 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 07 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 07 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 07 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 07 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 07 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 07 COL 47 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 08 COL 47 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 09 COL 47 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 47 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 47 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 47 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 47 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 47 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 47 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 47 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 47 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 47 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 47 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 47 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 47 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 07 COL 87 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 08 COL 87 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 09 COL 87 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 87 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 87 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 87 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 87 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 87 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 87 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 87 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 87 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 87 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 87 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 87 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 87 BACKGROUND-COLOR 7.
       ******************************************************************
        01 UPDATE-RECORD.
            05 EDIT-RECORD.
@@ -439,7 +454,7 @@
                    EXIT SECTION
            END-START
            MOVE 09 TO ILIN
-           MOVE 12 TO ICOL
+           MOVE 11 TO ICOL
            PERFORM UNTIL EOFSUPPLIER
                READ FXSUPPLY NEXT RECORD
                    AT END SET EOFSUPPLIER TO TRUE
@@ -452,17 +467,19 @@
                    NOT AT END
                    DISPLAY SUPPLIER-LIST
                    ADD 1 TO ILIN
-                   IF ILIN = 21 AND ICOL = 12 THEN
+                   IF ILIN = 21 AND ICOL = 11 THEN
                        MOVE 09 TO ILIN
-                       MOVE 50 TO ICOL
+                       MOVE 51 TO ICOL
                    ELSE
-                       IF ILIN = 21 AND ICOL = 50 THEN
+                       IF ILIN = 21 AND ICOL = 51 THEN
                            MOVE NEXT-PAGE TO MESSAGE-LIST-PAGE
                            ACCEPT GET-SUPPID
                            IF KEYSTATUS = 1002 THEN
-      *                         DISPLAY CLEAR-SUPPLIER-LIST
+                               DISPLAY CLEAR-SCREEN
+                               DISPLAY MAIN-SCREEN
+                               DISPLAY LIST-FRAME
                                MOVE 09 TO ILIN
-                               MOVE 12 TO ICOL
+                               MOVE 11 TO ICOL
                            ELSE
                                EXIT SECTION
                            END-IF
