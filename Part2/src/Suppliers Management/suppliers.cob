@@ -9,15 +9,22 @@
       ******************************************************************
        IDENTIFICATION DIVISION.
        PROGRAM-ID. SUPMENU.
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+       OBJECT-COMPUTER.
+       CHARACTER CLASSIFICATION IS LOCALE.
+       SPECIAL-NAMES.
+       CRT STATUS IS KEYSTATUS.
        DATA DIVISION.
        FILE SECTION.
        WORKING-STORAGE SECTION.
 
        COPY CONSTANTS.
 
-       01  WS-OPTION                           PIC 9(002).
-           88 VALID-OPTION                     VALUE 1 THRU 5.
+       01  WSMM-OPTION                         PIC 9(002).
+           88 VALID-WSMMOPTION                 VALUE 1 THRU 5.
        77  DUMMY                               PIC X(001).
+       77  KEYSTATUS                           PIC 9(004).
 
        SCREEN SECTION.
 
@@ -55,7 +62,7 @@
            03 VALUE MAIN-MENU-OPTION4 LINE 14 COL 50.
            03 VALUE MAIN-MENU-OPTION5 LINE 15 COL 50.
            03 VALUE MAIN-MENU-CHOICE LINE 20 COL 45 REVERSE-VIDEO.
-           03 MM-OPTION PIC 9(002) LINE 20 COL 73 TO WS-OPTION
+           03 MM-OPTION PIC 9(002) LINE 20 COL 73 TO WSMM-OPTION
                BLANK WHEN ZERO REVERSE-VIDEO.
 
        01 ERROR-MESSAGE FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
@@ -66,11 +73,14 @@
 
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
-           PERFORM WITH TEST AFTER UNTIL WS-OPTION = 5
-               MOVE ZERO TO WS-OPTION MM-OPTION
+           PERFORM WITH TEST AFTER UNTIL WSMM-OPTION = 5
+               MOVE ZERO TO WSMM-OPTION MM-OPTION
                DISPLAY CLEAR-SCREEN DISPLAY MAIN-SCREEN
                ACCEPT MAIN-MENU-SCREEN
-               IF NOT VALID-OPTION
+               IF KEYSTATUS = 1004
+                   MOVE 5 TO WSMM-OPTION
+               END-IF
+               IF NOT VALID-WSMMOPTION
                    MOVE MAIN-MENU-ERROR TO ERROR-LINE
                    ACCEPT ERROR-MESSAGE
                END-IF
@@ -79,7 +89,7 @@
            STOP RUN.
 
        EVALUATE-MAIN-MENU SECTION.
-           EVALUATE WS-OPTION
+           EVALUATE WSMM-OPTION
                WHEN 1
                    CALL "SUPPADD"
                WHEN 2
