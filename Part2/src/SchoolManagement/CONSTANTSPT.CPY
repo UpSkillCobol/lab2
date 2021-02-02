@@ -67,3 +67,10 @@
        78  EMPTY-LIST-TEXT     VALUE "SEM REGISTOS PARA MOSTRAR".
        78  NEXT-LIST-TEXT      VALUE
                "F2 PARA SEGUIR PARA A PROXIMA PAGINA".
+       78  WHAT-TO-EDIT        VALUE "O QUE DITAR".
+       78  EDIT1               VALUE "ID EXTERNO".
+       78  EDIT2               VALUE "DESIGNACAO".
+       78  EDIT3               VALUE "MORADA".
+       78  EDIT4               VALUE "CODIGO POSTAL".
+       78  EDIT5               VALUE "LOCALIDADE".
+       78  CHOOSE              VALUE "ESCOLHA OPCAO:".

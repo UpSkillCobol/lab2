@@ -18,6 +18,7 @@
            ORGANIZATION IS INDEXED
            RECORD KEY IS SCHOOL-INTERNAL-ID
            ALTERNATE KEY IS SCHOOL-EXTERNAL-ID
+           WITH DUPLICATES
            ALTERNATE KEY IS SCHOOL-TOWN
            WITH DUPLICATES
            ALTERNATE KEY IS SCHOOL-POSTAL-CODE
@@ -93,7 +94,7 @@
        01  WS-ADD                                  PIC X(001).
            88  ADD-VLD                             VALUE "Y", "S", "N".
        01  WS-EID-VLD                              PIC 9(001).
-       COPY "CONSTANTSPT".
+       COPY "CONSTANTS".
        SCREEN SECTION.
        01  CLEAR-SCREEN BACKGROUND-COLOR 0.
            05 VALUE " " BLANK SCREEN LINE 01 COL 01.
@@ -369,7 +370,7 @@
 
        CONFIRM-REGISTER SECTION.
 
-           MOVE "Y" TO SRM1-OPTION
+           MOVE SPACES TO SRM1-OPTION
            PERFORM WITH TEST AFTER UNTIL ADD-VLD
                ACCEPT SAVE-RECORD-MENU1
                MOVE SPACES TO SRM1-OPTION

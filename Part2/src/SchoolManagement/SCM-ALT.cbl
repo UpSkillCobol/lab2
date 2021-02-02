@@ -17,6 +17,12 @@
            SELECT SCHOOLS ASSIGN TO "SCHOOLS"
            ORGANIZATION IS INDEXED
            RECORD KEY IS SCHOOL-INTERNAL-ID
+           ALTERNATE KEY IS SCHOOL-EXTERNAL-ID
+           WITH DUPLICATES
+           ALTERNATE KEY IS SCHOOL-TOWN
+           WITH DUPLICATES
+           ALTERNATE KEY IS SCHOOL-POSTAL-CODE
+           WITH DUPLICATES
            ACCESS IS DYNAMIC
            FILE STATUS IS FILE-STATUS.
 
@@ -77,6 +83,7 @@
        01  FILE-STATUS                             PIC 9(002).
        01  KEY-ADD                                 PIC 9(003).
        01  KEY-STATUS                              PIC 9(004).
+       COPY "CONSTANTS".
 
        SCREEN SECTION.
        01  CLEAR-SCREEN BACKGROUND-COLOR 0.
@@ -87,15 +94,15 @@
            05 VALUE ALL " " PIC X(120) LINE 02 COL 01.
            05 VALUE ALL " " PIC X(120) LINE 03 COL 01.
            05 VALUE ALL " " PIC X(120) LINE 04 COL 01.
-           05 VALUE "SCHOOL MANAGEMENT" LINE 03 COL 50.
+           05 VALUE MODULE-NAME LINE 03 COL 50.
            05 VALUE ALL " " PIC X(95) LINE 24 COL 01.
            05 VALUE ALL " " PIC X(95) LINE 25 COL 01.
            05 VALUE ALL " " PIC X(95) LINE 26 COL 01.
            05 VALUE ALL " " PIC X(23) LINE 24 COL 98.
            05 VALUE ALL " " PIC X(23) LINE 25 COL 98.
            05 VALUE ALL " " PIC X(23) LINE 26 COL 98.
-           05 VALUE "F3 - BACK | F4 - EXIT"
-           LINE 25 COL 99 FOREGROUND-COLOR 5.
+           05 VALUE BACK-EXIT
+               LINE 25 COL 99 FOREGROUND-COLOR 5.
 
         01 EDIT-WHAT-SCREEN
            BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.

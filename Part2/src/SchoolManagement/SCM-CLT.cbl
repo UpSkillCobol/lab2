@@ -19,6 +19,7 @@
            ORGANIZATION IS INDEXED
            RECORD KEY IS SCHOOL-INTERNAL-ID
            ALTERNATE KEY IS SCHOOL-EXTERNAL-ID
+           WITH DUPLICATES
            ALTERNATE KEY IS SCHOOL-TOWN
            WITH DUPLICATES
            ALTERNATE KEY IS SCHOOL-POSTAL-CODE
@@ -71,15 +72,15 @@
            05 VALUE ALL " " PIC X(120) LINE 02 COL 01.
            05 VALUE ALL " " PIC X(120) LINE 03 COL 01.
            05 VALUE ALL " " PIC X(120) LINE 04 COL 01.
-           05 VALUE "SCHOOL MANAGEMENT" LINE 03 COL 50.
+           05 VALUE MODULE-NAME LINE 03 COL 50.
            05 VALUE ALL " " PIC X(95) LINE 24 COL 01.
            05 VALUE ALL " " PIC X(95) LINE 25 COL 01.
            05 VALUE ALL " " PIC X(95) LINE 26 COL 01.
            05 VALUE ALL " " PIC X(23) LINE 24 COL 98.
            05 VALUE ALL " " PIC X(23) LINE 25 COL 98.
            05 VALUE ALL " " PIC X(23) LINE 26 COL 98.
-           05 VALUE "F3 - BACK | F4 - EXIT"
-           LINE 25 COL 99 FOREGROUND-COLOR 5.
+           05 VALUE BACK-EXIT
+               LINE 25 COL 99 FOREGROUND-COLOR 5.
 
        01  MAIN-VIEW-SCREEN
            BACKGROUND-COLOR 7, FOREGROUND-COLOR 0, AUTO, REQUIRED.
@@ -90,12 +91,9 @@
            05 VALUE ALL " " PIC X(50) LINE 13 COL 35.
            05 VALUE ALL " " PIC X(50) LINE 14 COL 35.
            05 VALUE ALL " " PIC X(50) LINE 15 COL 35.
-           05 VALUE ALL " " PIC X(50) LINE 16 COL 35.
-           05 VALUE ALL " " PIC X(50) LINE 17 COL 35.
            05 VALUE VIEW-MENU-OPTION1 LINE 11 COL 42.
            05 VALUE VIEW-MENU-OPTION2 LINE 12 COL 42.
            05 VALUE VIEW-MENU-OPTION3 LINE 13 COL 42.
-           05 VALUE VIEW-MENU-OPTION4 LINE 14 COL 42.
            05 VALUE VIEW-MENU-CHOICE LINE 20 COL 45 REVERSE-VIDEO.
            05 MP-OPTION PIC 9(002) LINE 20 COL 73 TO WS-OPTION
                BLANK WHEN ZERO REVERSE-VIDEO.
@@ -255,6 +253,8 @@
            05 VALUE "  " LINE 20 COL 115 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 21 COL 115 BACKGROUND-COLOR 7.
            05  SHOW LINE SC-LINE COL 10.
+               10  SHOW-IID PIC 9(003)     FROM SCHOOL-INTERNAL-ID.
+               10  VALUE "   ".
                10  SHOW-EED PIC X(008)     FROM SCHOOL-EXTERNAL-ID.
                10  VALUE "   ".
                10  SHOW-DESG PIC X(050)    FROM SCHOOL-DESIGNATION.
@@ -263,8 +263,8 @@
            05 VALUE VIEW-MENU-OPTION5 LINE 25 COL 10
            FOREGROUND-COLOUR 4 BACKGROUND-COLOR 7.
            05  CONTINUE-LIST.
-               10  CONTINUE-EED PIC X(008) LINE 25 COL 44
-               TO SCHOOL-EXTERNAL-ID
+               10  CONTINUE-IID PIC 9(003) LINE 25 COL 44
+               TO SCHOOL-INTERNAL-ID
                FOREGROUND-COLOUR 4 BACKGROUND-COLOR 7.
 
        01  END-LIST-SCREEN FOREGROUND-COLOUR 4
@@ -282,30 +282,29 @@
 
        PROCEDURE DIVISION.
        MAIN SECTION.
-           PERFORM WITH TEST AFTER UNTIL WS-OPTION = 4
+           PERFORM WITH TEST AFTER UNTIL WS-OPTION = 3
            PERFORM CLEAR-VARIABLES
                 MOVE ZERO TO MP-OPTION
                 DISPLAY CLEAR-SCREEN
                 DISPLAY MAIN-SCREEN
                 DISPLAY MAIN-VIEW-SCREEN
                 ACCEPT MP-OPTION
-                PERFORM CHECK-KEY
+                   IF KEY-STATUS = 1003 THEN
+                       EXIT SECTION
+                   END-IF
+                   IF KEY-STATUS = 1004 THEN
+                       STOP RUN
+                   END-IF
                 EVALUATE WS-OPTION
-      *             WHEN 1
-      *                     PERFORM VIEW-ONE-IID
-      *                     PERFORM CHECK-KEY
-                   WHEN 2
-                           PERFORM VIEW-ONE-EED
+                   WHEN 1
+                           PERFORM VIEW-ONE-IID
                                IF KEY-STATUS = 1003 THEN
                                    EXIT SECTION
                                END-IF
                                IF KEY-STATUS = 1004 THEN
                                    STOP RUN
                                END-IF
-                           IF WS-VIEW = "S" THEN
-                                   PERFORM VIEW-ONE-EED
-                           END-IF
-                   WHEN 3
+                   WHEN 2
                            PERFORM VIEW-ALL
                                IF KEY-STATUS = 1003 THEN
                                    EXIT SECTION
@@ -313,53 +312,11 @@
                                IF KEY-STATUS = 1004 THEN
                                    STOP RUN
                                END-IF
-                   WHEN 5
-                           DISPLAY CLEAR-SCREEN
-                           PERFORM LIST
-                           ACCEPT OMITTED
-
                END-EVALUATE
            END-PERFORM
            EXIT PROGRAM.
 
        VIEW-ONE-IID SECTION.
-           DISPLAY CLEAR-SCREEN
-           DISPLAY MAIN-SCREEN
-           MOVE ZEROS TO VW-OPTION
-           DISPLAY PRE-VIEW-IID-SCREEN
-           ACCEPT VW-OPTION
-               IF KEY-STATUS = 1003 THEN
-                   EXIT SECTION
-               END-IF
-               IF KEY-STATUS = 1004 THEN
-                   STOP RUN
-               END-IF
-           MOVE ZEROS TO WS-CONTROL
-           PERFORM WITH TEST AFTER UNTIL WS-CONTROL = 1
-           OPEN INPUT SCHOOLS
-               READ SCHOOLS
-               INVALID KEY
-                   DISPLAY ID-ERROR-SCREEN
-                   MOVE ZEROS TO VW-OPTION
-                   ACCEPT VW-OPTION
-                       IF KEY-STATUS = 1003 THEN
-                           EXIT SECTION
-                       END-IF
-                       IF KEY-STATUS = 1004 THEN
-                           STOP RUN
-                       END-IF
-               NOT INVALID KEY
-                   MOVE SCHOOL-DETAILS TO VIEW-REC
-                   DISPLAY CLEAR-SCREEN
-                   DISPLAY MAIN-SCREEN
-                   DISPLAY VIEW-SCREEN
-                   MOVE 1 TO WS-CONTROL
-               END-READ
-           CLOSE SCHOOLS
-           END-PERFORM
-       EXIT SECTION.
-
-       VIEW-ONE-EED SECTION.
            MOVE SPACES TO VW-OPTION1
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
@@ -383,9 +340,12 @@
                END-IF
            MOVE ZEROS TO WS-CONTROL
            PERFORM WITH TEST AFTER UNTIL WS-CONTROL = 1
+           DISPLAY CLEAR-SCREEN
+           DISPLAY MAIN-SCREEN
+           DISPLAY VIEW-SCREEN
            OPEN INPUT SCHOOLS
                READ SCHOOLS
-               KEY IS WS-SCHOOL-EXTERNAL-ID
+      *         RECORD KEY IS WS-SCHOOL-EXTERNAL-ID
                INVALID KEY
                    DISPLAY ID-ERROR-SCREEN
                    MOVE ZEROS TO VW-OPTION1
@@ -401,6 +361,7 @@
                    DISPLAY CLEAR-SCREEN
                    DISPLAY MAIN-SCREEN
                    DISPLAY VIEW-SCREEN
+                   ACCEPT OMITTED AT LINE 25 COL 10
                    MOVE 1 TO WS-CONTROL
                END-READ
            CLOSE SCHOOLS
@@ -434,7 +395,12 @@
                        DISPLAY VALL-EED
                        DISPLAY VALL-ADDRESS1
                        ADD 1 TO WS-LINE
-                       PERFORM CHECK-KEY
+                           IF KEY-STATUS = 1003 THEN
+                               EXIT SECTION
+                           END-IF
+                           IF KEY-STATUS = 1004 THEN
+                               STOP RUN
+                           END-IF
                        IF WS-LINE = 20 THEN
                            MOVE 9 TO WS-LINE
                            DISPLAY VIEW-ALL-NEXT-SCREEN
@@ -448,7 +414,12 @@
                            DISPLAY CLEAR-SCREEN
                            DISPLAY MAIN-SCREEN
                            DISPLAY VIEW-ALL-SCREEN
-                           PERFORM CHECK-KEY
+                           IF KEY-STATUS = 1003 THEN
+                               EXIT SECTION
+                           END-IF
+                           IF KEY-STATUS = 1004 THEN
+                               STOP RUN
+                           END-IF
                        END-IF
                END-READ
            END-PERFORM
@@ -472,7 +443,6 @@
                     EXIT SECTION
                  END-IF
            END-START
-
            MOVE 9 TO SC-LINE
            PERFORM UNTIL WS-EOF
               READ SCHOOLS NEXT RECORD
@@ -492,7 +462,6 @@
                        CLOSE SCHOOLS
                        EXIT PROGRAM
                     END-IF
-
                  NOT AT END
                     DISPLAY LIST-SCREEN
                     ADD 01 TO SC-LINE
@@ -531,14 +500,6 @@
                END-IF
            CLOSE SCHOOLS
            MOVE ZEROS TO FILE-STATUS
-           EXIT SECTION.
-       CHECK-KEY SECTION.
-           IF KEY-STATUS = 1003 THEN
-               EXIT SECTION
-           END-IF
-           IF KEY-STATUS = 1004 THEN
-               STOP RUN
-           END-IF
            EXIT SECTION.
 
        CLEAR-VARIABLES SECTION.
