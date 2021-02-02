@@ -3,7 +3,7 @@
       ******************************************************************
       *    BREADWICH | SUPPLIER MANAGEMENT
       ******************************************************************
-      *    ENGLISH LANGUAGE | V0.4 | IN UPDATE | 27.01.2020
+      *    ENGLISH LANGUAGE | V0.5 | IN UPDATE | 01.02.2021
       ******************************************************************
 
        78  MAIN-TEXT        VALUE "CALENDAR MANAGEMENT".
@@ -20,8 +20,6 @@
            VALUE "INVALID OPTION. PLEASE SELECT A VALID OPTION | PRESS A
       -    "NY KEY TO CONTINUE".
 
-       78  EXIT-TEXT        VALUE "LEAVING PROGRAM! THANK YOU!".
-
        78  REGISTER-TEXT             VALUE "REGISTER NEW DOWNTIME".
        78  REGISTER-TEXT-ID          VALUE "         DOWNTIME ID:".
        78  REGISTER-TEXT-DATE        VALUE " DOWNTIME START DATE:".
@@ -36,14 +34,22 @@
       -    "A VALID DAY ACCORDING TO THE MONTH".
 
        78  INSTRUCTIONS-DESCRIPTION
-           VALUE "OPTIONAL FIELD: TYPE ANY DESCRIPTION OR NOTES".
+           VALUE "OPTIONAL FIELD: TYPE ANY DESCRIPTION OR NOTES OR PRESS
+      -    " ENTER TO BLANK".
 
-       78  MESSAGE-SAVE VALUE "WOULD YOU LIKE TO SAVE THIS DOWNTIME RECO
-      -    "RD? (Y)ES | (N)O:".
+       78  MESSAGE-SAVE
+           VALUE "WOULD YOU LIKE TO SAVE THIS DOWNTIME RECORD? (Y)ES | (
+      -    "N)O:".
 
-       78  INVALID-OPTION VALUE "INVALID. ENTER A VALID OPTION: (Y) FOR
-      -    "YES, (N) FOR NO".
+       78  INVALID-OPTION
+           VALUE "INVALID. ENTER A VALID OPTION: (Y) FOR YES, (N) FOR NO
+      -    "".
 
-       78  MESSAGE-WRITE-YES VALUE "DOWNTIME RECORD SAVED SUCCESSFULLY".
+       78  MESSAGE-WRITE-YES
+           VALUE "DOWNTIME RECORD SAVED SUCCESSFULLY".
 
-       78  MESSAGE-WRITE-NO VALUE "DOWNTIME RECORD NOT SAVED".
+       78  MESSAGE-WRITE-NO
+           VALUE "DOWNTIME RECORD NOT SAVED".
+
+       78  VIEW-TEXT
+           VALUE "WHAT DOWWTIME ID WOULD YOU LIKE TO ".
