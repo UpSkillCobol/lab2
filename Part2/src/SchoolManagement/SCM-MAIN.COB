@@ -11,33 +11,8 @@
        REPOSITORY.
            FUNCTION ALL INTRINSIC.
        INPUT-OUTPUT SECTION.
-       FILE-CONTROL.
-           SELECT SCHOOLS ASSIGN TO "SCHOOLS"
-           ORGANIZATION IS INDEXED
-           RECORD KEY IS SCHOOL-INTERNAL-ID
-           ACCESS IS DYNAMIC
-           ALTERNATE KEY IS SCHOOL-EXTERNAL-ID
-           FILE STATUS IS FILE-STATUS.
-
-           SELECT SCHOOLS1 ASSIGN TO "SCHOOLS1.csv"
-           ORGANIZATION IS LINE SEQUENTIAL.
-
-           SELECT KEYS ASSIGN TO "KEYS.txt"
-           ORGANIZATION IS SEQUENTIAL.
 
        DATA DIVISION.
-       FILE SECTION.
-
-       FD SCHOOLS.
-           COPY CB-SCHOOLS.
-
-       FD  SCHOOLS1.
-           01 SCHOOL1                              PIC X(200).
-
-       FD  KEYS.
-           01 FD-KEYS.
-               05 REGKEY                           PIC 9(003).
-
 
        WORKING-STORAGE SECTION.
        COPY CB-WS-SCHOOLS.
