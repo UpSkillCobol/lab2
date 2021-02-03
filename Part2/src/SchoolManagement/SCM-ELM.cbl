@@ -249,12 +249,14 @@
 
        PROCEDURE DIVISION.
        DELETE-REGISTER SECTION.
+      *    DELETE REGISTERS SECTION
            PERFORM CLEAR-VARIABLES
            MOVE SPACES TO DLT-OPTION
            MOVE SPACES TO DLT-OPTION1
            MOVE SPACES TO WS-DLT
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
+      *    SHOW A LIST OF ALL RECORDS AND ACCEPT THE ONE TO BE SHOW AND DELETED
            PERFORM LIST
                IF FLAG = "Y" THEN
                  EXIT SECTION
@@ -275,13 +277,15 @@
                END-IF
            MOVE ZEROS TO WS-CONTROL
            PERFORM WITH TEST AFTER UNTIL WS-CONTROL = 1
+      *    DISPLAY THE RECORD THE USER DID CHOOSE ON THE LIST SECTION
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY DELETE-SCREEN
            OPEN INPUT SCHOOLS
                READ SCHOOLS
-      *         RECORD KEY IS WS-SCHOOL-EXTERNAL-ID
                INVALID KEY
+      *    IF THE RECORD DOESN'T EXIST A MESSAGE WILL BE SHOWN
+                       DISPLAY EMPTY-LIST-SCREEN
                        IF KEY-STATUS = 1003 THEN
                            EXIT SECTION
                        END-IF
@@ -289,6 +293,7 @@
                            STOP RUN
                        END-IF
                NOT INVALID KEY
+      *    THE RECORD IS SHOWN IN THE SCREEN
                    MOVE SCHOOL-DETAILS TO DLT-REC
                    DISPLAY CLEAR-SCREEN
                    DISPLAY MAIN-SCREEN
@@ -298,6 +303,7 @@
            CLOSE SCHOOLS
            END-PERFORM
            PERFORM WITH TEST AFTER UNTIL DLT-VLD
+      *    THE USER MUST DECIDE IF HE WANTS DO DELETE OR NOT THE FILE
            MOVE SPACES TO DLT-OPTION1
            ACCEPT DLT-OPTION1
                IF KEY-STATUS = 1003 THEN
@@ -309,30 +315,39 @@
            END-PERFORM
            MOVE FUNCTION UPPER-CASE(WS-DLT) TO WS-DLT
            EVALUATE TRUE
+      *    IF THE USER INTRODUCES "S" OR "Y" THE RECORD IS "DELETED"
                WHEN WS-DLT = "S" OR WS-DLT = "Y"
                    PERFORM DELETE-RECORD
                    DISPLAY DELETED-SCREEN
                    ACCEPT OMITTED AT LINE 25 COL 09
+      *    IF THE USER INTRODUCES "N" THEN THE RECORD IS KEPT
                WHEN WS-DLT = "N"
                    PERFORM CLEAR-VARIABLES
            END-EVALUATE
            EXIT PROGRAM.
-
+      ******************************************************************
        DELETE-RECORD SECTION.
+      *    SECTION TO DELETE THE RECORD, IT ACTUALLY DOESNT DELETE THE RECORD
+      *    JUST MOVES A 0 TO THE SCHOOL-IS-ACTIVE VARIABLE, MAKING THE SCHOOL
+      *    INACTIVE
            OPEN I-O SCHOOLS
                MOVE 0 TO SCHOOL-IS-ACTIVE
            REWRITE SCHOOL-DETAILS FROM DLT-REC
        CLOSE SCHOOLS.
-
+      ******************************************************************
        CLEAR-VARIABLES SECTION.
+      *    SECTION TO CLEAR ALL VARIABLES THAT THE MODULE USES TO CHANGE
+      *    THE RECORD
            MOVE SPACES TO WS-SCHOOL-EXTERNAL-ID WS-SCHOOL-DESIGNATION
            WS-SCHOOL-ADRESS WS-SCHOOL-TOWN DLT-EED DLT-DESIGNATION
            DLT-ADDRESS DLT-TOWN
            MOVE ZEROS TO WS-SCHOOL-INTERNAL-ID WS-SCHOOL-POSTAL-CODE
            WS-SCHOOL-IS-ACTIVE DLT-IID DLT-POSTAL-CODE
            EXIT SECTION.
-
+      ******************************************************************
        LIST SECTION.
+      *    LIST SECTION THAT CREATES A LIST OF ALL THE RECORDS TO BE SHOWN
+      *    SO THE USER CAN CHOOSE THE ONE HE WANTS
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY LIST-SCREEN
@@ -341,8 +356,11 @@
            MOVE SPACES TO SCHOOL-EXTERNAL-ID
            MOVE ZEROS TO SCHOOL-INTERNAL-ID
            OPEN INPUT SCHOOLS
+      *    POINT THE FILE IN THE START, IN THIS CASE ON ID "000" SO
+      *    WE ARE SURE THAT THE PROGRAM WILL READ ALL RECORDS
            START SCHOOLS KEY IS GREATER OR EQUAL SCHOOL-INTERNAL-ID
               INVALID KEY
+      *    IF THERE ARE NO RECORDS A MESSAGE WILL BE SHOWN
                  ACCEPT EMPTY-LIST-SCREEN
                  MOVE "Y" TO FLAG
                  IF FLAG = "Y" THEN
@@ -352,10 +370,14 @@
            END-START
            MOVE 9 TO SC-LINE
            PERFORM UNTIL WS-EOF
+      *    READ THE FILE GOING THROUGH EACH RECORD AND POSITIONING IT ON
+      *    THE SCREEN
               READ SCHOOLS NEXT RECORD
       *             KEY IS SCHOOL-EXTERNAL-ID
                  AT END SET WS-EOF TO TRUE
+      *    WHEN THE LAST RECORD IS REACHED, A MESSAGE IS SHOWN TO THE USER
                     DISPLAY END-LIST-SCREEN
+      *    ACCEPT THE RECORD TO BE USED
                     ACCEPT CONTINUE-LIST
                     MOVE "S" TO FLAG
                     IF FLAG = "S" THEN
@@ -373,9 +395,15 @@
                  NOT AT END
                     DISPLAY LIST-SCREEN
                     ADD 01 TO SC-LINE
-                    IF SC-LINE = 20 THEN
+                    IF SC-LINE = 21 THEN
+      *    WHEN THE RECORDS REACH THE MAXIMUM AMMOUNT OF THE SPACE
+      *    AVAILABLE ON THE SCREEN, THE PROGRAM ASKS THE USER
+      *    TO EITHER INSERT A RECORD TO BE USED OR PRESS F2 TO GO
+      *    TO THE NEXT PAGE AND SHOW MORE RECORDS
                        DISPLAY NEXT-LIST-SCREEN
+      *    ACCEPT THE RECORD TO BE USED
                        ACCEPT CONTINUE-LIST
+      *    PRESS F2 TO GO TO THE NEXT PAGE
                        IF KEY-STATUS = 1002 THEN
                           DISPLAY CLEAR-SCREEN
                           DISPLAY MAIN-SCREEN

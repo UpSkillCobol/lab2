@@ -25,14 +25,9 @@
            05 VALUE ALL " " PIC X(120) LINE 03 COL 01.
            05 VALUE ALL " " PIC X(120) LINE 04 COL 01.
            05 VALUE MODULE-NAME LINE 03 COL 50.
-           05 VALUE ALL " " PIC X(95) LINE 24 COL 01.
-           05 VALUE ALL " " PIC X(95) LINE 25 COL 01.
-           05 VALUE ALL " " PIC X(95) LINE 26 COL 01.
-           05 VALUE ALL " " PIC X(23) LINE 24 COL 98.
-           05 VALUE ALL " " PIC X(23) LINE 25 COL 98.
-           05 VALUE ALL " " PIC X(23) LINE 26 COL 98.
-           05 VALUE BACK-EXIT
-           LINE 25 COL 99 FOREGROUND-COLOR 5.
+           05 VALUE ALL " " PIC X(120) LINE 24 COL 01.
+           05 VALUE ALL " " PIC X(120) LINE 25 COL 01.
+           05 VALUE ALL " " PIC X(120) LINE 26 COL 01.
       ******************************************************************
        01  MAIN-MENU
            BACKGROUND-COLOR 7, FOREGROUND-COLOR 0, AUTO, REQUIRED.
@@ -79,24 +74,51 @@
            DISPLAY MAIN-SCREEN
            DISPLAY MAIN-MENU
            ACCEPT MP-OPTION
+           IF KEY-STATUS = 1003 THEN
+               EXIT SECTION
+           END-IF
+           IF KEY-STATUS = 1004 THEN
+               STOP RUN
+           END-IF
            EVALUATE WS-OPTION
                WHEN 1
       *    OPTION 1 CALLS ADD MODULE THAT REGISTERS NEW RECORDS ON THE FILE
                        CALL "SCM-ADD"
+                       IF KEY-STATUS = 1003 THEN
+                           EXIT SECTION
+                       END-IF
+                       IF KEY-STATUS = 1004 THEN
+                           STOP RUN
+                       END-IF
                WHEN 2
       *    OPTION 2 CALLS CLT MODULE THAT ALLOWS THE USER TO VIEW THE RECORDS
       *    ALREADY REGISTERED ON THE FILE
                        CALL "SCM-CLT"
+                       IF KEY-STATUS = 1003 THEN
+                           EXIT SECTION
+                       END-IF
+                       IF KEY-STATUS = 1004 THEN
+                           STOP RUN
+                       END-IF
                WHEN 3
       *    OPTION 3 CALLS ELM MODULE THAT ALLOWS THE USER TO DELETE RECORDS
                        CALL "SCM-ELM"
+                       IF KEY-STATUS = 1003 THEN
+                           EXIT SECTION
+                       END-IF
+                       IF KEY-STATUS = 1004 THEN
+                           STOP RUN
+                       END-IF
                WHEN 4
       *    OPTION 4 CALLS ALT MODULE THAT ALLOWS THE USER TO DO CHANGES TO
       *    THE RECORDS ALREADY REGISTERED ON THE FILE
                        CALL "SCM-ALT"
-               WHEN OTHER
-                   DISPLAY MAIN-ERROR
-                   ACCEPT OMITTED
+                       IF KEY-STATUS = 1003 THEN
+                           EXIT SECTION
+                       END-IF
+                       IF KEY-STATUS = 1004 THEN
+                           STOP RUN
+                       END-IF
            END-EVALUATE
            END-PERFORM
            STOP RUN.

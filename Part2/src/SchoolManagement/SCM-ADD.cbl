@@ -193,17 +193,17 @@
                    TO WS-SCHOOL-EXTERNAL-ID.
                10 REG-DESIGNATION.
                    15 REG-DESIGNATION1 PIC X(050) LINE 13 COL 40
-                       TO WS-SCHOOL-DESIGNATION1.
+                       TO WS-SCHOOL-DESIGNATION1 AUTO.
                    15 REG-DESIGNATION2 PIC X(050) LINE 14 COL 40
-                       TO WS-SCHOOL-DESIGNATION2.
+                       TO WS-SCHOOL-DESIGNATION2 AUTO.
                    15 REG-DESIGNATION3 PIC X(050) LINE 15 COL 40
                        TO WS-SCHOOL-DESIGNATION3.
                10 REG-ADDRESS.
                    15 REG-ADDRESS1 PIC X(050) LINE 16 COL 40
-                       TO WS-SCHL-ADR-MAIN1.
+                       TO WS-SCHL-ADR-MAIN1 AUTO.
                    15 REG-ADDRESS2 PIC X(050) LINE 17 COL 40
                        TO WS-SCHL-ADR-MAIN2.
-               10 REG-POSTAL-CODE.
+               10 REG-POSTAL-CODE AUTO.
                    15 REG-PC1 PIC 9(004) LINE 18 COL 40
                        TO WS-SCHL-POSTAL-CODE1
                        BLANK WHEN ZERO.
