@@ -1,9 +1,9 @@
       ******************************************************************
       *    LAB | SECOND PART | DELICIOUSSANDWICH
       ******************************************************************
-      *    BREADWICH | SUPPLIER MANAGEMENT
+      *    BREADWICH | CALENDAR MANAGEMENT
       ******************************************************************
-      *    CHECK DATE VARIABLES | V0.5 | IN UPDATE | 01.02.2021
+      *    CHECK DATE VARIABLES | V0.6 | IN UPDATE | 03.02.2021
       ******************************************************************
 
        01  WS-VALID-DATE.
