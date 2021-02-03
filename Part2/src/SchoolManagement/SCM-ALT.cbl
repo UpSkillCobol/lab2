@@ -14,6 +14,7 @@
            FUNCTION ALL INTRINSIC.
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
+
            SELECT SCHOOLS ASSIGN TO "SCHOOLS"
            ORGANIZATION IS INDEXED
            RECORD KEY IS SCHOOL-INTERNAL-ID
@@ -24,13 +25,6 @@
            ALTERNATE KEY IS SCHOOL-POSTAL-CODE
            WITH DUPLICATES
            ACCESS IS DYNAMIC
-           FILE STATUS IS FILE-STATUS.
-
-           SELECT SCHOOLS1 ASSIGN TO "SCHOOLS1.csv"
-           ORGANIZATION IS LINE SEQUENTIAL.
-
-           SELECT KEYS ASSIGN TO "KEYS-SCM.txt"
-           ORGANIZATION IS SEQUENTIAL
            FILE STATUS IS FILE-STATUS.
 
        DATA DIVISION.
@@ -55,12 +49,6 @@
                10 SCHOOL-TOWN                      PIC X(030).
            05 SCHOOL-IS-ACTIVE                     PIC 9(001).
 
-       FD  SCHOOLS1.
-           01 SCHOOL1                              PIC X(200).
-
-       FD  KEYS.
-           01 FD-KEYS.
-               05 REGKEY                           PIC 9(003).
        WORKING-STORAGE SECTION.
        01  WS-SCHOOL-DETAILS.
            88 WS-EOF                               VALUE HIGH-VALUES.
@@ -109,7 +97,7 @@
        SCREEN SECTION.
        01  CLEAR-SCREEN BACKGROUND-COLOR 0.
            03 VALUE " " BLANK SCREEN LINE 01 COL 01.
-
+      ******************************************************************
        01  MAIN-SCREEN
            BACKGROUND-COLOR 7, FOREGROUND-COLOR 0.
            05 VALUE ALL " " PIC X(120) LINE 02 COL 01.
@@ -124,7 +112,7 @@
            05 VALUE ALL " " PIC X(23) LINE 26 COL 98.
            05 VALUE BACK-EXIT
                LINE 25 COL 99 FOREGROUND-COLOR 5.
-
+      ******************************************************************
        01  ALT-SCREEN.
            05 VALUE ALT-MENU-TEXT LINE 9 COL 30.
            05 VALUE ADD-MENU-TEXT1 LINE 11 COL 12.
@@ -187,7 +175,7 @@
                         TO WS-SCHL-POSTAL-CODE2 BLANK WHEN ZERO.
                10 ALT-TOWN PIC X(030) LINE 19 COL 32
                        TO WS-SCHOOL-TOWN.
-
+      ******************************************************************
         01 EDIT-WHAT-SCREEN
            BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
            05 VALUE ALL " " PIC X(22) LINE 07 COL 98.
@@ -216,7 +204,7 @@
            05 VALUE CHOOSE LINE 20 COL 100.
            05 EDIT-CHOICE PIC 9(002) LINE 20 COL 117 BLANK WHEN ZERO
                REQUIRED TO EDIT-WHAT.
-
+      ******************************************************************
        01  LIST-SCREEN FOREGROUND-COLOUR 7 BACKGROUND-COLOR 0.
            05 VALUE ALL " " PIC X(112) LINE 07 COL 05
            BACKGROUND-COLOR 7.
@@ -251,45 +239,48 @@
            05 VALUE "  " LINE 20 COL 115 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 21 COL 115 BACKGROUND-COLOR 7.
            05  SHOW LINE SC-LINE COL 10.
-      *         10  SHOW-IID PIC 9(003)     FROM SCHOOL-INTERNAL-ID.
-      *         10  VALUE "   ".
+               10  SHOW-IID PIC 9(003)     FROM SCHOOL-INTERNAL-ID.
+               10  VALUE "   ".
                10  SHOW-EED PIC X(008)     FROM SCHOOL-EXTERNAL-ID.
                10  VALUE "   ".
                10  SHOW-DESG PIC X(050)    FROM SCHOOL-DESIGNATION.
                10  VALUE "   ".
                10  SHOW-TOWN PIC X(030)    FROM SCHOOL-TOWN.
-           05 VALUE LIST-SCREEN-TEXT1 LINE 8 COL 11 FOREGROUND-COLOR 5.
-           05 VALUE LIST-SCREEN-TEXT2 LINE 8 COL 22 FOREGROUND-COLOR 5.
-           05 VALUE LIST-SCREEN-TEXT3 LINE 8 COL 75 FOREGROUND-COLOR 5.
+           05 VALUE LIST-SCREEN-TEXT4 LINE 8 COL 11 FOREGROUND-COLOR 5.
+           05 VALUE LIST-SCREEN-TEXT1 LINE 8 COL 17 FOREGROUND-COLOR 5.
+           05 VALUE LIST-SCREEN-TEXT2 LINE 8 COL 28 FOREGROUND-COLOR 5.
+           05 VALUE LIST-SCREEN-TEXT3 LINE 8 COL 81 FOREGROUND-COLOR 5.
            05 VALUE ALT-MENU-OPTION LINE 25 COL 10
            FOREGROUND-COLOUR 4 BACKGROUND-COLOR 7.
            05  CONTINUE-LIST.
-               10  CONTINUE-IID PIC X(008) LINE 25 COL 44
-               TO SCHOOL-EXTERNAL-ID
+               10  CONTINUE-IID PIC 9(003) LINE 25 COL 44
+               TO SCHOOL-INTERNAL-ID
                FOREGROUND-COLOUR 0 BACKGROUND-COLOR 7.
-
+      ******************************************************************
        01  END-LIST-SCREEN FOREGROUND-COLOUR 4
            BACKGROUND-COLOR 7.
            05 VALUE "|" LINE 25 COL 52.
            05 VALUE END-OF-LIST-TEXT LINE 25 COL 53.
-
+      ******************************************************************
        01  EMPTY-LIST-SCREEN FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
            05 VALUE EMPTY-LIST-TEXT LINE 25 COL 53.
            05  LINE 01 COL 01 PIC X(1) TO PRESS-KEY AUTO.
-
+      ******************************************************************
        01  NEXT-LIST-SCREEN FOREGROUND-COLOUR 4
            BACKGROUND-COLOR 7.
            05 VALUE "|" LINE 25 COL 52.
            05 VALUE NEXT-LIST-TEXT LINE 25 COL 53.
-
+      ******************************************************************
        01  ID-ERROR-SCREEN
            FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
            03 VALUE ID-ERROR-TEXT LINE 25 COL 10.
-
+      ******************************************************************
        PROCEDURE DIVISION.
        MAIN SECTION.
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
+      *    CALL THE LIST SECTION TO SHOW A LIST OF ALL RECORDS ALREADY
+      *    SAVED ON THE FILE SO THE USER CAN CHOOSE ONE TO USE
            PERFORM LIST
                IF FLAG = "Y" THEN
                  EXIT SECTION
@@ -309,8 +300,9 @@
                    STOP RUN
                END-IF
            PERFORM WITH TEST AFTER UNTIL WS-CONTROL = 1
-           DISPLAY CLEAR-SCREEN
-           DISPLAY MAIN-SCREEN
+      *    READ THE FILE TO CHECK IF THE RECORD THE USER DID CHOOSE IS
+      *    VALID OR NOT, IF IT IS, THE RECORD IS SHOWN TO THE USER AND
+      *    THEN GOES TO THE CHOOSE-EDIT SECTION.
            OPEN INPUT SCHOOLS
                READ SCHOOLS
                INVALID KEY
@@ -341,8 +333,10 @@
            END-PERFORM
            PERFORM CHOOSE-EDIT
            EXIT PROGRAM.
-
+      ******************************************************************
        CHOOSE-EDIT SECTION.
+      *    SECTION WHERE THE USER CHOOSES WHAT HE WANTS TO EDIT ON THE RECORD
+      *    THAT HE CHOSE PREVIOUSLY
            PERFORM WITH TEST AFTER UNTIL WS-OPTION = 6
                MOVE ZEROS TO EDIT-CHOICE
                DISPLAY CLEAR-SCREEN
@@ -351,28 +345,23 @@
                DISPLAY EDIT-WHAT-SCREEN
                ACCEPT EDIT-CHOICE
                EVALUATE TRUE
-
                    WHEN EDIT-WHAT = 1
                        PERFORM EDIT-EED
-
                    WHEN EDIT-WHAT = 2
                        PERFORM EDIT-DESIGNATION
-
                    WHEN EDIT-WHAT = 3
                        PERFORM EDIT-ADDRESS
-
                    WHEN EDIT-WHAT = 4
                        PERFORM EDIT-POSTAL-CODE
-
                    WHEN EDIT-WHAT = 5
                        PERFORM EDIT-TOWN
-
            END-EVALUATE
            END-PERFORM
-
            EXIT SECTION.
-
+      ******************************************************************
        LIST SECTION.
+      *    LIST SECTION THAT CREATES A LIST OF ALL THE RECORDS TO BE SHOWN
+      *    SO THE USER CAN CHOOSE THE ONE HE WANTS
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY LIST-SCREEN
@@ -380,8 +369,11 @@
            MOVE SPACES TO CONTINUE-LIST
            MOVE ZEROS TO SCHOOL-INTERNAL-ID
            OPEN INPUT SCHOOLS
+      *    POINT THE FILE IN THE START, IN THIS CASE ON ID "000" SO
+      *    WE ARE SURE THAT THE PROGRAM WILL READ ALL RECORDS
            START SCHOOLS KEY IS GREATER OR EQUAL SCHOOL-INTERNAL-ID
               INVALID KEY
+      *    IF THERE ARE NO RECORDS A MESSAGE WILL BE SHOWN
                  ACCEPT EMPTY-LIST-SCREEN
                  MOVE "Y" TO FLAG
                  IF FLAG = "Y" THEN
@@ -391,10 +383,14 @@
            END-START
            MOVE 9 TO SC-LINE
            PERFORM UNTIL WS-EOF
+      *    READ THE FILE GOING THROUGH EACH RECORD AND POSITIONING IT ON
+      *    THE SCREEN
               READ SCHOOLS NEXT RECORD
                    KEY IS SCHOOL-EXTERNAL-ID
                  AT END SET WS-EOF TO TRUE
+      *    WHEN THE LAST RECORD IS REACHED, A MESSAGE IS SHOWN TO THE USER
                     DISPLAY END-LIST-SCREEN
+      *    ACCEPT THE RECORD TO BE USED
                     ACCEPT CONTINUE-LIST
                     MOVE "S" TO FLAG
                     IF FLAG = "S" THEN
@@ -413,6 +409,10 @@
                     DISPLAY LIST-SCREEN
                     ADD 01 TO SC-LINE
                     IF SC-LINE = 20 THEN
+      *    WHEN THE RECORDS REACH THE MAXIMUM AMMOUNT OF THE SPACE
+      *    AVAILABLE ON THE SCREEN, THE PROGRAM ASKS THE USER
+      *    TO EITHER INSERT A RECORD TO BE USED OR PRESS F2 TO GO
+      *    TO THE NEXT PAGE AND SHOW MORE RECORDS
                        DISPLAY NEXT-LIST-SCREEN
                        ACCEPT CONTINUE-LIST
                        IF KEY-STATUS = 1002 THEN
@@ -437,7 +437,9 @@
               END-READ
            END-PERFORM
            EXIT SECTION.
-
+      ******************************************************************
+      *    SECTION TO CLEAR ALL VARIABLES THAT THE MODULE USES TO CHANGE
+      *    THE RECORD
        CLEAR-VARIABLES SECTION.
            MOVE SPACES TO WS-SCHOOL-EXTERNAL-ID WS-SCHOOL-DESIGNATION
            WS-SCHOOL-ADRESS WS-SCHOOL-TOWN ALT-EED ALT-DESIGNATION
@@ -445,8 +447,9 @@
            MOVE ZEROS TO WS-SCHOOL-INTERNAL-ID WS-SCHOOL-POSTAL-CODE
            ALT-IID ALT-POSTAL-CODE
            EXIT SECTION.
-
+************************************************************************
        EDIT-EED SECTION.
+      *    SECTION TO CHANGE EXTERNAL ID
            PERFORM WITH TEST AFTER UNTIL EXTERNAL-ID-VLD
            MOVE SPACES TO ALT-EED
                ACCEPT ALT-EED
@@ -457,9 +460,20 @@
                    STOP RUN
                END-IF
            END-PERFORM
+      *    PERFOM LOWER-UPPER TO CHANGE EVERYTHING TO UPPER CASE LETTERS
            PERFORM LOWER-UPPER
+      ******************************************************************
+      *    SAVING CHANGES ON FILE
+           MOVE ALT-REC TO WS-SCHOOL-DETAILS
+           OPEN I-O SCHOOLS
+               MOVE WS-SCHOOL-DETAILS TO SCHOOL-DETAILS
+               REWRITE SCHOOL-DETAILS
+               END-REWRITE
+           CLOSE SCHOOLS
            EXIT SECTION.
+      ******************************************************************
        EDIT-DESIGNATION SECTION.
+      *    SECTION TO CHANGE DESIGNATION
            PERFORM WITH TEST AFTER UNTIL DESIGNATION-VLD
            MOVE SPACES TO ALT-DESIGNATION
                ACCEPT ALT-DESIGNATION
@@ -470,9 +484,20 @@
                    STOP RUN
                END-IF
            END-PERFORM
+      *    PERFOM LOWER-UPPER TO CHANGE EVERYTHING TO UPPER CASE LETTERS
            PERFORM LOWER-UPPER
+      ******************************************************************
+      *    SAVING CHANGES ON FILE
+           MOVE ALT-REC TO WS-SCHOOL-DETAILS
+           OPEN I-O SCHOOLS
+               MOVE WS-SCHOOL-DETAILS TO SCHOOL-DETAILS
+               REWRITE SCHOOL-DETAILS
+               END-REWRITE
+           CLOSE SCHOOLS
            EXIT SECTION.
+      ******************************************************************
        EDIT-ADDRESS SECTION.
+      *    SECTION TO CHANGE ADDRESS
            PERFORM WITH TEST AFTER UNTIL ADDRESS-VLD
                ACCEPT ALT-ADDRESS
                IF KEY-STATUS = 1003 THEN
@@ -482,9 +507,20 @@
                    STOP RUN
                END-IF
            END-PERFORM
+      *    PERFOM LOWER-UPPER TO CHANGE EVERYTHING TO UPPER CASE LETTERS
            PERFORM LOWER-UPPER
+      ******************************************************************
+      *    SAVING CHANGES ON FILE
+           MOVE ALT-REC TO WS-SCHOOL-DETAILS
+           OPEN I-O SCHOOLS
+               MOVE WS-SCHOOL-DETAILS TO SCHOOL-DETAILS
+               REWRITE SCHOOL-DETAILS
+               END-REWRITE
+           CLOSE SCHOOLS
            EXIT SECTION.
+      ******************************************************************
        EDIT-POSTAL-CODE SECTION.
+      *    SECTION TO CHANGE THE POSTAL CODE
        PERFORM WITH TEST AFTER UNTIL POSTAL-CODE1-VLD AND
                POSTAL-CODE2-VLD
                ACCEPT ALT-PC1
@@ -502,9 +538,15 @@
                    STOP RUN
                END-IF
            END-PERFORM
+      *    HERE PROGRAM CALLS TO CHANGE THE TOWN,
+      *    USUALLY IF YOU CHANGE POSTAL CODE YOU CHANGE THE TOWN ASWELL
            PERFORM EDIT-TOWN
            EXIT SECTION.
+      ******************************************************************
        EDIT-TOWN SECTION.
+      *    SECTION TO CHANGE THE TOWN
+      *    CALL CPS MODULE TO USE THE POSTAL CODE AND AUTOMATICALLY
+      *    FILL THE TOWN CAMP
            CALL "CPS" USING BY REFERENCE ALT-REC
            MOVE WS-SCHOOL-TOWN TO ALT-TOWN
            DISPLAY ALT-SCREEN
@@ -517,8 +559,18 @@
                    STOP RUN
                END-IF
            END-PERFORM
+      *    PERFOM LOWER-UPPER TO CHANGE EVERYTHING TO UPPER CASE LETTERS
            PERFORM LOWER-UPPER
+      ******************************************************************
+      *    SAVING CHANGES ON FILE
+           MOVE ALT-REC TO WS-SCHOOL-DETAILS
+           OPEN I-O SCHOOLS
+               MOVE WS-SCHOOL-DETAILS TO SCHOOL-DETAILS
+               REWRITE SCHOOL-DETAILS
+               END-REWRITE
+           CLOSE SCHOOLS
            EXIT SECTION.
+
        LOWER-UPPER SECTION.
            MOVE FUNCTION UPPER-CASE (WS-SCHOOL-EXTERNAL-ID) TO
            WS-SCHOOL-EXTERNAL-ID

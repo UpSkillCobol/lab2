@@ -26,8 +26,6 @@
            ACCESS IS DYNAMIC
            FILE STATUS IS FILE-STATUS.
 
-           SELECT SCHOOLS1 ASSIGN TO "SCHOOLS1.csv"
-           ORGANIZATION IS LINE SEQUENTIAL.
            SELECT KEYS ASSIGN TO "KEYS-SCM.txt"
            ORGANIZATION IS SEQUENTIAL
            FILE STATUS IS FILE-STATUS.
@@ -52,8 +50,6 @@
                10 SCHOOL-TOWN                      PIC X(030).
            05 SCHOOL-IS-ACTIVE                     PIC 9(001).
 
-       FD  SCHOOLS1.
-           01 SCHOOL1                              PIC X(200).
        FD  KEYS.
            01 FD-KEYS.
                05 REGKEY                           PIC 9(003).
@@ -216,27 +212,27 @@
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
            PERFORM CHECK-FILE
-           PERFORM WITH TEST AFTER UNTIL WS-OPTION = 3
-           DISPLAY CLEAR-SCREEN
-           DISPLAY MAIN-SCREEN
-           DISPLAY MAIN-REGISTER-SCREEN
-               MOVE ZERO TO MP-OPTION
-               ACCEPT MP-OPTION
-                   IF KEY-STATUS = 1003 THEN
-                       EXIT SECTION
-                   END-IF
-                   IF KEY-STATUS = 1004 THEN
-                       STOP RUN
-                   END-IF
-               EVALUATE WS-OPTION
-                   WHEN 1
+      *     PERFORM WITH TEST AFTER UNTIL WS-OPTION = 3
+      *     DISPLAY CLEAR-SCREEN
+      *     DISPLAY MAIN-SCREEN
+      *     DISPLAY MAIN-REGISTER-SCREEN
+      *         MOVE ZERO TO MP-OPTION
+      *         ACCEPT MP-OPTION
+      *             IF KEY-STATUS = 1003 THEN
+      *                 EXIT SECTION
+      *             END-IF
+      *             IF KEY-STATUS = 1004 THEN
+      *                 STOP RUN
+      *             END-IF
+      *         EVALUATE WS-OPTION
+      *             WHEN 1
                        PERFORM REGISTER-MANUAL
-                   WHEN 2
-                       PERFORM REGISTER-CSV
-                   WHEN OTHER
-                       DISPLAY OPTION-INVALID-SCREEN
-           END-EVALUATE
-           END-PERFORM
+      *             WHEN 2
+      *                 PERFORM REGISTER-CSV
+      *             WHEN OTHER
+      *                 DISPLAY OPTION-INVALID-SCREEN
+      *     END-EVALUATE
+      *     END-PERFORM
            EXIT PROGRAM.
 
        REGISTER-MANUAL SECTION.
@@ -253,6 +249,12 @@
                DISPLAY MAIN-SCREEN
                DISPLAY REGISTER-SCREEN
                PERFORM REGISTER-INTERNAL-ID
+                   IF KEY-STATUS = 1003 THEN
+                       EXIT SECTION
+                   END-IF
+                   IF KEY-STATUS = 1004 THEN
+                       STOP RUN
+                   END-IF
                PERFORM REGISTER-EXTERNAL-ID
                    IF KEY-STATUS = 1003 THEN
                        EXIT SECTION
@@ -420,7 +422,6 @@
            END-EVALUATE
            EXIT SECTION.
 
-       REGISTER-CSV SECTION.
 
        EXIT SECTION.
 
