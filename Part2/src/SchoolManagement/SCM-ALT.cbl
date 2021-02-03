@@ -137,13 +137,13 @@
            05 VALUE ALL " " PIC X(22) LINE 20 COL 98.
            05 VALUE ALL " " PIC X(22) LINE 21 COL 98.
            05 VALUE ALL " " PIC X(22) LINE 22 COL 98.
-           05 VALUE WHAT-TO-EDIT LINE 08 COL 103.
-           05 VALUE EDIT1 LINE 10 COL 100.
-           05 VALUE EDIT2 LINE 11 COL 100.
-           05 VALUE EDIT3 LINE 12 COL 100.
-           05 VALUE EDIT4 LINE 13 COL 100.
-           05 VALUE EDIT5 LINE 14 COL 100.
-           05 VALUE EDIT6 LINE 14 COL 100.
+           05 VALUE WHAT-TO-EDIT LINE 09 COL 103.
+           05 VALUE EDIT1 LINE 12 COL 100.
+           05 VALUE EDIT2 LINE 13 COL 100.
+           05 VALUE EDIT3 LINE 14 COL 100.
+           05 VALUE EDIT4 LINE 15 COL 100.
+           05 VALUE EDIT5 LINE 16 COL 100.
+           05 VALUE EDIT6 LINE 17 COL 100.
            05 VALUE CHOOSE LINE 20 COL 100.
            05 EDIT-CHOICE PIC 9(002) LINE 20 COL 117 BLANK WHEN ZERO
                REQUIRED TO EDIT-WHAT.
@@ -222,6 +222,7 @@
            05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7.
            05 VALUE "|" LINE 25 COL 52.
            05 VALUE NEXT-LIST-TEXT LINE 25 COL 53.
+
       ******************************************************************
        01  ID-ERROR-SCREEN
            FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
@@ -311,7 +312,8 @@
            END-PERFORM
       *    WHERE THE USER CHOOSES WHAT HE WANTS TO EDIT ON THE RECORD
       *    THAT HE CHOSE PREVIOUSLY
-           PERFORM WITH TEST AFTER UNTIL WS-OPTION = 6
+           PERFORM WITH TEST AFTER UNTIL WS-OPTION = 8
+               MOVE ZEROS TO WS-OPTION
                MOVE ZEROS TO EDIT-CHOICE
                DISPLAY CLEAR-SCREEN
                DISPLAY MAIN-SCREEN
@@ -321,14 +323,44 @@
                EVALUATE TRUE
                    WHEN EDIT-WHAT = 1
                        PERFORM EDIT-EED
+                           IF KEY-STATUS = 1003 THEN
+                               EXIT SECTION
+                           END-IF
+                           IF KEY-STATUS = 1004 THEN
+                               STOP RUN
+                           END-IF
                    WHEN EDIT-WHAT = 2
                        PERFORM EDIT-DESIGNATION
+                           IF KEY-STATUS = 1003 THEN
+                               EXIT SECTION
+                           END-IF
+                           IF KEY-STATUS = 1004 THEN
+                               STOP RUN
+                           END-IF
                    WHEN EDIT-WHAT = 3
                        PERFORM EDIT-ADDRESS
+                           IF KEY-STATUS = 1003 THEN
+                               EXIT SECTION
+                           END-IF
+                           IF KEY-STATUS = 1004 THEN
+                               STOP RUN
+                           END-IF
                    WHEN EDIT-WHAT = 4
                        PERFORM EDIT-POSTAL-CODE
+                           IF KEY-STATUS = 1003 THEN
+                               EXIT SECTION
+                           END-IF
+                           IF KEY-STATUS = 1004 THEN
+                               STOP RUN
+                           END-IF
                    WHEN EDIT-WHAT = 5
                        PERFORM EDIT-TOWN
+                           IF KEY-STATUS = 1003 THEN
+                               EXIT SECTION
+                           END-IF
+                           IF KEY-STATUS = 1004 THEN
+                               STOP RUN
+                           END-IF
            END-EVALUATE
            END-PERFORM
            EXIT PROGRAM.
@@ -448,6 +480,12 @@
                            MOVE 0 TO REG-UNIQ
                            MOVE ERROR-EED TO ERROR-MESSAGE
                            ACCEPT ERROR-SCREEN
+                           IF KEY-STATUS = 1003 THEN
+                               EXIT SECTION
+                           END-IF
+                           IF KEY-STATUS = 1004 THEN
+                               STOP RUN
+                           END-IF
                    END-READ
                CLOSE SCHOOLS
                IF NOT EXTERNAL-ID-VLD THEN

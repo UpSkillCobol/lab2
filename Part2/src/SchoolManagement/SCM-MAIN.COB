@@ -100,8 +100,9 @@
                        IF KEY-STATUS = 1004 THEN
                            STOP RUN
                        END-IF
-               WHEN 3
-      *    OPTION 3 CALLS ELM MODULE THAT ALLOWS THE USER TO DELETE RECORDS
+               WHEN 4
+      *    OPTION 4 CALLS ALT MODULE THAT ALLOWS THE USER TO DO CHANGES TO
+      *    THE RECORDS ALREADY REGISTERED ON THE FILE
                        CALL "SCM-ELM"
                        IF KEY-STATUS = 1003 THEN
                            EXIT SECTION
@@ -109,9 +110,8 @@
                        IF KEY-STATUS = 1004 THEN
                            STOP RUN
                        END-IF
-               WHEN 4
-      *    OPTION 4 CALLS ALT MODULE THAT ALLOWS THE USER TO DO CHANGES TO
-      *    THE RECORDS ALREADY REGISTERED ON THE FILE
+               WHEN 3
+      *    OPTION 3 CALLS ELM MODULE THAT ALLOWS THE USER TO DELETE RECORDS
                        CALL "SCM-ALT"
                        IF KEY-STATUS = 1003 THEN
                            EXIT SECTION

@@ -233,19 +233,19 @@
       *    OPTION 1 IS VIEW ONE BY ONE
                            PERFORM VIEW-ONE-IID
                                IF KEY-STATUS = 1003 THEN
-                                   EXIT SECTION
+                                   EXIT PROGRAM
                                END-IF
                                IF KEY-STATUS = 1004 THEN
-                                   STOP RUN
+                                   EXIT PROGRAM
                                END-IF
                    WHEN 2
       *    OPTION 2 IS TO CHOOSE ONE TO VIEW SPECIFICALLY
                            PERFORM VIEW-ALL
                                IF KEY-STATUS = 1003 THEN
-                                   EXIT SECTION
+                                   EXIT PROGRAM
                                END-IF
                                IF KEY-STATUS = 1004 THEN
-                                   STOP RUN
+                                   EXIT PROGRAM
                                END-IF
                END-EVALUATE
            END-PERFORM
@@ -255,11 +255,6 @@
        VIEW-ONE-IID SECTION.
            OPEN INPUT SCHOOLS
            MOVE ZEROS TO SCHOOL-INTERNAL-ID
-           START SCHOOLS KEY IS GREATER OR EQUAL SCHOOL-INTERNAL-ID
-               INVALID KEY
-                   DISPLAY EMPTY-LIST-SCREEN
-                   EXIT SECTION
-           END-START
            PERFORM WITH TEST AFTER UNTIL WS-EOF
                READ SCHOOLS
                    AT END
@@ -269,12 +264,18 @@
                    NOT AT END
                        DISPLAY CLEAR-SCREEN
                        DISPLAY MAIN-SCREEN
+                       MOVE SCHOOL-DETAILS TO VIEW-REC
                        DISPLAY VIEW-SCREEN
                        DISPLAY VIEW-ALL-NEXT-SCREEN
-                       MOVE SCHOOL-DETAILS TO VIEW-REC
       *    SHOW THE RECORD AND WAIT FOR THE USER TO PRESS A KEY TO SHOW
       *    THE NEST RECORD
                        ACCEPT OMITTED AT LINE 25 COL 01
+                       IF KEY-STATUS = 1003 THEN
+                         EXIT SECTION
+                      END-IF
+                      IF KEY-STATUS = 1004 THEN
+                         EXIT PROGRAM
+                      END-IF
            END-PERFORM
            CLOSE SCHOOLS
        EXIT SECTION.
@@ -347,7 +348,7 @@
            MOVE SPACES TO FLAG
            MOVE SPACES TO CONTINUE-LIST
            MOVE SPACES TO SCHOOL-EXTERNAL-ID
-           MOVE ZEROS TO SCHOOL-INTERNAL-ID
+           MOVE 1 TO SCHOOL-INTERNAL-ID
            OPEN INPUT SCHOOLS
       *    POINT THE FILE IN THE START, IN THIS CASE ON ID "000" SO
       *    WE ARE SURE THAT THE PROGRAM WILL READ ALL RECORDS
