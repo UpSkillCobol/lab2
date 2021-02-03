@@ -1,0 +1,213 @@
+      ******************************************************************
+      *    LAB | SECOND PART | DELICIOUSSANDWICH
+      ******************************************************************
+      *    BREADWICH | CALENDAR MANAGEMENT
+      ******************************************************************
+      *    VIEW MODULE | V0.1 | IN UPDATE | 02.02.2021
+      ******************************************************************
+
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. CAMVIEW.
+
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+       SPECIAL-NAMES.
+       CRT STATUS IS F3F4EXIT.
+       REPOSITORY.
+           FUNCTION ALL INTRINSIC.
+
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT CALENDAR ASSIGN TO "CALENDARFILE"
+              ORGANIZATION IS INDEXED
+              ACCESS MODE IS DYNAMIC
+              RECORD KEY IS FD-DOWNTIME-ID
+              ALTERNATE KEY IS FD-START-DOWNTIME WITH DUPLICATES
+              FILE STATUS IS CALENDAR-TEST.
+
+       DATA DIVISION.
+       FILE SECTION.
+       FD  CALENDAR.
+       COPY FDCALENDAR.
+
+       WORKING-STORAGE SECTION.
+       COPY LANGUAGE.
+       COPY WSCALENDAR.
+       COPY WSVAR.
+       COPY VAR-VALIDDATE.
+       COPY VAR-SPACECHECK.
+
+       SCREEN SECTION.
+       01  CLEAR-SCREEN.
+           05 BLANK SCREEN.
+
+       01  MAIN-SCREEN BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
+           05 VALUE ALL " " PIC X(120) LINE 02 COL 01.
+           05 VALUE ALL " " PIC X(120) LINE 03 COL 01.
+           05 VALUE ALL " " PIC X(120) LINE 04 COL 01.
+           05 VALUE MAIN-TEXT          LINE 03 COL 50.
+           05 VALUE ALL " " PIC X(095) LINE 24 COL 01.
+           05 VALUE ALL " " PIC X(095) LINE 25 COL 01.
+           05 VALUE ALL " " PIC X(095) LINE 26 COL 01.
+           05 VALUE ALL " " PIC X(022) LINE 24 COL 98.
+           05 VALUE ALL " " PIC X(022) LINE 25 COL 98.
+           05 VALUE ALL " " PIC X(022) LINE 26 COL 98.
+           05 VALUE MAIN-TEXT1 LINE 25 COL 99 FOREGROUND-COLOR 5.
+
+       01  VIEW-MENU-SCREEN
+           BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
+           05 VALUE ALL " " PIC X(050) LINE 09 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 10 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 11 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 12 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 13 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 14 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 15 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 16 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 17 COL 35.
+           05 VALUE VIEW-MENU-OPTION1  LINE 12 COL 42.
+           05 VALUE VIEW-MENU-OPTION2  LINE 13 COL 42.
+           05 VALUE VIEW-MENU-OPTION3  LINE 14 COL 42.
+           05 VALUE VIEW-MENU-ACCEPT   LINE 20 COL 45 REVERSE-VIDEO.
+           05 SS-OPTION PIC 9(002) LINE 20 COL 73 TO VIEW-OPTION
+               BLANK WHEN ZERO REVERSE-VIDEO AUTO REQUIRED.
+
+       01  VIEW-RECORD-SCREEN BACKGROUND-COLOR 0 FOREGROUND-COLOR 7.
+           05 VALUE ALL "_" PIC X(082) LINE 10 COL 08.
+           05 VALUE ALL " " PIC X(082) LINE 07 COL 08
+              BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(082) LINE 22 COL 08
+              BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 08 COL 08 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 09 COL 08 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 08 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 08 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 08 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 08 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 08 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 08 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 08 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 08 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 08 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 08 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 08 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 08 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 08 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 09 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE REGISTER-TEXT                LINE 09 COL 38.
+           05 VALUE REGISTER-TEXT-ID             LINE 13 COL 11.
+           05 VALUE REGISTER-TEXT-DATE           LINE 15 COL 11.
+           05 VALUE REGISTER-TEXT-DATE1          LINE 16 COL 11.
+           05 VALUE REGISTER-TEXT-DESCRIPTION    LINE 18 COL 11.
+           05 SHOW-RECORD.
+              10 SHOW-DOWNTIME-ID     PIC 9(003) LINE 13 COL 35.
+              10 SHOW-START-DATE.
+                 15 SHOW-START-DAY    PIC X(002) LINE 15 COL 35.
+                 15 SHOW-START-MONTH  PIC X(002) LINE 15 COL 38.
+                 15 SHOW-START-YEAR   PIC X(004) LINE 15 COL 41.
+              10 SHOW-END-DATE.
+                 15 SHOW-END-DAY      PIC X(002) LINE 16 COL 35.
+                 15 SHOW-END-MONTH    PIC X(002) LINE 16 COL 38.
+                 15 SHOW-END-YEAR     PIC X(004) LINE 16 COL 41.
+              10 SHOW-DESCRIPTION.
+                 15 SHOW-DESCRIPTION1 PIC X(050) LINE 18 COL 35.
+                 15 SHOW-DESCRIPTION2 PIC X(050) LINE 19 COL 35.
+           05 VALUE "/"                          LINE 15 COL 37.
+           05 VALUE "/"                          LINE 15 COL 40.
+           05 VALUE "/"                          LINE 16 COL 37.
+           05 VALUE "/"                          LINE 16 COL 40.
+
+       01  EMPTY-FIELD-SCREEN BACKGROUND-COLOR 0 FOREGROUND-COLOR 7.
+           05 VALUE EMPTY-FIELD-TEXT LINE 18 COL 35.
+
+       01  INVALID-SCREEN BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
+           05 VALUE ALL " " PIC X(095) LINE 24 COL 01.
+           05 VALUE ALL " " PIC X(095) LINE 25 COL 01.
+           05 VALUE ALL " " PIC X(095) LINE 26 COL 01.
+           05 INVALID-TEXT LINE 25 COL 03 PIC X(085)
+              FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
+           05 LINE 01 COL 01 PIC X TO PRESS-KEY AUTO.
+
+       PROCEDURE DIVISION.
+       VIEW-DOWNTIME-MENU SECTION.
+           PERFORM WITH TEST AFTER UNTIL VIEW-OPTION = 3
+              DISPLAY CLEAR-SCREEN
+              MOVE ZEROS TO SS-OPTION
+              DISPLAY MAIN-SCREEN
+              ACCEPT VIEW-MENU-SCREEN
+              IF NOT VALID-VIEW-OPTION
+                 MOVE OPTION-ERROR TO INVALID-TEXT
+                 ACCEPT INVALID-SCREEN
+              END-IF
+
+              EVALUATE VIEW-OPTION
+                 WHEN 1
+                    PERFORM VIEW-ALL-RECORDS
+                 WHEN 2
+                    MOVE SPACE TO FLAG
+      *>               PERFORM UNTIL FLAG = "T"
+      *> *>                  VER SE ID EXISTE
+      *>               END-PERFORM
+                    PERFORM VIEW-SPECIFIC-DOWNTIME
+                 END-EVALUATE
+           END-PERFORM
+           EXIT PROGRAM.
+
+       VIEW-ALL-RECORDS SECTION.
+           OPEN INPUT CALENDAR
+           MOVE SPACE TO EOF
+           PERFORM UNTIL EOF = "T"
+              READ CALENDAR INTO SHOW-RECORD
+                 AT END
+                    MOVE "T" TO EOF
+                    DISPLAY CLEAR-SCREEN
+                    DISPLAY MAIN-SCREEN
+                    MOVE END-RECORDS-VIEW TO INVALID-TEXT
+                    ACCEPT INVALID-SCREEN
+                 NOT AT END
+                    DISPLAY CLEAR-SCREEN
+                    DISPLAY MAIN-SCREEN
+                    DISPLAY VIEW-RECORD-SCREEN
+                    IF SHOW-DESCRIPTION EQUALS SPACES THEN
+                       DISPLAY EMPTY-FIELD-SCREEN
+                    END-IF
+                    MOVE VIEW-RECORDS-ONEBYONE TO INVALID-TEXT
+                    ACCEPT INVALID-SCREEN
+              END-READ
+           END-PERFORM
+           CLOSE CALENDAR
+           EXIT SECTION.
+
+       VIEW-SPECIFIC-DOWNTIME SECTION.
+           OPEN INPUT CALENDAR
+              DISPLAY CLEAR-SCREEN
+              DISPLAY MAIN-SCREEN
+              MOVE VIEW-ID TO FD-DOWNTIME-ID
+              READ CALENDAR INTO SHOW-RECORD
+                 INVALID KEY
+                    MOVE ID-NONEXISTENT TO INVALID-TEXT
+                    ACCEPT INVALID-SCREEN
+                 NOT INVALID KEY
+                    DISPLAY VIEW-RECORD-SCREEN
+                    IF SHOW-DESCRIPTION EQUALS SPACES THEN
+                       DISPLAY EMPTY-FIELD-SCREEN
+                    END-IF
+                    MOVE VIEW-SPECIFIC TO INVALID-TEXT
+                    ACCEPT INVALID-SCREEN
+              END-READ
+           CLOSE CALENDAR
+       EXIT SECTION.
+
+       END PROGRAM CAMVIEW.
