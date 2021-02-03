@@ -3,7 +3,7 @@
       ******************************************************************
       *    BREADWICH | CALENDAR MANAGEMENT
       ******************************************************************
-      *    ADD MODULE | V0.9 | IN UPDATE | 02.02.2021
+      *    ADD MODULE | V0.10 | IN UPDATE | 03.02.2021
       ******************************************************************
 
        IDENTIFICATION DIVISION.
@@ -12,7 +12,7 @@
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
        SPECIAL-NAMES.
-       CRT STATUS IS F3F4EXIT.
+       CRT STATUS IS KEYSTATUS.
        REPOSITORY.
            FUNCTION ALL INTRINSIC.
 
@@ -38,7 +38,7 @@
        01  FDKEYS                               PIC 9(003).
 
        WORKING-STORAGE SECTION.
-       COPY LANGUAGE.
+       COPY CAMCONSTANTS.
        COPY WSCALENDAR.
        COPY WSVAR.
        COPY VAR-VALIDDATE.
@@ -95,7 +95,7 @@
            05 VALUE "  " LINE 19 COL 88 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 20 COL 88 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 21 COL 88 BACKGROUND-COLOR 7.
-           05 VALUE REGISTER-TEXT             LINE 09 COL 38.
+           05 VALUE REGISTER-TEXT             LINE 09 COL 31.
            05 VALUE REGISTER-TEXT-ID          LINE 13 COL 11.
            05 VALUE REGISTER-TEXT-DATE        LINE 15 COL 11.
            05 VALUE REGISTER-TEXT-DATE1       LINE 16 COL 11.
@@ -130,7 +130,7 @@
            05 VALUE ALL " " PIC X(095) LINE 24 COL 01.
            05 VALUE ALL " " PIC X(095) LINE 25 COL 01.
            05 VALUE ALL " " PIC X(095) LINE 26 COL 01.
-           05 COMMENT-TEXT LINE 25 COL 03 PIC X(085)
+           05 COMMENT-TEXT LINE 25 COL 03 PIC X(092)
               FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
            05 LINE 01 COL 01 PIC X TO PRESS-KEY AUTO.
 
@@ -146,41 +146,47 @@
            05 VALUE ALL " " PIC X(095) LINE 24 COL 01.
            05 VALUE ALL " " PIC X(095) LINE 25 COL 01.
            05 VALUE ALL " " PIC X(095) LINE 26 COL 01.
-           05 VALUE MESSAGE-SAVE LINE 25 COL 10
+           05 VALUE MESSAGE-SAVE LINE 25 COL 03
               FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
-           05 SS-SAVE LINE 25 COL 69
+           05 SS-SAVE LINE 25 COL 62
               FOREGROUND-COLOR 4 BACKGROUND-COLOR 7 TO SAVE.
 
        PROCEDURE DIVISION.
        REGISTER-DOWNTIME SECTION.
+      *****VERIFICATION IF FILE EXISTS
            PERFORM CREATE-FILE
 
+      *****GET DOWNTIME ID
            PERFORM DOWNTIME-ID
 
            OPEN I-O CALENDAR
+      *****VARIABLE CLEANUP
            MOVE "DD"   TO REG-START-DAY, REG-END-DAY
            MOVE "MM"   TO REG-START-MONTH, REG-END-MONTH
            MOVE "YYYY" TO REG-START-YEAR, REG-END-YEAR
            MOVE SPACES TO REG-DESCRIPTION
 
+      *****MOVE ID FROM FILE TO WORKING-STORAGE DOWNTIME RECORD
            MOVE FDKEYS TO WS-DOWNTIME-ID
 
+      *****DISPLAY OF FRAME SCREEN AND REGISTER MENU
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY REGISTER-SCREEN
 
+      *****GET DOWNTIME START DATE
            PERFORM DOWNTIME-START-DATE
-              IF F3F4EXIT = 1003 OR 1004 THEN
+              IF KEYSTATUS = 1003 OR 1004 THEN
                  EXIT PROGRAM
               END-IF
 
            PERFORM DOWNTIME-END-DATE
-              IF F3F4EXIT = 1003 OR 1004 THEN
+              IF KEYSTATUS = 1003 OR 1004 THEN
                  EXIT PROGRAM
               END-IF
 
            PERFORM DOWNTIME-DESCRIPTION
-              IF F3F4EXIT = 1003 OR 1004 THEN
+              IF KEYSTATUS = 1003 OR 1004 THEN
                  EXIT PROGRAM
               END-IF
 
@@ -195,9 +201,9 @@
            IF SAVE = "Y" OR "y"
               REWRITE FDKEYS
               END-REWRITE
+              CLOSE KEYS
               WRITE FD-CALENDAR FROM WS-CALENDAR
               END-WRITE
-              CLOSE KEYS
               CLOSE CALENDAR
               MOVE MESSAGE-WRITE-YES TO COMMENT-TEXT
               ACCEPT COMMENTS-SCREEN
@@ -211,11 +217,15 @@
            END-IF
            EXIT PROGRAM.
 
+      ******************************************************************
+
        DOWNTIME-ID SECTION.
            OPEN I-O KEYS
               READ KEYS
                  ADD 1 TO FDKEYS
            EXIT SECTION.
+
+      ******************************************************************
 
        DOWNTIME-START-DATE SECTION.
            PERFORM WITH TEST AFTER UNTIL DATE-VALID = "Y"
@@ -229,15 +239,15 @@
               MOVE INSTRUCTIONS-DATE TO INSTRUCTIONS-TEXT
               DISPLAY INSTRUCTIONS-SCREEN
               ACCEPT REG-START-DAY
-              IF F3F4EXIT = 1003 OR 1004 THEN
+              IF KEYSTATUS = 1003 OR 1004 THEN
                  EXIT SECTION
               END-IF
               ACCEPT REG-START-MONTH
-              IF F3F4EXIT = 1003 OR 1004 THEN
+              IF KEYSTATUS = 1003 OR 1004 THEN
                  EXIT SECTION
               END-IF
               ACCEPT REG-START-YEAR
-              IF F3F4EXIT = 1003 OR 1004 THEN
+              IF KEYSTATUS = 1003 OR 1004 THEN
                  EXIT SECTION
               END-IF
 
@@ -257,8 +267,11 @@
            END-PERFORM
            EXIT SECTION.
 
+      ******************************************************************
+
        DOWNTIME-END-DATE SECTION.
            PERFORM WITH TEST AFTER UNTIL DATE-VALID = "Y"
+           AND WS-END-DOWNTIME >= WS-START-DOWNTIME
               MOVE SPACE TO DATE-VALID
               MOVE "DD"   TO REG-END-DAY
               MOVE "MM"   TO REG-END-MONTH
@@ -268,15 +281,15 @@
               MOVE INSTRUCTIONS2-DATE TO INSTRUCTIONS-TEXT
               DISPLAY INSTRUCTIONS-SCREEN
               ACCEPT REG-END-DAY
-              IF F3F4EXIT = 1003 OR 1004 THEN
+              IF KEYSTATUS = 1003 OR 1004 OR REG-END-DAY = "DD" THEN
                  EXIT SECTION
               END-IF
               ACCEPT REG-END-MONTH
-              IF F3F4EXIT = 1003 OR 1004 THEN
+              IF KEYSTATUS = 1003 OR 1004 THEN
                  EXIT SECTION
               END-IF
               ACCEPT REG-END-YEAR
-              IF F3F4EXIT = 1003 OR 1004 THEN
+              IF KEYSTATUS = 1003 OR 1004 THEN
                  EXIT SECTION
               END-IF
 
@@ -284,8 +297,14 @@
               PERFORM CHECK-DATE
               MOVE WS-VALID-DATE TO WS-END-DOWNTIME
 
+              IF WS-END-DOWNTIME < WS-START-DOWNTIME THEN
+                 MOVE INVALID-END-DATE TO COMMENT-TEXT
+                 ACCEPT COMMENTS-SCREEN
+              END-IF
            END-PERFORM
            EXIT SECTION.
+
+      ******************************************************************
 
        DOWNTIME-DESCRIPTION SECTION.
            MOVE SPACES TO REG-DESCRIPTION
@@ -293,12 +312,18 @@
            DISPLAY INSTRUCTIONS-SCREEN
 
            ACCEPT REG-DESCRIPTION
-           CALL "LOWERUPPER" USING BY REFERENCE WS-DOWNTIME-DESCRIPTION
+           CALL "LOWERUPPER" USING BY REFERENCE WS-DOWNTIME-DESCRIPTION1
+           CALL "LOWERUPPER" USING BY REFERENCE WS-DOWNTIME-DESCRIPTION2
 
-           MOVE REG-DESCRIPTION TO LINK-TEXT
+           MOVE REG-DESCRIPTION1 TO LINK-TEXT
            PERFORM SPACE-CHECK
-           MOVE LINK-TEXT TO REG-DESCRIPTION
+           MOVE LINK-TEXT TO REG-DESCRIPTION1
+           MOVE REG-DESCRIPTION2 TO LINK-TEXT
+           PERFORM SPACE-CHECK
+           MOVE LINK-TEXT TO REG-DESCRIPTION2
            EXIT SECTION.
+
+      ******************************************************************
 
        CREATE-FILE SECTION.
            OPEN I-O CALENDAR
@@ -320,6 +345,8 @@
               CLOSE KEYS
            END-IF
            EXIT SECTION.
+
+      ******************************************************************
 
        CHECK-DATE SECTION.
            ACCEPT WS-CURRENT-DATE FROM DATE YYYYMMDD
@@ -354,6 +381,8 @@
            END-IF
            EXIT SECTION.
 
+      ******************************************************************
+
        LEAP-YEAR-CHECK SECTION.
            MOVE SPACE TO LEAP-YEAR
            IF FUNCTION MOD (WS-YEAR,4) = 0 THEN
@@ -366,6 +395,8 @@
                END-IF
            END-IF
            EXIT SECTION.
+
+      ******************************************************************
 
        SPACE-CHECK SECTION.
            MOVE SPACES TO SPACE-CHECK1,
