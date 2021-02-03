@@ -5,8 +5,14 @@
       ******************************************************************
       *    MAIN PROGRAM | V0.6 | IN UPDATE | 01.02.2021
       ******************************************************************
+
        IDENTIFICATION DIVISION.
        PROGRAM-ID. CAMMAIN.
+
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+       SPECIAL-NAMES.
+       CRT STATUS IS F3F4EXIT.
 
        DATA DIVISION.
        FILE SECTION.
@@ -14,10 +20,7 @@
        WORKING-STORAGE SECTION.
        COPY LANGUAGE.
        COPY WSCALENDAR.
-
-       01  OPTION                               PIC 9(002).
-           88  VALID-OPTION                     VALUE 1 THRU 5.
-       77  PRESS-KEY                            PIC X.
+       COPY WSVAR.
 
        SCREEN SECTION.
        01  CLEAR-SCREEN.
@@ -53,7 +56,7 @@
            05 VALUE OPTION-DELETE4   LINE 14 COL 50.
            05 VALUE OPTION-EXIT5     LINE 15 COL 50.
            05 VALUE ACCEPT-OPTION    LINE 20 COL 45 REVERSE-VIDEO.
-           05 SC-OPTION PIC 9(002) LINE 20 COL 70 TO OPTION
+           05 SS-OPTION PIC 9(002) LINE 20 COL 70 TO MAIN-OPTION
               BLANK WHEN ZERO REVERSE-VIDEO.
 
        01  ERROR-MESSAGE-SCREEN FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
@@ -62,26 +65,38 @@
 
        PROCEDURE DIVISION.
        MAIN SECTION.
-           PERFORM UNTIL OPTION = 5
+           PERFORM UNTIL MAIN-OPTION = 5
 
               DISPLAY CLEAR-SCREEN
-              MOVE ZERO TO SC-OPTION
+              MOVE ZEROS TO SS-OPTION
               DISPLAY MAIN-SCREEN
               ACCEPT MAIN-MENU-SCREEN
-              IF NOT VALID-OPTION
-                   MOVE MAIN-MENU-ERROR TO ERROR-LINE
-                   ACCEPT ERROR-MESSAGE-SCREEN
+              IF NOT VALID-MAIN-OPTION
+                 MOVE OPTION-ERROR TO ERROR-LINE
+                 ACCEPT ERROR-MESSAGE-SCREEN
                END-IF
 
-              EVALUATE OPTION
+              EVALUATE MAIN-OPTION
                  WHEN 1     CALL "CAMADD"
+                            IF F3F4EXIT = 1004 THEN
+                               EXIT PROGRAM
+                            END-IF
                  WHEN 2     CALL "CAMVIEW"
+                            IF F3F4EXIT = 1004 THEN
+                               EXIT PROGRAM
+                            END-IF
                  WHEN 3     CALL "CAMEDIT"
+                            IF F3F4EXIT = 1004 THEN
+                               EXIT PROGRAM
+                            END-IF
                  WHEN 4     CALL "CAMDELETE"
+                            IF F3F4EXIT = 1004 THEN
+                               EXIT PROGRAM
+                            END-IF
               END-EVALUATE
 
            END-PERFORM
 
-           STOP RUN.
+           EXIT PROGRAM.
 
        END PROGRAM CAMMAIN.
