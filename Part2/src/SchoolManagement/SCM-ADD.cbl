@@ -92,11 +92,27 @@
            88  ADD-VLD                             VALUE "Y", "S", "N".
        01  WS-EID-VLD                              PIC 9(001).
        01  REG-UNIQ                                PIC 9(001).
+       01  SPACE-CHECK1            PIC X(050).
+       01  SPACE-CHECK2            PIC X(050).
+       01  SPACE-CHECK3            PIC X(050).
+       01  SPACE-CHECK4            PIC X(050).
+       01  SPACE-CHECK5            PIC X(050).
+       01  SPACE-CHECK6            PIC X(050).
+       01  SPACE-CHECK7            PIC X(050).
+       01  SPACE-CHECK8            PIC X(050).
+       01  SPACE-CHECK9            PIC X(050).
+       01  SPACE-CHECK10           PIC X(050).
+       01  SPACE-CHECK11           PIC X(050).
+       01  SPACE-CHECK12           PIC X(050).
+       01  SPACE-CHECK13           PIC X(050).
+       01  SPACE-CHECK14           PIC X(050).
+       01  SPACE-CHECK15           PIC X(050).
+       01  LINK-TEXT               PIC X(150).
        COPY "CONSTANTS".
        SCREEN SECTION.
        01  CLEAR-SCREEN BACKGROUND-COLOR 0.
            05 VALUE " " BLANK SCREEN LINE 01 COL 01.
-
+      ******************************************************************
        01  MAIN-SCREEN
            BACKGROUND-COLOR 7, FOREGROUND-COLOR 0.
            05 VALUE ALL " " PIC X(120) LINE 02 COL 01.
@@ -111,7 +127,7 @@
            05 VALUE ALL " " PIC X(23) LINE 26 COL 98.
            05 VALUE BACK-EXIT
                LINE 25 COL 99 FOREGROUND-COLOR 5.
-
+      ******************************************************************
        01  MAIN-REGISTER-SCREEN
            BACKGROUND-COLOR 7, FOREGROUND-COLOR 0, AUTO, REQUIRED.
            05 VALUE ALL " " PIC X(50) LINE 09 COL 35.
@@ -128,7 +144,7 @@
            05 VALUE ADD-MENU-CHOICE LINE 20 COL 45 REVERSE-VIDEO.
            05 MP-OPTION PIC 9(02) LINE 20 COL 73 TO WS-OPTION
                BLANK WHEN ZERO REVERSE-VIDEO.
-
+      ******************************************************************
        01  REGISTER-SCREEN
            BACKGROUND-COLOR 0, FOREGROUND-COLOR 7.
            05 VALUE ADD-MENU-TEXT LINE 9 COL 40.
@@ -196,7 +212,7 @@
                        BLANK WHEN ZERO.
                10 REG-TOWN PIC X(030) LINE 19 COL 40
                    TO WS-SCHOOL-TOWN.
-
+      ******************************************************************
        01  SAVE-RECORD-MENU1
            REQUIRED, BACKGROUND-COLOR 7.
            03 VALUE ADD-MENU-TEXT10
@@ -204,39 +220,21 @@
            03 SRM1-OPTION            PIC X(01) LINE 25 COL 54
                TO WS-ADD
                    FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
-
+      ******************************************************************
        01  OPTION-INVALID-SCREEN.
            05 VALUE OPTION-INVALID-TEXT LINE 25 COL 10
            FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
-
+      ******************************************************************
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
            PERFORM CHECK-FILE
-      *     PERFORM WITH TEST AFTER UNTIL WS-OPTION = 3
-      *     DISPLAY CLEAR-SCREEN
-      *     DISPLAY MAIN-SCREEN
-      *     DISPLAY MAIN-REGISTER-SCREEN
-      *         MOVE ZERO TO MP-OPTION
-      *         ACCEPT MP-OPTION
-      *             IF KEY-STATUS = 1003 THEN
-      *                 EXIT SECTION
-      *             END-IF
-      *             IF KEY-STATUS = 1004 THEN
-      *                 STOP RUN
-      *             END-IF
-      *         EVALUATE WS-OPTION
-      *             WHEN 1
-                       PERFORM REGISTER-MANUAL
-      *             WHEN 2
-      *                 PERFORM REGISTER-CSV
-      *             WHEN OTHER
-      *                 DISPLAY OPTION-INVALID-SCREEN
-      *     END-EVALUATE
-      *     END-PERFORM
+           PERFORM REGISTER-MANUAL
            EXIT PROGRAM.
-
+      ******************************************************************
        REGISTER-MANUAL SECTION.
+      *    SECTION TO REGISTER A SCHOOL
            MOVE SPACES TO WS-ADD
+      *    CLEANING OF ALL VARIABLES
                MOVE SPACES TO  WS-SCHOOL-EXTERNAL-ID,
                                WS-SCHOOL-DESIGNATION, WS-SCHOOL-ADRESS,
                                WS-SCHOOL-TOWN
@@ -248,6 +246,7 @@
                DISPLAY CLEAR-SCREEN
                DISPLAY MAIN-SCREEN
                DISPLAY REGISTER-SCREEN
+      *    CALLING ALL SECTIONS THAT REGISTER A FIELD OF THE RECORD EACH
                PERFORM REGISTER-INTERNAL-ID
                    IF KEY-STATUS = 1003 THEN
                        EXIT SECTION
@@ -276,7 +275,11 @@
                    IF KEY-STATUS = 1004 THEN
                        STOP RUN
                    END-IF
+      *    CALLING THE SECTION LOWER-UPPER TO CONVERT ALL LOWER CASE LETTERS
+      *    INTO UPPER CASE LETTERS
                PERFORM LOWER-UPPER
+      *    CALLING THE SECTION CONFIRM-REGISTER TO CHECK IF THE USER
+      *    WANTS TO KEEP THE RECORD HE JUST CREATED OR NOT
                PERFORM CONFIRM-REGISTER
                    IF KEY-STATUS = 1003 THEN
                        EXIT SECTION
@@ -285,8 +288,10 @@
                        STOP RUN
                    END-IF
            EXIT SECTION.
-
+      ******************************************************************
        REGISTER-INTERNAL-ID SECTION.
+      *    SECTION TO OBTAIN THE INTERNAL ID, IT IS AUTOMATIC, BRINGING THE ID
+      *    FROM THE FILE KEYS-SCM
            MOVE ZERO TO REG-UNIQ
            OPEN INPUT KEYS
                READ KEYS
@@ -294,12 +299,12 @@
                MOVE REGKEY TO WS-SCHOOL-INTERNAL-ID
            CLOSE KEYS
            MOVE WS-SCHOOL-INTERNAL-ID TO SCHOOL-INTERNAL-ID
-
            MOVE WS-SCHOOL-INTERNAL-ID TO REG-IID
            DISPLAY REGISTER-SCREEN
            EXIT SECTION.
-
+      ******************************************************************
        REGISTER-EXTERNAL-ID SECTION.
+      *    SECTION TO OBTAIN THE EXTERNAL ID
            MOVE ZERO TO REG-UNIQ
            PERFORM WITH TEST AFTER UNTIL EXTERNAL-ID-VLD
                AND REG-UNIQ = 1
@@ -311,6 +316,7 @@
                IF KEY-STATUS = 1004 THEN
                    STOP RUN
                END-IF
+      *    CHECK IF THE EXTERNAL ID ISNT ALREADY REGISTERED
                MOVE WS-SCHOOL-EXTERNAL-ID TO SCHOOL-EXTERNAL-ID
                OPEN INPUT SCHOOLS
                    READ SCHOOLS RECORD
@@ -325,9 +331,15 @@
                    END-READ
                CLOSE SCHOOLS
            END-PERFORM
+      *    CALL SPACE-CHECK SECTION TO REMOVE ALL EXTRA SPACES
+           MOVE SPACES TO LINK-TEXT
+           MOVE WS-SCHOOL-EXTERNAL-ID TO LINK-TEXT
+           PERFORM SPACE-CHECK
+           MOVE LINK-TEXT TO WS-SCHOOL-EXTERNAL-ID
            EXIT SECTION.
-
+      ******************************************************************
        REGISTER-DESIGNATION SECTION.
+      *    SECTION TO OBTAIN THE DESIGNATION
            PERFORM WITH TEST AFTER UNTIL DESIGNATION-VLD
                ACCEPT REG-DESIGNATION
                IF KEY-STATUS = 1003 THEN
@@ -337,10 +349,17 @@
                    STOP RUN
                END-IF
            END-PERFORM
+      *    CALL SPACE-CHECK SECTION TO REMOVE ALL EXTRA SPACES
+           MOVE SPACES TO LINK-TEXT
+           MOVE WS-SCHOOL-DESIGNATION TO LINK-TEXT
+           PERFORM SPACE-CHECK
+           MOVE LINK-TEXT TO WS-SCHOOL-DESIGNATION
            EXIT SECTION.
-
+      ******************************************************************
        REGISTER-ADDRESS SECTION.
+      *    SECTION TO OBTAIN THE ADDRESS, MAIN ADDRESS, POSTLA CODE AND TOWN
            PERFORM WITH TEST AFTER UNTIL ADDRESS-VLD
+      *    OBTAIN MAIN ADDRESS
                ACCEPT REG-ADDRESS
                IF KEY-STATUS = 1003 THEN
                    EXIT SECTION
@@ -349,8 +368,13 @@
                    STOP RUN
                END-IF
            END-PERFORM
-
-
+      *    CALL SPACE-CHECK SECTION TO REMOVE ALL EXTRA SPACES
+           MOVE SPACES TO LINK-TEXT
+           MOVE WS-SCHL-ADR-MAIN TO LINK-TEXT
+           PERFORM SPACE-CHECK
+           MOVE LINK-TEXT TO WS-SCHL-ADR-MAIN
+      ******************************************************************
+      *    OBTAIN POSTAL CODE
            PERFORM WITH TEST AFTER UNTIL POSTAL-CODE1-VLD AND
                POSTAL-CODE2-VLD
                ACCEPT REG-PC1
@@ -368,11 +392,14 @@
                    STOP RUN
                END-IF
            END-PERFORM
-
+      *    CALL CPS MODULE TO OBTAIN THE TOWN AUTOMATICALLY FROM THE
+      *    THE POSTAL CODE
            CALL "CPS" USING BY REFERENCE WS-SCHOOL-DETAILS
            MOVE WS-SCHOOL-TOWN TO REG-TOWN
            DISPLAY REGISTER-SCREEN
-
+      ******************************************************************
+      *    OBTAIN THE TOWN, IF THE CPS MODULE DOESNT RETURN ANY VALUE
+      *    OR IF THE USER WANTS TO CHANGE IT
            PERFORM WITH TEST AFTER UNTIL TOWN-VLD
                 ACCEPT REG-TOWN
                 IF KEY-STATUS = 1003 THEN
@@ -381,10 +408,16 @@
                IF KEY-STATUS = 1004 THEN
                    STOP RUN
                END-IF
-           END-PERFORM.
+           END-PERFORM
+           MOVE SPACES TO LINK-TEXT
+      *    CALL SPACE-CHECK SECTION TO REMOVE ALL EXTRA SPACES
+           MOVE WS-SCHOOL-TOWN TO LINK-TEXT
+           PERFORM SPACE-CHECK
+           MOVE LINK-TEXT TO WS-SCHOOL-TOWN
            EXIT SECTION.
-
+      ******************************************************************
        CONFIRM-REGISTER SECTION.
+      *    SECTION TO CHECK IF THE USER WANTS TO SAVE THE RECORD OR NOT
            DISPLAY REGISTER-SCREEN
            PERFORM WITH TEST AFTER UNTIL ADD-VLD
                MOVE SPACES TO SRM1-OPTION
@@ -398,6 +431,8 @@
                END-IF
            END-PERFORM
            EVALUATE TRUE
+      *    IF THE USER INSERTS "S" IN PORTUGUESE OR "Y" IN ENGLISH
+      *    THEN THE PROGRAM PROCEEDS TO SAVE THE RECORD ONTO THE FILE
                WHEN WS-ADD = "S"
                    OPEN I-O SCHOOLS
                        PERFORM LOWER-UPPER
@@ -421,12 +456,12 @@
                    CLOSE KEYS
            END-EVALUATE
            EXIT SECTION.
-
-
-       EXIT SECTION.
-
+      ******************************************************************
        CHECK-FILE SECTION.
+      *    SECTION TO CHECK FILE STATUS.
            MOVE ZEROS TO FILE-STATUS
+      *    CHECK SCHOOLS FILE
+      *    IF IT DOESN'T EXIST THE FILE IS CREATED
            OPEN I-O SCHOOLS
                IF FILE-STATUS = 35 THEN
                    OPEN OUTPUT SCHOOLS
@@ -434,6 +469,8 @@
                END-IF
            CLOSE SCHOOLS
            MOVE ZEROS TO FILE-STATUS
+      *    CHECK KEYS FILE, IF IT DOESN'T EXIST THEN IT CREATES AND
+      *    MOVES ZEROS TO RESET THE KEY
            OPEN I-O KEYS
                IF FILE-STATUS = 35 THEN
                    OPEN OUTPUT KEYS
@@ -443,17 +480,9 @@
                END-IF
            CLOSE KEYS
            EXIT SECTION.
-
-       CHECK-KEY SECTION.
-           IF KEY-STATUS = 1003 THEN
-               EXIT SECTION
-           END-IF
-           IF KEY-STATUS = 1004 THEN
-               STOP RUN
-           END-IF
-           EXIT SECTION.
-
+      ******************************************************************
        LOWER-UPPER SECTION.
+      *    SECTION TO CONVERT ALL LOWER CASED LETTERS INTO UPPER CASED LETTERS
            MOVE FUNCTION UPPER-CASE (WS-SCHOOL-EXTERNAL-ID) TO
            WS-SCHOOL-EXTERNAL-ID
            MOVE FUNCTION UPPER-CASE (WS-SCHOOL-DESIGNATION) TO
@@ -465,5 +494,45 @@
            MOVE FUNCTION UPPER-CASE (REG-DESIGNATION) TO REG-DESIGNATION
            MOVE FUNCTION UPPER-CASE (REG-ADDRESS) TO REG-ADDRESS
            MOVE FUNCTION UPPER-CASE (REG-TOWN) TO REG-TOWN
+           EXIT SECTION.
+      ******************************************************************
+       SPACE-CHECK SECTION.
+      *    PACE-CHECK SECTION TO REMOVE ALL EXTRA SPACES
+           MOVE SPACES TO
+           SPACE-CHECK1,
+               SPACE-CHECK2, SPACE-CHECK3, SPACE-CHECK4, SPACE-CHECK5,
+               SPACE-CHECK6, SPACE-CHECK7, SPACE-CHECK8, SPACE-CHECK9,
+               SPACE-CHECK10, SPACE-CHECK11, SPACE-CHECK12,
+               SPACE-CHECK13, SPACE-CHECK14, SPACE-CHECK15
+           MOVE TRIM(LINK-TEXT) TO LINK-TEXT
+           UNSTRING LINK-TEXT DELIMITED BY ALL SPACES INTO
+               SPACE-CHECK1,
+               SPACE-CHECK2, SPACE-CHECK3, SPACE-CHECK4, SPACE-CHECK5,
+               SPACE-CHECK6, SPACE-CHECK7, SPACE-CHECK8, SPACE-CHECK9,
+               SPACE-CHECK10, SPACE-CHECK11, SPACE-CHECK12,
+               SPACE-CHECK13, SPACE-CHECK14, SPACE-CHECK15
+           STRING
+               SPACE-CHECK1 DELIMITED BY SPACES SPACE DELIMITED BY SIZE
+               SPACE-CHECK2 DELIMITED BY SPACES SPACE DELIMITED BY SIZE
+               SPACE-CHECK3 DELIMITED BY SPACES SPACE DELIMITED BY SIZE
+               SPACE-CHECK4 DELIMITED BY SPACES SPACE DELIMITED BY SIZE
+               SPACE-CHECK5 DELIMITED BY SPACES SPACE DELIMITED BY SIZE
+               SPACE-CHECK6 DELIMITED BY SPACES SPACE DELIMITED BY SIZE
+               SPACE-CHECK7 DELIMITED BY SPACES SPACE DELIMITED BY SIZE
+               SPACE-CHECK8 DELIMITED BY SPACES SPACE DELIMITED BY SIZE
+               SPACE-CHECK9 DELIMITED BY SPACES SPACE DELIMITED BY SIZE
+               SPACE-CHECK10 DELIMITED BY SPACES
+                             SPACE DELIMITED BY SIZE
+               SPACE-CHECK11 DELIMITED BY SPACES
+                             SPACE DELIMITED BY SIZE
+               SPACE-CHECK12 DELIMITED BY SPACES
+                             SPACE DELIMITED BY SIZE
+               SPACE-CHECK13 DELIMITED BY SPACES
+                             SPACE DELIMITED BY SIZE
+               SPACE-CHECK14 DELIMITED BY SPACES
+                             SPACE DELIMITED BY SIZE
+               SPACE-CHECK15 DELIMITED BY SPACES
+                             SPACE DELIMITED BY SIZE
+               INTO LINK-TEXT
            EXIT SECTION.
        END PROGRAM SCM-ADD.

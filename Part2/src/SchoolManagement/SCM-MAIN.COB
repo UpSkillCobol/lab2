@@ -21,7 +21,7 @@
        SCREEN SECTION.
        01  CLEAR-SCREEN BACKGROUND-COLOR 0.
            03 VALUE " " BLANK SCREEN LINE 01 COL 01.
-
+      ******************************************************************
        01  MAIN-SCREEN
            BACKGROUND-COLOR 7, FOREGROUND-COLOR 0.
            05 VALUE ALL " " PIC X(120) LINE 02 COL 01.
@@ -36,7 +36,7 @@
            05 VALUE ALL " " PIC X(23) LINE 26 COL 98.
            05 VALUE BACK-EXIT
            LINE 25 COL 99 FOREGROUND-COLOR 5.
-
+      ******************************************************************
        01  MAIN-MENU
            BACKGROUND-COLOR 7, FOREGROUND-COLOR 0, AUTO, REQUIRED.
            03 VALUE ALL " " PIC X(50) LINE 09 COL 35.
@@ -57,22 +57,25 @@
            REVERSE-VIDEO.
            03 MP-OPTION PIC 9(02) LINE 20 COL 73 TO WS-OPTION
                BLANK WHEN ZERO REVERSE-VIDEO.
-
+      ******************************************************************
        01  MAIN-ERROR.
            03 VALUE MAIN-MENU-ERROR LINE 25 COL 10
                BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
            03 VALUE "  " LINE 24 COL 96 BACKGROUND-COLOR 0.
            03 VALUE "  " LINE 25 COL 96 BACKGROUND-COLOR 0.
            03 VALUE "  " LINE 26 COL 96 BACKGROUND-COLOR 0.
-
+      ******************************************************************
        01  LEAVE-SCREEN
            BACKGROUND-COLOR 7 FOREGROUND-COLOR 5.
            05 VALUE " " BLANK SCREEN LINE 01 COL 01.
            05 VALUE LEAVE-MESSAGE LINE 10 COL 45.
            05 VALUE LEAVE-THANKS LINE 11 COL 45.
-
+      ******************************************************************
        PROCEDURE DIVISION.
        MAIN SECTION.
+      *    MAIN SECTION WHERE THE USER DECIDES WHAT TO DO, THE DECISION
+      *    TRIGGERS A CALL OF A MODULE RESPONSIBLE FOR THE OPTION THAT
+      *    THE USER DID CHOOSE
            PERFORM UNTIL WS-OPTION = 5
            MOVE ZERO TO MP-OPTION
            DISPLAY CLEAR-SCREEN
@@ -84,12 +87,18 @@
            EVALUATE WS-OPTION
 
                WHEN 1
+      *    OPTION 1 CALLS ADD MODULE THAT REGISTERS NEW RECORDS ON THE FILE
                        CALL "SCM-ADD"
                WHEN 2
+      *    OPTION 2 CALLS CLT MODULE THAT ALLOWS THE USER TO VIEW THE RECORDS
+      *    ALREADY REGISTERED ON THE FILE
                        CALL "SCM-CLT"
                WHEN 3
+      *    OPTION 3 CALLS ELM MODULE THAT ALLOWS THE USER TO DELETE RECORDS
                        CALL "SCM-ELM"
                WHEN 4
+      *    OPTION 4 CALLS ALT MODULE THAT ALLOWS THE USER TO DO CHANGES TO
+      *    THE RECORDS ALREADY REGISTERED ON THE FILE
                        CALL "SCM-ALT"
                WHEN OTHER
                    DISPLAY MAIN-ERROR
@@ -99,5 +108,4 @@
 
            END-PERFORM
 
-           DISPLAY LEAVE-SCREEN
            STOP RUN.

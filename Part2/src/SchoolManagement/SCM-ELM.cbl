@@ -50,6 +50,7 @@
 
        WORKING-STORAGE SECTION.
        01  WS-SCHOOL-DETAILS.
+           88 WS-EOF                               VALUE HIGH-VALUES.
            05 WS-SCHOOL-INTERNAL-ID                PIC 9(003).
            05 WS-SCHOOL-EXTERNAL-ID                PIC X(008).
            05 WS-SCHOOL-DESIGNATION.
@@ -79,6 +80,8 @@
        01  KEY-STATUS                              PIC 9(004).
        01  PRESS-KEY                               PIC X(001).
        01  SC-LINE                                 PIC 9(004).
+       01  FLAG                                    PIC X(001).
+       01  WS-CONTROL                              PIC 9(001).
        COPY "CONSTANTS".
 
        SCREEN SECTION.
@@ -212,21 +215,22 @@
            05 VALUE "  " LINE 20 COL 115 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 21 COL 115 BACKGROUND-COLOR 7.
            05  SHOW LINE SC-LINE COL 10.
-      *         10  SHOW-IID PIC 9(003)     FROM SCHOOL-INTERNAL-ID.
-      *         10  VALUE "   ".
+               10  SHOW-IID PIC 9(003)     FROM SCHOOL-INTERNAL-ID.
+               10  VALUE "   ".
                10  SHOW-EED PIC X(008)     FROM SCHOOL-EXTERNAL-ID.
                10  VALUE "   ".
                10  SHOW-DESG PIC X(050)    FROM SCHOOL-DESIGNATION.
                10  VALUE "   ".
                10  SHOW-TOWN PIC X(030)    FROM SCHOOL-TOWN.
-           05 VALUE LIST-SCREEN-TEXT1 LINE 8 COL 11 FOREGROUND-COLOR 5.
-           05 VALUE LIST-SCREEN-TEXT2 LINE 8 COL 22 FOREGROUND-COLOR 5.
-           05 VALUE LIST-SCREEN-TEXT3 LINE 8 COL 75 FOREGROUND-COLOR 5.
+           05 VALUE LIST-SCREEN-TEXT4 LINE 8 COL 11 FOREGROUND-COLOR 5.
+           05 VALUE LIST-SCREEN-TEXT1 LINE 8 COL 17 FOREGROUND-COLOR 5.
+           05 VALUE LIST-SCREEN-TEXT2 LINE 8 COL 28 FOREGROUND-COLOR 5.
+           05 VALUE LIST-SCREEN-TEXT3 LINE 8 COL 81 FOREGROUND-COLOR 5.
            05 VALUE DLT-MENU-TEXT1 LINE 25 COL 10
            FOREGROUND-COLOUR 4 BACKGROUND-COLOR 7.
            05  CONTINUE-LIST.
-               10  CONTINUE-IID PIC X(008) LINE 25 COL 44
-               TO SCHOOL-EXTERNAL-ID
+               10  CONTINUE-IID PIC 9(003) LINE 25 COL 47
+               TO SCHOOL-INTERNAL-ID
                FOREGROUND-COLOUR 0 BACKGROUND-COLOR 7.
 
        01  END-LIST-SCREEN FOREGROUND-COLOUR 4
@@ -249,33 +253,61 @@
            MOVE SPACES TO DLT-OPTION
            MOVE SPACES TO DLT-OPTION1
            MOVE SPACES TO WS-DLT
-           PERFORM WITH TEST AFTER UNTIL WS-DLT-KEY = 1
-               DISPLAY CLEAR-SCREEN
-               DISPLAY MAIN-SCREEN
-               DISPLAY PRE-DELETE-MENU
-                   ACCEPT DLT-OPTION
+           DISPLAY CLEAR-SCREEN
+           DISPLAY MAIN-SCREEN
+           PERFORM LIST
+               IF FLAG = "Y" THEN
+                 EXIT SECTION
+              END-IF
+              IF KEY-STATUS = 1003 THEN
+                 EXIT SECTION
+              END-IF
+              IF KEY-STATUS = 1004 THEN
+                 EXIT PROGRAM
+              END-IF
+              DISPLAY CLEAR-SCREEN
+              DISPLAY MAIN-SCREEN
+               IF KEY-STATUS = 1003 THEN
+                   EXIT SECTION
+               END-IF
+               IF KEY-STATUS = 1004 THEN
+                   STOP RUN
+               END-IF
+           MOVE ZEROS TO WS-CONTROL
+           PERFORM WITH TEST AFTER UNTIL WS-CONTROL = 1
+           DISPLAY CLEAR-SCREEN
+           DISPLAY MAIN-SCREEN
+           DISPLAY DELETE-SCREEN
+           OPEN INPUT SCHOOLS
+               READ SCHOOLS
+      *         RECORD KEY IS WS-SCHOOL-EXTERNAL-ID
+               INVALID KEY
                        IF KEY-STATUS = 1003 THEN
                            EXIT SECTION
                        END-IF
                        IF KEY-STATUS = 1004 THEN
                            STOP RUN
                        END-IF
-               MOVE ZEROS TO WS-DLT-KEY
-               MOVE FUNCTION UPPER-CASE (WS-SCHOOL-EXTERNAL-ID) TO
-               WS-SCHOOL-EXTERNAL-ID
-               MOVE WS-SCHOOL-EXTERNAL-ID TO SCHOOL-EXTERNAL-ID
-               PERFORM READ-RECORD
+               NOT INVALID KEY
+                   MOVE SCHOOL-DETAILS TO DLT-REC
+                   DISPLAY CLEAR-SCREEN
+                   DISPLAY MAIN-SCREEN
+                   DISPLAY DELETE-SCREEN
+                   MOVE 1 TO WS-CONTROL
+               END-READ
+           CLOSE SCHOOLS
            END-PERFORM
-           DISPLAY CLEAR-SCREEN
-           DISPLAY MAIN-SCREEN
-           DISPLAY DELETE-SCREEN
-           ACCEPT DLT-OPTION1.
+           PERFORM WITH TEST AFTER UNTIL DLT-VLD
+           MOVE SPACES TO DLT-OPTION1
+           ACCEPT DLT-OPTION1
                IF KEY-STATUS = 1003 THEN
                    EXIT SECTION
                END-IF
                IF KEY-STATUS = 1004 THEN
                    STOP RUN
-               END-IF.
+               END-IF
+           END-PERFORM
+           MOVE FUNCTION UPPER-CASE(WS-DLT) TO WS-DLT
            EVALUATE TRUE
                WHEN WS-DLT = "S" OR WS-DLT = "Y"
                    PERFORM DELETE-RECORD
@@ -285,20 +317,6 @@
                    PERFORM CLEAR-VARIABLES
            END-EVALUATE
            EXIT PROGRAM.
-
-
-       READ-RECORD SECTION.
-           OPEN INPUT SCHOOLS
-               READ SCHOOLS RECORD
-                   KEY SCHOOL-EXTERNAL-ID
-                   INVALID KEY
-                       DISPLAY ID-ERROR
-                       MOVE 0 TO WS-DLT-KEY
-                   NOT INVALID KEY
-                       MOVE SCHOOL-DETAILS TO DLT-REC
-                       MOVE 1 TO WS-DLT-KEY
-               END-READ
-           CLOSE SCHOOLS.
 
        DELETE-RECORD SECTION.
            OPEN I-O SCHOOLS
@@ -312,6 +330,73 @@
            DLT-ADDRESS DLT-TOWN
            MOVE ZEROS TO WS-SCHOOL-INTERNAL-ID WS-SCHOOL-POSTAL-CODE
            WS-SCHOOL-IS-ACTIVE DLT-IID DLT-POSTAL-CODE
+           EXIT SECTION.
+
+       LIST SECTION.
+           DISPLAY CLEAR-SCREEN
+           DISPLAY MAIN-SCREEN
+           DISPLAY LIST-SCREEN
+           MOVE SPACES TO FLAG
+           MOVE SPACES TO CONTINUE-LIST
+           MOVE SPACES TO SCHOOL-EXTERNAL-ID
+           MOVE ZEROS TO SCHOOL-INTERNAL-ID
+           OPEN INPUT SCHOOLS
+           START SCHOOLS KEY IS GREATER OR EQUAL SCHOOL-INTERNAL-ID
+              INVALID KEY
+                 ACCEPT EMPTY-LIST-SCREEN
+                 MOVE "Y" TO FLAG
+                 IF FLAG = "Y" THEN
+                    CLOSE SCHOOLS
+                    EXIT SECTION
+                 END-IF
+           END-START
+           MOVE 9 TO SC-LINE
+           PERFORM UNTIL WS-EOF
+              READ SCHOOLS NEXT RECORD
+      *             KEY IS SCHOOL-EXTERNAL-ID
+                 AT END SET WS-EOF TO TRUE
+                    DISPLAY END-LIST-SCREEN
+                    ACCEPT CONTINUE-LIST
+                    MOVE "S" TO FLAG
+                    IF FLAG = "S" THEN
+                       CLOSE SCHOOLS
+                       EXIT SECTION
+                    END-IF
+                    IF KEY-STATUS = 1003 THEN
+                       CLOSE SCHOOLS
+                       EXIT SECTION
+                    END-IF
+                    IF KEY-STATUS = 1004 THEN
+                       CLOSE SCHOOLS
+                       EXIT PROGRAM
+                    END-IF
+                 NOT AT END
+                    DISPLAY LIST-SCREEN
+                    ADD 01 TO SC-LINE
+                    IF SC-LINE = 20 THEN
+                       DISPLAY NEXT-LIST-SCREEN
+                       ACCEPT CONTINUE-LIST
+                       IF KEY-STATUS = 1002 THEN
+                          DISPLAY CLEAR-SCREEN
+                          DISPLAY MAIN-SCREEN
+                          DISPLAY LIST-SCREEN
+                          MOVE 9 TO SC-LINE
+                       ELSE
+                          MOVE "S" TO FLAG
+                          IF FLAG = "S" THEN
+                             CLOSE SCHOOLS
+                             EXIT SECTION
+                          END-IF
+                       END-IF
+                       IF KEY-STATUS = 1003 THEN
+                          EXIT SECTION
+                       END-IF
+                       IF KEY-STATUS = 1004 THEN
+                          EXIT PROGRAM
+                       END-IF
+                    END-IF
+              END-READ
+           END-PERFORM
            EXIT SECTION.
 
        END PROGRAM SCM-ELM.
