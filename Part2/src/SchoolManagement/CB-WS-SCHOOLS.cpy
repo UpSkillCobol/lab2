@@ -12,11 +12,13 @@
            05 WS-SCHOOL-INTERNAL-ID                PIC 9(003).
            05 WS-SCHOOL-EXTERNAL-ID                PIC X(008).
                88 EXTERNAL-ID-VLD                  VALUE "A" THRU "Z",
-                                                   "a" THRU "z", SPACES.
+                                                   "a" THRU "z", SPACES,
+                                                   "0" THRU "9", "/".
            05 WS-SCHOOL-DESIGNATION.
                88 DESIGNATION-VLD                  VALUE "A" THRU "Z",
                                                    "a" THRU "z", SPACES,
-                                                   "&",",",".","º","ª".
+                                                   "&",",",".","º","ª",
+                                                   "0" THRU "9".
                10 WS-SCHOOL-DESIGNATION1           PIC X(050).
                10 WS-SCHOOL-DESIGNATION2           PIC X(050).
                10 WS-SCHOOL-DESIGNATION3           PIC X(050).
@@ -76,3 +78,4 @@
            88  ADD-VLD                             VALUE "Y", "S", "N".
        01  WS-EID-VLD                              PIC 9(001).
        01  REG-UNIQ                                PIC 9(001).
+       77  DUMMY                                   PIC X(001).

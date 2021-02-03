@@ -135,26 +135,53 @@
                    15 REG-ADDRESS2 PIC X(050) LINE 17 COL 40
                        TO WS-SCHL-ADR-MAIN2.
                10 REG-POSTAL-CODE AUTO.
-                   15 REG-PC1 PIC 9(004) LINE 18 COL 40
-                       TO WS-SCHL-POSTAL-CODE1
-                       BLANK WHEN ZERO.
-                   15 REG-PC2 PIC 9(003) LINE 18 COL 47
-                       TO WS-SCHL-POSTAL-CODE2
-                       BLANK WHEN ZERO.
+                   15 REG-PC1 PIC 9(004) LINE 18 COL 40 BLANK WHEN ZERO
+                       TO WS-SCHL-POSTAL-CODE1.
+                   15 REG-PC2 PIC 9(003) LINE 18 COL 47 BLANK WHEN ZERO
+                       TO WS-SCHL-POSTAL-CODE2.
                10 REG-TOWN PIC X(030) LINE 19 COL 40
                    TO WS-SCHOOL-TOWN.
       ******************************************************************
        01  SAVE-RECORD-MENU1
            REQUIRED, BACKGROUND-COLOR 7.
-           03 VALUE ADD-MENU-TEXT10
+           05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(95) LINE 25 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ADD-MENU-TEXT10
                LINE 25 COL 10 FOREGROUND-COLOR 4.
-           03 SRM1-OPTION            PIC X(01) LINE 25 COL 54
+           05 SRM1-OPTION            PIC X(01) LINE 25 COL 54
                TO WS-ADD
                    FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
       ******************************************************************
        01  OPTION-INVALID-SCREEN.
+           05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(95) LINE 25 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7.
            05 VALUE OPTION-INVALID-TEXT LINE 25 COL 10
            FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
+      ******************************************************************
+       01  INSTRUCTIONS-SCREEN.
+           05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(95) LINE 25 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7.
+           05 INSTRUCTION-MESSAGE PIC X(085) LINE 25 COL 10
+           FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
+      ******************************************************************
+       01  ERROR-SCREEN.
+           05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(95) LINE 25 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7.
+           05 ERROR-MESSAGE PIC X(085) LINE 25 COL 10
+           FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
+           05 SCREEN-DUMMY LINE 27 COL 01 PIC X TO DUMMY AUTO.
+      ******************************************************************
+       01  CONFIRM-SCREEN.
+           05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(95) LINE 25 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7.
+           05 CONFIRM-MESSAGE PIC X(085) LINE 25 COL 10
+           FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
+           05 SCREEN-DUMMY LINE 27 COL 01 PIC X TO DUMMY AUTO.
       ******************************************************************
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
@@ -237,10 +264,12 @@
       ******************************************************************
        REGISTER-EXTERNAL-ID SECTION.
       *    SECTION TO OBTAIN THE EXTERNAL ID
-           MOVE ZERO TO REG-UNIQ
            PERFORM WITH TEST AFTER UNTIL EXTERNAL-ID-VLD
                AND REG-UNIQ = 1
+               MOVE ZERO TO REG-UNIQ
                MOVE SPACES TO REG-EED
+               MOVE INSTRUCTION-EED TO INSTRUCTION-MESSAGE
+               DISPLAY INSTRUCTIONS-SCREEN
                ACCEPT REG-EED
                IF KEY-STATUS = 1003 THEN
                    EXIT SECTION
@@ -257,22 +286,28 @@
                            MOVE 1 TO REG-UNIQ
                        NOT INVALID KEY
                            MOVE 0 TO REG-UNIQ
-                           DISPLAY "EXTERNAL ID ALREADY IN USE"
-                           LINE 25 COL 10 FOREGROUND-COLOR 4
-                           BACKGROUND-COLOR 7
+                           MOVE ERROR-EED TO ERROR-MESSAGE
+                           ACCEPT ERROR-SCREEN
                    END-READ
                CLOSE SCHOOLS
+               IF NOT EXTERNAL-ID-VLD THEN
+                   MOVE ERROR-EED1 TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
+               END-IF
            END-PERFORM
       *    CALL SPACE-CHECK SECTION TO REMOVE ALL EXTRA SPACES
            MOVE SPACES TO LINK-TEXT
-           MOVE WS-SCHOOL-EXTERNAL-ID TO LINK-TEXT
+           MOVE FUNCTION TRIM (WS-SCHOOL-EXTERNAL-ID) TO LINK-TEXT
            PERFORM SPACE-CHECK
            MOVE LINK-TEXT TO WS-SCHOOL-EXTERNAL-ID
            EXIT SECTION.
+
       ******************************************************************
        REGISTER-DESIGNATION SECTION.
       *    SECTION TO OBTAIN THE DESIGNATION
            PERFORM WITH TEST AFTER UNTIL DESIGNATION-VLD
+               MOVE INSTRUCTION-DSG TO INSTRUCTION-MESSAGE
+               DISPLAY INSTRUCTIONS-SCREEN
+               MOVE SPACES TO REG-DESIGNATION
                ACCEPT REG-DESIGNATION
                IF KEY-STATUS = 1003 THEN
                    EXIT SECTION
@@ -280,10 +315,13 @@
                IF KEY-STATUS = 1004 THEN
                    STOP RUN
                END-IF
+               IF NOT DESIGNATION-VLD THEN
+                   MOVE ERROR-DSG TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
+               END-IF
            END-PERFORM
       *    CALL SPACE-CHECK SECTION TO REMOVE ALL EXTRA SPACES
            MOVE SPACES TO LINK-TEXT
-           MOVE WS-SCHOOL-DESIGNATION TO LINK-TEXT
+           MOVE FUNCTION TRIM (WS-SCHOOL-DESIGNATION) TO LINK-TEXT
            PERFORM SPACE-CHECK
            MOVE LINK-TEXT TO WS-SCHOOL-DESIGNATION
            EXIT SECTION.
@@ -292,6 +330,9 @@
       *    SECTION TO OBTAIN THE ADDRESS, MAIN ADDRESS, POSTLA CODE AND TOWN
            PERFORM WITH TEST AFTER UNTIL ADDRESS-VLD
       *    OBTAIN MAIN ADDRESS
+               MOVE INSTRUCTION-ADR TO INSTRUCTION-MESSAGE
+               DISPLAY INSTRUCTIONS-SCREEN
+               MOVE SPACES TO REG-ADDRESS
                ACCEPT REG-ADDRESS
                IF KEY-STATUS = 1003 THEN
                    EXIT SECTION
@@ -299,16 +340,22 @@
                IF KEY-STATUS = 1004 THEN
                    STOP RUN
                END-IF
+               IF NOT ADDRESS-VLD
+                   MOVE ERROR-ADR TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
+               END-IF
            END-PERFORM
       *    CALL SPACE-CHECK SECTION TO REMOVE ALL EXTRA SPACES
            MOVE SPACES TO LINK-TEXT
-           MOVE WS-SCHL-ADR-MAIN TO LINK-TEXT
+           MOVE FUNCTION TRIM (WS-SCHL-ADR-MAIN) TO LINK-TEXT
            PERFORM SPACE-CHECK
            MOVE LINK-TEXT TO WS-SCHL-ADR-MAIN
       ******************************************************************
       *    OBTAIN POSTAL CODE
            PERFORM WITH TEST AFTER UNTIL POSTAL-CODE1-VLD AND
                POSTAL-CODE2-VLD
+               MOVE INSTRUCTION-POSTAL-CODE TO INSTRUCTION-MESSAGE
+               DISPLAY INSTRUCTIONS-SCREEN
+               MOVE ZEROS TO REG-POSTAL-CODE
                ACCEPT REG-PC1
                IF KEY-STATUS = 1003 THEN
                    EXIT SECTION
@@ -323,6 +370,10 @@
                IF KEY-STATUS = 1004 THEN
                    STOP RUN
                END-IF
+               IF WS-SCHL-POSTAL-CODE1 <1000 THEN
+                   MOVE ERROR-POSTAL-CODE TO ERROR-MESSAGE
+                   ACCEPT ERROR-SCREEN
+               END-IF
            END-PERFORM
       *    CALL CPS MODULE TO OBTAIN THE TOWN AUTOMATICALLY FROM THE
       *    THE POSTAL CODE
@@ -333,6 +384,8 @@
       *    OBTAIN THE TOWN, IF THE CPS MODULE DOESNT RETURN ANY VALUE
       *    OR IF THE USER WANTS TO CHANGE IT
            PERFORM WITH TEST AFTER UNTIL TOWN-VLD
+               MOVE INSTRUCTION-TOWN TO INSTRUCTION-MESSAGE
+               DISPLAY INSTRUCTIONS-SCREEN
                 ACCEPT REG-TOWN
                 IF KEY-STATUS = 1003 THEN
                    EXIT SECTION
@@ -340,10 +393,14 @@
                IF KEY-STATUS = 1004 THEN
                    STOP RUN
                END-IF
+               IF NOT TOWN-VLD THEN
+                   MOVE ERROR-TOWN TO ERROR-MESSAGE
+                   ACCEPT ERROR-SCREEN
+               END-IF
            END-PERFORM
            MOVE SPACES TO LINK-TEXT
       *    CALL SPACE-CHECK SECTION TO REMOVE ALL EXTRA SPACES
-           MOVE WS-SCHOOL-TOWN TO LINK-TEXT
+           MOVE FUNCTION TRIM (WS-SCHOOL-TOWN) TO LINK-TEXT
            PERFORM SPACE-CHECK
            MOVE LINK-TEXT TO WS-SCHOOL-TOWN
            EXIT SECTION.
@@ -370,6 +427,8 @@
                        PERFORM LOWER-UPPER
                        MOVE WS-SCHOOL-DETAILS TO SCHOOL-DETAILS
                        WRITE SCHOOL-DETAILS
+                       MOVE CONFIRM-RECORD TO CONFIRM-MESSAGE
+                       ACCEPT CONFIRM-SCREEN
                    CLOSE SCHOOLS
                    OPEN OUTPUT KEYS
                        MOVE WS-SCHOOL-INTERNAL-ID TO REGKEY
@@ -380,6 +439,8 @@
                        PERFORM LOWER-UPPER
                        MOVE WS-SCHOOL-DETAILS TO SCHOOL-DETAILS
                        WRITE SCHOOL-DETAILS
+                       MOVE CONFIRM-RECORD TO CONFIRM-MESSAGE
+                       ACCEPT CONFIRM-SCREEN
                    CLOSE SCHOOLS
                    OPEN OUTPUT KEYS
                        MOVE WS-SCHOOL-INTERNAL-ID TO REGKEY
@@ -397,6 +458,8 @@
                IF FILE-STATUS = 35 THEN
                    OPEN OUTPUT SCHOOLS
                    CLOSE SCHOOLS
+                   MOVE FS-ERROR TO ERROR-MESSAGE
+                   ACCEPT ERROR-SCREEN
                END-IF
            CLOSE SCHOOLS
            MOVE ZEROS TO FILE-STATUS
@@ -435,7 +498,6 @@
                SPACE-CHECK6, SPACE-CHECK7, SPACE-CHECK8, SPACE-CHECK9,
                SPACE-CHECK10, SPACE-CHECK11, SPACE-CHECK12,
                SPACE-CHECK13, SPACE-CHECK14, SPACE-CHECK15
-           MOVE TRIM(LINK-TEXT) TO LINK-TEXT
            UNSTRING LINK-TEXT DELIMITED BY ALL SPACES INTO
                SPACE-CHECK1,
                SPACE-CHECK2, SPACE-CHECK3, SPACE-CHECK4, SPACE-CHECK5,

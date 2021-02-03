@@ -101,19 +101,19 @@
                    TO WS-SCHOOL-EXTERNAL-ID.
                10 ALT-DESIGNATION.
                    15 ALT-DESIGNATION1 PIC X(050) LINE 13 COL 32
-                       TO WS-SCHOOL-DESIGNATION1.
+                       TO WS-SCHOOL-DESIGNATION1 AUTO.
                    15 ALT-DESIGNATION2 PIC X(050) LINE 14 COL 32
-                       TO WS-SCHOOL-DESIGNATION2.
+                       TO WS-SCHOOL-DESIGNATION2 AUTO.
                    15 ALT-DESIGNATION3 PIC X(050) LINE 15 COL 32
                        TO WS-SCHOOL-DESIGNATION3.
                10 ALT-ADDRESS.
                    15 ALT-ADDRESS1 PIC X(050) LINE 16 COL 32
-                       TO WS-SCHL-ADR-MAIN1.
+                       TO WS-SCHL-ADR-MAIN1 AUTO.
                    15 ALT-ADDRESS2 PIC X(050) LINE 17 COL 32
                        TO WS-SCHL-ADR-MAIN2.
                10 ALT-POSTAL-CODE.
                    15 ALT-PC1 PIC 9(004) LINE 18 COL 32
-                        TO WS-SCHL-POSTAL-CODE1 BLANK WHEN ZERO.
+                        TO WS-SCHL-POSTAL-CODE1 BLANK WHEN ZERO AUTO.
                    15 ALT-PC2 PIC 9(003) LINE 18 COL 39
                         TO WS-SCHL-POSTAL-CODE2 BLANK WHEN ZERO.
                10 ALT-TOWN PIC X(030) LINE 19 COL 32
@@ -202,21 +202,56 @@
       ******************************************************************
        01  END-LIST-SCREEN FOREGROUND-COLOUR 4
            BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(95) LINE 25 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7.
            05 VALUE "|" LINE 25 COL 52.
            05 VALUE END-OF-LIST-TEXT LINE 25 COL 53.
       ******************************************************************
        01  EMPTY-LIST-SCREEN FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(95) LINE 25 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7.
            05 VALUE EMPTY-LIST-TEXT LINE 25 COL 53.
            05  LINE 01 COL 01 PIC X(1) TO PRESS-KEY AUTO.
       ******************************************************************
        01  NEXT-LIST-SCREEN FOREGROUND-COLOUR 4
            BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(95) LINE 25 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7.
            05 VALUE "|" LINE 25 COL 52.
            05 VALUE NEXT-LIST-TEXT LINE 25 COL 53.
       ******************************************************************
        01  ID-ERROR-SCREEN
            FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
-           03 VALUE ID-ERROR-TEXT LINE 25 COL 10.
+           05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(95) LINE 25 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ID-ERROR-TEXT LINE 25 COL 10.
+      ******************************************************************
+       01  INSTRUCTIONS-SCREEN.
+           05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(95) LINE 25 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7.
+           05 INSTRUCTION-MESSAGE PIC X(085) LINE 25 COL 10
+           FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
+      ******************************************************************
+       01  ERROR-SCREEN.
+           05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(95) LINE 25 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7.
+           05 ERROR-MESSAGE PIC X(085) LINE 25 COL 10
+           FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
+           05 SCREEN-DUMMY LINE 27 COL 01 PIC X TO DUMMY AUTO.
+      ******************************************************************
+       01  CONFIRM-SCREEN.
+           05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(95) LINE 25 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7.
+           05 CONFIRM-MESSAGE PIC X(085) LINE 25 COL 10
+           FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
+           05 SCREEN-DUMMY LINE 27 COL 01 PIC X TO DUMMY AUTO.
       ******************************************************************
        PROCEDURE DIVISION.
        MAIN SECTION.
@@ -274,11 +309,7 @@
                END-READ
            CLOSE SCHOOLS
            END-PERFORM
-           PERFORM CHOOSE-EDIT
-           EXIT PROGRAM.
-      ******************************************************************
-       CHOOSE-EDIT SECTION.
-      *    SECTION WHERE THE USER CHOOSES WHAT HE WANTS TO EDIT ON THE RECORD
+      *    WHERE THE USER CHOOSES WHAT HE WANTS TO EDIT ON THE RECORD
       *    THAT HE CHOSE PREVIOUSLY
            PERFORM WITH TEST AFTER UNTIL WS-OPTION = 6
                MOVE ZEROS TO EDIT-CHOICE
@@ -300,7 +331,7 @@
                        PERFORM EDIT-TOWN
            END-EVALUATE
            END-PERFORM
-           EXIT SECTION.
+           EXIT PROGRAM.
       ******************************************************************
        LIST SECTION.
       *    LIST SECTION THAT CREATES A LIST OF ALL THE RECORDS TO BE SHOWN
@@ -394,7 +425,11 @@
        EDIT-EED SECTION.
       *    SECTION TO CHANGE EXTERNAL ID
            PERFORM WITH TEST AFTER UNTIL EXTERNAL-ID-VLD
-           MOVE SPACES TO ALT-EED
+               AND REG-UNIQ = 1
+               MOVE ZERO TO REG-UNIQ
+               MOVE SPACES TO ALT-EED
+               MOVE INSTRUCTION-EED TO INSTRUCTION-MESSAGE
+               DISPLAY INSTRUCTIONS-SCREEN
                ACCEPT ALT-EED
                IF KEY-STATUS = 1003 THEN
                    EXIT SECTION
@@ -402,11 +437,27 @@
                IF KEY-STATUS = 1004 THEN
                    STOP RUN
                END-IF
+      *    CHECK IF THE EXTERNAL ID ISNT ALREADY REGISTERED
+               MOVE WS-SCHOOL-EXTERNAL-ID TO SCHOOL-EXTERNAL-ID
+               OPEN INPUT SCHOOLS
+                   READ SCHOOLS RECORD
+                       KEY IS SCHOOL-EXTERNAL-ID
+                       INVALID KEY
+                           MOVE 1 TO REG-UNIQ
+                       NOT INVALID KEY
+                           MOVE 0 TO REG-UNIQ
+                           MOVE ERROR-EED TO ERROR-MESSAGE
+                           ACCEPT ERROR-SCREEN
+                   END-READ
+               CLOSE SCHOOLS
+               IF NOT EXTERNAL-ID-VLD THEN
+                   MOVE ERROR-EED1 TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
+               END-IF
            END-PERFORM
       *    PERFOM LOWER-UPPER TO CHANGE EVERYTHING TO UPPER CASE LETTERS
            PERFORM LOWER-UPPER
       *    CALL SPACE-CHECK SECTION TO REMOVE ALL EXTRA SPACES
-           MOVE WS-SCHOOL-EXTERNAL-ID TO LINK-TEXT
+           MOVE FUNCTION TRIM (WS-SCHOOL-EXTERNAL-ID) TO LINK-TEXT
            PERFORM SPACE-CHECK
            MOVE LINK-TEXT TO WS-SCHOOL-EXTERNAL-ID
       ******************************************************************
@@ -421,7 +472,9 @@
        EDIT-DESIGNATION SECTION.
       *    SECTION TO CHANGE DESIGNATION
            PERFORM WITH TEST AFTER UNTIL DESIGNATION-VLD
-           MOVE SPACES TO ALT-DESIGNATION
+               MOVE INSTRUCTION-DSG TO INSTRUCTION-MESSAGE
+               DISPLAY INSTRUCTIONS-SCREEN
+               MOVE SPACES TO ALT-DESIGNATION
                ACCEPT ALT-DESIGNATION
                IF KEY-STATUS = 1003 THEN
                    EXIT SECTION
@@ -429,11 +482,14 @@
                IF KEY-STATUS = 1004 THEN
                    STOP RUN
                END-IF
+               IF NOT DESIGNATION-VLD THEN
+                   MOVE ERROR-DSG TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
+               END-IF
            END-PERFORM
       *    PERFOM LOWER-UPPER TO CHANGE EVERYTHING TO UPPER CASE LETTERS
            PERFORM LOWER-UPPER
       *    CALL SPACE-CHECK SECTION TO REMOVE ALL EXTRA SPACES
-           MOVE WS-SCHOOL-DESIGNATION TO LINK-TEXT
+           MOVE FUNCTION TRIM (WS-SCHOOL-DESIGNATION) TO LINK-TEXT
            PERFORM SPACE-CHECK
            MOVE LINK-TEXT TO WS-SCHOOL-DESIGNATION
       ******************************************************************
@@ -442,12 +498,17 @@
                MOVE WS-SCHOOL-DETAILS TO SCHOOL-DETAILS
                REWRITE SCHOOL-DETAILS
                END-REWRITE
+               MOVE CONFIRM-RECORD TO CONFIRM-MESSAGE
+               ACCEPT CONFIRM-SCREEN
            CLOSE SCHOOLS
            EXIT SECTION.
       ******************************************************************
        EDIT-ADDRESS SECTION.
       *    SECTION TO CHANGE ADDRESS
            PERFORM WITH TEST AFTER UNTIL ADDRESS-VLD
+               MOVE INSTRUCTION-ADR TO INSTRUCTION-MESSAGE
+               DISPLAY INSTRUCTIONS-SCREEN
+               MOVE SPACES TO ALT-ADDRESS
                ACCEPT ALT-ADDRESS
                IF KEY-STATUS = 1003 THEN
                    EXIT SECTION
@@ -455,11 +516,14 @@
                IF KEY-STATUS = 1004 THEN
                    STOP RUN
                END-IF
+               IF NOT ADDRESS-VLD
+                   MOVE ERROR-ADR TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
+               END-IF
            END-PERFORM
       *    PERFOM LOWER-UPPER TO CHANGE EVERYTHING TO UPPER CASE LETTERS
            PERFORM LOWER-UPPER
       *    CALL SPACE-CHECK SECTION TO REMOVE ALL EXTRA SPACES
-           MOVE WS-SCHL-ADR-MAIN TO LINK-TEXT
+           MOVE FUNCTION TRIM (WS-SCHL-ADR-MAIN) TO LINK-TEXT
            PERFORM SPACE-CHECK
            MOVE LINK-TEXT TO WS-SCHL-ADR-MAIN
       ******************************************************************
@@ -468,6 +532,8 @@
                MOVE WS-SCHOOL-DETAILS TO SCHOOL-DETAILS
                REWRITE SCHOOL-DETAILS
                END-REWRITE
+               MOVE CONFIRM-RECORD TO CONFIRM-MESSAGE
+               ACCEPT CONFIRM-SCREEN
            CLOSE SCHOOLS
            EXIT SECTION.
       ******************************************************************
@@ -475,6 +541,9 @@
       *    SECTION TO CHANGE THE POSTAL CODE
        PERFORM WITH TEST AFTER UNTIL POSTAL-CODE1-VLD AND
                POSTAL-CODE2-VLD
+               MOVE INSTRUCTION-POSTAL-CODE TO INSTRUCTION-MESSAGE
+               DISPLAY INSTRUCTIONS-SCREEN
+               MOVE ZEROS TO ALT-POSTAL-CODE
                ACCEPT ALT-PC1
                IF KEY-STATUS = 1003 THEN
                    EXIT SECTION
@@ -488,6 +557,10 @@
                END-IF
                IF KEY-STATUS = 1004 THEN
                    STOP RUN
+               END-IF
+               IF WS-SCHL-POSTAL-CODE1 <1000 THEN
+                   MOVE ERROR-POSTAL-CODE TO ERROR-MESSAGE
+                   ACCEPT ERROR-SCREEN
                END-IF
            END-PERFORM
       *    HERE PROGRAM CALLS TO CHANGE THE TOWN,
@@ -503,6 +576,8 @@
            MOVE WS-SCHOOL-TOWN TO ALT-TOWN
            DISPLAY ALT-SCREEN
            PERFORM WITH TEST AFTER UNTIL TOWN-VLD
+               MOVE INSTRUCTION-TOWN TO INSTRUCTION-MESSAGE
+               DISPLAY INSTRUCTIONS-SCREEN
                 ACCEPT ALT-TOWN
                 IF KEY-STATUS = 1003 THEN
                    EXIT SECTION
@@ -510,11 +585,15 @@
                IF KEY-STATUS = 1004 THEN
                    STOP RUN
                END-IF
+               IF NOT TOWN-VLD THEN
+                   MOVE ERROR-TOWN TO ERROR-MESSAGE
+                   ACCEPT ERROR-SCREEN
+               END-IF
            END-PERFORM
       *    PERFORM LOWER-UPPER TO CHANGE EVERYTHING TO UPPER CASE LETTERS
            PERFORM LOWER-UPPER
       *    CALL SPACE-CHECK SECTION TO REMOVE ALL EXTRA SPACES
-           MOVE WS-SCHOOL-TOWN TO LINK-TEXT
+           MOVE FUNCTION TRIM (WS-SCHOOL-TOWN) TO LINK-TEXT
            PERFORM SPACE-CHECK
            MOVE LINK-TEXT TO WS-SCHOOL-TOWN
       ******************************************************************
@@ -523,6 +602,8 @@
                MOVE WS-SCHOOL-DETAILS TO SCHOOL-DETAILS
                REWRITE SCHOOL-DETAILS
                END-REWRITE
+               MOVE CONFIRM-RECORD TO CONFIRM-MESSAGE
+               ACCEPT CONFIRM-SCREEN
            CLOSE SCHOOLS
            EXIT SECTION.
       ******************************************************************
