@@ -66,18 +66,33 @@
            88 WS-EOF                               VALUE HIGH-VALUES.
            05 WS-SCHOOL-INTERNAL-ID                PIC 9(003).
            05 WS-SCHOOL-EXTERNAL-ID                PIC X(008).
+               88 EXTERNAL-ID-VLD                  VALUE "A" THRU "Z",
+                                                   "a" THRU "z", SPACES.
            05 WS-SCHOOL-DESIGNATION.
+               88 DESIGNATION-VLD                  VALUE "A" THRU "Z",
+                                                   "a" THRU "z", SPACES,
+                                                   "&",",",".","º","ª".
                10 WS-SCHOOL-DESIGNATION1           PIC X(050).
                10 WS-SCHOOL-DESIGNATION2           PIC X(050).
                10 WS-SCHOOL-DESIGNATION3           PIC X(050).
            05 WS-SCHOOL-ADRESS.
                10 WS-SCHL-ADR-MAIN.
+                   88 ADDRESS-VLD                   VALUE "A" THRU "Z",
+                                                   "a" THRU "z", SPACES,
+                                                   "0" THRU "9".
                    15 WS-SCHL-ADR-MAIN1            PIC X(050).
                    15 WS-SCHL-ADR-MAIN2            PIC X(050).
                10 WS-SCHOOL-POSTAL-CODE.
                    15 WS-SCHL-POSTAL-CODE1         PIC 9(004).
+                       88 POSTAL-CODE1-VLD         VALUE "1000" THRU
+                                                   "9999".
                    15 WS-SCHL-POSTAL-CODE2         PIC 9(003).
+                       88 POSTAL-CODE2-VLD         VALUE "000" THRU
+                                                   "999".
                10 WS-SCHOOL-TOWN                   PIC X(030).
+                   88 TOWN-VLD                     VALUE "A" THRU "Z",
+                                                   "a" THRU "z", SPACES.
+           05 WS-SCHOOL-IS-ACTIVE                  PIC 9(001).
        01  WS-OPTION                                PIC 9(002).
            88 OPTION-VLD                            VALUE
                                                    "1","2","3","4".
@@ -89,7 +104,7 @@
        01  SC-LINE                                 PIC 9(004).
        01  FLAG                                    PIC X(001).
        01  WS-CONTROL                              PIC 9(001).
-       COPY "CONSTANTSPT".
+       COPY "CONSTANTS".
 
        SCREEN SECTION.
        01  CLEAR-SCREEN BACKGROUND-COLOR 0.
@@ -110,68 +125,67 @@
            05 VALUE BACK-EXIT
                LINE 25 COL 99 FOREGROUND-COLOR 5.
 
-       01  VIEW-SCREEN
-           REQUIRED.
-           05 VALUE ALT-MENU-TEXT LINE 9 COL 40.
-           05 VALUE ADD-MENU-TEXT1 LINE 11 COL 22.
-           05 VALUE ADD-MENU-TEXT2 LINE 12 COL 22.
-           05 VALUE ADD-MENU-TEXT3 LINE 13 COL 22.
-           05 VALUE ADD-MENU-TEXT6 LINE 16 COL 22.
-           05 VALUE ADD-MENU-TEXT8 LINE 18 COL 22.
-           05 VALUE "-" LINE 18 COL 45.
-           05 VALUE ADD-MENU-TEXT9 LINE 19 COL 25.
-           05 VALUE ALL " " PIC X(080) LINE 7 COL 18
+       01  ALT-SCREEN.
+           05 VALUE ALT-MENU-TEXT LINE 9 COL 30.
+           05 VALUE ADD-MENU-TEXT1 LINE 11 COL 12.
+           05 VALUE ADD-MENU-TEXT2 LINE 12 COL 12.
+           05 VALUE ADD-MENU-TEXT3 LINE 13 COL 12.
+           05 VALUE ADD-MENU-TEXT6 LINE 16 COL 12.
+           05 VALUE ADD-MENU-TEXT8 LINE 18 COL 12.
+           05 VALUE "-" LINE 18 COL 37.
+           05 VALUE ADD-MENU-TEXT9 LINE 19 COL 12.
+           05 VALUE ALL " " PIC X(080) LINE 7 COL 10
                BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(080) LINE 21 COL 18
+           05 VALUE ALL " " PIC X(080) LINE 21 COL 10
                BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 20 COL 18 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 8 COL 18 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 9 COL 18 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 10 COL 18 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 11 COL 18 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 12 COL 18 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 13 COL 18 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 14 COL 18 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 15 COL 18 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 16 COL 18 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 17 COL 18 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 18 COL 18 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 19 COL 18 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 20 COL 96 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 8 COL 96 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 9 COL 96 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 10 COL 96 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 11 COL 96 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 12 COL 96 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 13 COL 96 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 14 COL 96 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 15 COL 96 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 16 COL 96 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 17 COL 96 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 18 COL 96 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 19 COL 96 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 10 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 8 COL 10 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 9 COL 10 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 10 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 10 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 10 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 10 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 10 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 10 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 10 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 10 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 10 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 10 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 8 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 9 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 88 BACKGROUND-COLOR 7.
            05 ALT-REC.
-               10 ALT-IID PIC 9(003) LINE 11 COL 40 BLANK WHEN ZERO.
-               10 ALT-EED PIC X(008) LINE 12 COL 40
+               10 ALT-IID PIC 9(003) LINE 11 COL 32 BLANK WHEN ZERO.
+               10 ALT-EED PIC X(008) LINE 12 COL 32
                    TO WS-SCHOOL-EXTERNAL-ID.
                10 ALT-DESIGNATION.
-                   15 ALT-DESIGNATION1 PIC X(050) LINE 13 COL 40
+                   15 ALT-DESIGNATION1 PIC X(050) LINE 13 COL 32
                        TO WS-SCHOOL-DESIGNATION1.
-                   15 ALT-DESIGNATION2 PIC X(050) LINE 14 COL 40
+                   15 ALT-DESIGNATION2 PIC X(050) LINE 14 COL 32
                        TO WS-SCHOOL-DESIGNATION2.
-                   15 ALT-DESIGNATION3 PIC X(050) LINE 15 COL 40
+                   15 ALT-DESIGNATION3 PIC X(050) LINE 15 COL 32
                        TO WS-SCHOOL-DESIGNATION3.
                10 ALT-ADDRESS.
-                   15 ALT-ADDRESS1 PIC X(050) LINE 16 COL 40
+                   15 ALT-ADDRESS1 PIC X(050) LINE 16 COL 32
                        TO WS-SCHL-ADR-MAIN1.
-                   15 ALT-ADDRESS2 PIC X(050) LINE 17 COL 40
+                   15 ALT-ADDRESS2 PIC X(050) LINE 17 COL 32
                        TO WS-SCHL-ADR-MAIN2.
                10 ALT-POSTAL-CODE.
-                   15 ALT-PC1 PIC 9(004) LINE 18 COL 40
+                   15 ALT-PC1 PIC 9(004) LINE 18 COL 32
                         TO WS-SCHL-POSTAL-CODE1 BLANK WHEN ZERO.
-                   15 ALT-PC2 PIC 9(003) LINE 18 COL 47
+                   15 ALT-PC2 PIC 9(003) LINE 18 COL 39
                         TO WS-SCHL-POSTAL-CODE2 BLANK WHEN ZERO.
-               10 ALT-TOWN PIC X(030) LINE 19 COL 40
+               10 ALT-TOWN PIC X(030) LINE 19 COL 32
                        TO WS-SCHOOL-TOWN.
 
         01 EDIT-WHAT-SCREEN
@@ -237,31 +251,36 @@
            05 VALUE "  " LINE 20 COL 115 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 21 COL 115 BACKGROUND-COLOR 7.
            05  SHOW LINE SC-LINE COL 10.
-               10  SHOW-IID PIC 9(003)     FROM SCHOOL-INTERNAL-ID.
-               10  VALUE "   ".
+      *         10  SHOW-IID PIC 9(003)     FROM SCHOOL-INTERNAL-ID.
+      *         10  VALUE "   ".
                10  SHOW-EED PIC X(008)     FROM SCHOOL-EXTERNAL-ID.
                10  VALUE "   ".
                10  SHOW-DESG PIC X(050)    FROM SCHOOL-DESIGNATION.
                10  VALUE "   ".
                10  SHOW-TOWN PIC X(030)    FROM SCHOOL-TOWN.
+           05 VALUE LIST-SCREEN-TEXT1 LINE 8 COL 11 FOREGROUND-COLOR 5.
+           05 VALUE LIST-SCREEN-TEXT2 LINE 8 COL 22 FOREGROUND-COLOR 5.
+           05 VALUE LIST-SCREEN-TEXT3 LINE 8 COL 75 FOREGROUND-COLOR 5.
            05 VALUE ALT-MENU-OPTION LINE 25 COL 10
            FOREGROUND-COLOUR 4 BACKGROUND-COLOR 7.
            05  CONTINUE-LIST.
-               10  CONTINUE-IID PIC 9(003) LINE 25 COL 46
-               TO SCHOOL-INTERNAL-ID
-               FOREGROUND-COLOUR 4 BACKGROUND-COLOR 7.
+               10  CONTINUE-IID PIC X(008) LINE 25 COL 44
+               TO SCHOOL-EXTERNAL-ID
+               FOREGROUND-COLOUR 0 BACKGROUND-COLOR 7.
 
        01  END-LIST-SCREEN FOREGROUND-COLOUR 4
            BACKGROUND-COLOR 7.
-           03 VALUE END-OF-LIST-TEXT LINE 25 COL 70.
+           05 VALUE "|" LINE 25 COL 52.
+           05 VALUE END-OF-LIST-TEXT LINE 25 COL 53.
 
        01  EMPTY-LIST-SCREEN FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
-           05 VALUE EMPTY-LIST-TEXT LINE 25 COL 10.
+           05 VALUE EMPTY-LIST-TEXT LINE 25 COL 53.
            05  LINE 01 COL 01 PIC X(1) TO PRESS-KEY AUTO.
 
        01  NEXT-LIST-SCREEN FOREGROUND-COLOUR 4
            BACKGROUND-COLOR 7.
-           05 VALUE NEXT-LIST-TEXT LINE 25 COL 70.
+           05 VALUE "|" LINE 25 COL 52.
+           05 VALUE NEXT-LIST-TEXT LINE 25 COL 53.
 
        01  ID-ERROR-SCREEN
            FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
@@ -296,7 +315,7 @@
                READ SCHOOLS
                INVALID KEY
                    DISPLAY ID-ERROR-SCREEN
-                   MOVE SPACES TO CONTINUE-LIST
+                   MOVE ZEROS TO CONTINUE-LIST
                    ACCEPT CONTINUE-LIST
                        IF KEY-STATUS = 1003 THEN
                            EXIT SECTION
@@ -305,20 +324,30 @@
                            STOP RUN
                        END-IF
                NOT INVALID KEY
+                   PERFORM CLEAR-VARIABLES
                    MOVE SCHOOL-DETAILS TO ALT-REC
                    DISPLAY CLEAR-SCREEN
                    DISPLAY MAIN-SCREEN
-                   DISPLAY VIEW-SCREEN
-                   ACCEPT OMITTED AT LINE 25 COL 10
+                   DISPLAY ALT-SCREEN
+                       IF KEY-STATUS = 1003 THEN
+                           EXIT SECTION
+                       END-IF
+                       IF KEY-STATUS = 1004 THEN
+                           STOP RUN
+                       END-IF
                    MOVE 1 TO WS-CONTROL
                END-READ
            CLOSE SCHOOLS
            END-PERFORM
-           PERFORM WHAT-TO-EDIT
+           PERFORM CHOOSE-EDIT
            EXIT PROGRAM.
 
-       WHAT-TO-EDIT SECTION.
+       CHOOSE-EDIT SECTION.
            PERFORM WITH TEST AFTER UNTIL WS-OPTION = 6
+               MOVE ZEROS TO EDIT-CHOICE
+               DISPLAY CLEAR-SCREEN
+               DISPLAY MAIN-SCREEN
+               DISPLAY ALT-SCREEN
                DISPLAY EDIT-WHAT-SCREEN
                ACCEPT EDIT-CHOICE
                EVALUATE TRUE
@@ -340,7 +369,8 @@
 
            END-EVALUATE
            END-PERFORM
-       EXIT SECTION.
+
+           EXIT SECTION.
 
        LIST SECTION.
            DISPLAY CLEAR-SCREEN
@@ -348,7 +378,7 @@
            DISPLAY LIST-SCREEN
            MOVE SPACES TO FLAG
            MOVE SPACES TO CONTINUE-LIST
-           MOVE ZERO TO SCHOOL-INTERNAL-ID
+           MOVE ZEROS TO SCHOOL-INTERNAL-ID
            OPEN INPUT SCHOOLS
            START SCHOOLS KEY IS GREATER OR EQUAL SCHOOL-INTERNAL-ID
               INVALID KEY
@@ -362,6 +392,7 @@
            MOVE 9 TO SC-LINE
            PERFORM UNTIL WS-EOF
               READ SCHOOLS NEXT RECORD
+                   KEY IS SCHOOL-EXTERNAL-ID
                  AT END SET WS-EOF TO TRUE
                     DISPLAY END-LIST-SCREEN
                     ACCEPT CONTINUE-LIST
@@ -416,13 +447,89 @@
            EXIT SECTION.
 
        EDIT-EED SECTION.
-
+           PERFORM WITH TEST AFTER UNTIL EXTERNAL-ID-VLD
+           MOVE SPACES TO ALT-EED
+               ACCEPT ALT-EED
+               IF KEY-STATUS = 1003 THEN
+                   EXIT SECTION
+               END-IF
+               IF KEY-STATUS = 1004 THEN
+                   STOP RUN
+               END-IF
+           END-PERFORM
+           PERFORM LOWER-UPPER
+           EXIT SECTION.
        EDIT-DESIGNATION SECTION.
-
+           PERFORM WITH TEST AFTER UNTIL DESIGNATION-VLD
+           MOVE SPACES TO ALT-DESIGNATION
+               ACCEPT ALT-DESIGNATION
+               IF KEY-STATUS = 1003 THEN
+                   EXIT SECTION
+               END-IF
+               IF KEY-STATUS = 1004 THEN
+                   STOP RUN
+               END-IF
+           END-PERFORM
+           PERFORM LOWER-UPPER
+           EXIT SECTION.
        EDIT-ADDRESS SECTION.
-
+           PERFORM WITH TEST AFTER UNTIL ADDRESS-VLD
+               ACCEPT ALT-ADDRESS
+               IF KEY-STATUS = 1003 THEN
+                   EXIT SECTION
+               END-IF
+               IF KEY-STATUS = 1004 THEN
+                   STOP RUN
+               END-IF
+           END-PERFORM
+           PERFORM LOWER-UPPER
+           EXIT SECTION.
        EDIT-POSTAL-CODE SECTION.
-
+       PERFORM WITH TEST AFTER UNTIL POSTAL-CODE1-VLD AND
+               POSTAL-CODE2-VLD
+               ACCEPT ALT-PC1
+               IF KEY-STATUS = 1003 THEN
+                   EXIT SECTION
+               END-IF
+               IF KEY-STATUS = 1004 THEN
+                   STOP RUN
+           END-IF
+               ACCEPT ALT-PC2
+               IF KEY-STATUS = 1003 THEN
+                   EXIT SECTION
+               END-IF
+               IF KEY-STATUS = 1004 THEN
+                   STOP RUN
+               END-IF
+           END-PERFORM
+           PERFORM EDIT-TOWN
+           EXIT SECTION.
        EDIT-TOWN SECTION.
-
+           CALL "CPS" USING BY REFERENCE ALT-REC
+           MOVE WS-SCHOOL-TOWN TO ALT-TOWN
+           DISPLAY ALT-SCREEN
+           PERFORM WITH TEST AFTER UNTIL TOWN-VLD
+                ACCEPT ALT-TOWN
+                IF KEY-STATUS = 1003 THEN
+                   EXIT SECTION
+               END-IF
+               IF KEY-STATUS = 1004 THEN
+                   STOP RUN
+               END-IF
+           END-PERFORM
+           PERFORM LOWER-UPPER
+           EXIT SECTION.
+       LOWER-UPPER SECTION.
+           MOVE FUNCTION UPPER-CASE (WS-SCHOOL-EXTERNAL-ID) TO
+           WS-SCHOOL-EXTERNAL-ID
+           MOVE FUNCTION UPPER-CASE (WS-SCHOOL-DESIGNATION) TO
+           WS-SCHOOL-DESIGNATION
+           MOVE FUNCTION UPPER-CASE (WS-SCHOOL-ADRESS) TO
+           WS-SCHOOL-ADRESS
+           MOVE FUNCTION UPPER-CASE (WS-SCHOOL-TOWN) TO WS-SCHOOL-TOWN
+           MOVE FUNCTION UPPER-CASE (ALT-EED) TO ALT-EED
+           MOVE FUNCTION UPPER-CASE (ALT-DESIGNATION) TO ALT-DESIGNATION
+           MOVE FUNCTION UPPER-CASE (ALT-ADDRESS) TO ALT-ADDRESS
+           MOVE FUNCTION UPPER-CASE (ALT-TOWN) TO ALT-TOWN
+           EXIT SECTION.
        END PROGRAM SCM-ALT.

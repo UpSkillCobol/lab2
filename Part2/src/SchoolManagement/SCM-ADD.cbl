@@ -65,7 +65,8 @@
                                                    "a" THRU "z", SPACES.
            05 WS-SCHOOL-DESIGNATION.
                88 DESIGNATION-VLD                  VALUE "A" THRU "Z",
-                                                   "a" THRU "z", SPACES.
+                                                   "a" THRU "z", SPACES,
+                                                   "&",",",".","º","ª".
                10 WS-SCHOOL-DESIGNATION1           PIC X(050).
                10 WS-SCHOOL-DESIGNATION2           PIC X(050).
                10 WS-SCHOOL-DESIGNATION3           PIC X(050).
@@ -94,6 +95,7 @@
        01  WS-ADD                                  PIC X(001).
            88  ADD-VLD                             VALUE "Y", "S", "N".
        01  WS-EID-VLD                              PIC 9(001).
+       01  REG-UNIQ                                PIC 9(001).
        COPY "CONSTANTS".
        SCREEN SECTION.
        01  CLEAR-SCREEN BACKGROUND-COLOR 0.
@@ -211,14 +213,6 @@
            05 VALUE OPTION-INVALID-TEXT LINE 25 COL 10
            FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
 
-      * 01  SAVE-RECORD-MENU2
-      *     REQUIRED, BACKGROUND-COLOR 7.
-      *     03 VALUE ADD-MENU-TEXT11
-      *         LINE 25 COL 10 FOREGROUND-COLOR 5.
-      *     03 SRM2-OPTION            PIC X(01) LINE 25 COL 61
-      *         TO WS-ADD
-      *             FOREGROUND-COLOR 5 BACKGROUND-COLOR 7.
-
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
            PERFORM CHECK-FILE
@@ -280,6 +274,7 @@
                    IF KEY-STATUS = 1004 THEN
                        STOP RUN
                    END-IF
+               PERFORM LOWER-UPPER
                PERFORM CONFIRM-REGISTER
                    IF KEY-STATUS = 1003 THEN
                        EXIT SECTION
@@ -290,17 +285,23 @@
            EXIT SECTION.
 
        REGISTER-INTERNAL-ID SECTION.
+           MOVE ZERO TO REG-UNIQ
            OPEN INPUT KEYS
                READ KEYS
                    ADD 1 TO REGKEY
                MOVE REGKEY TO WS-SCHOOL-INTERNAL-ID
            CLOSE KEYS
+           MOVE WS-SCHOOL-INTERNAL-ID TO SCHOOL-INTERNAL-ID
+
            MOVE WS-SCHOOL-INTERNAL-ID TO REG-IID
            DISPLAY REGISTER-SCREEN
            EXIT SECTION.
 
        REGISTER-EXTERNAL-ID SECTION.
+           MOVE ZERO TO REG-UNIQ
            PERFORM WITH TEST AFTER UNTIL EXTERNAL-ID-VLD
+               AND REG-UNIQ = 1
+               MOVE SPACES TO REG-EED
                ACCEPT REG-EED
                IF KEY-STATUS = 1003 THEN
                    EXIT SECTION
@@ -308,6 +309,19 @@
                IF KEY-STATUS = 1004 THEN
                    STOP RUN
                END-IF
+               MOVE WS-SCHOOL-EXTERNAL-ID TO SCHOOL-EXTERNAL-ID
+               OPEN INPUT SCHOOLS
+                   READ SCHOOLS RECORD
+                       KEY IS SCHOOL-EXTERNAL-ID
+                       INVALID KEY
+                           MOVE 1 TO REG-UNIQ
+                       NOT INVALID KEY
+                           MOVE 0 TO REG-UNIQ
+                           DISPLAY "EXTERNAL ID ALREADY IN USE"
+                           LINE 25 COL 10 FOREGROUND-COLOR 4
+                           BACKGROUND-COLOR 7
+                   END-READ
+               CLOSE SCHOOLS
            END-PERFORM
            EXIT SECTION.
 
@@ -369,19 +383,18 @@
            EXIT SECTION.
 
        CONFIRM-REGISTER SECTION.
-
-           MOVE SPACES TO SRM1-OPTION
+           DISPLAY REGISTER-SCREEN
            PERFORM WITH TEST AFTER UNTIL ADD-VLD
-               ACCEPT SAVE-RECORD-MENU1
                MOVE SPACES TO SRM1-OPTION
+               ACCEPT SAVE-RECORD-MENU1
+               MOVE FUNCTION UPPER-CASE(WS-ADD) TO WS-ADD
                IF KEY-STATUS = 1003 THEN
                    EXIT SECTION
                END-IF
                IF KEY-STATUS = 1004 THEN
                    STOP RUN
                END-IF
-           END-PERFORM.
-               MOVE FUNCTION UPPER-CASE(WS-ADD) TO WS-ADD
+           END-PERFORM
            EVALUATE TRUE
                WHEN WS-ADD = "S"
                    OPEN I-O SCHOOLS
@@ -396,6 +409,7 @@
                    CLOSE KEYS
                WHEN WS-ADD = "Y"
                    OPEN I-O SCHOOLS
+                       PERFORM LOWER-UPPER
                        MOVE WS-SCHOOL-DETAILS TO SCHOOL-DETAILS
                        WRITE SCHOOL-DETAILS
                    CLOSE SCHOOLS
@@ -407,6 +421,9 @@
            EXIT SECTION.
 
        REGISTER-CSV SECTION.
+
+       EXIT SECTION.
+
        CHECK-FILE SECTION.
            MOVE ZEROS TO FILE-STATUS
            OPEN I-O SCHOOLS
@@ -443,5 +460,9 @@
            MOVE FUNCTION UPPER-CASE (WS-SCHOOL-ADRESS) TO
            WS-SCHOOL-ADRESS
            MOVE FUNCTION UPPER-CASE (WS-SCHOOL-TOWN) TO WS-SCHOOL-TOWN
+           MOVE FUNCTION UPPER-CASE (REG-EED) TO REG-EED
+           MOVE FUNCTION UPPER-CASE (REG-DESIGNATION) TO REG-DESIGNATION
+           MOVE FUNCTION UPPER-CASE (REG-ADDRESS) TO REG-ADDRESS
+           MOVE FUNCTION UPPER-CASE (REG-TOWN) TO REG-TOWN
            EXIT SECTION.
        END PROGRAM SCM-ADD.
