@@ -29,59 +29,11 @@
        FILE SECTION.
 
        FD SCHOOLS.
-       01  SCHOOL-DETAILS.
-           88 EOFSCHOOLS                           VALUE HIGH-VALUES.
-           05 SCHOOL-INTERNAL-ID                   PIC 9(003).
-           05 SCHOOL-EXTERNAL-ID                   PIC X(008).
-           05 SCHOOL-DESIGNATION.
-               10 SCHOOL-DESIGNATION1              PIC X(050).
-               10 SCHOOL-DESIGNATION2              PIC X(050).
-               10 SCHOOL-DESIGNATION3              PIC X(050).
-           05 SCHOOL-ADRESS.
-               10 SCHL-ADR-MAIN.
-                   15 SCHL-ADR-MAIN1               PIC X(050).
-                   15 SCHL-ADR-MAIN2               PIC X(050).
-               10 SCHOOL-POSTAL-CODE.
-                   15 SCHL-POSTAL-CODE1            PIC 9(004).
-                   15 SCHL-POSTAL-CODE2            PIC 9(003).
-               10 SCHOOL-TOWN                      PIC X(030).
-           05 SCHOOL-IS-ACTIVE                     PIC 9(001).
+       COPY "CB-SCHOOLS".
 
 
        WORKING-STORAGE SECTION.
-       01  WS-SCHOOL-DETAILS.
-           88 WS-EOF                               VALUE HIGH-VALUES.
-           05 WS-SCHOOL-INTERNAL-ID                PIC 9(003).
-           05 WS-SCHOOL-EXTERNAL-ID                PIC X(008).
-           05 WS-SCHOOL-DESIGNATION.
-               10 WS-SCHOOL-DESIGNATION1           PIC X(050).
-               10 WS-SCHOOL-DESIGNATION2           PIC X(050).
-               10 WS-SCHOOL-DESIGNATION3           PIC X(050).
-           05 WS-SCHOOL-ADRESS.
-               10 WS-SCHL-ADR-MAIN.
-                   15 WS-SCHL-ADR-MAIN1            PIC X(050).
-                   15 WS-SCHL-ADR-MAIN2            PIC X(050).
-               10 WS-SCHOOL-POSTAL-CODE.
-                   15 WS-SCHL-POSTAL-CODE1         PIC 9(004).
-                   15 WS-SCHL-POSTAL-CODE2         PIC 9(003).
-               10 WS-SCHOOL-TOWN                   PIC X(030).
-           05 WS-SCHOOL-IS-ACTIVE                  PIC 9(001).
-
-       01  WS-OPTION                                PIC 9(002).
-           88 OPTION-VLD                            VALUE
-                                                   "1","2","3","4".
-       01  WS-DLT                                  PIC X(01).
-           88 DLT-VLD                              VALUE
-                                                   "Y","S","N",
-                                                   "y","s","n".
-       01  WS-DLT-KEY                           PIC 9(001).
-       01  FILE-STATUS                             PIC 9(002).
-       01  KEY-ADD                                 PIC 9(003).
-       01  KEY-STATUS                              PIC 9(004).
-       01  PRESS-KEY                               PIC X(001).
-       01  SC-LINE                                 PIC 9(004).
-       01  FLAG                                    PIC X(001).
-       01  WS-CONTROL                              PIC 9(001).
+       COPY "CB-WS-SCHOOLS".
        COPY "CONSTANTS".
 
        SCREEN SECTION.
@@ -105,7 +57,6 @@
 
        01  PRE-DELETE-MENU
            REQUIRED.
-      *    SCREEN PARA CONFIRMAR QUAL REGISTO O UTILIZADOR QUER ELIMINAR
            05 VALUE DLT-MENU-TEXT1 LINE 25 COL 10
            BACKGROUND-COLOR 7 FOREGROUND-COLOR 4.
            05 DLT-OPTION PIC X(008) LINE 25 COL 47 TO
@@ -407,7 +358,6 @@
                        IF KEY-STATUS = 1002 THEN
                           DISPLAY CLEAR-SCREEN
                           DISPLAY MAIN-SCREEN
-                          DISPLAY LIST-SCREEN
                           MOVE 9 TO SC-LINE
                        ELSE
                           MOVE "S" TO FLAG

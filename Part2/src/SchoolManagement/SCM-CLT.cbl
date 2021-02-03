@@ -30,35 +30,7 @@
        FD SCHOOLS.
        COPY "CB-SCHOOLS".
        WORKING-STORAGE SECTION.
-       01  WS-SCHOOL-DETAILS.
-           88 WS-EOF                               VALUE HIGH-VALUES.
-           05 WS-SCHOOL-INTERNAL-ID                PIC 9(003).
-           05 WS-SCHOOL-EXTERNAL-ID                PIC X(008).
-           05 WS-SCHOOL-DESIGNATION.
-               10 WS-SCHOOL-DESIGNATION1           PIC X(050).
-               10 WS-SCHOOL-DESIGNATION2           PIC X(050).
-               10 WS-SCHOOL-DESIGNATION3           PIC X(050).
-           05 WS-SCHOOL-ADRESS.
-               10 WS-SCHL-ADR-MAIN.
-                   15 WS-SCHL-ADR-MAIN1            PIC X(050).
-                   15 WS-SCHL-ADR-MAIN2            PIC X(050).
-               10 WS-SCHOOL-POSTAL-CODE.
-                   15 WS-SCHL-POSTAL-CODE1         PIC 9(004).
-                   15 WS-SCHL-POSTAL-CODE2         PIC 9(003).
-               10 WS-SCHOOL-TOWN                   PIC X(030).
-       01  WS-OPTION                                PIC 9(002).
-           88 OPTION-VLD                            VALUE
-                                                   "1","2","3","4".
-       01  FILE-STATUS                             PIC 9(002).
-       01  KEY-STATUS                              PIC 9(004).
-       01  KEY-ADD                                 PIC 9(003).
-       01  WS-VIEW                                 PIC X(001).
-       01  WS-LINE                                 PIC 9(002).
-       01  WS-CONTROL                              PIC 9(001).
-       01  SC-LINE                                 PIC 9(004).
-       01  SC-COL                                  PIC 9(004).
-       01  FLAG                                    PIC X(001).
-       01  PRESS-KEY                               PIC X(001).
+       COPY "CB-WS-SCHOOLS".
        COPY "CONSTANTS".
        SCREEN SECTION.
        01  CLEAR-SCREEN BACKGROUND-COLOR 0.
@@ -425,10 +397,8 @@
                        ACCEPT CONTINUE-LIST
       *    PRESS F2 TO GO TO THE NEXT PAGE
                        IF KEY-STATUS = 1002 THEN
-                          PERFORM CLEAR-VARIABLES
                           DISPLAY CLEAR-SCREEN
                           DISPLAY MAIN-SCREEN
-                          DISPLAY LIST-SCREEN
                           MOVE 9 TO SC-LINE
                        ELSE
                           MOVE "S" TO FLAG
