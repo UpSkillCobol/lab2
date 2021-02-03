@@ -1,9 +1,9 @@
       ******************************************************************
       *    LAB | SECOND PART | DELICIOUSSANDWICH
       ******************************************************************
-      *    BREADWICH | SUPPLIER MANAGEMENT
+      *    BREADWICH | CALENDAR MANAGEMENT
       ******************************************************************
-      *    WORKING-STORAGE VARIABLES | V0.5 | IN UPDATE | 01.02.2021
+      *    WORKING-STORAGE VARIABLES | V0.6 | IN UPDATE | 03.02.2021
       ******************************************************************
 
        01  WS-CALENDAR.
