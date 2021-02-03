@@ -497,7 +497,7 @@
            EXIT SECTION.
       ******************************************************************
        SPACE-CHECK SECTION.
-      *    PACE-CHECK SECTION TO REMOVE ALL EXTRA SPACES
+      *    SPACE-CHECK SECTION TO REMOVE ALL EXTRA SPACES
            MOVE SPACES TO
            SPACE-CHECK1,
                SPACE-CHECK2, SPACE-CHECK3, SPACE-CHECK4, SPACE-CHECK5,

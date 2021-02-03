@@ -11,13 +11,10 @@
        REPOSITORY.
            FUNCTION ALL INTRINSIC.
        INPUT-OUTPUT SECTION.
-
        DATA DIVISION.
-
        WORKING-STORAGE SECTION.
        COPY CB-WS-SCHOOLS.
        COPY CONSTANTS.
-
        SCREEN SECTION.
        01  CLEAR-SCREEN BACKGROUND-COLOR 0.
            03 VALUE " " BLANK SCREEN LINE 01 COL 01.
@@ -81,11 +78,8 @@
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY MAIN-MENU
-
            ACCEPT MP-OPTION
-
            EVALUATE WS-OPTION
-
                WHEN 1
       *    OPTION 1 CALLS ADD MODULE THAT REGISTERS NEW RECORDS ON THE FILE
                        CALL "SCM-ADD"
@@ -103,9 +97,6 @@
                WHEN OTHER
                    DISPLAY MAIN-ERROR
                    ACCEPT OMITTED
-
            END-EVALUATE
-
            END-PERFORM
-
            STOP RUN.
