@@ -1,9 +1,9 @@
       ******************************************************************
       *    LAB | SECOND PART | DELICIOUSSANDWICH
       ******************************************************************
-      *    BREADWICH | SUPPLIER MANAGEMENT
+      *    BREADWICH | CALENDAR MANAGEMENT
       ******************************************************************
-      *    CHECK SPACES VARIABLES | V0.5 | IN UPDATE | 01.02.2021
+      *    CHECK SPACES VARIABLES | V0.6 | IN UPDATE | 03.02.2021
       ******************************************************************
 
        01  LINK-TEXT               PIC X(150).
