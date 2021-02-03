@@ -356,6 +356,7 @@
       *    IF THERE ARE NO RECORDS A MESSAGE WILL BE SHOWN
                  ACCEPT EMPTY-LIST-SCREEN
                  MOVE "Y" TO FLAG
+                 ACCEPT OMITTED AT LINE 25 COL 01
                  IF FLAG = "Y" THEN
                     CLOSE SCHOOLS
                     EXIT SECTION

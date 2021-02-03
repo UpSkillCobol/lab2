@@ -232,6 +232,7 @@
            MOVE WS-SCHOOL-INTERNAL-ID TO SCHOOL-INTERNAL-ID
            MOVE WS-SCHOOL-INTERNAL-ID TO REG-IID
            DISPLAY REGISTER-SCREEN
+           MOVE 1 TO WS-SCHOOL-IS-ACTIVE
            EXIT SECTION.
       ******************************************************************
        REGISTER-EXTERNAL-ID SECTION.
@@ -368,7 +369,6 @@
                    OPEN I-O SCHOOLS
                        PERFORM LOWER-UPPER
                        MOVE WS-SCHOOL-DETAILS TO SCHOOL-DETAILS
-                       MOVE 1 TO SCHOOL-IS-ACTIVE
                        WRITE SCHOOL-DETAILS
                    CLOSE SCHOOLS
                    OPEN OUTPUT KEYS
