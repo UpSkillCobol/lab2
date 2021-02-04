@@ -3,7 +3,7 @@
       ******************************************************************
       *    BREADWICH | CALENDAR MANAGEMENT
       ******************************************************************
-      *    ADD MODULE | V0.10 | IN UPDATE | 03.02.2021
+      *    ADD MODULE | V0.11 | IN UPDATE | 04.02.2021
       ******************************************************************
 
        IDENTIFICATION DIVISION.
@@ -42,11 +42,13 @@
        COPY WSCALENDAR.
        COPY WSVAR.
        COPY VAR-VALIDDATE.
-       COPY VAR-SPACECHECK.
+       COPY VAR-SPACEUPPER.
 
        SCREEN SECTION.
        01  CLEAR-SCREEN.
            05 BLANK SCREEN.
+
+      ******************************************************************
 
        01  MAIN-SCREEN BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
            05 VALUE ALL " " PIC X(120) LINE 02 COL 01.
@@ -59,7 +61,9 @@
            05 VALUE ALL " " PIC X(022) LINE 24 COL 98.
            05 VALUE ALL " " PIC X(022) LINE 25 COL 98.
            05 VALUE ALL " " PIC X(022) LINE 26 COL 98.
-           05 VALUE MAIN-TEXT1 LINE 25 COL 99 FOREGROUND-COLOR 5.
+           05 VALUE MAIN-TEXT1 LINE 25 COL 100 FOREGROUND-COLOR 5.
+
+      ******************************************************************
 
        01  REGISTER-SCREEN BACKGROUND-COLOR 0 FOREGROUND-COLOR 7.
            05 VALUE ALL "_" PIC X(082) LINE 10 COL 08.
@@ -111,6 +115,13 @@
                  15 LINE 15 COL 40 VALUE "/".
                  15 REG-START-YEAR PIC X(004) LINE 15 COL 41 TO
                     WS-START-DT-YEAR AUTO REQUIRED.
+              10 REG-START-TIME.
+                 15 LINE 15 COL 46 VALUE "|".
+                 15 REG-START-HOUR PIC X(002) LINE 15 COL 48 TO
+                    WS-START-HOUR AUTO REQUIRED.
+                 15 LINE 15 COL 50 VALUE ":".
+                 15 REG-START-MINUTE PIC X(002) LINE 15 COL 51 TO
+                    WS-START-MINUTE AUTO REQUIRED.
               10 REG-END-DATE.
                  15 REG-END-DAY PIC X(002) LINE 16 COL 35 TO
                     WS-END-DT-DAY AUTO.
@@ -120,11 +131,20 @@
                  15 LINE 16 COL 40 VALUE "/".
                  15 REG-END-YEAR PIC X(004) LINE 16 COL 41 TO
                     WS-END-DT-YEAR AUTO.
+              10 REG-END-TIME.
+                 15 LINE 16 COL 46 VALUE "|".
+                 15 REG-END-HOUR PIC X(002) LINE 16 COL 48 TO
+                    WS-END-HOUR AUTO REQUIRED.
+                 15 LINE 16 COL 50 VALUE ":".
+                 15 REG-END-MINUTE PIC X(002) LINE 16 COL 51 TO
+                    WS-END-MINUTE AUTO.
               10 REG-DESCRIPTION.
                  15 REG-DESCRIPTION1 PIC X(050) LINE 18 COL 35
                     TO WS-DOWNTIME-DESCRIPTION1 AUTO.
                  15 REG-DESCRIPTION2 PIC X(050) LINE 19 COL 35
                     TO WS-DOWNTIME-DESCRIPTION2 AUTO.
+
+      ******************************************************************
 
        01  COMMENTS-SCREEN BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
            05 VALUE ALL " " PIC X(095) LINE 24 COL 01.
@@ -134,12 +154,16 @@
               FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
            05 LINE 01 COL 01 PIC X TO PRESS-KEY AUTO.
 
+      ******************************************************************
+
        01  INSTRUCTIONS-SCREEN BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
            05 VALUE ALL " " PIC X(095) LINE 24 COL 01.
            05 VALUE ALL " " PIC X(095) LINE 25 COL 01.
            05 VALUE ALL " " PIC X(095) LINE 26 COL 01.
            05 INSTRUCTIONS-TEXT LINE 25 COL 03 PIC X(092)
               FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
+
+      ******************************************************************
 
        01  SAVE-SCREEN
            BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
@@ -151,42 +175,50 @@
            05 SS-SAVE LINE 25 COL 62
               FOREGROUND-COLOR 4 BACKGROUND-COLOR 7 TO SAVE.
 
+      ******************************************************************
+
        PROCEDURE DIVISION.
        REGISTER-DOWNTIME SECTION.
-      *****VERIFICATION IF FILE EXISTS
            PERFORM CREATE-FILE
 
-      *****GET DOWNTIME ID
            PERFORM DOWNTIME-ID
 
            OPEN I-O CALENDAR
-      *****VARIABLE CLEANUP
            MOVE "DD"   TO REG-START-DAY, REG-END-DAY
            MOVE "MM"   TO REG-START-MONTH, REG-END-MONTH
            MOVE "YYYY" TO REG-START-YEAR, REG-END-YEAR
+           MOVE "HH"   TO REG-START-HOUR, REG-END-HOUR
+           MOVE "MM"   TO REG-START-MINUTE, REG-END-MINUTE
            MOVE SPACES TO REG-DESCRIPTION
 
-      *****MOVE ID FROM FILE TO WORKING-STORAGE DOWNTIME RECORD
            MOVE FDKEYS TO WS-DOWNTIME-ID
 
-      *****DISPLAY OF FRAME SCREEN AND REGISTER MENU
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY REGISTER-SCREEN
 
-      *****GET DOWNTIME START DATE
            PERFORM DOWNTIME-START-DATE
-              IF KEYSTATUS = 1003 OR 1004 THEN
+              IF KEYSTATUS = 1003 THEN
+                 EXIT PROGRAM
+              END-IF
+
+           PERFORM START-TIME
+              IF KEYSTATUS = 1003 THEN
                  EXIT PROGRAM
               END-IF
 
            PERFORM DOWNTIME-END-DATE
-              IF KEYSTATUS = 1003 OR 1004 THEN
+              IF KEYSTATUS = 1003 THEN
+                 EXIT PROGRAM
+              END-IF
+
+           PERFORM END-TIME
+              IF KEYSTATUS = 1003 THEN
                  EXIT PROGRAM
               END-IF
 
            PERFORM DOWNTIME-DESCRIPTION
-              IF KEYSTATUS = 1003 OR 1004 THEN
+              IF KEYSTATUS = 1003 THEN
                  EXIT PROGRAM
               END-IF
 
@@ -215,6 +247,8 @@
                  ACCEPT COMMENTS-SCREEN
               END-IF
            END-IF
+
+           MOVE SPACES TO SS-SAVE
            EXIT PROGRAM.
 
       ******************************************************************
@@ -238,16 +272,17 @@
               DISPLAY REG-START-DATE
               MOVE INSTRUCTIONS-DATE TO INSTRUCTIONS-TEXT
               DISPLAY INSTRUCTIONS-SCREEN
+
               ACCEPT REG-START-DAY
-              IF KEYSTATUS = 1003 OR 1004 THEN
+              IF KEYSTATUS = 1003 THEN
                  EXIT SECTION
               END-IF
               ACCEPT REG-START-MONTH
-              IF KEYSTATUS = 1003 OR 1004 THEN
+              IF KEYSTATUS = 1003 THEN
                  EXIT SECTION
               END-IF
               ACCEPT REG-START-YEAR
-              IF KEYSTATUS = 1003 OR 1004 THEN
+              IF KEYSTATUS = 1003 THEN
                  EXIT SECTION
               END-IF
 
@@ -269,6 +304,36 @@
 
       ******************************************************************
 
+       START-TIME SECTION.
+           PERFORM WITH TEST AFTER UNTIL VALID-START-HOUR
+           AND VALID-START-MINUTE AND REG-START-HOUR IS NOT EQUALS "HH"
+           AND REG-START-MINUTE IS NOT EQUALS "MM"
+              MOVE "HH"   TO REG-START-HOUR
+              MOVE "MM"   TO REG-START-MINUTE
+
+              DISPLAY REG-START-TIME
+              MOVE INSTRUCTIONS-TIME TO INSTRUCTIONS-TEXT
+              DISPLAY INSTRUCTIONS-SCREEN
+
+              ACCEPT REG-START-HOUR
+              IF KEYSTATUS = 1003 THEN
+                 EXIT SECTION
+              END-IF
+              ACCEPT REG-START-MINUTE
+              IF KEYSTATUS = 1003 THEN
+                 EXIT SECTION
+              END-IF
+
+              IF NOT VALID-START-HOUR OR NOT VALID-START-MINUTE
+              OR REG-START-HOUR = "HH" OR REG-START-MINUTE = "MM" THEN
+                 MOVE INVALID-TIME TO COMMENT-TEXT
+                 ACCEPT COMMENTS-SCREEN
+              END-IF
+           END-PERFORM
+           EXIT SECTION.
+
+      ******************************************************************
+
        DOWNTIME-END-DATE SECTION.
            PERFORM WITH TEST AFTER UNTIL DATE-VALID = "Y"
            AND WS-END-DOWNTIME >= WS-START-DOWNTIME
@@ -280,16 +345,17 @@
               DISPLAY REG-END-DATE
               MOVE INSTRUCTIONS2-DATE TO INSTRUCTIONS-TEXT
               DISPLAY INSTRUCTIONS-SCREEN
+
               ACCEPT REG-END-DAY
-              IF KEYSTATUS = 1003 OR 1004 OR REG-END-DAY = "DD" THEN
+              IF KEYSTATUS = 1003 OR REG-END-DAY = "DD" THEN
                  EXIT SECTION
               END-IF
               ACCEPT REG-END-MONTH
-              IF KEYSTATUS = 1003 OR 1004 THEN
+              IF KEYSTATUS = 1003 THEN
                  EXIT SECTION
               END-IF
               ACCEPT REG-END-YEAR
-              IF KEYSTATUS = 1003 OR 1004 THEN
+              IF KEYSTATUS = 1003 THEN
                  EXIT SECTION
               END-IF
 
@@ -306,21 +372,62 @@
 
       ******************************************************************
 
+       END-TIME SECTION.
+           IF REG-END-DAY = "DD" AND REG-END-MONTH = "MM"
+           AND REG-END-YEAR = "YYYY" THEN
+              EXIT SECTION
+           END-IF
+
+           PERFORM WITH TEST AFTER UNTIL VALID-END-HOUR
+           AND VALID-END-MINUTE AND FLAG-TRUE <> "Y"
+              MOVE SPACE TO FLAG-TRUE
+              MOVE "HH"   TO REG-END-HOUR
+              MOVE "MM"   TO REG-END-MINUTE
+
+              DISPLAY REG-END-TIME
+              MOVE INSTRUCTIONS2-TIME TO INSTRUCTIONS-TEXT
+              DISPLAY INSTRUCTIONS-SCREEN
+
+              ACCEPT REG-END-HOUR
+              IF KEYSTATUS = 1003 THEN
+                 EXIT SECTION
+              END-IF
+              ACCEPT REG-END-MINUTE
+              IF KEYSTATUS = 1003 THEN
+                 EXIT SECTION
+              END-IF
+
+              IF NOT VALID-END-HOUR OR NOT VALID-END-MINUTE THEN
+                 MOVE INVALID-TIME TO COMMENT-TEXT
+                 ACCEPT COMMENTS-SCREEN
+              END-IF
+
+              IF WS-START-DOWNTIME = WS-END-DOWNTIME
+              AND WS-START-TIME >= WS-END-TIME THEN
+                 MOVE "Y" TO FLAG-TRUE
+                 MOVE INVALID2-TIME TO COMMENT-TEXT
+                 ACCEPT COMMENTS-SCREEN
+              END-IF
+           END-PERFORM
+
+           MOVE SPACE TO FLAG-TRUE
+           EXIT SECTION.
+
+      ******************************************************************
+
        DOWNTIME-DESCRIPTION SECTION.
            MOVE SPACES TO REG-DESCRIPTION
            MOVE INSTRUCTIONS-DESCRIPTION TO INSTRUCTIONS-TEXT
            DISPLAY INSTRUCTIONS-SCREEN
 
            ACCEPT REG-DESCRIPTION
-           CALL "LOWERUPPER" USING BY REFERENCE WS-DOWNTIME-DESCRIPTION1
-           CALL "LOWERUPPER" USING BY REFERENCE WS-DOWNTIME-DESCRIPTION2
 
-           MOVE REG-DESCRIPTION1 TO LINK-TEXT
-           PERFORM SPACE-CHECK
-           MOVE LINK-TEXT TO REG-DESCRIPTION1
-           MOVE REG-DESCRIPTION2 TO LINK-TEXT
-           PERFORM SPACE-CHECK
-           MOVE LINK-TEXT TO REG-DESCRIPTION2
+           MOVE WS-DOWNTIME-DESCRIPTION1 TO LINK-TEXT
+           PERFORM SPACE-UPPER
+           MOVE LINK-TEXT TO WS-DOWNTIME-DESCRIPTION1
+           MOVE WS-DOWNTIME-DESCRIPTION2 TO LINK-TEXT
+           PERFORM SPACE-UPPER
+           MOVE LINK-TEXT TO WS-DOWNTIME-DESCRIPTION2
            EXIT SECTION.
 
       ******************************************************************
@@ -350,7 +457,7 @@
 
        CHECK-DATE SECTION.
            ACCEPT WS-CURRENT-DATE FROM DATE YYYYMMDD
-           IF WS-CURRENT-DATE <= WS-VALID-DATE THEN
+           IF WS-CURRENT-DATE < WS-VALID-DATE THEN
               IF VALID-YEAR AND VALID-MONTH AND VALID-DAY THEN
                  IF WS-YEAR >= WS-CURRENT-YEAR AND WS-MONTH >=
                  WS-CURRENT-MONTH THEN
@@ -398,7 +505,7 @@
 
       ******************************************************************
 
-       SPACE-CHECK SECTION.
+       SPACE-UPPER SECTION.
            MOVE SPACES TO SPACE-CHECK1,
               SPACE-CHECK2, SPACE-CHECK3, SPACE-CHECK4, SPACE-CHECK5,
               SPACE-CHECK6, SPACE-CHECK7, SPACE-CHECK8, SPACE-CHECK9,
@@ -407,7 +514,9 @@
               SPACE-CHECK17, SPACE-CHECK18, SPACE-CHECK19, SPACE-CHECK20
               SPACE-CHECK21, SPACE-CHECK22, SPACE-CHECK23, SPACE-CHECK24
 
-           MOVE TRIM(LINK-TEXT) TO LINK-TEXT
+           MOVE FUNCTION TRIM (LINK-TEXT) TO LINK-TEXT
+
+           MOVE FUNCTION UPPER-CASE (LINK-TEXT) TO LINK-TEXT
 
            UNSTRING LINK-TEXT DELIMITED BY ALL SPACES INTO SPACE-CHECK1,
               SPACE-CHECK2, SPACE-CHECK3, SPACE-CHECK4, SPACE-CHECK5,
