@@ -290,7 +290,8 @@
       *    THE NEST RECORD
                        ACCEPT OMITTED AT LINE 25 COL 01
                        IF KEY-STATUS = 1003 THEN
-                         EXIT SECTION
+                           CLOSE SCHOOLS
+                           EXIT SECTION
                       END-IF
            END-PERFORM
            CLOSE SCHOOLS
@@ -305,10 +306,7 @@
       *    CALL SECTION LIST TO VIEW ALL RECORDS AND CHOOSE ONE TO VIEW
       *    WITH ALL DETAILS
            PERFORM LIST
-               IF FLAG = "Y" THEN
-                 EXIT SECTION
-              END-IF
-              IF KEY-STATUS = 1003 THEN
+               IF FLAG = "Y" OR KEY-STATUS = 1003 THEN
                  EXIT SECTION
               END-IF
            MOVE ZEROS TO WS-CONTROL
@@ -320,16 +318,11 @@
                INVALID KEY
       *    IF THE RECORD DOESNT EXIST A MESSAGE WILL BE SHOWN
                    ACCEPT ID-ERROR-SCREEN
+                   IF KEY-STATUS = 1003 THEN
+                       CLOSE SCHOOLS
+                       EXIT SECTION
+                   END-IF
                    MOVE 1 TO WS-CONTROL
-      *             DISPLAY LIST-SCREEN
-      *             DISPLAY NEXT-LIST-SCREEN
-      *             ACCEPT VW-OPTION
-      *                 IF KEY-STATUS = 1003 THEN
-      *                     EXIT SECTION
-      *                 END-IF
-      *                 IF KEY-STATUS = 1004 THEN
-      *                     STOP RUN
-      *                 END-IF
                NOT INVALID KEY
       *    IF THE RECORD IS VALID, SHOW THE RECORD TO THE USER
                    MOVE SCHOOL-DETAILS TO VIEW-REC
@@ -337,6 +330,10 @@
                    DISPLAY MAIN-SCREEN
                    DISPLAY VIEW-SCREEN
                    ACCEPT OMITTED AT LINE 25 COL 10
+                   IF KEY-STATUS = 1003 THEN
+                       CLOSE SCHOOLS
+                       EXIT SECTION
+                   END-IF
                    MOVE 1 TO WS-CONTROL
                END-READ
            CLOSE SCHOOLS
@@ -368,7 +365,7 @@
                  MOVE "Y" TO FLAG
                  SET WS-EOF TO TRUE
                  ACCEPT OMITTED AT LINE 25 COL 01
-                 IF FLAG = "Y" THEN
+                 IF FLAG = "Y" OR KEY-STATUS = 1003 THEN
                     CLOSE SCHOOLS
                     EXIT SECTION
                  END-IF
@@ -384,11 +381,7 @@
       *    ACCEPT THE RECORD TO BE USED
                     ACCEPT CONTINUE-LIST
                     MOVE "S" TO FLAG
-                    IF FLAG = "S" THEN
-                       CLOSE SCHOOLS
-                       EXIT SECTION
-                    END-IF
-                    IF KEY-STATUS = 1003 THEN
+                    IF FLAG = "S" OR KEY-STATUS = 1003 THEN
                        CLOSE SCHOOLS
                        EXIT SECTION
                     END-IF
@@ -410,13 +403,10 @@
                           MOVE 9 TO SC-LINE
                        ELSE
                           MOVE "S" TO FLAG
-                          IF FLAG = "S" THEN
+                          IF FLAG = "S" OR KEY-STATUS = 1003 THEN
                              CLOSE SCHOOLS
                              EXIT SECTION
                           END-IF
-                       END-IF
-                       IF KEY-STATUS = 1003 THEN
-                          EXIT SECTION
                        END-IF
                     END-IF
               END-READ
