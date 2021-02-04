@@ -78,7 +78,7 @@
            EVALUATE ADD-OPTION
                WHEN 1
                    CALL "ADDSUPMAN"
-               WHEN 2
-                   CALL "ADDSUPPCSV"
+      *         WHEN 2
+      *             CALL "ADDSUPCSV"
            END-EVALUATE
            EXIT SECTION.
