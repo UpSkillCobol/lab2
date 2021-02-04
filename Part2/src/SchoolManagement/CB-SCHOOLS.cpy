@@ -1,3 +1,12 @@
+      ******************************************************************
+      *    LAB | SECOND PART | DELICIOUSSANDWICH
+      ******************************************************************
+      *    BREADWICH | SCHOOL MANAGEMENT
+      ******************************************************************
+      *    FILE DESCRIPTION
+      ******************************************************************
+      *     V0.1 | EM ATUALIZAÇÃO | 25.01.2020
+      ******************************************************************
        01  SCHOOL-DETAILS.
            88 EOFSCHOOLS                           VALUE HIGH-VALUES.
            05 SCHOOL-INTERNAL-ID                   PIC 9(003).
@@ -14,4 +23,4 @@
                    15 SCHL-POSTAL-CODE1            PIC 9(004).
                    15 SCHL-POSTAL-CODE2            PIC 9(003).
                10 SCHOOL-TOWN                      PIC X(030).
-           05 SCHOOL-IS-ACTIVE                     PIC 9(009).
+           05 SCHOOL-IS-ACTIVE                     PIC 9(001).
