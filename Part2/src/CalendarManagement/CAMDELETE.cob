@@ -291,6 +291,11 @@
                  IF NOT SAVE-VALID THEN
                     MOVE INVALID-OPTION TO COMMENT-TEXT
                     ACCEPT COMMENTS-SCREEN
+                    IF KEYSTATUS = 1003 THEN
+                       MOVE SPACES TO SS-SAVE
+                       MOVE SPACE TO EOF
+                       EXIT PROGRAM
+                    END-IF
                  END-IF
               END-PERFORM
 
@@ -299,9 +304,19 @@
                  END-DELETE
                  MOVE MESSAGE-DELETE-YES TO COMMENT-TEXT
                  ACCEPT COMMENTS-SCREEN
+                 IF KEYSTATUS = 1003 THEN
+                    MOVE SPACES TO SS-SAVE
+                    MOVE SPACE TO EOF
+                    EXIT PROGRAM
+                 END-IF
               ELSE
                  MOVE MESSAGE-DELETE-NO TO COMMENT-TEXT
                  ACCEPT COMMENTS-SCREEN
+                 IF KEYSTATUS = 1003 THEN
+                    MOVE SPACES TO SS-SAVE
+                    MOVE SPACE TO EOF
+                    EXIT PROGRAM
+                 END-IF
               END-IF
            CLOSE CALENDAR
 
@@ -319,11 +334,13 @@
                  DISPLAY MAIN-SCREEN
                  PERFORM DOWNTIME-LIST-RECORDS
                  IF KEYSTATUS = 1003 OR EOF = "T" THEN
+                    CLOSE CALENDAR
                     EXIT SECTION
                  END-IF
 
                  PERFORM VIEW-SPECIFIC-DOWNTIME
                  IF KEYSTATUS = 1003 THEN
+                    CLOSE CALENDAR
                     EXIT SECTION
                  END-IF
 
