@@ -43,7 +43,7 @@
 
        WORKING-STORAGE SECTION.
 
-           COPY CONSTANTS.
+           COPY CONSTANTSSUPP.
 
        01 WSSUPPLIER-DETAILS.
            05 WSSUPPLIER-ID                    PIC 9(003).
@@ -143,7 +143,7 @@
            05 VALUE ALL " " PIC X(22) LINE 24 COL 98.
            05 VALUE ALL " " PIC X(22) LINE 25 COL 98.
            05 VALUE ALL " " PIC X(22) LINE 26 COL 98.
-           05 VALUE BACK-EXIT LINE 25 COL 99 FOREGROUND-COLOR 5.
+           05 VALUE BACK-EXIT LINE 25 COL 100 FOREGROUND-COLOR 5.
       ******************************************************************
        01 VIEW-SUPPLIER.
            05 VALUE ALL " " PIC X(080) LINE 7 COL 08
@@ -335,19 +335,51 @@
            05 DEL-SUPP LINE 25 COL PLUS 1 PIC X(002) TO DELETE-SUPP
                AUTO.
       ******************************************************************
-
+       01  EMPTY-LIST-SCREEN
+           BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
+           05 VALUE ALL " " PIC X(050) LINE 09 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 10 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 11 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 12 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 13 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 14 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 15 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 16 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 17 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 18 COL 35.
+           05 VALUE EMPTY-RECORDS      LINE 12 COL 38.
+           05 VALUE EMPTY-RECORDS2     LINE 15 COL 47.
+           05 LINE 01 COL 01 PIC X TO DUMMY AUTO.
+      ******************************************************************
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
            PERFORM 110-CHECK-IF-DEL-FILE-EXISTS
            MOVE SPACE TO SUPPEXIST
            PERFORM UNTIL SUPPEXIST-YES
                PERFORM 100-SUPPLIERS-LIST
+
+               IF TRUE-YES = "Y" OR KEYSTATUS = 1003 THEN
+                   EXIT PROGRAM
+               END-IF
                PERFORM 105-CHECK-IF-SUPPID-EXISTS
+               IF KEYSTATUS = 1003
+                   EXIT PROGRAM
+               END-IF
            END-PERFORM
            PERFORM 120-DELETE-SUPPLIER
            EXIT PROGRAM.
 
        100-SUPPLIERS-LIST SECTION.
+           OPEN INPUT FXSUPPLY
+           IF SUPP-STATUS = 35 THEN
+               DISPLAY CLEAR-SCREEN
+               DISPLAY MAIN-SCREEN
+               ACCEPT EMPTY-LIST-SCREEN
+               MOVE "Y" TO TRUE-YES
+               EXIT SECTION
+           ELSE
+               CLOSE FXSUPPLY
+           END-IF
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY LIST-FRAME
@@ -410,6 +442,9 @@
                    INVALID KEY
                        MOVE ERROR-SUPPID-NO TO ERROR-TEXT
                        ACCEPT ERROR-ZONE
+                       IF KEYSTATUS = 1003
+                               EXIT SECTION
+                       END-IF
                END-READ
            CLOSE FXSUPPLY
        EXIT SECTION.
@@ -432,9 +467,17 @@
            PERFORM WITH TEST AFTER UNTIL DELETE-SUPP-VALID
                MOVE SPACE TO DEL-SUPP
                ACCEPT DELETE-SUPPLIER-SCREEN
+               IF KEYSTATUS = 1003
+                   CLOSE FXSUPPLY FXSUPPLYDEL
+                   EXIT SECTION
+               END-IF
                IF NOT DELETE-SUPP-VALID THEN
                    MOVE VIEW-SUPPLIER-MENU-ERROR TO ERROR-TEXT
                    ACCEPT ERROR-ZONE
+                   IF KEYSTATUS = 1003
+                       CLOSE FXSUPPLY FXSUPPLYDEL
+                       EXIT SECTION
+                   END-IF
                END-IF
            END-PERFORM
            IF DELETE-SUPP = "Y" OR "y" THEN
@@ -446,9 +489,17 @@
                END-DELETE
                MOVE DELETE-YES TO ERROR-TEXT
                ACCEPT ERROR-ZONE
+               IF KEYSTATUS = 1003
+                   CLOSE FXSUPPLY FXSUPPLYDEL
+                   EXIT SECTION
+               END-IF
            ELSE
                MOVE DELETE-NO TO ERROR-TEXT
                ACCEPT ERROR-ZONE
+               IF KEYSTATUS = 1003
+                   CLOSE FXSUPPLY FXSUPPLYDEL
+                   EXIT SECTION
+               END-IF
            END-IF
            CLOSE FXSUPPLY FXSUPPLYDEL
        EXIT SECTION.
