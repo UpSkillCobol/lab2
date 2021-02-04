@@ -3,7 +3,7 @@
       ******************************************************************
       *    BREADWICH | CALENDAR MANAGEMENT
       ******************************************************************
-      *    DELETE MODULE | V0.1 | IN UPDATE | 03.02.2021
+      *    DELETE MODULE | V0.2 | IN UPDATE | 04.02.2021
       ******************************************************************
 
        IDENTIFICATION DIVISION.
@@ -34,12 +34,12 @@
        COPY CAMCONSTANTS.
        COPY WSCALENDAR.
        COPY WSVAR.
-       COPY VAR-VALIDDATE.
-       COPY VAR-SPACECHECK.
 
        SCREEN SECTION.
        01  CLEAR-SCREEN.
            05 BLANK SCREEN.
+
+      ******************************************************************
 
        01  MAIN-SCREEN BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
            05 VALUE ALL " " PIC X(120) LINE 02 COL 01.
@@ -52,7 +52,9 @@
            05 VALUE ALL " " PIC X(022) LINE 24 COL 98.
            05 VALUE ALL " " PIC X(022) LINE 25 COL 98.
            05 VALUE ALL " " PIC X(022) LINE 26 COL 98.
-           05 VALUE MAIN-TEXT1 LINE 25 COL 99 FOREGROUND-COLOR 5.
+           05 VALUE MAIN-TEXT1 LINE 25 COL 100 FOREGROUND-COLOR 5.
+
+      ******************************************************************
 
        01  LIST-FRAME.
            05 VALUE ALL " " PIC X(082) LINE 7 COL 07
@@ -109,6 +111,8 @@
            05 VALUE "  " LINE 20 COL 87 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 21 COL 87 BACKGROUND-COLOR 7.
 
+      ******************************************************************
+
        01  DOWNTIME-ID-LIST-SCREEN.
            05 LIST LINE ILIN COL ICOL.
               10 SHOW-ID PIC 9(003)       FROM FD-DOWNTIME-ID.
@@ -118,6 +122,26 @@
               10 SHOW-MONT PIC 9(002)     FROM FD-START-DT-MONTH.
               10 VALUE "/".
               10 SHOW-YEAR PIC 9(004)     FROM FD-START-DT-YEAR.
+
+      ******************************************************************
+
+       01  EMPTY-LIST-SCREEN
+           BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
+           05 VALUE ALL " " PIC X(050) LINE 09 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 10 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 11 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 12 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 13 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 14 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 15 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 16 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 17 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 18 COL 35.
+           05 VALUE EMPTY-RECORDS      LINE 12 COL 38.
+           05 VALUE EMPTY-RECORDS2     LINE 15 COL 47.
+           05 LINE 01 COL 01 PIC X TO PRESS-KEY AUTO.
+
+      ******************************************************************
 
        01  VIEW-RECORD-SCREEN BACKGROUND-COLOR 0 FOREGROUND-COLOR 7.
            05 VALUE ALL "_" PIC X(082) LINE 10 COL 08.
@@ -169,6 +193,13 @@
                  15 LINE 15 COL 40 VALUE "/".
                  15 REG-START-YEAR PIC X(004) LINE 15 COL 41 FROM
                     WS-START-DT-YEAR AUTO REQUIRED.
+              10 REG-START-TIME.
+                 15 LINE 15 COL 46 VALUE "|".
+                 15 REG-START-HOUR PIC X(002) LINE 15 COL 48 FROM
+                    WS-START-HOUR AUTO REQUIRED.
+                 15 LINE 15 COL 50 VALUE ":".
+                 15 REG-START-MINUTE PIC X(002) LINE 15 COL 51 FROM
+                    WS-START-MINUTE AUTO REQUIRED.
               10 REG-END-DATE.
                  15 REG-END-DAY PIC X(002) LINE 16 COL 35 FROM
                     WS-END-DT-DAY AUTO.
@@ -178,14 +209,25 @@
                  15 LINE 16 COL 40 VALUE "/".
                  15 REG-END-YEAR PIC X(004) LINE 16 COL 41 FROM
                     WS-END-DT-YEAR AUTO.
+              10 REG-END-TIME.
+                 15 LINE 16 COL 46 VALUE "|".
+                 15 REG-END-HOUR PIC X(002) LINE 16 COL 48 FROM
+                    WS-END-HOUR AUTO REQUIRED.
+                 15 LINE 16 COL 50 VALUE ":".
+                 15 REG-END-MINUTE PIC X(002) LINE 16 COL 51 FROM
+                    WS-END-MINUTE AUTO.
               10 REG-DESCRIPTION.
                  15 REG-DESCRIPTION1 PIC X(050) LINE 18 COL 35
                     FROM WS-DOWNTIME-DESCRIPTION1 AUTO.
                  15 REG-DESCRIPTION2 PIC X(050) LINE 19 COL 35
                     FROM WS-DOWNTIME-DESCRIPTION2 AUTO.
 
+      ******************************************************************
+
        01  EMPTY-FIELD-SCREEN BACKGROUND-COLOR 0 FOREGROUND-COLOR 7.
            05 VALUE EMPTY-FIELD-TEXT LINE 18 COL 35.
+
+      ******************************************************************
 
        01  INSTRUCTIONS-SCREEN BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
            05 VALUE ALL " " PIC X(095) LINE 24 COL 01.
@@ -194,6 +236,8 @@
            05 INSTRUCTIONS-TEXT LINE 25 COL 03 PIC X(092)
               FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
 
+      ******************************************************************
+
        01  COMMENTS-SCREEN BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
            05 VALUE ALL " " PIC X(095) LINE 24 COL 01.
            05 VALUE ALL " " PIC X(095) LINE 25 COL 01.
@@ -201,6 +245,8 @@
            05 COMMENT-TEXT LINE 25 COL 03 PIC X(085)
               FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
            05 LINE 01 COL 01 PIC X TO PRESS-KEY AUTO.
+
+      ******************************************************************
 
        01  REQUEST-ID-SCREEN
            BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
@@ -216,6 +262,8 @@
               FOREGROUND-COLOR 0 BACKGROUND-COLOR 7 TO REQUEST-ID
               BLANK WHEN ZERO.
 
+      ******************************************************************
+
        01  DELETE-SCREEN
            BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
            05 VALUE ALL " " PIC X(095) LINE 24 COL 01.
@@ -226,13 +274,15 @@
            05 SS-SAVE LINE 25 COL 74
               FOREGROUND-COLOR 4 BACKGROUND-COLOR 7 TO SAVE.
 
+      ******************************************************************
+
        PROCEDURE DIVISION.
        VIEW-DOWNTIME-MENU SECTION.
-           PERFORM UNTIL EOF = "T"
+           PERFORM UNTIL EOF = "Y"
               PERFORM GET-DOWNTIME-ID
-                 IF KEYSTATUS = 1003 OR 1004 THEN
-                    EXIT PROGRAM
-                 END-IF
+              IF KEYSTATUS = 1003 OR EOF = "T" THEN
+                 EXIT PROGRAM
+              END-IF
            END-PERFORM
 
            OPEN I-O CALENDAR
@@ -255,29 +305,33 @@
               END-IF
            CLOSE CALENDAR
 
-           MOVE SPACE TO SS-SAVE
+           MOVE SPACES TO SS-SAVE
            MOVE SPACE TO EOF
            EXIT PROGRAM.
 
+      ******************************************************************
+
        GET-DOWNTIME-ID SECTION.
-           PERFORM WITH TEST AFTER UNTIL EOF = "T"
+           PERFORM WITH TEST AFTER UNTIL EOF = "Y"
               OPEN INPUT CALENDAR
 
                  DISPLAY CLEAR-SCREEN
                  DISPLAY MAIN-SCREEN
                  PERFORM DOWNTIME-LIST-RECORDS
-                 IF KEYSTATUS = 1003 OR 1004 THEN
+                 IF KEYSTATUS = 1003 OR EOF = "T" THEN
                     EXIT SECTION
                  END-IF
 
                  PERFORM VIEW-SPECIFIC-DOWNTIME
-                 IF KEYSTATUS = 1003 OR 1004 THEN
+                 IF KEYSTATUS = 1003 THEN
                     EXIT SECTION
                  END-IF
 
                  CLOSE CALENDAR
            END-PERFORM
            EXIT SECTION.
+
+      ******************************************************************
 
        VIEW-SPECIFIC-DOWNTIME SECTION.
            DISPLAY CLEAR-SCREEN
@@ -288,7 +342,7 @@
               INVALID KEY
                  MOVE ID-NONEXISTENT TO COMMENT-TEXT
                  ACCEPT COMMENTS-SCREEN
-                 IF KEYSTATUS = 1003 OR 1004 THEN
+                 IF KEYSTATUS = 1003 THEN
                     EXIT SECTION
                  END-IF
 
@@ -297,14 +351,24 @@
                  IF REG-DESCRIPTION EQUALS SPACES THEN
                     DISPLAY EMPTY-FIELD-SCREEN
                  END-IF
-                 MOVE "T" TO EOF
-                 IF KEYSTATUS = 1003 OR 1004 THEN
+                 MOVE "Y" TO EOF
+                 IF KEYSTATUS = 1003 THEN
                     EXIT SECTION
                  END-IF
            END-READ
        EXIT SECTION.
 
+      ******************************************************************
+
        DOWNTIME-LIST-RECORDS SECTION.
+           IF CALENDAR-TEST = "35" THEN
+              DISPLAY CLEAR-SCREEN
+              DISPLAY MAIN-SCREEN
+              ACCEPT EMPTY-LIST-SCREEN
+              MOVE "T" TO EOF
+              EXIT SECTION
+           END-IF
+
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY LIST-FRAME
@@ -315,8 +379,9 @@
 
            START CALENDAR KEY IS GREATER OR EQUAL FD-DOWNTIME-ID
               INVALID KEY
-                 MOVE EMPTY-RECORDS TO COMMENT-TEXT
-                 ACCEPT COMMENTS-SCREEN
+                 DISPLAY CLEAR-SCREEN
+                 DISPLAY MAIN-SCREEN
+                 ACCEPT EMPTY-LIST-SCREEN
                  MOVE "T" TO EOF
                  EXIT SECTION
            END-START
@@ -329,7 +394,7 @@
                     MOVE LAST-PAGE TO MESSAGE-LIST-PAGE
                     ACCEPT REQUEST-ID-SCREEN
                     EXIT SECTION
-                    IF KEYSTATUS = 1003 OR 1004 THEN
+                    IF KEYSTATUS = 1003 THEN
                        EXIT SECTION
                     END-IF
                  NOT AT END
@@ -351,7 +416,7 @@
                           ELSE
                              EXIT SECTION
                           END-IF
-                          IF KEYSTATUS = 1003 OR 1004 THEN
+                          IF KEYSTATUS = 1003 THEN
                              EXIT SECTION
                           END-IF
                        END-IF
