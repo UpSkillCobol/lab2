@@ -8,7 +8,7 @@
       *     V0.1 | EM ATUALIZAÇÃO | 27.01.2020
       ******************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. SUPMENU.
+       PROGRAM-ID. SUPPLIERS.
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
        OBJECT-COMPUTER.
@@ -37,13 +37,10 @@
            03 VALUE ALL " " PIC X(120) LINE 03 COL 01.
            03 VALUE ALL " " PIC X(120) LINE 04 COL 01.
            03 VALUE MODULE-NAME LINE 03 COL 50.
-           03 VALUE ALL " " PIC X(95) LINE 24 COL 01.
-           03 VALUE ALL " " PIC X(95) LINE 25 COL 01.
-           03 VALUE ALL " " PIC X(95) LINE 26 COL 01.
-           03 VALUE ALL " " PIC X(22) LINE 24 COL 98.
-           03 VALUE ALL " " PIC X(22) LINE 25 COL 98.
-           03 VALUE ALL " " PIC X(22) LINE 26 COL 98.
-           03 VALUE BACK-EXIT LINE 25 COL 99 FOREGROUND-COLOR 5.
+           03 VALUE ALL " " PIC X(120) LINE 24 COL 01.
+           03 VALUE ALL " " PIC X(120) LINE 25 COL 01.
+           03 VALUE ALL " " PIC X(120) LINE 26 COL 01.
+
 
        01  MAIN-MENU-SCREEN
            BACKGROUND-COLOR 7, FOREGROUND-COLOR 0, AUTO, REQUIRED.
@@ -69,8 +66,6 @@
            03 ERROR-LINE LINE 25 COL 15 PIC X(80).
            03 SCREEN-DUMMY LINE 26 COL 95 PIC X TO DUMMY AUTO.
 
-
-
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
            PERFORM WITH TEST AFTER UNTIL WSMM-OPTION = 5
@@ -86,7 +81,7 @@
                END-IF
                PERFORM EVALUATE-MAIN-MENU
            END-PERFORM
-           STOP RUN.
+           EXIT PROGRAM.
 
        EVALUATE-MAIN-MENU SECTION.
            EVALUATE WSMM-OPTION
