@@ -5,19 +5,26 @@
       ******************************************************************
       *    SUPPLIERS MODULE - MAIN MENU
       ******************************************************************
-      *     V0.1 | EM ATUALIZAÇÃO | 23.01.2020
+      *     V0.1 | EM ATUALIZAÇÃO | 27.01.2020
       ******************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. SUPMENU.
+       PROGRAM-ID. SUPPLIERS.
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+       OBJECT-COMPUTER.
+       CHARACTER CLASSIFICATION IS LOCALE.
+       SPECIAL-NAMES.
+       CRT STATUS IS KEYSTATUS.
        DATA DIVISION.
        FILE SECTION.
        WORKING-STORAGE SECTION.
 
        COPY CONSTANTS.
 
-       01  WS-OPTION                           PIC 9(002).
-           88 VALID-OPTION                     VALUE 1 THRU 5.
+       01  WSMM-OPTION                         PIC 9(002).
+           88 VALID-WSMMOPTION                 VALUE 1 THRU 5.
        77  DUMMY                               PIC X(001).
+       77  KEYSTATUS                           PIC 9(004).
 
        SCREEN SECTION.
 
@@ -30,13 +37,10 @@
            03 VALUE ALL " " PIC X(120) LINE 03 COL 01.
            03 VALUE ALL " " PIC X(120) LINE 04 COL 01.
            03 VALUE MODULE-NAME LINE 03 COL 50.
-           03 VALUE ALL " " PIC X(95) LINE 24 COL 01.
-           03 VALUE ALL " " PIC X(95) LINE 25 COL 01.
-           03 VALUE ALL " " PIC X(95) LINE 26 COL 01.
-           03 VALUE ALL " " PIC X(22) LINE 24 COL 98.
-           03 VALUE ALL " " PIC X(22) LINE 25 COL 98.
-           03 VALUE ALL " " PIC X(22) LINE 26 COL 98.
-           03 VALUE BACK-EXIT LINE 25 COL 99 FOREGROUND-COLOR 5.
+           03 VALUE ALL " " PIC X(120) LINE 24 COL 01.
+           03 VALUE ALL " " PIC X(120) LINE 25 COL 01.
+           03 VALUE ALL " " PIC X(120) LINE 26 COL 01.
+
 
        01  MAIN-MENU-SCREEN
            BACKGROUND-COLOR 7, FOREGROUND-COLOR 0, AUTO, REQUIRED.
@@ -55,31 +59,32 @@
            03 VALUE MAIN-MENU-OPTION4 LINE 14 COL 50.
            03 VALUE MAIN-MENU-OPTION5 LINE 15 COL 50.
            03 VALUE MAIN-MENU-CHOICE LINE 20 COL 45 REVERSE-VIDEO.
-           03 MM-OPTION PIC 9(002) LINE 20 COL 73 TO WS-OPTION
+           03 MM-OPTION PIC 9(002) LINE 20 COL 73 TO WSMM-OPTION
                BLANK WHEN ZERO REVERSE-VIDEO.
 
        01 ERROR-MESSAGE FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
            03 ERROR-LINE LINE 25 COL 15 PIC X(80).
            03 SCREEN-DUMMY LINE 26 COL 95 PIC X TO DUMMY AUTO.
 
-
-
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
-           PERFORM WITH TEST AFTER UNTIL WS-OPTION = 5
-               MOVE ZERO TO WS-OPTION MM-OPTION
-               DISPLAY MAIN-SCREEN
+           PERFORM WITH TEST AFTER UNTIL WSMM-OPTION = 5
+               MOVE ZERO TO WSMM-OPTION MM-OPTION
+               DISPLAY CLEAR-SCREEN DISPLAY MAIN-SCREEN
                ACCEPT MAIN-MENU-SCREEN
-               IF NOT VALID-OPTION
+               IF KEYSTATUS = 1004
+                   MOVE 5 TO WSMM-OPTION
+               END-IF
+               IF NOT VALID-WSMMOPTION
                    MOVE MAIN-MENU-ERROR TO ERROR-LINE
                    ACCEPT ERROR-MESSAGE
                END-IF
                PERFORM EVALUATE-MAIN-MENU
            END-PERFORM
-           STOP RUN.
+           EXIT PROGRAM.
 
        EVALUATE-MAIN-MENU SECTION.
-           EVALUATE WS-OPTION
+           EVALUATE WSMM-OPTION
                WHEN 1
                    CALL "SUPPADD"
                WHEN 2
