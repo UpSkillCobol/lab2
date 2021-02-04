@@ -3,7 +3,7 @@
       ******************************************************************
       *    BREADWICH | CALENDAR MANAGEMENT
       ******************************************************************
-      *    REGULAR VARIABLES | V0.7 | IN UPDATE | 03.02.2021
+      *    REGULAR VARIABLES | V0.8 | IN UPDATE | 04.02.2021
       ******************************************************************
 
        01  MAIN-OPTION                          PIC 9(002).
@@ -25,5 +25,5 @@
        77  ILIN                                 PIC 9(002).
        77  ICOL                                 PIC 9(002).
        01  EDIT-OPTION                          PIC 9(001).
-           88 VALID-EDIT-OPTION                 VALUE 1 THRU 4.
-           88 EDIT-OPTION-EXIT                  VALUE 4.
+           88 VALID-EDIT-OPTION                 VALUE 1 THRU 6.
+           88 EDIT-OPTION-EXIT                  VALUE 6.
