@@ -21,6 +21,8 @@
        01  CLEAR-SCREEN.
            05 BLANK SCREEN.
 
+      ******************************************************************
+
        01  MAIN-SCREEN BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
            05 VALUE ALL " " PIC X(120) LINE 02 COL 01.
            05 VALUE ALL " " PIC X(120) LINE 03 COL 01.
@@ -29,6 +31,8 @@
            05 VALUE ALL " " PIC X(120) LINE 24 COL 01.
            05 VALUE ALL " " PIC X(120) LINE 25 COL 01.
            05 VALUE ALL " " PIC X(120) LINE 26 COL 01.
+
+      ******************************************************************
 
        01  MAIN-MENU-SCREEN BACKGROUND-COLOR 7 FOREGROUND-COLOR 0
            AUTO REQUIRED.
@@ -51,6 +55,8 @@
            05 VALUE ACCEPT-OPTION  LINE 21 COL 46 REVERSE-VIDEO.
            05 SS-OPTION PIC 9(002) LINE 21 COL 71 TO MAIN-OPTION
               BLANK WHEN ZERO REVERSE-VIDEO.
+
+      ******************************************************************
 
        01  LEAVE-SCREEN BACKGROUND-COLOR 0 FOREGROUND-COLOR 7.
            05 BLANK SCREEN.
@@ -84,22 +90,26 @@
            05 VALUE ALL " " PIC X(048) LINE 17 COL 36.
            05 LINE 01 COL 01 PIC X TO PRESS-KEY AUTO.
 
+      ******************************************************************
+
        01  ERROR-MESSAGE-SCREEN FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
            05 ERROR-LINE LINE 25 COL 12 PIC X(080).
            05 LINE 01 COL 01 PIC X TO PRESS-KEY AUTO.
+
+      ******************************************************************
 
        PROCEDURE DIVISION.
        MAIN SECTION.
            PERFORM UNTIL MAIN-OPTION = 6
 
-              DISPLAY CLEAR-SCREEN
               MOVE ZEROS TO SS-OPTION
+              DISPLAY CLEAR-SCREEN
               DISPLAY MAIN-SCREEN
               ACCEPT MAIN-MENU-SCREEN
               IF NOT VALID-MAIN-OPTION
                  MOVE OPTION-ERROR TO ERROR-LINE
                  ACCEPT ERROR-MESSAGE-SCREEN
-               END-IF
+              END-IF
 
               EVALUATE MAIN-OPTION
                  WHEN 1     CALL "SCM-MAIN"
