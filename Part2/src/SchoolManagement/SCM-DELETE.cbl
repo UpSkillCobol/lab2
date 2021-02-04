@@ -264,6 +264,7 @@
       *    IF THE RECORD DOESN'T EXIST A MESSAGE WILL BE SHOWN
                        DISPLAY EMPTY-LIST-SCREEN
                        IF KEY-STATUS = 1003 THEN
+                           CLOSE SCHOOLS
                            EXIT SECTION
                        END-IF
                NOT INVALID KEY
@@ -293,6 +294,11 @@
                    PERFORM DELETE-RECORD
                    DISPLAY DELETED-SCREEN
                    ACCEPT OMITTED AT LINE 25 COL 09
+                   IF KEY-STATUS = 1003 THEN
+                       CLOSE SCHOOLS
+                       EXIT SECTION
+                   END-IF
+
       *    IF THE USER INTRODUCES "N" THEN THE RECORD IS KEPT
                WHEN WS-DLT = "N"
                    PERFORM CLEAR-VARIABLES
@@ -328,8 +334,9 @@
            OPEN INPUT SCHOOLS
                IF FILE-STATUS = 35 THEN
                    ACCEPT EMPTY-LIST-SCREEN
-                   MOVE "Y" TO FLAG
                    SET WS-EOF TO TRUE
+                   CLOSE SCHOOLS
+                   MOVE "Y" TO FLAG
                END-IF
            DISPLAY LIST-SCREEN
       *    POINT THE FILE IN THE START, IN THIS CASE ON ID "000" SO
@@ -338,10 +345,11 @@
               INVALID KEY
       *    IF THERE ARE NO RECORDS A MESSAGE WILL BE SHOWN
                  ACCEPT EMPTY-LIST-SCREEN
+                 CLOSE SCHOOLS
                  MOVE "Y" TO FLAG
                  SET WS-EOF TO TRUE
                  ACCEPT OMITTED AT LINE 25 COL 01
-                 IF FLAG = "Y" THEN
+                 IF FLAG = "Y" OR KEY-STATUS = 1003 THEN
                     CLOSE SCHOOLS
                     EXIT SECTION
                  END-IF
@@ -358,11 +366,7 @@
       *    ACCEPT THE RECORD TO BE USED
                     ACCEPT CONTINUE-LIST
                     MOVE "S" TO FLAG
-                    IF FLAG = "S" THEN
-                       CLOSE SCHOOLS
-                       EXIT SECTION
-                    END-IF
-                    IF KEY-STATUS = 1003 THEN
+                    IF FLAG = "S" OR KEY-STATUS = 1003 THEN
                        CLOSE SCHOOLS
                        EXIT SECTION
                     END-IF
@@ -384,13 +388,10 @@
                           MOVE 9 TO SC-LINE
                        ELSE
                           MOVE "S" TO FLAG
-                          IF FLAG = "S" THEN
+                          IF FLAG = "S" OR KEY-STATUS = 1003 THEN
                              CLOSE SCHOOLS
                              EXIT SECTION
                           END-IF
-                       END-IF
-                       IF KEY-STATUS = 1003 THEN
-                          EXIT SECTION
                        END-IF
                     END-IF
               END-READ
