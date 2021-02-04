@@ -48,12 +48,12 @@
            05 VALUE ALL " " PIC X(120) LINE 03 COL 01.
            05 VALUE ALL " " PIC X(120) LINE 04 COL 01.
            05 VALUE MODULE-NAME LINE 03 COL 50.
-           05 VALUE ALL " " PIC X(95) LINE 24 COL 01.
-           05 VALUE ALL " " PIC X(95) LINE 25 COL 01.
-           05 VALUE ALL " " PIC X(95) LINE 26 COL 01.
-           05 VALUE ALL " " PIC X(23) LINE 24 COL 98.
-           05 VALUE ALL " " PIC X(23) LINE 25 COL 98.
-           05 VALUE ALL " " PIC X(23) LINE 26 COL 98.
+           05 VALUE ALL " " PIC X(095) LINE 24 COL 01.
+           05 VALUE ALL " " PIC X(095) LINE 25 COL 01.
+           05 VALUE ALL " " PIC X(095) LINE 26 COL 01.
+           05 VALUE ALL " " PIC X(023) LINE 24 COL 98.
+           05 VALUE ALL " " PIC X(023) LINE 25 COL 98.
+           05 VALUE ALL " " PIC X(023) LINE 26 COL 98.
            05 VALUE BACK-EXIT
                LINE 25 COL 100 FOREGROUND-COLOR 5.
       ******************************************************************
@@ -122,22 +122,22 @@
       ******************************************************************
         01 EDIT-WHAT-SCREEN
            BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
-           05 VALUE ALL " " PIC X(22) LINE 07 COL 98.
-           05 VALUE ALL " " PIC X(22) LINE 08 COL 98.
-           05 VALUE ALL " " PIC X(22) LINE 09 COL 98.
-           05 VALUE ALL " " PIC X(22) LINE 10 COL 98.
-           05 VALUE ALL " " PIC X(22) LINE 11 COL 98.
-           05 VALUE ALL " " PIC X(22) LINE 12 COL 98.
-           05 VALUE ALL " " PIC X(22) LINE 13 COL 98.
-           05 VALUE ALL " " PIC X(22) LINE 14 COL 98.
-           05 VALUE ALL " " PIC X(22) LINE 15 COL 98.
-           05 VALUE ALL " " PIC X(22) LINE 16 COL 98.
-           05 VALUE ALL " " PIC X(22) LINE 17 COL 98.
-           05 VALUE ALL " " PIC X(22) LINE 18 COL 98.
-           05 VALUE ALL " " PIC X(22) LINE 19 COL 98.
-           05 VALUE ALL " " PIC X(22) LINE 20 COL 98.
-           05 VALUE ALL " " PIC X(22) LINE 21 COL 98.
-           05 VALUE ALL " " PIC X(22) LINE 22 COL 98.
+           05 VALUE ALL " " PIC X(022) LINE 07 COL 98.
+           05 VALUE ALL " " PIC X(022) LINE 08 COL 98.
+           05 VALUE ALL " " PIC X(022) LINE 09 COL 98.
+           05 VALUE ALL " " PIC X(022) LINE 10 COL 98.
+           05 VALUE ALL " " PIC X(022) LINE 11 COL 98.
+           05 VALUE ALL " " PIC X(022) LINE 12 COL 98.
+           05 VALUE ALL " " PIC X(022) LINE 13 COL 98.
+           05 VALUE ALL " " PIC X(022) LINE 14 COL 98.
+           05 VALUE ALL " " PIC X(022) LINE 15 COL 98.
+           05 VALUE ALL " " PIC X(022) LINE 16 COL 98.
+           05 VALUE ALL " " PIC X(022) LINE 17 COL 98.
+           05 VALUE ALL " " PIC X(022) LINE 18 COL 98.
+           05 VALUE ALL " " PIC X(022) LINE 19 COL 98.
+           05 VALUE ALL " " PIC X(022) LINE 20 COL 98.
+           05 VALUE ALL " " PIC X(022) LINE 21 COL 98.
+           05 VALUE ALL " " PIC X(022) LINE 22 COL 98.
            05 VALUE WHAT-TO-EDIT LINE 09 COL 103.
            05 VALUE EDIT1 LINE 12 COL 100.
            05 VALUE EDIT2 LINE 13 COL 100.
@@ -223,39 +223,54 @@
       ******************************************************************
        01  NEXT-LIST-SCREEN FOREGROUND-COLOUR 4
            BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 25 COL 01 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(095) LINE 24 COL 01
+           BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(095) LINE 25 COL 01
+           BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(095) LINE 26 COL 01
+           BACKGROUND-COLOR 7.
            05 VALUE "|" LINE 25 COL 52.
            05 VALUE NEXT-LIST-TEXT LINE 25 COL 53.
 
       ******************************************************************
        01  ID-ERROR-SCREEN
            FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 25 COL 01 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(095) LINE 24 COL 01
+           BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(095) LINE 25 COL 01
+           BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(095) LINE 26 COL 01
+           BACKGROUND-COLOR 7.
            05 VALUE ID-ERROR-TEXT LINE 25 COL 10.
       ******************************************************************
        01  INSTRUCTIONS-SCREEN.
-           05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 25 COL 01 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(095) LINE 24 COL 01
+           BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(095) LINE 25 COL 01
+           BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(095) LINE 26 COL 01
+           BACKGROUND-COLOR 7.
            05 INSTRUCTION-MESSAGE PIC X(085) LINE 25 COL 10
            FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
       ******************************************************************
        01  ERROR-SCREEN.
-           05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 25 COL 01 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(095) LINE 24 COL 01
+           BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(095) LINE 25 COL 01
+           BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(095) LINE 26 COL 01
+           BACKGROUND-COLOR 7.
            05 ERROR-MESSAGE PIC X(085) LINE 25 COL 10
            FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
            05 SCREEN-DUMMY LINE 27 COL 01 PIC X TO DUMMY AUTO.
       ******************************************************************
        01  CONFIRM-SCREEN.
-           05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 25 COL 01 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(095) LINE 24 COL 01
+           BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(095) LINE 25 COL 01
+           BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(095) LINE 26 COL 01
+           BACKGROUND-COLOR 7.
            05 CONFIRM-MESSAGE PIC X(085) LINE 25 COL 10
            FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
            05 SCREEN-DUMMY LINE 27 COL 01 PIC X TO DUMMY AUTO.
