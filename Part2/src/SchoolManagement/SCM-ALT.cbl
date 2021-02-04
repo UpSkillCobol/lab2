@@ -34,6 +34,7 @@
        COPY "CB-SCHOOLS".
 
        WORKING-STORAGE SECTION.
+       01  WS-SPACES                                   PIC 9(003).
        COPY "CB-WS-SCHOOLS".
        COPY "CONSTANTS".
 
@@ -456,40 +457,44 @@
        EDIT-EED SECTION.
       *    SECTION TO CHANGE EXTERNAL ID
            PERFORM WITH TEST AFTER UNTIL EXTERNAL-ID-VLD
-               AND REG-UNIQ = 1
-               MOVE ZERO TO REG-UNIQ
-               MOVE SPACES TO ALT-EED
-               MOVE INSTRUCTION-EED TO INSTRUCTION-MESSAGE
-               DISPLAY INSTRUCTIONS-SCREEN
-               ACCEPT ALT-EED
-               IF KEY-STATUS = 1003 THEN
-                   EXIT SECTION
-               END-IF
-               IF KEY-STATUS = 1004 THEN
-                   STOP RUN
-               END-IF
+               AND REG-UNIQ = 1 AND WS-SPACES = 8
+                   MOVE ZEROS TO WS-SPACES
+                   MOVE ZERO TO REG-UNIQ
+                   MOVE SPACES TO ALT-EED
+                   MOVE INSTRUCTION-EED TO INSTRUCTION-MESSAGE
+                   DISPLAY INSTRUCTIONS-SCREEN
+                   ACCEPT ALT-EED
+                   IF KEY-STATUS = 1003 THEN
+                       EXIT SECTION
+                   END-IF
+                   IF KEY-STATUS = 1004 THEN
+                       STOP RUN
+                   END-IF
       *    CHECK IF THE EXTERNAL ID ISNT ALREADY REGISTERED
-               MOVE WS-SCHOOL-EXTERNAL-ID TO SCHOOL-EXTERNAL-ID
-               OPEN INPUT SCHOOLS
-                   READ SCHOOLS RECORD
-                       KEY IS SCHOOL-EXTERNAL-ID
-                       INVALID KEY
-                           MOVE 1 TO REG-UNIQ
-                       NOT INVALID KEY
-                           MOVE 0 TO REG-UNIQ
-                           MOVE ERROR-EED TO ERROR-MESSAGE
+                   MOVE WS-SCHOOL-EXTERNAL-ID TO SCHOOL-EXTERNAL-ID
+                   OPEN INPUT SCHOOLS
+                       READ SCHOOLS RECORD
+                           KEY IS SCHOOL-EXTERNAL-ID
+                           INVALID KEY
+                               MOVE 1 TO REG-UNIQ
+                           NOT INVALID KEY
+                               MOVE 0 TO REG-UNIQ
+                               MOVE ERROR-EED TO ERROR-MESSAGE
+                               ACCEPT ERROR-SCREEN
+                               IF KEY-STATUS = 1003 THEN
+                                   EXIT SECTION
+                               END-IF
+                               IF KEY-STATUS = 1004 THEN
+                                   STOP RUN
+                               END-IF
+                       END-READ
+                   CLOSE SCHOOLS
+                   INSPECT WS-SCHOOL-EXTERNAL-ID TALLYING WS-SPACES
+                   FOR ALL SPACES
+                   IF NOT EXTERNAL-ID-VLD OR WS-SPACES = 8 THEN
+                       MOVE ERROR-EED1 TO ERROR-MESSAGE
                            ACCEPT ERROR-SCREEN
-                           IF KEY-STATUS = 1003 THEN
-                               EXIT SECTION
-                           END-IF
-                           IF KEY-STATUS = 1004 THEN
-                               STOP RUN
-                           END-IF
-                   END-READ
-               CLOSE SCHOOLS
-               IF NOT EXTERNAL-ID-VLD THEN
-                   MOVE ERROR-EED1 TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
-               END-IF
+                   END-IF
            END-PERFORM
       *    PERFOM LOWER-UPPER TO CHANGE EVERYTHING TO UPPER CASE LETTERS
            PERFORM LOWER-UPPER
@@ -509,19 +514,24 @@
        EDIT-DESIGNATION SECTION.
       *    SECTION TO CHANGE DESIGNATION
            PERFORM WITH TEST AFTER UNTIL DESIGNATION-VLD
-               MOVE INSTRUCTION-DSG TO INSTRUCTION-MESSAGE
-               DISPLAY INSTRUCTIONS-SCREEN
-               MOVE SPACES TO ALT-DESIGNATION
-               ACCEPT ALT-DESIGNATION
-               IF KEY-STATUS = 1003 THEN
-                   EXIT SECTION
-               END-IF
-               IF KEY-STATUS = 1004 THEN
-                   STOP RUN
-               END-IF
-               IF NOT DESIGNATION-VLD THEN
-                   MOVE ERROR-DSG TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
-               END-IF
+               AND WS-SPACES <150
+                   MOVE ZEROS TO WS-SPACES
+                   MOVE INSTRUCTION-DSG TO INSTRUCTION-MESSAGE
+                   DISPLAY INSTRUCTIONS-SCREEN
+                   MOVE SPACES TO ALT-DESIGNATION
+                   ACCEPT ALT-DESIGNATION
+                   IF KEY-STATUS = 1003 THEN
+                       EXIT SECTION
+                   END-IF
+                   IF KEY-STATUS = 1004 THEN
+                       STOP RUN
+                   END-IF
+                   INSPECT WS-SCHOOL-DESIGNATION1 TALLYING WS-SPACES
+                           FOR ALL SPACES
+                       IF NOT DESIGNATION-VLD OR WS-SPACES = 50 THEN
+                           MOVE ERROR-DSG TO ERROR-MESSAGE
+                           ACCEPT ERROR-SCREEN
+                       END-IF
            END-PERFORM
       *    PERFOM LOWER-UPPER TO CHANGE EVERYTHING TO UPPER CASE LETTERS
            PERFORM LOWER-UPPER
@@ -542,7 +552,8 @@
       ******************************************************************
        EDIT-ADDRESS SECTION.
       *    SECTION TO CHANGE ADDRESS
-           PERFORM WITH TEST AFTER UNTIL ADDRESS-VLD
+           PERFORM WITH TEST AFTER UNTIL ADDRESS-VLD AND WS-SPACES <50
+               MOVE ZEROS TO WS-SPACES
                MOVE INSTRUCTION-ADR TO INSTRUCTION-MESSAGE
                DISPLAY INSTRUCTIONS-SCREEN
                MOVE SPACES TO ALT-ADDRESS
@@ -553,7 +564,9 @@
                IF KEY-STATUS = 1004 THEN
                    STOP RUN
                END-IF
-               IF NOT ADDRESS-VLD
+               INSPECT WS-SCHL-ADR-MAIN1 TALLYING WS-SPACES
+               FOR ALL SPACES
+               IF NOT ADDRESS-VLD OR WS-SPACES = 50 THEN
                    MOVE ERROR-ADR TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
                END-IF
            END-PERFORM
@@ -612,7 +625,8 @@
            CALL "CPS" USING BY REFERENCE ALT-REC
            MOVE WS-SCHOOL-TOWN TO ALT-TOWN
            DISPLAY ALT-SCREEN
-           PERFORM WITH TEST AFTER UNTIL TOWN-VLD
+           PERFORM WITH TEST AFTER UNTIL TOWN-VLD AND WS-SPACES < 30
+               MOVE ZEROS TO WS-SPACES
                MOVE INSTRUCTION-TOWN TO INSTRUCTION-MESSAGE
                DISPLAY INSTRUCTIONS-SCREEN
                 ACCEPT ALT-TOWN
@@ -622,7 +636,9 @@
                IF KEY-STATUS = 1004 THEN
                    STOP RUN
                END-IF
-               IF NOT TOWN-VLD THEN
+               INSPECT WS-SCHOOL-TOWN TALLYING WS-SPACES
+               FOR ALL SPACES
+               IF NOT TOWN-VLD OR WS-SPACES = 30 THEN
                    MOVE ERROR-TOWN TO ERROR-MESSAGE
                    ACCEPT ERROR-SCREEN
                END-IF

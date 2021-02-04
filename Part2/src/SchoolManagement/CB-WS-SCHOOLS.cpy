@@ -12,11 +12,11 @@
            05 WS-SCHOOL-INTERNAL-ID                PIC 9(003).
            05 WS-SCHOOL-EXTERNAL-ID                PIC X(008).
                88 EXTERNAL-ID-VLD                  VALUE "A" THRU "Z",
-                                                   "a" THRU "z", SPACES,
+                                                   "a" THRU "z", SPACE,
                                                    "0" THRU "9", "/".
            05 WS-SCHOOL-DESIGNATION.
                88 DESIGNATION-VLD                  VALUE "A" THRU "Z",
-                                                   "a" THRU "z", SPACES,
+                                                   "a" THRU "z", SPACE,
                                                    "&",",",".","º","ª",
                                                    "0" THRU "9".
                10 WS-SCHOOL-DESIGNATION1           PIC X(050).
@@ -25,7 +25,7 @@
            05 WS-SCHOOL-ADRESS.
                10 WS-SCHL-ADR-MAIN.
                    88 ADDRESS-VLD                   VALUE "A" THRU "Z",
-                                                   "a" THRU "z", SPACES,
+                                                   "a" THRU "z", SPACE,
                                                    "0" THRU "9".
                    15 WS-SCHL-ADR-MAIN1            PIC X(050).
                    15 WS-SCHL-ADR-MAIN2            PIC X(050).

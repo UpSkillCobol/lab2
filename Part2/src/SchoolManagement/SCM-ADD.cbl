@@ -38,6 +38,11 @@
            01 FD-KEYS.
                05 REGKEY                           PIC 9(003).
        WORKING-STORAGE SECTION.
+       01  ALPHABET-CHECK                          PIC X(001).
+           88  LETTERS                             VALUE "A" THRU "Z",
+                                                   "a" THRU "z".
+       01  WS-LETTER-COUNT                         PIC 9(003).
+       01  WS-SPACES                               PIC 9(003).
        COPY "CB-WS-SCHOOLS".
        COPY "CONSTANTS".
        SCREEN SECTION.
@@ -265,7 +270,8 @@
        REGISTER-EXTERNAL-ID SECTION.
       *    SECTION TO OBTAIN THE EXTERNAL ID
            PERFORM WITH TEST AFTER UNTIL EXTERNAL-ID-VLD
-               AND REG-UNIQ = 1
+               AND REG-UNIQ = 1 AND WS-SPACES < 8
+               MOVE ZEROS TO WS-SPACES
                MOVE ZERO TO REG-UNIQ
                MOVE SPACES TO REG-EED
                MOVE INSTRUCTION-EED TO INSTRUCTION-MESSAGE
@@ -290,7 +296,9 @@
                            ACCEPT ERROR-SCREEN
                    END-READ
                CLOSE SCHOOLS
-               IF NOT EXTERNAL-ID-VLD THEN
+               INSPECT WS-SCHOOL-EXTERNAL-ID TALLYING WS-SPACES
+               FOR ALL SPACES
+               IF NOT EXTERNAL-ID-VLD OR WS-SPACES = 8 THEN
                    MOVE ERROR-EED1 TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
                END-IF
            END-PERFORM
@@ -305,19 +313,24 @@
        REGISTER-DESIGNATION SECTION.
       *    SECTION TO OBTAIN THE DESIGNATION
            PERFORM WITH TEST AFTER UNTIL DESIGNATION-VLD
-               MOVE INSTRUCTION-DSG TO INSTRUCTION-MESSAGE
-               DISPLAY INSTRUCTIONS-SCREEN
-               MOVE SPACES TO REG-DESIGNATION
-               ACCEPT REG-DESIGNATION
-               IF KEY-STATUS = 1003 THEN
-                   EXIT SECTION
-               END-IF
-               IF KEY-STATUS = 1004 THEN
-                   STOP RUN
-               END-IF
-               IF NOT DESIGNATION-VLD THEN
-                   MOVE ERROR-DSG TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
-               END-IF
+               AND WS-SPACES < 50
+                   MOVE ZEROS TO WS-SPACES
+                   MOVE INSTRUCTION-DSG TO INSTRUCTION-MESSAGE
+                   DISPLAY INSTRUCTIONS-SCREEN
+                   MOVE SPACES TO REG-DESIGNATION
+                   ACCEPT REG-DESIGNATION
+                   IF KEY-STATUS = 1003 THEN
+                       EXIT SECTION
+                   END-IF
+                   IF KEY-STATUS = 1004 THEN
+                       STOP RUN
+                   END-IF
+                   INSPECT WS-SCHOOL-DESIGNATION1 TALLYING WS-SPACES
+                       FOR ALL SPACES
+                   IF NOT DESIGNATION-VLD OR WS-SPACES = 50 THEN
+                       MOVE ERROR-DSG TO ERROR-MESSAGE
+                       ACCEPT ERROR-SCREEN
+                   END-IF
            END-PERFORM
       *    CALL SPACE-CHECK SECTION TO REMOVE ALL EXTRA SPACES
            MOVE SPACES TO LINK-TEXT
@@ -328,8 +341,9 @@
       ******************************************************************
        REGISTER-ADDRESS SECTION.
       *    SECTION TO OBTAIN THE ADDRESS, MAIN ADDRESS, POSTLA CODE AND TOWN
-           PERFORM WITH TEST AFTER UNTIL ADDRESS-VLD
+           PERFORM WITH TEST AFTER UNTIL ADDRESS-VLD AND WS-SPACES < 50
       *    OBTAIN MAIN ADDRESS
+               MOVE ZEROS TO WS-SPACES
                MOVE INSTRUCTION-ADR TO INSTRUCTION-MESSAGE
                DISPLAY INSTRUCTIONS-SCREEN
                MOVE SPACES TO REG-ADDRESS
@@ -340,7 +354,9 @@
                IF KEY-STATUS = 1004 THEN
                    STOP RUN
                END-IF
-               IF NOT ADDRESS-VLD
+               INSPECT WS-SCHL-ADR-MAIN1 TALLYING WS-SPACES
+               FOR ALL SPACES
+               IF NOT ADDRESS-VLD OR WS-SPACES = 50 THEN
                    MOVE ERROR-ADR TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
                END-IF
            END-PERFORM
@@ -383,8 +399,9 @@
       ******************************************************************
       *    OBTAIN THE TOWN, IF THE CPS MODULE DOESNT RETURN ANY VALUE
       *    OR IF THE USER WANTS TO CHANGE IT
-           PERFORM WITH TEST AFTER UNTIL TOWN-VLD
+           PERFORM WITH TEST AFTER UNTIL TOWN-VLD AND WS-SPACES <30
                MOVE INSTRUCTION-TOWN TO INSTRUCTION-MESSAGE
+               MOVE ZEROS TO WS-SPACES
                DISPLAY INSTRUCTIONS-SCREEN
                 ACCEPT REG-TOWN
                 IF KEY-STATUS = 1003 THEN
@@ -393,7 +410,9 @@
                IF KEY-STATUS = 1004 THEN
                    STOP RUN
                END-IF
-               IF NOT TOWN-VLD THEN
+               INSPECT WS-SCHOOL-TOWN TALLYING WS-SPACES
+               FOR ALL SPACES
+               IF NOT TOWN-VLD OR WS-SPACES = 30 THEN
                    MOVE ERROR-TOWN TO ERROR-MESSAGE
                    ACCEPT ERROR-SCREEN
                END-IF
