@@ -138,10 +138,10 @@
               END-IF
 
               EVALUATE MAIN-OPTION
-                 WHEN 1     CALL "SCM-MAIN"
-                 WHEN 2     CALL "CAMMAIN"
-                 WHEN 3     CALL "MAININGREDS"
-                 WHEN 4     CALL "suppliers"
+                 WHEN 1     CALL "SCHOOLS"
+                 WHEN 2     CALL "CALENDAR"
+                 WHEN 3     CALL "INGREDIENTS"
+                 WHEN 4     CALL "SUPPLIERS"
                  WHEN 5     CALL "CATEGORIES"
               END-EVALUATE
 
