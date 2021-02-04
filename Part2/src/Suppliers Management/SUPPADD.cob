@@ -9,15 +9,22 @@
       ******************************************************************
        IDENTIFICATION DIVISION.
        PROGRAM-ID. SUPPADD.
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+       SPECIAL-NAMES.
+       CRT STATUS IS KEYSTATUS1.
+       REPOSITORY.
+       FUNCTION ALL INTRINSIC.
        DATA DIVISION.
        FILE SECTION.
        WORKING-STORAGE SECTION.
 
-       COPY CONSTANTS.
+       COPY CONSTANTSSUPP.
 
-       01  ADD-OPTION                              PIC 9(002).
-           88 ADD-VALID-OPTION                     VALUE 1 THRU 3.
-       77  DUMMY                                   PIC X(001).
+       01  ADD-OPTION                      PIC 9(002).
+           88 ADD-VALID-OPTION             VALUE 1 THRU 3.
+       77  DUMMY                           PIC X(001).
+       77  KEYSTATUS1                       PIC 9(004).
 
        SCREEN SECTION.
 
@@ -71,14 +78,23 @@
                    ACCEPT ERROR-MESSAGE
                END-IF
                PERFORM EVALUATE-ADD-SUPPLIER-MENU
+                   IF KEYSTATUS1 = 1003 THEN
+                       EXIT PROGRAM
+                   END-IF
            END-PERFORM
            EXIT PROGRAM.
 
        EVALUATE-ADD-SUPPLIER-MENU SECTION.
            EVALUATE ADD-OPTION
                WHEN 1
-                   CALL "ADDSUPMAN"
-      *         WHEN 2
-      *             CALL "ADDSUPCSV"
+                   CALL "ADDSUPMAN" USING BY REFERENCE KEYSTATUS1
+                   IF KEYSTATUS1 = 1003 THEN
+                       EXIT SECTION
+                   END-IF
+               WHEN 2
+                   CALL "ADDSUPPCSV" USING BY REFERENCE KEYSTATUS1
+                   IF KEYSTATUS1 = 1003 THEN
+                       EXIT SECTION
+                   END-IF
            END-EVALUATE
            EXIT SECTION.
