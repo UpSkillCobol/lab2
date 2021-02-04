@@ -3,11 +3,11 @@
       ******************************************************************
       *    BREADWICH | CALENDAR MANAGEMENT
       ******************************************************************
-      *    MAIN PROGRAM | V0.7 | IN UPDATE | 03.02.2021
+      *    MAIN PROGRAM | V0.8 | IN UPDATE | 04.02.2021
       ******************************************************************
 
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. CAMMAIN.
+       PROGRAM-ID. CALENDAR.
 
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
@@ -90,4 +90,4 @@
 
            EXIT PROGRAM.
 
-       END PROGRAM CAMMAIN.
+       END PROGRAM CALENDAR.
