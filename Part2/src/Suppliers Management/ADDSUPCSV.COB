@@ -65,7 +65,7 @@
 
        FD CSVERRORLOG.
        01  ERRORLOG.
-           03 ERRORSUPP                   PIC X(500).
+           03 ERRORSUPP                   PIC X(480).
 
        WORKING-STORAGE SECTION.
 
@@ -104,8 +104,7 @@
 
        SCREEN SECTION.
       ******************************************************************
-       01  CLEAR-SCREEN.
-           03 BLANK SCREEN.
+       01  CLEAR-SCREEN BLANK SCREEN.
       ******************************************************************
        01  MAIN-SCREEN
            BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
@@ -234,17 +233,6 @@
            05 WANT-TO-SAVE1 LINE 25 COL 67
                FOREGROUND-COLOR 4 BACKGROUND-COLOR 7 TO SAVE-IT.
       ******************************************************************
-       01 INSTRUCTIONS-test.
-           05 VALUE ALL " " PIC X(095) LINE 19 COL 01.
-           05 VALUE ALL " " PIC X(095) LINE 20 COL 01.
-           05 VALUE ALL " " PIC X(095) LINE 21 COL 01.
-           05 VALUE ALL " " PIC X(095) LINE 18 COL 01.
-           05 VALUE ALL " " PIC X(095) LINE 22 COL 01.
-           05 INSTRUCTIONS-teste LINE 18 COL 03 PIC X(480)
-               FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
-           05 WANT-TO-SAVE2 LINE 25 COL 67
-               FOREGROUND-COLOR 4 BACKGROUND-COLOR 7 TO SAVE-IT.
-
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
            PERFORM 102-CHECK-IF-CSV-FILE-EXISTS
@@ -305,55 +293,82 @@
        EXIT SECTION.
 
        112-GET-CSV-DATA SECTION.
+      *>      OPEN INPUT CSVSUPPLY
+      *>      MOVE SPACE TO CSV-VALID
+      *>      READ CSVSUPPLY NEXT RECORD
+      *>          AT END SET EOFCSV TO TRUE
+      *>      END-READ
+      *>      PERFORM UNTIL EOFCSV
+      *>                  PERFORM 110-GET-SUPPLY-ID
+      *>                  MOVE 1 TO WSSUPPLIER-IS-ACTIVE
+      *>                  MOVE ZERO TO WSSUPPLIER-POSTAL-CODE1
+      *>                  WSSUPPLIER-POSTAL-CODE2 WSSUPPLIER-TELEPHONE
+      *>                  MOVE SPACES TO WSSUPPLIER-NAME
+      *>                  WSSUPPLIER-DESCRIPTION WSSUPP-ADR-MAIN
+      *>                  WSSUPPLIER-TOWN WSSUPPLIER-EMAIL
+      *>                  MOVE FDSUPPKEYS TO WSSUPPLIER-ID
+      *>                  UNSTRING SUPCSVDATA DELIMITED BY ";" INTO
+      *>                  WSSUPPLIER-NAME WSSUPPLIER-DESCRIPTION
+      *>                  WSSUPP-ADR-MAIN WSSUPPLIER-POSTAL-CODE
+      *>                  WSSUPPLIER-TOWN WSSUPPLIER-EMAIL1
+      *>                  WSSUPPLIER-EMAIL2 WSSUPPLIER-EMAIL3
+      *>                  WSSUPPLIER-TELEPHONE1 WSSUPPLIER-TELEPHONE2
+      *>                  WSSUPPLIER-TELEPHONE3
+                       PERFORM 115-CHECK-NAME-VALIDITY
+                       IF NOT CSV-NOT-VALID
+                           PERFORM 120-CHECK-DESCRIPTION-VALIDITY
+                       END-IF
+                       IF NOT CSV-NOT-VALID
+                           PERFORM 125-CHECK-ADDRESS-VALIDITY
+                       END-IF
+                       IF NOT CSV-NOT-VALID
+                           PERFORM 130-CHECK-POSTALCODE-VALIDITY
+                       END-IF
+                       IF NOT CSV-NOT-VALID
+                           PERFORM 135-CHECK-TOWN-VALIDITY
+                       END-IF
+                       IF NOT CSV-NOT-VALID
+                           PERFORM 140-CHECK-EMAIL-VALIDITY
+                       END-IF
+                       IF NOT CSV-NOT-VALID
+                           PERFORM 140-CHECK-PHONE-VALIDITY
+                       END-IF
+      *>                  PERFORM 150-WRITE-RECORD
+      *>                  READ CSVSUPPLY NEXT RECORD
+      *>                      AT END SET EOFCSV TO TRUE
+      *>                  END-READ
+      *>      END-PERFORM
+      *>      CLOSE CSVSUPPLY
            OPEN INPUT CSVSUPPLY
-           MOVE SPACE TO CSV-VALID
+           READ CSVSUPPLY NEXT RECORD
+               AT END SET EOFCSV TO TRUE
+           END-READ
            PERFORM UNTIL EOFCSV
-               READ CSVSUPPLY
-                   AT END SET EOFCSV TO TRUE
-                       MOVE END-CSV-READ TO ERROR-TEXT
-                       DISPLAY CLEAR-SCREEN
-                       DISPLAY MAIN-SCREEN
-                       ACCEPT ERROR-ZONE
-      *         END-READ
-                   NOT AT END
-                       PERFORM 110-GET-SUPPLY-ID
-                       MOVE 1 TO WSSUPPLIER-IS-ACTIVE
-                       MOVE ZERO TO WSSUPPLIER-POSTAL-CODE1
-                       WSSUPPLIER-POSTAL-CODE2 WSSUPPLIER-TELEPHONE
-                       MOVE SPACES TO WSSUPPLIER-NAME
-                       WSSUPPLIER-DESCRIPTION WSSUPP-ADR-MAIN
-                       WSSUPPLIER-TOWN WSSUPPLIER-EMAIL
-                       MOVE FDSUPPKEYS TO WSSUPPLIER-ID
-                       UNSTRING SUPCSVDATA DELIMITED BY ";" INTO
+               UNSTRING SUPCSVDATA DELIMITED BY ";" INTO
                        WSSUPPLIER-NAME WSSUPPLIER-DESCRIPTION
                        WSSUPP-ADR-MAIN WSSUPPLIER-POSTAL-CODE
                        WSSUPPLIER-TOWN WSSUPPLIER-EMAIL1
                        WSSUPPLIER-EMAIL2 WSSUPPLIER-EMAIL3
                        WSSUPPLIER-TELEPHONE1 WSSUPPLIER-TELEPHONE2
                        WSSUPPLIER-TELEPHONE3
-      *                 PERFORM 115-CHECK-NAME-VALIDITY
-      *                 IF NOT CSV-NOT-VALID
-      *                     PERFORM 120-CHECK-DESCRIPTION-VALIDITY
-      *                 END-IF
-      *                 IF NOT CSV-NOT-VALID
-      *                     PERFORM 125-CHECK-ADDRESS-VALIDITY
-      *                 END-IF
-      *                 IF NOT CSV-NOT-VALID
-      *                     PERFORM 130-CHECK-POSTALCODE-VALIDITY
-      *                 END-IF
-      *                 IF NOT CSV-NOT-VALID
-      *                     PERFORM 135-CHECK-TOWN-VALIDITY
-      *                 END-IF
-      *                 IF NOT CSV-NOT-VALID
-      *                     PERFORM 140-CHECK-EMAIL-VALIDITY
-      *                 END-IF
-      *                 IF NOT CSV-NOT-VALID
-      *                     PERFORM 140-CHECK-PHONE-VALIDITY
-      *                 END-IF
-                       PERFORM 150-WRITE-RECORD
-               END-READ
+               ACCEPT CSV-ADD-SUPPLIER-SCREEN
+      *>          PERFORM 110-GET-SUPPLY-ID
+      *>          MOVE FDSUPPKEYS TO WSSUPPLIER-ID
+      *>          OPEN I-O CSVERRORLOG
+      *>          WRITE ERRORLOG FROM SUPCSVDATA
+      *>          END-WRITE
+      *>          CLOSE CSVERRORLOG
+      *>          CLOSE FXKEYS
+      *>          OPEN I-O FXSUPPLY
+      *>              WRITE SUPPLIER-DETAILS FROM WSSUPPLIER-DETAILS
+      *>              END-WRITE
+      *>          CLOSE FXSUPPLY
+           READ CSVSUPPLY NEXT RECORD
+               AT END SET EOFCSV TO TRUE
+           END-READ
            END-PERFORM
            CLOSE CSVSUPPLY
+
        EXIT SECTION.
 
        115-CHECK-NAME-VALIDITY SECTION.
@@ -462,38 +477,38 @@
        150-WRITE-RECORD SECTION.
       *     IF CSV-VALID = "N"
       *         MOVE SUPCSVDATA TO ERRORSUPP
-      *         OPEN I-O CSVERRORLOG
-      *             WRITE ERRORLOG
-      *         CLOSE CSVERRORLOG
-      *         CLOSE FXKEYS
+                OPEN I-O CSVERRORLOG
+                   WRITE ERRORLOG
+                CLOSE CSVERRORLOG
+                CLOSE FXKEYS
       *         DISPLAY CLEAR-SCREEN
       *         DISPLAY MAIN-SCREEN
       *         ACCEPT ERROR-ZONE
       *     ELSE
-               PERFORM WITH TEST AFTER UNTIL SAVE-IT-VALID
-                   DISPLAY CLEAR-SCREEN
-                   DISPLAY MAIN-SCREEN
-                   DISPLAY CSV-ADD-SUPPLIER-SCREEN
-                   MOVE "Y" TO WANT-TO-SAVE1
-                   ACCEPT WANT-TO-SAVE
-                   IF NOT SAVE-IT-VALID THEN
-                       MOVE ERROR-SAVE TO ERROR-TEXT
-                       ACCEPT ERROR-ZONE
-                   END-IF
-               END-PERFORM
-               IF SAVE-IT-YES THEN
-                   REWRITE FDSUPPKEYS
-                   END-REWRITE
-                   CLOSE FXKEYS
-                   OPEN I-O FXSUPPLY
-                   WRITE SUPPLIER-DETAILS FROM WSSUPPLIER-DETAILS
-                   END-WRITE
-                   CLOSE FXSUPPLY
-                   MOVE MESSAGE-WRITE-YES TO ERROR-TEXT
-                   ACCEPT ERROR-ZONE
-               ELSE
-                   CLOSE FXKEYS
-               END-IF
+      >          PERFORM WITH TEST AFTER UNTIL SAVE-IT-VALID
+      >              DISPLAY CLEAR-SCREEN
+      >              DISPLAY MAIN-SCREEN
+      >              DISPLAY CSV-ADD-SUPPLIER-SCREEN
+      >              MOVE "Y" TO WANT-TO-SAVE1
+      >              ACCEPT WANT-TO-SAVE
+      >              IF NOT SAVE-IT-VALID THEN
+      >                  MOVE ERROR-SAVE TO ERROR-TEXT
+      >                  ACCEPT ERROR-ZONE
+      >              END-IF
+      >          END-PERFORM
+      *>          IF SAVE-IT-YES THEN
+      *>              REWRITE FDSUPPKEYS
+      *>              END-REWRITE
+      *>              CLOSE FXKEYS
+      *>              OPEN I-O FXSUPPLY
+      *>              WRITE SUPPLIER-DETAILS FROM WSSUPPLIER-DETAILS
+      *>              END-WRITE
+      *>              CLOSE FXSUPPLY
+      *>              MOVE MESSAGE-WRITE-YES TO ERROR-TEXT
+      *>              ACCEPT ERROR-ZONE
+      *>          ELSE
+      *>              CLOSE FXKEYS
+      *>          END-IF
       *     END-IF
        EXIT SECTION.
 
