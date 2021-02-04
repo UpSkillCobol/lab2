@@ -227,6 +227,10 @@
               IF NOT SAVE-VALID THEN
                  MOVE INVALID-OPTION TO COMMENT-TEXT
                  ACCEPT COMMENTS-SCREEN
+                 IF KEYSTATUS = 1003 THEN
+                    MOVE SPACES TO SS-SAVE
+                    EXIT PROGRAM
+                 END-IF
               END-IF
            END-PERFORM
 
@@ -239,12 +243,20 @@
               CLOSE CALENDAR
               MOVE MESSAGE-WRITE-YES TO COMMENT-TEXT
               ACCEPT COMMENTS-SCREEN
+              IF KEYSTATUS = 1003 THEN
+                 MOVE SPACES TO SS-SAVE
+                 EXIT PROGRAM
+              END-IF
            ELSE
               IF SAVE = "N" OR "n"
                  CLOSE KEYS
                  CLOSE CALENDAR
                  MOVE MESSAGE-WRITE-NO TO COMMENT-TEXT
                  ACCEPT COMMENTS-SCREEN
+                 IF KEYSTATUS = 1003 THEN
+                    MOVE SPACES TO SS-SAVE
+                    EXIT PROGRAM
+                 END-IF
               END-IF
            END-IF
 
@@ -296,6 +308,9 @@
                  NOT INVALID KEY
                     MOVE EXISTENT-DATE TO COMMENT-TEXT
                     ACCEPT COMMENTS-SCREEN
+                    IF KEYSTATUS = 1003 THEN
+                       EXIT SECTION
+                    END-IF
                  INVALID KEY
                     MOVE "Y" TO FLAG-TRUE
               END-READ
@@ -328,6 +343,9 @@
               OR REG-START-HOUR = "HH" OR REG-START-MINUTE = "MM" THEN
                  MOVE INVALID-TIME TO COMMENT-TEXT
                  ACCEPT COMMENTS-SCREEN
+                 IF KEYSTATUS = 1003 THEN
+                    EXIT SECTION
+                 END-IF
               END-IF
            END-PERFORM
            EXIT SECTION.
@@ -366,6 +384,9 @@
               IF WS-END-DOWNTIME < WS-START-DOWNTIME THEN
                  MOVE INVALID-END-DATE TO COMMENT-TEXT
                  ACCEPT COMMENTS-SCREEN
+                 IF KEYSTATUS = 1003 THEN
+                    EXIT SECTION
+                 END-IF
               END-IF
            END-PERFORM
            EXIT SECTION.
@@ -390,16 +411,22 @@
 
               ACCEPT REG-END-HOUR
               IF KEYSTATUS = 1003 THEN
+                 MOVE SPACE TO FLAG-TRUE
                  EXIT SECTION
               END-IF
               ACCEPT REG-END-MINUTE
               IF KEYSTATUS = 1003 THEN
+                 MOVE SPACE TO FLAG-TRUE
                  EXIT SECTION
               END-IF
 
               IF NOT VALID-END-HOUR OR NOT VALID-END-MINUTE THEN
                  MOVE INVALID-TIME TO COMMENT-TEXT
                  ACCEPT COMMENTS-SCREEN
+                 IF KEYSTATUS = 1003 THEN
+                    MOVE SPACE TO FLAG-TRUE
+                    EXIT SECTION
+                 END-IF
               END-IF
 
               IF WS-START-DOWNTIME = WS-END-DOWNTIME
@@ -407,6 +434,10 @@
                  MOVE "Y" TO FLAG-TRUE
                  MOVE INVALID2-TIME TO COMMENT-TEXT
                  ACCEPT COMMENTS-SCREEN
+                 IF KEYSTATUS = 1003 THEN
+                    MOVE SPACE TO FLAG-TRUE
+                    EXIT SECTION
+                 END-IF
               END-IF
            END-PERFORM
 
@@ -416,18 +447,32 @@
       ******************************************************************
 
        DOWNTIME-DESCRIPTION SECTION.
-           MOVE SPACES TO REG-DESCRIPTION
-           MOVE INSTRUCTIONS-DESCRIPTION TO INSTRUCTIONS-TEXT
-           DISPLAY INSTRUCTIONS-SCREEN
+           PERFORM WITH TEST AFTER UNTIL
+           (WS-DOWNTIME-DESCRIPTION1(1:1)IS ALPHABETIC)
+              MOVE SPACES TO REG-DESCRIPTION
+              MOVE INSTRUCTIONS-DESCRIPTION TO INSTRUCTIONS-TEXT
+              DISPLAY INSTRUCTIONS-SCREEN
 
-           ACCEPT REG-DESCRIPTION
+              ACCEPT REG-DESCRIPTION
+              IF KEYSTATUS = 1003 THEN
+                 EXIT SECTION
+              END-IF
 
-           MOVE WS-DOWNTIME-DESCRIPTION1 TO LINK-TEXT
-           PERFORM SPACE-UPPER
-           MOVE LINK-TEXT TO WS-DOWNTIME-DESCRIPTION1
-           MOVE WS-DOWNTIME-DESCRIPTION2 TO LINK-TEXT
-           PERFORM SPACE-UPPER
-           MOVE LINK-TEXT TO WS-DOWNTIME-DESCRIPTION2
+              MOVE WS-DOWNTIME-DESCRIPTION1 TO LINK-TEXT
+              PERFORM SPACE-UPPER
+              MOVE LINK-TEXT TO WS-DOWNTIME-DESCRIPTION1
+              MOVE WS-DOWNTIME-DESCRIPTION2 TO LINK-TEXT
+              PERFORM SPACE-UPPER
+              MOVE LINK-TEXT TO WS-DOWNTIME-DESCRIPTION2
+
+              IF (WS-DOWNTIME-DESCRIPTION1(1:1)IS NOT ALPHABETIC) THEN
+                 MOVE INVALID-DESCRIPTION TO COMMENT-TEXT
+                 ACCEPT COMMENTS-SCREEN
+                 IF KEYSTATUS = 1003 THEN
+                    EXIT SECTION
+                 END-IF
+              END-IF
+           END-PERFORM
            EXIT SECTION.
 
       ******************************************************************
@@ -485,6 +530,9 @@
            IF DATE-VALID NOT = "Y" THEN
               MOVE INVALID-DATE TO COMMENT-TEXT
               ACCEPT COMMENTS-SCREEN
+              IF KEYSTATUS = 1003 THEN
+                 EXIT SECTION
+              END-IF
            END-IF
            EXIT SECTION.
 
