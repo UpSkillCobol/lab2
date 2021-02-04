@@ -46,12 +46,12 @@
            05 VALUE ALL " " PIC X(120) LINE 03 COL 01.
            05 VALUE ALL " " PIC X(120) LINE 04 COL 01.
            05 VALUE MODULE-NAME LINE 03 COL 50.
-           05 VALUE ALL " " PIC X(95) LINE 24 COL 01.
-           05 VALUE ALL " " PIC X(95) LINE 25 COL 01.
-           05 VALUE ALL " " PIC X(95) LINE 26 COL 01.
-           05 VALUE ALL " " PIC X(23) LINE 24 COL 98.
-           05 VALUE ALL " " PIC X(23) LINE 25 COL 98.
-           05 VALUE ALL " " PIC X(23) LINE 26 COL 98.
+           05 VALUE ALL " " PIC X(095) LINE 24 COL 01.
+           05 VALUE ALL " " PIC X(095) LINE 25 COL 01.
+           05 VALUE ALL " " PIC X(095) LINE 26 COL 01.
+           05 VALUE ALL " " PIC X(023) LINE 24 COL 98.
+           05 VALUE ALL " " PIC X(023) LINE 25 COL 98.
+           05 VALUE ALL " " PIC X(023) LINE 26 COL 98.
            05 VALUE BACK-EXIT
                LINE 25 COL 100 FOREGROUND-COLOR 5.
       ******************************************************************
@@ -75,7 +75,7 @@
            05 VALUE ADD-MENU-TEXT9 LINE 19 COL 22.
            05 VALUE DLT-MENU-TEXT2 LINE 25 COL 10
            BACKGROUND-COLOR 7, FOREGROUND-COLOR 4.
-           05 DLT-OPTION1 PIC X(02) LINE 25 COL 46 TO WS-DLT
+           05 DLT-OPTION1 PIC X(002) LINE 25 COL 46 TO WS-DLT
            BACKGROUND-COLOR 7, FOREGROUND-COLOR 4.
            05 VALUE ALL " " PIC X(080) LINE 7 COL 18
                BACKGROUND-COLOR 7.
@@ -125,16 +125,22 @@
                10 DLT-TOWN PIC X(030) LINE 19 COL 40.
       ******************************************************************
        01  DELETED-SCREEN.
-           05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 25 COL 01 BACKGROUND-COLOR 7..
-           05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7..
+           05 VALUE ALL " " PIC X(095) LINE 24 COL 01
+           BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(095) LINE 25 COL 01
+           BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(095) LINE 26 COL 01
+           BACKGROUND-COLOR 7.
            05 VALUE DELETED-TEXT LINE 25 COL 10 BACKGROUND-COLOR 7
            FOREGROUND-COLOR 4.
       ******************************************************************
        01  ID-ERROR.
-           05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7..
-           05 VALUE ALL " " PIC X(95) LINE 25 COL 01 BACKGROUND-COLOR 7..
-           05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7..
+           05 VALUE ALL " " PIC X(095) LINE 24 COL 01
+           BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(095) LINE 25 COL 01
+           BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(095) LINE 26 COL 01
+           BACKGROUND-COLOR 7.
            05 VALUE DLT-ID-ERROR LINE 26 COL 10 BACKGROUND-COLOR 7
            FOREGROUND-COLOR 4.
       ******************************************************************
@@ -212,9 +218,12 @@
       ******************************************************************
        01  NEXT-LIST-SCREEN FOREGROUND-COLOUR 4
            BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 25 COL 01 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(095) LINE 24 COL 01
+           BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(095) LINE 25 COL 01
+           BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(095) LINE 26 COL 01
+           BACKGROUND-COLOR 7.
            05 VALUE "|" LINE 25 COL 52.
            05 VALUE NEXT-LIST-TEXT LINE 25 COL 53.
       ******************************************************************
