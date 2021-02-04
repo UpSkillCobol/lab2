@@ -185,7 +185,8 @@
            05 SCREEN-DUMMY LINE 27 COL 01 PIC X TO DUMMY AUTO.
       ******************************************************************
        PROCEDURE DIVISION.
-       MAIN-PROCEDURE.
+       MAIN SECTION.
+           MOVE ZEROS TO KEY-STATUS
            PERFORM CHECK-FILE
            PERFORM REGISTER-MANUAL
            EXIT PROGRAM.

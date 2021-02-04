@@ -229,19 +229,20 @@
       ******************************************************************
        PROCEDURE DIVISION.
        MAIN SECTION.
+           MOVE ZEROS TO KEY-STATUS
       *    SECTION WHERE THE USER CHOOSES WHICH VIEW MODE HE WANTS
            PERFORM WITH TEST AFTER UNTIL WS-OPTION = 3
            PERFORM CLEAR-VARIABLES
                IF KEY-STATUS = 1003 THEN
-                                   EXIT PROGRAM
-                               END-IF
+                   EXIT PROGRAM
+               END-IF
                 MOVE ZERO TO MP-OPTION
                 DISPLAY CLEAR-SCREEN
                 DISPLAY MAIN-SCREEN
                 DISPLAY MAIN-VIEW-SCREEN
                 ACCEPT MP-OPTION
                    IF KEY-STATUS = 1003 THEN
-                       EXIT SECTION
+                       EXIT PROGRAM
                    END-IF
                 EVALUATE WS-OPTION
                    WHEN 1

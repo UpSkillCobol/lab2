@@ -262,6 +262,7 @@
       ******************************************************************
        PROCEDURE DIVISION.
        MAIN SECTION.
+           MOVE ZEROS TO KEY-STATUS
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
       *    CALL THE LIST SECTION TO SHOW A LIST OF ALL RECORDS ALREADY

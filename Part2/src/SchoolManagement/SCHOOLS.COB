@@ -69,14 +69,12 @@
       *    TRIGGERS A CALL OF A MODULE RESPONSIBLE FOR THE OPTION THAT
       *    THE USER DID CHOOSE
            PERFORM WITH TEST AFTER UNTIL WS-OPTION = 5
+           MOVE ZEROS TO KEY-STATUS
            MOVE ZERO TO MP-OPTION
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY MAIN-MENU
            ACCEPT MP-OPTION
-           IF KEY-STATUS = 1003 THEN
-               EXIT PROGRAM
-           END-IF
 
            EVALUATE WS-OPTION
                WHEN 1
@@ -85,18 +83,12 @@
                        IF KEY-STATUS = 1003 THEN
                            EXIT PROGRAM
                        END-IF
-                       IF KEY-STATUS = 1004 THEN
-                           STOP RUN
-                       END-IF
                WHEN 2
       *    OPTION 2 CALLS CLT MODULE THAT ALLOWS THE USER TO VIEW THE RECORDS
       *    ALREADY REGISTERED ON THE FILE
                        CALL "SCM-VIEW"
                        IF KEY-STATUS = 1003 THEN
                            EXIT PROGRAM
-                       END-IF
-                       IF KEY-STATUS = 1004 THEN
-                           STOP RUN
                        END-IF
                WHEN 4
       *    OPTION 4 CALLS ALT MODULE THAT ALLOWS THE USER TO DO CHANGES TO
@@ -105,17 +97,11 @@
                        IF KEY-STATUS = 1003 THEN
                            EXIT PROGRAM
                        END-IF
-                       IF KEY-STATUS = 1004 THEN
-                           STOP RUN
-                       END-IF
                WHEN 3
       *    OPTION 3 CALLS ELM MODULE THAT ALLOWS THE USER TO DELETE RECORDS
                        CALL "SCM-EDIT"
                        IF KEY-STATUS = 1003 THEN
                            EXIT PROGRAM
-                       END-IF
-                       IF KEY-STATUS = 1004 THEN
-                           STOP RUN
                        END-IF
            END-EVALUATE
            END-PERFORM
