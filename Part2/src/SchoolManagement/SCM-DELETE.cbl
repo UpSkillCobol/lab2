@@ -34,12 +34,12 @@
 
        WORKING-STORAGE SECTION.
        COPY "CB-WS-SCHOOLS".
-       COPY "CONSTANTS".
-
+       COPY "CONSTANTSPT".
+      ******************************************************************
        SCREEN SECTION.
        01  CLEAR-SCREEN BACKGROUND-COLOR 0.
            03 VALUE " " BLANK SCREEN LINE 01 COL 01.
-
+      ******************************************************************
        01  MAIN-SCREEN
            BACKGROUND-COLOR 7, FOREGROUND-COLOR 0.
            05 VALUE ALL " " PIC X(120) LINE 02 COL 01.
@@ -53,8 +53,8 @@
            05 VALUE ALL " " PIC X(23) LINE 25 COL 98.
            05 VALUE ALL " " PIC X(23) LINE 26 COL 98.
            05 VALUE BACK-EXIT
-               LINE 25 COL 99 FOREGROUND-COLOR 5.
-
+               LINE 25 COL 100 FOREGROUND-COLOR 5.
+      ******************************************************************
        01  PRE-DELETE-MENU
            REQUIRED.
            05 VALUE DLT-MENU-TEXT1 LINE 25 COL 10
@@ -62,7 +62,7 @@
            05 DLT-OPTION PIC X(008) LINE 25 COL 47 TO
                WS-SCHOOL-EXTERNAL-ID
                BACKGROUND-COLOR 7 FOREGROUND-COLOR 4.
-
+      ******************************************************************
        01  DELETE-SCREEN
            REQUIRED.
            05 VALUE DLT-MENU-TEXT LINE 9 COL 25.
@@ -123,21 +123,21 @@
                    15 DLT-PC2 PIC 9(003) LINE 18 COL 47
                         BLANK WHEN ZERO.
                10 DLT-TOWN PIC X(030) LINE 19 COL 40.
-
+      ******************************************************************
        01  DELETED-SCREEN.
            05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7.
            05 VALUE ALL " " PIC X(95) LINE 25 COL 01 BACKGROUND-COLOR 7..
            05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7..
            05 VALUE DELETED-TEXT LINE 25 COL 10 BACKGROUND-COLOR 7
            FOREGROUND-COLOR 4.
-
+      ******************************************************************
        01  ID-ERROR.
            05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7..
            05 VALUE ALL " " PIC X(95) LINE 25 COL 01 BACKGROUND-COLOR 7..
            05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7..
            05 VALUE DLT-ID-ERROR LINE 26 COL 10 BACKGROUND-COLOR 7
            FOREGROUND-COLOR 4.
-
+      ******************************************************************
        01  LIST-SCREEN FOREGROUND-COLOUR 7 BACKGROUND-COLOR 0.
            05 VALUE ALL " " PIC X(112) LINE 07 COL 05
            BACKGROUND-COLOR 7.
@@ -189,22 +189,27 @@
                10  CONTINUE-IID PIC 9(003) LINE 25 COL 47
                TO SCHOOL-INTERNAL-ID
                FOREGROUND-COLOUR 0 BACKGROUND-COLOR 7.
-
+      ******************************************************************
        01  END-LIST-SCREEN FOREGROUND-COLOUR 4
            BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 25 COL 01 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7.
            05 VALUE "|" LINE 25 COL 52.
            05 VALUE END-OF-LIST-TEXT LINE 25 COL 53.
-
+      ******************************************************************
        01  EMPTY-LIST-SCREEN FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 25 COL 01 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7.
-           05 VALUE EMPTY-LIST-TEXT LINE 25 COL 53.
-           05  LINE 01 COL 01 PIC X(1) TO PRESS-KEY AUTO.
-
+           05 VALUE ALL " " PIC X(050) LINE 09 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 10 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 11 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 12 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 13 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 14 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 15 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 16 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 17 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 18 COL 35.
+           05 VALUE EMPTY-RECORDS      LINE 12 COL 38.
+           05 VALUE EMPTY-RECORDS2     LINE 15 COL 47.
+           05 LINE 01 COL 01 PIC X TO PRESS-KEY AUTO.
+      ******************************************************************
        01  NEXT-LIST-SCREEN FOREGROUND-COLOUR 4
            BACKGROUND-COLOR 7.
            05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7.
@@ -212,7 +217,7 @@
            05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7.
            05 VALUE "|" LINE 25 COL 52.
            05 VALUE NEXT-LIST-TEXT LINE 25 COL 53.
-
+      ******************************************************************
        PROCEDURE DIVISION.
        DELETE-REGISTER SECTION.
       *    DELETE REGISTERS SECTION
@@ -229,9 +234,6 @@
               END-IF
               IF KEY-STATUS = 1003 THEN
                  EXIT SECTION
-              END-IF
-              IF KEY-STATUS = 1004 THEN
-                 EXIT PROGRAM
               END-IF
               DISPLAY CLEAR-SCREEN
               DISPLAY MAIN-SCREEN
@@ -254,9 +256,6 @@
                        IF KEY-STATUS = 1003 THEN
                            EXIT SECTION
                        END-IF
-                       IF KEY-STATUS = 1004 THEN
-                           STOP RUN
-                       END-IF
                NOT INVALID KEY
       *    THE RECORD IS SHOWN IN THE SCREEN
                    MOVE SCHOOL-DETAILS TO DLT-REC
@@ -275,9 +274,6 @@
            ACCEPT DLT-OPTION1
                IF KEY-STATUS = 1003 THEN
                    EXIT SECTION
-               END-IF
-               IF KEY-STATUS = 1004 THEN
-                   STOP RUN
                END-IF
            END-PERFORM
            MOVE FUNCTION UPPER-CASE(WS-DLT) TO WS-DLT
@@ -360,10 +356,6 @@
                        CLOSE SCHOOLS
                        EXIT SECTION
                     END-IF
-                    IF KEY-STATUS = 1004 THEN
-                       CLOSE SCHOOLS
-                       EXIT PROGRAM
-                    END-IF
                  NOT AT END
                     DISPLAY LIST-SCREEN
                     ADD 01 TO SC-LINE
@@ -389,9 +381,6 @@
                        END-IF
                        IF KEY-STATUS = 1003 THEN
                           EXIT SECTION
-                       END-IF
-                       IF KEY-STATUS = 1004 THEN
-                          EXIT PROGRAM
                        END-IF
                     END-IF
               END-READ

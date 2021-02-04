@@ -36,7 +36,7 @@
        WORKING-STORAGE SECTION.
        01  WS-SPACES                                   PIC 9(003).
        COPY "CB-WS-SCHOOLS".
-       COPY "CONSTANTS".
+       COPY "CONSTANTSPT".
 
        SCREEN SECTION.
        01  CLEAR-SCREEN BACKGROUND-COLOR 0.
@@ -55,7 +55,7 @@
            05 VALUE ALL " " PIC X(23) LINE 25 COL 98.
            05 VALUE ALL " " PIC X(23) LINE 26 COL 98.
            05 VALUE BACK-EXIT
-               LINE 25 COL 99 FOREGROUND-COLOR 5.
+               LINE 25 COL 100 FOREGROUND-COLOR 5.
       ******************************************************************
        01  ALT-SCREEN.
            05 VALUE ALT-MENU-TEXT LINE 9 COL 30.
@@ -203,18 +203,23 @@
       ******************************************************************
        01  END-LIST-SCREEN FOREGROUND-COLOUR 4
            BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 25 COL 01 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7.
            05 VALUE "|" LINE 25 COL 52.
            05 VALUE END-OF-LIST-TEXT LINE 25 COL 53.
       ******************************************************************
        01  EMPTY-LIST-SCREEN FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 25 COL 01 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7.
-           05 VALUE EMPTY-LIST-TEXT LINE 25 COL 53.
-           05  LINE 01 COL 01 PIC X(1) TO PRESS-KEY AUTO.
+           05 VALUE ALL " " PIC X(050) LINE 09 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 10 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 11 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 12 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 13 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 14 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 15 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 16 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 17 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 18 COL 35.
+           05 VALUE EMPTY-RECORDS      LINE 12 COL 38.
+           05 VALUE EMPTY-RECORDS2     LINE 15 COL 47.
+           05 LINE 01 COL 01 PIC X TO PRESS-KEY AUTO.
       ******************************************************************
        01  NEXT-LIST-SCREEN FOREGROUND-COLOUR 4
            BACKGROUND-COLOR 7.
@@ -267,9 +272,6 @@
               END-IF
               IF KEY-STATUS = 1003 THEN
                  EXIT SECTION
-              END-IF
-              IF KEY-STATUS = 1004 THEN
-                 EXIT PROGRAM
               END-IF
               DISPLAY CLEAR-SCREEN
               DISPLAY MAIN-SCREEN
@@ -325,10 +327,6 @@
                        CLOSE SCHOOLS
                        EXIT SECTION
                     END-IF
-                    IF KEY-STATUS = 1004 THEN
-                       CLOSE SCHOOLS
-                       EXIT PROGRAM
-                    END-IF
                  NOT AT END
                     DISPLAY LIST-SCREEN
                     ADD 01 TO SC-LINE
@@ -349,14 +347,12 @@
                           MOVE "S" TO FLAG
                           IF FLAG = "S" THEN
                              CLOSE SCHOOLS
+
                              EXIT SECTION
                           END-IF
                        END-IF
                        IF KEY-STATUS = 1003 THEN
                           EXIT SECTION
-                       END-IF
-                       IF KEY-STATUS = 1004 THEN
-                          EXIT PROGRAM
                        END-IF
                     END-IF
               END-READ
@@ -377,9 +373,6 @@
                        IF KEY-STATUS = 1003 THEN
                            EXIT SECTION
                        END-IF
-                       IF KEY-STATUS = 1004 THEN
-                           STOP RUN
-                       END-IF
                NOT INVALID KEY
                    PERFORM CLEAR-VARIABLES
                    MOVE SCHOOL-DETAILS TO ALT-REC
@@ -388,9 +381,6 @@
                    DISPLAY ALT-SCREEN
                        IF KEY-STATUS = 1003 THEN
                            EXIT SECTION
-                       END-IF
-                       IF KEY-STATUS = 1004 THEN
-                           STOP RUN
                        END-IF
                    MOVE 1 TO WS-CONTROL
                END-READ
@@ -413,40 +403,25 @@
                            IF KEY-STATUS = 1003 THEN
                                EXIT SECTION
                            END-IF
-                           IF KEY-STATUS = 1004 THEN
-                               STOP RUN
-                           END-IF
                    WHEN EDIT-WHAT = 2
                        PERFORM EDIT-DESIGNATION
                            IF KEY-STATUS = 1003 THEN
                                EXIT SECTION
-                           END-IF
-                           IF KEY-STATUS = 1004 THEN
-                               STOP RUN
                            END-IF
                    WHEN EDIT-WHAT = 3
                        PERFORM EDIT-ADDRESS
                            IF KEY-STATUS = 1003 THEN
                                EXIT SECTION
                            END-IF
-                           IF KEY-STATUS = 1004 THEN
-                               STOP RUN
-                           END-IF
                    WHEN EDIT-WHAT = 4
                        PERFORM EDIT-POSTAL-CODE
                            IF KEY-STATUS = 1003 THEN
                                EXIT SECTION
                            END-IF
-                           IF KEY-STATUS = 1004 THEN
-                               STOP RUN
-                           END-IF
                    WHEN EDIT-WHAT = 5
                        PERFORM EDIT-TOWN
                            IF KEY-STATUS = 1003 THEN
                                EXIT SECTION
-                           END-IF
-                           IF KEY-STATUS = 1004 THEN
-                               STOP RUN
                            END-IF
            END-EVALUATE
            END-PERFORM.
@@ -474,9 +449,6 @@
                    IF KEY-STATUS = 1003 THEN
                        EXIT SECTION
                    END-IF
-                   IF KEY-STATUS = 1004 THEN
-                       STOP RUN
-                   END-IF
       *    CHECK IF THE EXTERNAL ID ISNT ALREADY REGISTERED
                    MOVE WS-SCHOOL-EXTERNAL-ID TO SCHOOL-EXTERNAL-ID
                    OPEN INPUT SCHOOLS
@@ -490,9 +462,6 @@
                                ACCEPT ERROR-SCREEN
                                IF KEY-STATUS = 1003 THEN
                                    EXIT SECTION
-                               END-IF
-                               IF KEY-STATUS = 1004 THEN
-                                   STOP RUN
                                END-IF
                        END-READ
                    CLOSE SCHOOLS
@@ -530,9 +499,6 @@
                    IF KEY-STATUS = 1003 THEN
                        EXIT SECTION
                    END-IF
-                   IF KEY-STATUS = 1004 THEN
-                       STOP RUN
-                   END-IF
                    INSPECT WS-SCHOOL-DESIGNATION1 TALLYING WS-SPACES
                            FOR ALL SPACES
                        IF NOT DESIGNATION-VLD OR WS-SPACES = 50 THEN
@@ -568,9 +534,6 @@
                IF KEY-STATUS = 1003 THEN
                    EXIT SECTION
                END-IF
-               IF KEY-STATUS = 1004 THEN
-                   STOP RUN
-               END-IF
                INSPECT WS-SCHL-ADR-MAIN1 TALLYING WS-SPACES
                FOR ALL SPACES
                IF NOT ADDRESS-VLD OR WS-SPACES = 50 THEN
@@ -605,15 +568,9 @@
                IF KEY-STATUS = 1003 THEN
                    EXIT SECTION
                END-IF
-               IF KEY-STATUS = 1004 THEN
-                   STOP RUN
-           END-IF
                ACCEPT ALT-PC2
                IF KEY-STATUS = 1003 THEN
                    EXIT SECTION
-               END-IF
-               IF KEY-STATUS = 1004 THEN
-                   STOP RUN
                END-IF
                IF WS-SCHL-POSTAL-CODE1 <1000 THEN
                    MOVE ERROR-POSTAL-CODE TO ERROR-MESSAGE
@@ -639,9 +596,6 @@
                 ACCEPT ALT-TOWN
                 IF KEY-STATUS = 1003 THEN
                    EXIT SECTION
-               END-IF
-               IF KEY-STATUS = 1004 THEN
-                   STOP RUN
                END-IF
                INSPECT WS-SCHOOL-TOWN TALLYING WS-SPACES
                FOR ALL SPACES

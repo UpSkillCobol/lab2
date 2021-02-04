@@ -102,7 +102,7 @@
                END-IF
 
               EVALUATE MAIN-OPTION
-                 WHEN 1     CALL "SCM-MAIN"
+                 WHEN 1     CALL "SCHOOLS"
                  WHEN 2     CALL "CAMMAIN"
                  WHEN 3     CALL "MAININGREDS"
                  WHEN 4     CALL "suppliers"

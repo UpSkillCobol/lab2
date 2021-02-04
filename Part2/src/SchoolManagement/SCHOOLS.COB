@@ -5,7 +5,7 @@
       * Tectonics: cobc
       ******************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. SCM-MAIN.
+       PROGRAM-ID. SCHOOLS.
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
        REPOSITORY.
@@ -14,7 +14,7 @@
        DATA DIVISION.
        WORKING-STORAGE SECTION.
        COPY "CB-WS-SCHOOLS".
-       COPY "CONSTANTS".
+       COPY "CONSTANTSPT".
        SCREEN SECTION.
        01  CLEAR-SCREEN BACKGROUND-COLOR 0.
            03 VALUE " " BLANK SCREEN LINE 01 COL 01.
@@ -68,24 +68,22 @@
       *    MAIN SECTION WHERE THE USER DECIDES WHAT TO DO, THE DECISION
       *    TRIGGERS A CALL OF A MODULE RESPONSIBLE FOR THE OPTION THAT
       *    THE USER DID CHOOSE
-           PERFORM UNTIL WS-OPTION = 5
+           PERFORM WITH TEST AFTER UNTIL WS-OPTION = 5
            MOVE ZERO TO MP-OPTION
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY MAIN-MENU
            ACCEPT MP-OPTION
            IF KEY-STATUS = 1003 THEN
-               EXIT SECTION
+               EXIT PROGRAM
            END-IF
-           IF KEY-STATUS = 1004 THEN
-               STOP RUN
-           END-IF
+
            EVALUATE WS-OPTION
                WHEN 1
       *    OPTION 1 CALLS ADD MODULE THAT REGISTERS NEW RECORDS ON THE FILE
                        CALL "SCM-ADD"
                        IF KEY-STATUS = 1003 THEN
-                           EXIT SECTION
+                           EXIT PROGRAM
                        END-IF
                        IF KEY-STATUS = 1004 THEN
                            STOP RUN
@@ -95,7 +93,7 @@
       *    ALREADY REGISTERED ON THE FILE
                        CALL "SCM-VIEW"
                        IF KEY-STATUS = 1003 THEN
-                           EXIT SECTION
+                           EXIT PROGRAM
                        END-IF
                        IF KEY-STATUS = 1004 THEN
                            STOP RUN
@@ -105,7 +103,7 @@
       *    THE RECORDS ALREADY REGISTERED ON THE FILE
                        CALL "SCM-DELETE"
                        IF KEY-STATUS = 1003 THEN
-                           EXIT SECTION
+                           EXIT PROGRAM
                        END-IF
                        IF KEY-STATUS = 1004 THEN
                            STOP RUN
@@ -114,12 +112,12 @@
       *    OPTION 3 CALLS ELM MODULE THAT ALLOWS THE USER TO DELETE RECORDS
                        CALL "SCM-EDIT"
                        IF KEY-STATUS = 1003 THEN
-                           EXIT SECTION
+                           EXIT PROGRAM
                        END-IF
                        IF KEY-STATUS = 1004 THEN
                            STOP RUN
                        END-IF
            END-EVALUATE
            END-PERFORM
-           STOP RUN.
-       END PROGRAM SCM-MAIN.
+           EXIT PROGRAM.
+       END PROGRAM SCHOOLS.

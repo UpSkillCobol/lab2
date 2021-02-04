@@ -31,7 +31,7 @@
        COPY "CB-SCHOOLS".
        WORKING-STORAGE SECTION.
        COPY "CB-WS-SCHOOLS".
-       COPY "CONSTANTS".
+       COPY "CONSTANTSPT".
        SCREEN SECTION.
        01  CLEAR-SCREEN BACKGROUND-COLOR 0.
            03 VALUE " " BLANK SCREEN LINE 01 COL 01.
@@ -49,7 +49,7 @@
            05 VALUE ALL " " PIC X(23) LINE 25 COL 98.
            05 VALUE ALL " " PIC X(23) LINE 26 COL 98.
            05 VALUE BACK-EXIT
-               LINE 25 COL 99 FOREGROUND-COLOR 5.
+               LINE 25 COL 100 FOREGROUND-COLOR 5.
       ******************************************************************
        01  MAIN-VIEW-SCREEN
            BACKGROUND-COLOR 7, FOREGROUND-COLOR 0, AUTO, REQUIRED.
@@ -144,7 +144,11 @@
       ******************************************************************
        01  ID-ERROR-SCREEN
            FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
-           03 VALUE ID-ERROR-TEXT LINE 25 COL 48.
+           05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(95) LINE 25 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ID-ERROR-TEXT LINE 25 COL 48.
+           05 SCREEN-DUMMY LINE 27 COL 01 PIC X TO DUMMY AUTO.
       ******************************************************************
        01  LIST-SCREEN FOREGROUND-COLOUR 7 BACKGROUND-COLOR 0.
            05 VALUE ALL " " PIC X(112) LINE 07 COL 05
@@ -204,11 +208,19 @@
            05 VALUE END-OF-LIST-TEXT LINE 25 COL 53.
       ******************************************************************
        01  EMPTY-LIST-SCREEN FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 25 COL 01 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7.
-           05 VALUE EMPTY-LIST-TEXT LINE 25 COL 53.
-           05  LINE 01 COL 01 PIC X(1) TO PRESS-KEY AUTO.
+           05 VALUE ALL " " PIC X(050) LINE 09 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 10 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 11 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 12 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 13 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 14 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 15 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 16 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 17 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 18 COL 35.
+           05 VALUE EMPTY-RECORDS      LINE 12 COL 38.
+           05 VALUE EMPTY-RECORDS2     LINE 15 COL 47.
+           05 LINE 01 COL 01 PIC X TO PRESS-KEY AUTO.
       ******************************************************************
        01  NEXT-LIST-SCREEN FOREGROUND-COLOUR 4
            BACKGROUND-COLOR 7.
@@ -220,6 +232,9 @@
       *    SECTION WHERE THE USER CHOOSES WHICH VIEW MODE HE WANTS
            PERFORM WITH TEST AFTER UNTIL WS-OPTION = 3
            PERFORM CLEAR-VARIABLES
+               IF KEY-STATUS = 1003 THEN
+                                   EXIT PROGRAM
+                               END-IF
                 MOVE ZERO TO MP-OPTION
                 DISPLAY CLEAR-SCREEN
                 DISPLAY MAIN-SCREEN
@@ -228,9 +243,6 @@
                    IF KEY-STATUS = 1003 THEN
                        EXIT SECTION
                    END-IF
-                   IF KEY-STATUS = 1004 THEN
-                       STOP RUN
-                   END-IF
                 EVALUATE WS-OPTION
                    WHEN 1
       *    OPTION 1 IS VIEW ONE BY ONE
@@ -238,16 +250,10 @@
                                IF KEY-STATUS = 1003 THEN
                                    EXIT PROGRAM
                                END-IF
-                               IF KEY-STATUS = 1004 THEN
-                                   EXIT PROGRAM
-                               END-IF
                    WHEN 2
       *    OPTION 2 IS TO CHOOSE ONE TO VIEW SPECIFICALLY
                            PERFORM VIEW-ALL
                                IF KEY-STATUS = 1003 THEN
-                                   EXIT PROGRAM
-                               END-IF
-                               IF KEY-STATUS = 1004 THEN
                                    EXIT PROGRAM
                                END-IF
                END-EVALUATE
@@ -282,9 +288,6 @@
                        IF KEY-STATUS = 1003 THEN
                          EXIT SECTION
                       END-IF
-                      IF KEY-STATUS = 1004 THEN
-                         EXIT PROGRAM
-                      END-IF
            END-PERFORM
            CLOSE SCHOOLS
        EXIT SECTION.
@@ -304,37 +307,25 @@
               IF KEY-STATUS = 1003 THEN
                  EXIT SECTION
               END-IF
-              IF KEY-STATUS = 1004 THEN
-                 EXIT PROGRAM
-              END-IF
-              DISPLAY CLEAR-SCREEN
-              DISPLAY MAIN-SCREEN
-               IF KEY-STATUS = 1003 THEN
-                   EXIT SECTION
-               END-IF
-               IF KEY-STATUS = 1004 THEN
-                   STOP RUN
-               END-IF
            MOVE ZEROS TO WS-CONTROL
            PERFORM WITH TEST AFTER UNTIL WS-CONTROL = 1
       *    READ THE RECORD THE USER DID CHOOSE ON THE LIST SECTION
       *    AND DISPLAY THE RECORD TO THE USER
-           DISPLAY CLEAR-SCREEN
-           DISPLAY MAIN-SCREEN
-           DISPLAY VIEW-SCREEN
            OPEN INPUT SCHOOLS
                READ SCHOOLS
                INVALID KEY
       *    IF THE RECORD DOESNT EXIST A MESSAGE WILL BE SHOWN
-                   MOVE ZEROS TO VW-OPTION1
-                   DISPLAY ID-ERROR-SCREEN
-                   ACCEPT VW-OPTION
-                       IF KEY-STATUS = 1003 THEN
-                           EXIT SECTION
-                       END-IF
-                       IF KEY-STATUS = 1004 THEN
-                           STOP RUN
-                       END-IF
+                   ACCEPT ID-ERROR-SCREEN
+                   MOVE 1 TO WS-CONTROL
+      *             DISPLAY LIST-SCREEN
+      *             DISPLAY NEXT-LIST-SCREEN
+      *             ACCEPT VW-OPTION
+      *                 IF KEY-STATUS = 1003 THEN
+      *                     EXIT SECTION
+      *                 END-IF
+      *                 IF KEY-STATUS = 1004 THEN
+      *                     STOP RUN
+      *                 END-IF
                NOT INVALID KEY
       *    IF THE RECORD IS VALID, SHOW THE RECORD TO THE USER
                    MOVE SCHOOL-DETAILS TO VIEW-REC
@@ -397,10 +388,6 @@
                        CLOSE SCHOOLS
                        EXIT SECTION
                     END-IF
-                    IF KEY-STATUS = 1004 THEN
-                       CLOSE SCHOOLS
-                       EXIT PROGRAM
-                    END-IF
                  NOT AT END
                     DISPLAY LIST-SCREEN
                     ADD 01 TO SC-LINE
@@ -426,9 +413,6 @@
                        END-IF
                        IF KEY-STATUS = 1003 THEN
                           EXIT SECTION
-                       END-IF
-                       IF KEY-STATUS = 1004 THEN
-                          EXIT PROGRAM
                        END-IF
                     END-IF
               END-READ

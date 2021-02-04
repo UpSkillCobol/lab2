@@ -40,7 +40,7 @@
        WORKING-STORAGE SECTION.
        01  WS-SPACES                               PIC 9(003).
        COPY "CB-WS-SCHOOLS".
-       COPY "CONSTANTS".
+       COPY "CONSTANTSPT".
        SCREEN SECTION.
        01  CLEAR-SCREEN BACKGROUND-COLOR 0.
            05 VALUE " " BLANK SCREEN LINE 01 COL 01.
@@ -58,7 +58,7 @@
            05 VALUE ALL " " PIC X(23) LINE 25 COL 98.
            05 VALUE ALL " " PIC X(23) LINE 26 COL 98.
            05 VALUE BACK-EXIT
-               LINE 25 COL 99 FOREGROUND-COLOR 5.
+               LINE 25 COL 100 FOREGROUND-COLOR 5.
       ******************************************************************
        01  MAIN-REGISTER-SCREEN
            BACKGROUND-COLOR 7, FOREGROUND-COLOR 0, AUTO, REQUIRED.
@@ -135,9 +135,9 @@
                        TO WS-SCHL-ADR-MAIN1 AUTO.
                    15 REG-ADDRESS2 PIC X(050) LINE 17 COL 40
                        TO WS-SCHL-ADR-MAIN2.
-               10 REG-POSTAL-CODE AUTO.
+               10 REG-POSTAL-CODE.
                    15 REG-PC1 PIC 9(004) LINE 18 COL 40 BLANK WHEN ZERO
-                       TO WS-SCHL-POSTAL-CODE1.
+                       TO WS-SCHL-POSTAL-CODE1 AUTO.
                    15 REG-PC2 PIC 9(003) LINE 18 COL 47 BLANK WHEN ZERO
                        TO WS-SCHL-POSTAL-CODE2.
                10 REG-TOWN PIC X(030) LINE 19 COL 40
@@ -210,29 +210,17 @@
                    IF KEY-STATUS = 1003 THEN
                        EXIT SECTION
                    END-IF
-                   IF KEY-STATUS = 1004 THEN
-                       STOP RUN
-                   END-IF
                PERFORM REGISTER-EXTERNAL-ID
                    IF KEY-STATUS = 1003 THEN
                        EXIT SECTION
-                   END-IF
-                   IF KEY-STATUS = 1004 THEN
-                       STOP RUN
                    END-IF
                PERFORM REGISTER-DESIGNATION
                    IF KEY-STATUS = 1003 THEN
                        EXIT SECTION
                    END-IF
-                   IF KEY-STATUS = 1004 THEN
-                       STOP RUN
-                   END-IF
                PERFORM REGISTER-ADDRESS
                    IF KEY-STATUS = 1003 THEN
                        EXIT SECTION
-                   END-IF
-                   IF KEY-STATUS = 1004 THEN
-                       STOP RUN
                    END-IF
       *    CALLING THE SECTION LOWER-UPPER TO CONVERT ALL LOWER CASE LETTERS
       *    INTO UPPER CASE LETTERS
@@ -242,9 +230,6 @@
                PERFORM CONFIRM-REGISTER
                    IF KEY-STATUS = 1003 THEN
                        EXIT SECTION
-                   END-IF
-                   IF KEY-STATUS = 1004 THEN
-                       STOP RUN
                    END-IF
            EXIT SECTION.
       ******************************************************************
@@ -275,9 +260,6 @@
                IF KEY-STATUS = 1003 THEN
                    EXIT SECTION
                END-IF
-               IF KEY-STATUS = 1004 THEN
-                   STOP RUN
-               END-IF
                PERFORM EXTERNAL-ID-EXISTS
       *    CHECK FOR SPACES, FIELD MUST BE FILLED
                INSPECT WS-SCHOOL-EXTERNAL-ID TALLYING WS-SPACES
@@ -305,9 +287,6 @@
                    ACCEPT REG-DESIGNATION
                    IF KEY-STATUS = 1003 THEN
                        EXIT SECTION
-                   END-IF
-                   IF KEY-STATUS = 1004 THEN
-                       STOP RUN
                    END-IF
       *    CHECK FOR SPACES,FIELD MUST BE FILLED
                    INSPECT WS-SCHOOL-DESIGNATION1 TALLYING WS-SPACES
@@ -337,9 +316,6 @@
                IF KEY-STATUS = 1003 THEN
                    EXIT SECTION
                END-IF
-               IF KEY-STATUS = 1004 THEN
-                   STOP RUN
-               END-IF
       *    CHECK FOR SPACES, FIELD MUST BE FILLED
                INSPECT WS-SCHL-ADR-MAIN1 TALLYING WS-SPACES
                FOR ALL SPACES
@@ -364,15 +340,9 @@
                IF KEY-STATUS = 1003 THEN
                    EXIT SECTION
                END-IF
-               IF KEY-STATUS = 1004 THEN
-                   STOP RUN
-           END-IF
                ACCEPT REG-PC2
                IF KEY-STATUS = 1003 THEN
                    EXIT SECTION
-               END-IF
-               IF KEY-STATUS = 1004 THEN
-                   STOP RUN
                END-IF
                IF WS-SCHL-POSTAL-CODE1 <1000 THEN
                    MOVE ERROR-POSTAL-CODE TO ERROR-MESSAGE
@@ -395,15 +365,13 @@
                 IF KEY-STATUS = 1003 THEN
                    EXIT SECTION
                END-IF
-               IF KEY-STATUS = 1004 THEN
-                   STOP RUN
-               END-IF
       *    CHECK FOR SPACES, FIELD MUST BE FILLED
                INSPECT WS-SCHOOL-TOWN TALLYING WS-SPACES
                FOR ALL SPACES
                IF NOT TOWN-VLD OR WS-SPACES = 30 THEN
                    MOVE ERROR-TOWN TO ERROR-MESSAGE
                    ACCEPT ERROR-SCREEN
+                   MOVE SPACES TO REG-TOWN
                END-IF
            END-PERFORM
            MOVE SPACES TO LINK-TEXT
@@ -423,9 +391,6 @@
                MOVE FUNCTION UPPER-CASE(WS-ADD) TO WS-ADD
                IF KEY-STATUS = 1003 THEN
                    EXIT SECTION
-               END-IF
-               IF KEY-STATUS = 1004 THEN
-                   STOP RUN
                END-IF
            END-PERFORM
            EVALUATE TRUE
