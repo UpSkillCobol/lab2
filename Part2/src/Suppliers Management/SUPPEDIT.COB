@@ -5,7 +5,7 @@
       ******************************************************************
       *    SUPPLIERS MODULE - EDIT SUPPLIER DLL
       ******************************************************************
-      *     V0.1 | EM ATUALIZAÇÃO | 27.01.2020
+      *     V0.1 | EM ATUALIZAÇÃO | 04.02.2021
       ******************************************************************
        IDENTIFICATION DIVISION.
        PROGRAM-ID. SUPPEDIT.
@@ -46,7 +46,7 @@
 
        WORKING-STORAGE SECTION.
 
-       COPY CONSTANTS.
+       COPY CONSTANTSSUPP.
 
        01 WSSUPPLIER-DETAILS.
            05 WSSUPPLIER-ID                        PIC 9(003).
@@ -130,6 +130,7 @@
        01  EDIT-WHAT                           PIC 9(001).
            88 EDIT-WHAT-EXIT                   VALUE 8.
        77 UNSTR                        PIC X(150).
+       77 UNSTRTEMP                    PIC X(150).
        77 UNSTR1                       PIC X(050).
        77 UNSTR2                       PIC X(050).
        77 UNSTR3                       PIC X(050).
@@ -163,7 +164,7 @@
            05 VALUE ALL " " PIC X(22) LINE 24 COL 98.
            05 VALUE ALL " " PIC X(22) LINE 25 COL 98.
            05 VALUE ALL " " PIC X(22) LINE 26 COL 98.
-           05 VALUE BACK-EXIT LINE 25 COL 99 FOREGROUND-COLOR 5.
+           05 VALUE BACK-EXIT LINE 25 COL 100 FOREGROUND-COLOR 5.
       ******************************************************************
        01 EDIT-SCREEN.
            05 VALUE ALL " " PIC X(080) LINE 7 COL 08
@@ -417,12 +418,28 @@
            05 LIST-SUPP-NAME PIC X(030) LINE ILIN COL PLUS 1
                FROM SUPPLIER-NAME.
       ******************************************************************
-
+       01  EMPTY-LIST-SCREEN
+           BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
+           05 VALUE ALL " " PIC X(050) LINE 09 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 10 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 11 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 12 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 13 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 14 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 15 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 16 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 17 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 18 COL 35.
+           05 VALUE EMPTY-RECORDS      LINE 12 COL 38.
+           05 VALUE EMPTY-RECORDS2     LINE 15 COL 47.
+           05 LINE 01 COL 01 PIC X TO DUMMY AUTO.
+      ******************************************************************
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
            PERFORM UNTIL SUPPEXIST-YES
                PERFORM 100-SUPPLIERS-LIST
-                   IF TRUE-YES = "Y" THEN
+                   IF TRUE-YES = "Y" OR KEYSTATUS = 1003 THEN
+                       MOVE SPACE TO SUPPEXIST
                        EXIT PROGRAM
                    END-IF
                PERFORM 105-CHECK-IF-SUPPID-EXISTS
@@ -430,8 +447,17 @@
            MOVE ZERO TO EDIT-WHAT
            PERFORM WITH TEST AFTER UNTIL EDIT-WHAT = 8
                PERFORM 110-EDIT-SUPPLIER
+               IF KEYSTATUS = 1003 THEN
+                   MOVE SPACE TO SUPPEXIST
+                   EXIT PROGRAM
+               END-IF
                OPEN I-O FXSUPPLY
                    PERFORM 115-EDIT-WHAT
+                   IF KEYSTATUS = 1003 THEN
+                       MOVE SPACE TO SUPPEXIST
+                       CLOSE FXSUPPLY
+                       EXIT PROGRAM
+                   END-IF
                    REWRITE SUPPLIER-DETAILS FROM WSSUPPLIER-DETAILS
                    END-REWRITE
                CLOSE FXSUPPLY
@@ -440,6 +466,16 @@
            EXIT PROGRAM.
 
        100-SUPPLIERS-LIST SECTION.
+           OPEN INPUT FXSUPPLY
+           IF SUPP-STATUS = 35 THEN
+               DISPLAY CLEAR-SCREEN
+               DISPLAY MAIN-SCREEN
+               ACCEPT EMPTY-LIST-SCREEN
+               MOVE "Y" TO TRUE-YES
+               EXIT SECTION
+           ELSE
+               CLOSE FXSUPPLY
+           END-IF
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY LIST-FRAME
@@ -511,6 +547,9 @@
            DISPLAY MAIN-SCREEN
            DISPLAY EDIT-SCREEN
            ACCEPT EDIT-WHAT-SCREEN
+           IF KEYSTATUS = 1003 THEN
+               EXIT SECTION
+           END-IF
        EXIT SECTION.
 
        115-EDIT-WHAT SECTION.
@@ -518,19 +557,43 @@
            EVALUATE EDIT-WHAT
                WHEN 1
                    PERFORM 150-GET-NAME
+                       IF KEYSTATUS = 1003 THEN
+                           EXIT SECTION
+                       END-IF
                WHEN 2
                    PERFORM 155-GET-DESCRIPTION
+                       IF KEYSTATUS = 1003 THEN
+                           EXIT SECTION
+                       END-IF
                WHEN 3
                    PERFORM 160-GET-ADDRESS
+                       IF KEYSTATUS = 1003 THEN
+                           EXIT SECTION
+                       END-IF
                WHEN 4
                    PERFORM 165-GET-POSTAL-CODE
+                       IF KEYSTATUS = 1003 THEN
+                           EXIT SECTION
+                       END-IF
                    PERFORM 170-GET-TOWN
+                       IF KEYSTATUS = 1003 THEN
+                           EXIT SECTION
+                       END-IF
                WHEN 5
                    PERFORM 170-GET-TOWN
+                       IF KEYSTATUS = 1003 THEN
+                           EXIT SECTION
+                       END-IF
                WHEN 6
                    PERFORM 175-GET-EMAIL
+                       IF KEYSTATUS = 1003 THEN
+                           EXIT SECTION
+                       END-IF
                WHEN 7
                    PERFORM 180-GET-PHONE
+                       IF KEYSTATUS = 1003 THEN
+                           EXIT SECTION
+                       END-IF
            END-EVALUATE
        EXIT SECTION.
 
@@ -539,12 +602,19 @@
            DISPLAY INSTRUCTIONS-ZONE
            MOVE WSSUPPLIER-NAME TO EDIT-SUPP-NAME
            ACCEPT EDIT-SUPP-NAME
+           IF KEYSTATUS = 1003 THEN
+               EXIT SECTION
+           END-IF
            MOVE UPPER-CASE (WSSUPPLIER-NAME) TO WSSUPPLIER-NAME
            MOVE TRIM(WSSUPPLIER-NAME) TO UNSTR
            PERFORM 190-REMOVE-EXTRA-SPACES
            MOVE UNSTR TO WSSUPPLIER-NAME
            IF WSSUPPLIER-NAME EQUAL SPACES THEN
-               MOVE ERROR-NAME TO ERROR-TEXT ACCEPT ERROR-ZONE
+               MOVE ERROR-NAME TO ERROR-TEXT
+               ACCEPT ERROR-ZONE
+               IF KEYSTATUS = 1003 THEN
+                   EXIT SECTION
+               END-IF
            END-IF
        EXIT SECTION.
 
@@ -552,22 +622,36 @@
            MOVE MESSAGE-DESCRIPTION TO INSTRUCTIONS-TEXT
            DISPLAY INSTRUCTIONS-TEXT
            MOVE REG-SUPP-DESCRIPTION TO EDIT-SUPP-DESCRIPTION
-           ACCEPT EDIT-SUPP-DESCRIPTION
-           MOVE UPPER-CASE (WSSUPPLIER-DESCRIPTION1) TO
-               WSSUPPLIER-DESCRIPTION1
-           MOVE TRIM(WSSUPPLIER-DESCRIPTION1) TO UNSTR
-           PERFORM 190-REMOVE-EXTRA-SPACES
-           MOVE UNSTR TO WSSUPPLIER-DESCRIPTION1
-           MOVE UPPER-CASE (WSSUPPLIER-DESCRIPTION2) TO
-               WSSUPPLIER-DESCRIPTION2
-           MOVE TRIM(WSSUPPLIER-DESCRIPTION2) TO UNSTR
-           PERFORM 190-REMOVE-EXTRA-SPACES
-           MOVE UNSTR TO WSSUPPLIER-DESCRIPTION2
-           MOVE UPPER-CASE (WSSUPPLIER-DESCRIPTION3) TO
-               WSSUPPLIER-DESCRIPTION3
-           MOVE TRIM(WSSUPPLIER-DESCRIPTION3) TO UNSTR
-           PERFORM 190-REMOVE-EXTRA-SPACES
-           MOVE UNSTR TO WSSUPPLIER-DESCRIPTION3
+           PERFORM WITH TEST AFTER UNTIL WSSUPPLIER-DESCRIPTION1
+           NOT EQUAL SPACES AND WSSUPPLIER-DESCRIPTION1 (1:1) IS
+           ALPHABETIC
+               ACCEPT EDIT-SUPP-DESCRIPTION
+               IF KEYSTATUS = 1003 THEN
+                   EXIT SECTION
+               END-IF
+               MOVE UPPER-CASE (WSSUPPLIER-DESCRIPTION1) TO
+                   WSSUPPLIER-DESCRIPTION1
+               MOVE TRIM(WSSUPPLIER-DESCRIPTION1) TO UNSTR
+               PERFORM 190-REMOVE-EXTRA-SPACES
+               MOVE UNSTR TO WSSUPPLIER-DESCRIPTION1
+               MOVE UPPER-CASE (WSSUPPLIER-DESCRIPTION2) TO
+                   WSSUPPLIER-DESCRIPTION2
+               MOVE TRIM(WSSUPPLIER-DESCRIPTION2) TO UNSTR
+               PERFORM 190-REMOVE-EXTRA-SPACES
+               MOVE UNSTR TO WSSUPPLIER-DESCRIPTION2
+               MOVE UPPER-CASE (WSSUPPLIER-DESCRIPTION3) TO
+                   WSSUPPLIER-DESCRIPTION3
+               MOVE TRIM(WSSUPPLIER-DESCRIPTION3) TO UNSTR
+               PERFORM 190-REMOVE-EXTRA-SPACES
+               MOVE UNSTR TO WSSUPPLIER-DESCRIPTION3
+               IF WSSUPPLIER-DESCRIPTION1 (1:1) IS NOT ALPHABETIC THEN
+                   MOVE ERROR-DESCRIPTION TO ERROR-TEXT
+                   ACCEPT ERROR-ZONE
+                   IF KEYSTATUS = 1003 THEN
+                       EXIT SECTION
+                   END-IF
+               END-IF
+           END-PERFORM
        EXIT SECTION.
 
        160-GET-ADDRESS SECTION.
@@ -575,6 +659,9 @@
            DISPLAY INSTRUCTIONS-ZONE
            MOVE REG-SUPP-ADDRESS TO EDIT-SUPP-ADDRESS
            ACCEPT EDIT-SUPP-ADDRESS
+           IF KEYSTATUS = 1003 THEN
+               EXIT SECTION
+           END-IF
            MOVE UPPER-CASE (WSSUPP-ADR-MAIN1) TO WSSUPP-ADR-MAIN1
            MOVE TRIM(WSSUPP-ADR-MAIN1) TO UNSTR
            PERFORM 190-REMOVE-EXTRA-SPACES
@@ -591,9 +678,15 @@
                DISPLAY INSTRUCTIONS-ZONE
                MOVE REG-SUPP-POSTAL-CODE TO EDIT-SUPP-POSTAL-CODE
                ACCEPT EDIT-SUPP-POSTAL-CODE
+               IF KEYSTATUS = 1003 THEN
+                   EXIT SECTION
+               END-IF
                IF NOT VALID-POSTAL-CODE THEN
                    MOVE ERROR-POSTAL-CODE TO ERROR-TEXT
                    ACCEPT ERROR-ZONE
+                   IF KEYSTATUS = 1003 THEN
+                       EXIT SECTION
+                   END-IF
                END-IF
            END-PERFORM
        EXIT SECTION.
@@ -610,13 +703,20 @@
                MOVE MESSAGE-TOWN TO INSTRUCTIONS-TEXT
                DISPLAY INSTRUCTIONS-ZONE
                ACCEPT EDIT-SUPP-TOWN
+               IF KEYSTATUS = 1003 THEN
+                   EXIT SECTION
+               END-IF
                IF WSSUPPLIER-TOWN IS ALPHABETIC
                    MOVE UPPER-CASE (WSSUPPLIER-TOWN) TO WSSUPPLIER-TOWN
                MOVE TRIM(WSSUPPLIER-TOWN) TO UNSTR
                PERFORM 190-REMOVE-EXTRA-SPACES
                MOVE UNSTR TO WSSUPPLIER-TOWN
                ELSE
-                   MOVE ERROR-TOWN TO ERROR-TEXT ACCEPT ERROR-ZONE
+                   MOVE ERROR-TOWN TO ERROR-TEXT
+                   ACCEPT ERROR-ZONE
+                   IF KEYSTATUS = 1003 THEN
+                       EXIT SECTION
+                   END-IF
                END-IF
            END-PERFORM
        EXIT SECTION.
@@ -626,6 +726,9 @@
            DISPLAY INSTRUCTIONS-ZONE
            MOVE REG-SUPP-EMAIL TO EDIT-SUPP-EMAIL
            ACCEPT EDIT-SUPP-EMAIL
+           IF KEYSTATUS = 1003 THEN
+               EXIT SECTION
+           END-IF
        EXIT SECTION.
 
        180-GET-PHONE SECTION.
@@ -635,16 +738,23 @@
                DISPLAY INSTRUCTIONS-ZONE
                MOVE REG-SUPP-PHONE TO EDIT-SUPP-PHONE
                ACCEPT EDIT-SUPP-PHONE
+               IF KEYSTATUS = 1003 THEN
+                   EXIT SECTION
+               END-IF
                IF NOT VALID-PHONE1 OR NOT VALID-PHONE2
                OR NOT VALID-PHONE3 THEN
-                   MOVE ERROR-PHONE TO ERROR-TEXT ACCEPT ERROR-ZONE
+                   MOVE ERROR-PHONE TO ERROR-TEXT
+                   ACCEPT ERROR-ZONE
+                   IF KEYSTATUS = 1003 THEN
+                       EXIT SECTION
+                   END-IF
                END-IF
            END-PERFORM
        EXIT SECTION.
 
        190-REMOVE-EXTRA-SPACES SECTION.
            MOVE SPACE TO UNSTR1 UNSTR2 UNSTR3 UNSTR4 UNSTR5
-           UNSTR6 UNSTR7 UNSTR8 UNSTR9 UNSTR10
+           UNSTR6 UNSTR7 UNSTR8 UNSTR9 UNSTR10 UNSTRTEMP
            UNSTRING UNSTR DELIMITED BY ALL SPACES INTO UNSTR1
                UNSTR2 UNSTR3 UNSTR4 UNSTR5 UNSTR6 UNSTR7 UNSTR8 UNSTR9
                UNSTR10
@@ -658,5 +768,6 @@
                    UNSTR8 DELIMITED BY SPACES SPACE DELIMITED BY SIZE
                    UNSTR9 DELIMITED BY SPACES SPACE DELIMITED BY SIZE
                    UNSTR10 DELIMITED BY SPACES SPACE DELIMITED BY SIZE
-           INTO UNSTR
+           INTO UNSTRTEMP
+           MOVE UNSTRTEMP TO UNSTR
        EXIT SECTION.
