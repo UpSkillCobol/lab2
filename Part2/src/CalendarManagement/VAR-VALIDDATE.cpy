@@ -3,12 +3,12 @@
       ******************************************************************
       *    BREADWICH | CALENDAR MANAGEMENT
       ******************************************************************
-      *    CHECK DATE VARIABLES | V0.6 | IN UPDATE | 03.02.2021
+      *    CHECK DATE VARIABLES | V0.7 | IN UPDATE | 04.02.2021
       ******************************************************************
 
        01  WS-VALID-DATE.
            05  WS-YEAR                         PIC 9(004).
-               88  VALID-YEAR                  VALUE 2021 THRU 2022.
+               88  VALID-YEAR                  VALUE 2021 THRU 2100.
            05  WS-MONTH                        PIC 9(002).
                88  VALID-MONTH                 VALUE 01 THRU 12.
                88  MONTH-30                    VALUE 04, 06, 09, 11.
