@@ -5,7 +5,7 @@
       * Tectonics: cobc
       ******************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. SCM-ELM.
+       PROGRAM-ID. SCM-VIEW.
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
        SPECIAL-NAMES.
@@ -27,19 +27,15 @@
            FILE STATUS IS FILE-STATUS.
        DATA DIVISION.
        FILE SECTION.
-
        FD SCHOOLS.
        COPY "CB-SCHOOLS".
-
-
        WORKING-STORAGE SECTION.
        COPY "CB-WS-SCHOOLS".
        COPY "CONSTANTS".
-
        SCREEN SECTION.
        01  CLEAR-SCREEN BACKGROUND-COLOR 0.
            03 VALUE " " BLANK SCREEN LINE 01 COL 01.
-
+      ******************************************************************
        01  MAIN-SCREEN
            BACKGROUND-COLOR 7, FOREGROUND-COLOR 0.
            05 VALUE ALL " " PIC X(120) LINE 02 COL 01.
@@ -54,18 +50,40 @@
            05 VALUE ALL " " PIC X(23) LINE 26 COL 98.
            05 VALUE BACK-EXIT
                LINE 25 COL 99 FOREGROUND-COLOR 5.
-
-       01  PRE-DELETE-MENU
+      ******************************************************************
+       01  MAIN-VIEW-SCREEN
+           BACKGROUND-COLOR 7, FOREGROUND-COLOR 0, AUTO, REQUIRED.
+           05 VALUE ALL " " PIC X(50) LINE 09 COL 35.
+           05 VALUE ALL " " PIC X(50) LINE 10 COL 35.
+           05 VALUE ALL " " PIC X(50) LINE 11 COL 35.
+           05 VALUE ALL " " PIC X(50) LINE 12 COL 35.
+           05 VALUE ALL " " PIC X(50) LINE 13 COL 35.
+           05 VALUE ALL " " PIC X(50) LINE 14 COL 35.
+           05 VALUE ALL " " PIC X(50) LINE 15 COL 35.
+           05 VALUE VIEW-MENU-OPTION1 LINE 11 COL 42.
+           05 VALUE VIEW-MENU-OPTION2 LINE 12 COL 42.
+           05 VALUE VIEW-MENU-OPTION3 LINE 13 COL 42.
+           05 VALUE VIEW-MENU-CHOICE LINE 20 COL 45 REVERSE-VIDEO.
+           05 MP-OPTION PIC 9(002) LINE 20 COL 73 TO WS-OPTION
+               BLANK WHEN ZERO REVERSE-VIDEO.
+      ******************************************************************
+       01  PRE-VIEW-IID-SCREEN
            REQUIRED.
-           05 VALUE DLT-MENU-TEXT1 LINE 25 COL 10
+           03 VALUE VIEW-MENU-OPTION5 LINE 25 COL 10
            BACKGROUND-COLOR 7 FOREGROUND-COLOR 4.
-           05 DLT-OPTION PIC X(008) LINE 25 COL 47 TO
-               WS-SCHOOL-EXTERNAL-ID
-               BACKGROUND-COLOR 7 FOREGROUND-COLOR 4.
-
-       01  DELETE-SCREEN
+           03 VW-OPTION PIC 9(003) LINE 25 COL 44 TO SCHOOL-INTERNAL-ID
+           BLANK WHEN ZERO FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
+      ******************************************************************
+       01  PRE-VIEW-EED-SCREEN
            REQUIRED.
-           05 VALUE DLT-MENU-TEXT LINE 9 COL 25.
+           03 VALUE VIEW-MENU-OPTION5 LINE 25 COL 10.
+           03 VW-OPTION1 PIC X(008) LINE 25 COL 44 TO
+               WS-SCHOOL-EXTERNAL-ID
+               FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
+      ******************************************************************
+       01  VIEW-SCREEN
+           REQUIRED.
+           05 VALUE VIEW-MENU-TEXT LINE 9 COL 40.
            05 VALUE ADD-MENU-TEXT1 LINE 11 COL 22.
            05 VALUE ADD-MENU-TEXT2 LINE 12 COL 22.
            05 VALUE ADD-MENU-TEXT3 LINE 13 COL 22.
@@ -73,10 +91,6 @@
            05 VALUE ADD-MENU-TEXT8 LINE 18 COL 22.
            05 VALUE "-" LINE 18 COL 45.
            05 VALUE ADD-MENU-TEXT9 LINE 19 COL 22.
-           05 VALUE DLT-MENU-TEXT2 LINE 25 COL 10
-           BACKGROUND-COLOR 7, FOREGROUND-COLOR 4.
-           05 DLT-OPTION1 PIC X(01) LINE 25 COL 46 TO WS-DLT
-           BACKGROUND-COLOR 7, FOREGROUND-COLOR 4.
            05 VALUE ALL " " PIC X(080) LINE 7 COL 18
                BACKGROUND-COLOR 7.
            05 VALUE ALL " " PIC X(080) LINE 21 COL 18
@@ -107,37 +121,31 @@
            05 VALUE "  " LINE 17 COL 96 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 18 COL 96 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 19 COL 96 BACKGROUND-COLOR 7.
-           05 DLT-REC.
-               10 DLT-IID PIC 9(003) LINE 11 COL 40 BLANK WHEN ZERO.
-               10 DLT-EED PIC X(008) LINE 12 COL 40.
-               10 DLT-DESIGNATION.
-                   15 DLT-DESIGNATION1 PIC X(050) LINE 13 COL 40.
-                   15 DLT-DESIGNATION2 PIC X(050) LINE 14 COL 40.
-                   15 DLT-DESIGNATION3 PIC X(050) LINE 15 COL 40.
-               10 DLT-ADDRESS.
-                   15 DLT-ADDRESS1 PIC X(050) LINE 16 COL 40.
-                   15 DLT-ADDRESS2 PIC X(050) LINE 17 COL 40.
-               10 DLT-POSTAL-CODE.
-                   15 DLT-PC1 PIC 9(004) LINE 18 COL 40
+           05 VIEW-REC.
+               10 VIEW-IID PIC 9(003) LINE 11 COL 40 BLANK WHEN ZERO.
+               10 VIEW-EED PIC X(008) LINE 12 COL 40.
+               10 VIEW-DESIGNATION.
+                   15 VIEW-DESIGNATION1 PIC X(050) LINE 13 COL 40.
+                   15 VIEW-DESIGNATION2 PIC X(050) LINE 14 COL 40.
+                   15 VIEW-DESIGNATION3 PIC X(050) LINE 15 COL 40.
+               10 VIEW-ADDRESS.
+                   15 VIEW-ADDRESS1 PIC X(050) LINE 16 COL 40.
+                   15 VIEW-ADDRESS2 PIC X(050) LINE 17 COL 40.
+               10 VIEW-POSTAL-CODE.
+                   15 VIEW-PC1 PIC 9(004) LINE 18 COL 40
                         BLANK WHEN ZERO.
-                   15 DLT-PC2 PIC 9(003) LINE 18 COL 47
+                   15 VIEW-PC2 PIC 9(003) LINE 18 COL 47
                         BLANK WHEN ZERO.
-               10 DLT-TOWN PIC X(030) LINE 19 COL 40.
-
-       01  DELETED-SCREEN.
-           05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 25 COL 01 BACKGROUND-COLOR 7..
-           05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7..
-           05 VALUE DELETED-TEXT LINE 25 COL 10 BACKGROUND-COLOR 7
-           FOREGROUND-COLOR 4.
-
-       01  ID-ERROR.
-           05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7..
-           05 VALUE ALL " " PIC X(95) LINE 25 COL 01 BACKGROUND-COLOR 7..
-           05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7..
-           05 VALUE DLT-ID-ERROR LINE 26 COL 10 BACKGROUND-COLOR 7
-           FOREGROUND-COLOR 4.
-
+               10 VIEW-TOWN PIC X(030) LINE 19 COL 40.
+      ******************************************************************
+       01  VIEW-ALL-NEXT-SCREEN
+           FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
+           03 VALUE VIEW-NEXT-TEXT LINE 25 COL 10.
+      ******************************************************************
+       01  ID-ERROR-SCREEN
+           FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
+           03 VALUE ID-ERROR-TEXT LINE 25 COL 48.
+      ******************************************************************
        01  LIST-SCREEN FOREGROUND-COLOUR 7 BACKGROUND-COLOR 0.
            05 VALUE ALL " " PIC X(112) LINE 07 COL 05
            BACKGROUND-COLOR 7.
@@ -183,46 +191,103 @@
            05 VALUE LIST-SCREEN-TEXT1 LINE 8 COL 17 FOREGROUND-COLOR 5.
            05 VALUE LIST-SCREEN-TEXT2 LINE 8 COL 28 FOREGROUND-COLOR 5.
            05 VALUE LIST-SCREEN-TEXT3 LINE 8 COL 81 FOREGROUND-COLOR 5.
-           05 VALUE DLT-MENU-TEXT1 LINE 25 COL 10
+           05 VALUE VIEW-MENU-OPTION5 LINE 25 COL 10
            FOREGROUND-COLOUR 4 BACKGROUND-COLOR 7.
            05  CONTINUE-LIST.
-               10  CONTINUE-IID PIC 9(003) LINE 25 COL 47
+               10  CONTINUE-IID PIC 9(003) LINE 25 COL 44
                TO SCHOOL-INTERNAL-ID
                FOREGROUND-COLOUR 0 BACKGROUND-COLOR 7.
-
+      ******************************************************************
        01  END-LIST-SCREEN FOREGROUND-COLOUR 4
            BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 25 COL 01 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7.
            05 VALUE "|" LINE 25 COL 52.
            05 VALUE END-OF-LIST-TEXT LINE 25 COL 53.
-
+      ******************************************************************
        01  EMPTY-LIST-SCREEN FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 25 COL 01 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7.
            05 VALUE EMPTY-LIST-TEXT LINE 25 COL 53.
            05  LINE 01 COL 01 PIC X(1) TO PRESS-KEY AUTO.
-
+      ******************************************************************
        01  NEXT-LIST-SCREEN FOREGROUND-COLOUR 4
            BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 25 COL 01 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7.
            05 VALUE "|" LINE 25 COL 52.
            05 VALUE NEXT-LIST-TEXT LINE 25 COL 53.
-
+      ******************************************************************
        PROCEDURE DIVISION.
-       DELETE-REGISTER SECTION.
-      *    DELETE REGISTERS SECTION
+       MAIN SECTION.
+      *    SECTION WHERE THE USER CHOOSES WHICH VIEW MODE HE WANTS
+           PERFORM WITH TEST AFTER UNTIL WS-OPTION = 3
            PERFORM CLEAR-VARIABLES
-           MOVE SPACES TO DLT-OPTION
-           MOVE SPACES TO DLT-OPTION1
-           MOVE SPACES TO WS-DLT
+                MOVE ZERO TO MP-OPTION
+                DISPLAY CLEAR-SCREEN
+                DISPLAY MAIN-SCREEN
+                DISPLAY MAIN-VIEW-SCREEN
+                ACCEPT MP-OPTION
+                   IF KEY-STATUS = 1003 THEN
+                       EXIT SECTION
+                   END-IF
+                   IF KEY-STATUS = 1004 THEN
+                       STOP RUN
+                   END-IF
+                EVALUATE WS-OPTION
+                   WHEN 1
+      *    OPTION 1 IS VIEW ONE BY ONE
+                           PERFORM VIEW-ONE-IID
+                               IF KEY-STATUS = 1003 THEN
+                                   EXIT PROGRAM
+                               END-IF
+                               IF KEY-STATUS = 1004 THEN
+                                   EXIT PROGRAM
+                               END-IF
+                   WHEN 2
+      *    OPTION 2 IS TO CHOOSE ONE TO VIEW SPECIFICALLY
+                           PERFORM VIEW-ALL
+                               IF KEY-STATUS = 1003 THEN
+                                   EXIT PROGRAM
+                               END-IF
+                               IF KEY-STATUS = 1004 THEN
+                                   EXIT PROGRAM
+                               END-IF
+               END-EVALUATE
+           END-PERFORM
+           EXIT PROGRAM.
+      ******************************************************************
+      *    SECTION TO VIEW THE RECORDS WITH ALL DETAILS ONE BY ONE
+       VIEW-ONE-IID SECTION.
+           OPEN INPUT SCHOOLS
+           MOVE ZEROS TO SCHOOL-INTERNAL-ID
+           PERFORM WITH TEST AFTER UNTIL WS-EOF
+               READ SCHOOLS
+                   AT END
+      *    WHEN THE LAST RECORD IS SHOWN A MESSAGE WILL APPEAR
+                       SET WS-EOF TO TRUE
+                       DISPLAY END-LIST-SCREEN
+                   NOT AT END
+                       DISPLAY CLEAR-SCREEN
+                       DISPLAY MAIN-SCREEN
+                       MOVE SCHOOL-DETAILS TO VIEW-REC
+                       DISPLAY VIEW-SCREEN
+                       DISPLAY VIEW-ALL-NEXT-SCREEN
+      *    SHOW THE RECORD AND WAIT FOR THE USER TO PRESS A KEY TO SHOW
+      *    THE NEST RECORD
+                       ACCEPT OMITTED AT LINE 25 COL 01
+                       IF KEY-STATUS = 1003 THEN
+                         EXIT SECTION
+                      END-IF
+                      IF KEY-STATUS = 1004 THEN
+                         EXIT PROGRAM
+                      END-IF
+           END-PERFORM
+           CLOSE SCHOOLS
+       EXIT SECTION.
+      ******************************************************************
+      *    SECTION TO VIEW ALL RECORDS AND CHOOSE ONE TO VIEW
+      *    MORE DETAILED
+       VIEW-ALL SECTION.
+          MOVE SPACES TO VW-OPTION1
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
-      *    SHOW A LIST OF ALL RECORDS AND ACCEPT THE ONE TO BE SHOW AND DELETED
+      *    CALL SECTION LIST TO VIEW ALL RECORDS AND CHOOSE ONE TO VIEW
+      *    WITH ALL DETAILS
            PERFORM LIST
                IF FLAG = "Y" THEN
                  EXIT SECTION
@@ -243,15 +308,18 @@
                END-IF
            MOVE ZEROS TO WS-CONTROL
            PERFORM WITH TEST AFTER UNTIL WS-CONTROL = 1
-      *    DISPLAY THE RECORD THE USER DID CHOOSE ON THE LIST SECTION
+      *    READ THE RECORD THE USER DID CHOOSE ON THE LIST SECTION
+      *    AND DISPLAY THE RECORD TO THE USER
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
-           DISPLAY DELETE-SCREEN
+           DISPLAY VIEW-SCREEN
            OPEN INPUT SCHOOLS
                READ SCHOOLS
                INVALID KEY
-      *    IF THE RECORD DOESN'T EXIST A MESSAGE WILL BE SHOWN
-                       DISPLAY EMPTY-LIST-SCREEN
+      *    IF THE RECORD DOESNT EXIST A MESSAGE WILL BE SHOWN
+                   MOVE ZEROS TO VW-OPTION1
+                   DISPLAY ID-ERROR-SCREEN
+                   ACCEPT VW-OPTION
                        IF KEY-STATUS = 1003 THEN
                            EXIT SECTION
                        END-IF
@@ -259,55 +327,16 @@
                            STOP RUN
                        END-IF
                NOT INVALID KEY
-      *    THE RECORD IS SHOWN IN THE SCREEN
-                   MOVE SCHOOL-DETAILS TO DLT-REC
+      *    IF THE RECORD IS VALID, SHOW THE RECORD TO THE USER
+                   MOVE SCHOOL-DETAILS TO VIEW-REC
                    DISPLAY CLEAR-SCREEN
                    DISPLAY MAIN-SCREEN
-                   DISPLAY DELETE-SCREEN
+                   DISPLAY VIEW-SCREEN
+                   ACCEPT OMITTED AT LINE 25 COL 10
                    MOVE 1 TO WS-CONTROL
                END-READ
            CLOSE SCHOOLS
            END-PERFORM
-           PERFORM WITH TEST AFTER UNTIL DLT-VLD
-      *    THE USER MUST DECIDE IF HE WANTS DO DELETE OR NOT THE FILE
-           MOVE SPACES TO DLT-OPTION1
-           ACCEPT DLT-OPTION1
-               IF KEY-STATUS = 1003 THEN
-                   EXIT SECTION
-               END-IF
-               IF KEY-STATUS = 1004 THEN
-                   STOP RUN
-               END-IF
-           END-PERFORM
-           MOVE FUNCTION UPPER-CASE(WS-DLT) TO WS-DLT
-           EVALUATE TRUE
-      *    IF THE USER INTRODUCES "S" OR "Y" THE RECORD IS "DELETED"
-               WHEN WS-DLT = "S" OR WS-DLT = "Y"
-                   PERFORM DELETE-RECORD
-                   DISPLAY DELETED-SCREEN
-                   ACCEPT OMITTED AT LINE 25 COL 09
-      *    IF THE USER INTRODUCES "N" THEN THE RECORD IS KEPT
-               WHEN WS-DLT = "N"
-                   PERFORM CLEAR-VARIABLES
-           END-EVALUATE
-           EXIT PROGRAM.
-      ******************************************************************
-       DELETE-RECORD SECTION.
-      *    SECTION TO DELETE THE RECORD, IT ACTUALLY DOESNT DELETE THE RECORD
-      *    JUST MOVES A 0 TO THE SCHOOL-IS-ACTIVE VARIABLE, MAKING THE SCHOOL
-      *    INACTIVE
-           OPEN I-O SCHOOLS
-               DELETE SCHOOLS
-           CLOSE SCHOOLS.
-      ******************************************************************
-       CLEAR-VARIABLES SECTION.
-      *    SECTION TO CLEAR ALL VARIABLES THAT THE MODULE USES TO CHANGE
-      *    THE RECORD
-           MOVE SPACES TO WS-SCHOOL-EXTERNAL-ID WS-SCHOOL-DESIGNATION
-           WS-SCHOOL-ADRESS WS-SCHOOL-TOWN DLT-EED DLT-DESIGNATION
-           DLT-ADDRESS DLT-TOWN
-           MOVE ZEROS TO WS-SCHOOL-INTERNAL-ID WS-SCHOOL-POSTAL-CODE
-           WS-SCHOOL-IS-ACTIVE DLT-IID DLT-POSTAL-CODE
            EXIT SECTION.
       ******************************************************************
        LIST SECTION.
@@ -319,7 +348,7 @@
            MOVE SPACES TO FLAG
            MOVE SPACES TO CONTINUE-LIST
            MOVE SPACES TO SCHOOL-EXTERNAL-ID
-           MOVE ZEROS TO SCHOOL-INTERNAL-ID
+           MOVE 1 TO SCHOOL-INTERNAL-ID
            OPEN INPUT SCHOOLS
       *    POINT THE FILE IN THE START, IN THIS CASE ON ID "000" SO
       *    WE ARE SURE THAT THE PROGRAM WILL READ ALL RECORDS
@@ -328,6 +357,7 @@
       *    IF THERE ARE NO RECORDS A MESSAGE WILL BE SHOWN
                  ACCEPT EMPTY-LIST-SCREEN
                  MOVE "Y" TO FLAG
+                 ACCEPT OMITTED AT LINE 25 COL 01
                  IF FLAG = "Y" THEN
                     CLOSE SCHOOLS
                     EXIT SECTION
@@ -338,7 +368,6 @@
       *    READ THE FILE GOING THROUGH EACH RECORD AND POSITIONING IT ON
       *    THE SCREEN
               READ SCHOOLS NEXT RECORD
-      *             KEY IS SCHOOL-EXTERNAL-ID
                  AT END SET WS-EOF TO TRUE
       *    WHEN THE LAST RECORD IS REACHED, A MESSAGE IS SHOWN TO THE USER
                     DISPLAY END-LIST-SCREEN
@@ -390,5 +419,14 @@
               END-READ
            END-PERFORM
            EXIT SECTION.
-
-       END PROGRAM SCM-ELM.
+      ******************************************************************
+      *    SECTION TO CLEAR ALL VARIABLES THAT THE MODULE USES TO CHANGE
+      *    THE RECORD
+       CLEAR-VARIABLES SECTION.
+           MOVE SPACES TO WS-SCHOOL-EXTERNAL-ID WS-SCHOOL-DESIGNATION
+           WS-SCHOOL-ADRESS WS-SCHOOL-TOWN VIEW-EED VIEW-DESIGNATION
+           VIEW-ADDRESS VIEW-TOWN SHOW-EED SHOW-DESG SHOW-TOWN
+           MOVE ZEROS TO WS-SCHOOL-INTERNAL-ID WS-SCHOOL-POSTAL-CODE
+           VIEW-IID VIEW-POSTAL-CODE SHOW-IID
+           EXIT SECTION.
+       END PROGRAM SCM-VIEW.

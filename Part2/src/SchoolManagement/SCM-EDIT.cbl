@@ -5,7 +5,7 @@
       * Tectonics: cobc
       ******************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. SCM-ALT.
+       PROGRAM-ID. SCM-EDIT.
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
        SPECIAL-NAMES.
@@ -713,4 +713,4 @@
                              SPACE DELIMITED BY SIZE
                INTO LINK-TEXT
            EXIT SECTION.
-       END PROGRAM SCM-ALT.
+       END PROGRAM SCM-EDIT.

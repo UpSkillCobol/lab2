@@ -93,7 +93,7 @@
                WHEN 2
       *    OPTION 2 CALLS CLT MODULE THAT ALLOWS THE USER TO VIEW THE RECORDS
       *    ALREADY REGISTERED ON THE FILE
-                       CALL "SCM-CLT"
+                       CALL "SCM-VIEW"
                        IF KEY-STATUS = 1003 THEN
                            EXIT SECTION
                        END-IF
@@ -103,7 +103,7 @@
                WHEN 4
       *    OPTION 4 CALLS ALT MODULE THAT ALLOWS THE USER TO DO CHANGES TO
       *    THE RECORDS ALREADY REGISTERED ON THE FILE
-                       CALL "SCM-ELM"
+                       CALL "SCM-DELETE"
                        IF KEY-STATUS = 1003 THEN
                            EXIT SECTION
                        END-IF
@@ -112,7 +112,7 @@
                        END-IF
                WHEN 3
       *    OPTION 3 CALLS ELM MODULE THAT ALLOWS THE USER TO DELETE RECORDS
-                       CALL "SCM-ALT"
+                       CALL "SCM-EDIT"
                        IF KEY-STATUS = 1003 THEN
                            EXIT SECTION
                        END-IF

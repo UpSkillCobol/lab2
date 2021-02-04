@@ -272,7 +272,6 @@
            PERFORM WITH TEST AFTER UNTIL EXTERNAL-ID-VLD
                AND REG-UNIQ = 1 AND WS-SPACES < 8
                MOVE ZEROS TO WS-SPACES
-               MOVE ZERO TO REG-UNIQ
                MOVE SPACES TO REG-EED
                MOVE INSTRUCTION-EED TO INSTRUCTION-MESSAGE
                DISPLAY INSTRUCTIONS-SCREEN
@@ -283,19 +282,8 @@
                IF KEY-STATUS = 1004 THEN
                    STOP RUN
                END-IF
-      *    CHECK IF THE EXTERNAL ID ISNT ALREADY REGISTERED
-               MOVE WS-SCHOOL-EXTERNAL-ID TO SCHOOL-EXTERNAL-ID
-               OPEN INPUT SCHOOLS
-                   READ SCHOOLS RECORD
-                       KEY IS SCHOOL-EXTERNAL-ID
-                       INVALID KEY
-                           MOVE 1 TO REG-UNIQ
-                       NOT INVALID KEY
-                           MOVE 0 TO REG-UNIQ
-                           MOVE ERROR-EED TO ERROR-MESSAGE
-                           ACCEPT ERROR-SCREEN
-                   END-READ
-               CLOSE SCHOOLS
+               PERFORM EXTERNAL-ID-EXISTS
+      *    CHECK FOR SPACES, FIELD MUST BE FILLED
                INSPECT WS-SCHOOL-EXTERNAL-ID TALLYING WS-SPACES
                FOR ALL SPACES
                IF NOT EXTERNAL-ID-VLD OR WS-SPACES = 8 THEN
@@ -325,6 +313,7 @@
                    IF KEY-STATUS = 1004 THEN
                        STOP RUN
                    END-IF
+      *    CHECK FOR SPACES,FIELD MUST BE FILLED
                    INSPECT WS-SCHOOL-DESIGNATION1 TALLYING WS-SPACES
                        FOR ALL SPACES
                    IF NOT DESIGNATION-VLD OR WS-SPACES = 50 THEN
@@ -354,6 +343,7 @@
                IF KEY-STATUS = 1004 THEN
                    STOP RUN
                END-IF
+      *    CHECK FOR SPACES, FIELD MUST BE FILLED
                INSPECT WS-SCHL-ADR-MAIN1 TALLYING WS-SPACES
                FOR ALL SPACES
                IF NOT ADDRESS-VLD OR WS-SPACES = 50 THEN
@@ -410,6 +400,7 @@
                IF KEY-STATUS = 1004 THEN
                    STOP RUN
                END-IF
+      *    CHECK FOR SPACES, FIELD MUST BE FILLED
                INSPECT WS-SCHOOL-TOWN TALLYING WS-SPACES
                FOR ALL SPACES
                IF NOT TOWN-VLD OR WS-SPACES = 30 THEN
@@ -466,6 +457,23 @@
                        WRITE FD-KEYS
                    CLOSE KEYS
            END-EVALUATE
+           EXIT SECTION.
+      ******************************************************************
+       EXTERNAL-ID-EXISTS SECTION.
+      *    CHECK IF THE EXTERNAL ID ISNT ALREADY REGISTERED
+           MOVE ZERO TO REG-UNIQ
+           MOVE WS-SCHOOL-EXTERNAL-ID TO SCHOOL-EXTERNAL-ID
+           OPEN INPUT SCHOOLS
+               READ SCHOOLS RECORD
+                   KEY IS SCHOOL-EXTERNAL-ID
+                   INVALID KEY
+                       MOVE 1 TO REG-UNIQ
+                   NOT INVALID KEY
+                       MOVE 0 TO REG-UNIQ
+                       MOVE ERROR-EED TO ERROR-MESSAGE
+                       ACCEPT ERROR-SCREEN
+               END-READ
+           CLOSE SCHOOLS
            EXIT SECTION.
       ******************************************************************
        CHECK-FILE SECTION.
