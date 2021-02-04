@@ -21,6 +21,8 @@
        01  CLEAR-SCREEN.
            05 BLANK SCREEN.
 
+      ******************************************************************
+
        01  MAIN-SCREEN BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
            05 VALUE ALL " " PIC X(120) LINE 02 COL 01.
            05 VALUE ALL " " PIC X(120) LINE 03 COL 01.
@@ -29,28 +31,58 @@
            05 VALUE ALL " " PIC X(120) LINE 24 COL 01.
            05 VALUE ALL " " PIC X(120) LINE 25 COL 01.
            05 VALUE ALL " " PIC X(120) LINE 26 COL 01.
+           05 VALUE ACCEPT-OPTION      LINE 25 COL 48.
+           05 SS-OPTION PIC 9(002)     LINE 25 COL 73
+              TO MAIN-OPTION BLANK WHEN ZERO.
+
+      ******************************************************************
 
        01  MAIN-MENU-SCREEN BACKGROUND-COLOR 7 FOREGROUND-COLOR 0
            AUTO REQUIRED.
-           05 VALUE ALL " " PIC X(050) LINE 09 COL 35.
-           05 VALUE ALL " " PIC X(050) LINE 10 COL 35.
-           05 VALUE ALL " " PIC X(050) LINE 11 COL 35.
-           05 VALUE ALL " " PIC X(050) LINE 12 COL 35.
-           05 VALUE ALL " " PIC X(050) LINE 13 COL 35.
-           05 VALUE ALL " " PIC X(050) LINE 14 COL 35.
-           05 VALUE ALL " " PIC X(050) LINE 15 COL 35.
-           05 VALUE ALL " " PIC X(050) LINE 16 COL 35.
-           05 VALUE ALL " " PIC X(050) LINE 17 COL 35.
-           05 VALUE ALL " " PIC X(050) LINE 18 COL 35.
-           05 VALUE OPTION-1       LINE 11 COL 47.
-           05 VALUE OPTION-2       LINE 12 COL 47.
-           05 VALUE OPTION-3       LINE 13 COL 47.
-           05 VALUE OPTION-4       LINE 14 COL 47.
-           05 VALUE OPTION-5       LINE 15 COL 47.
-           05 VALUE OPTION-6       LINE 16 COL 47.
-           05 VALUE ACCEPT-OPTION  LINE 21 COL 46 REVERSE-VIDEO.
-           05 SS-OPTION PIC 9(002) LINE 21 COL 71 TO MAIN-OPTION
-              BLANK WHEN ZERO REVERSE-VIDEO.
+           05 VALUE ALL " " PIC X(030) LINE 08 COL 10.
+           05 VALUE ALL " " PIC X(030) LINE 09 COL 10.
+           05 VALUE ALL " " PIC X(030) LINE 10 COL 10.
+           05 VALUE OPTION-1           LINE 10 COL 14.
+           05 VALUE ALL " " PIC X(030) LINE 11 COL 10.
+           05 VALUE ALL " " PIC X(030) LINE 12 COL 10.
+
+           05 VALUE ALL " " PIC X(030) LINE 08 COL 46.
+           05 VALUE ALL " " PIC X(030) LINE 09 COL 46.
+           05 VALUE ALL " " PIC X(030) LINE 10 COL 46.
+           05 VALUE OPTION-2           LINE 10 COL 50.
+           05 VALUE ALL " " PIC X(030) LINE 11 COL 46.
+           05 VALUE ALL " " PIC X(030) LINE 12 COL 46.
+
+           05 VALUE ALL " " PIC X(030) LINE 08 COL 82.
+           05 VALUE ALL " " PIC X(030) LINE 09 COL 82.
+           05 VALUE ALL " " PIC X(030) LINE 10 COL 82.
+           05 VALUE OPTION-3           LINE 10 COL 84.
+           05 VALUE ALL " " PIC X(030) LINE 11 COL 82.
+           05 VALUE ALL " " PIC X(030) LINE 12 COL 82.
+
+           05 VALUE ALL " " PIC X(030) LINE 16 COL 10.
+           05 VALUE ALL " " PIC X(030) LINE 17 COL 10.
+           05 VALUE ALL " " PIC X(030) LINE 18 COL 10.
+           05 VALUE OPTION-4           LINE 18 COL 13.
+           05 VALUE ALL " " PIC X(030) LINE 19 COL 10.
+           05 VALUE ALL " " PIC X(030) LINE 20 COL 10.
+
+           05 VALUE ALL " " PIC X(030) LINE 16 COL 46.
+           05 VALUE ALL " " PIC X(030) LINE 17 COL 46.
+           05 VALUE ALL " " PIC X(030) LINE 18 COL 46.
+           05 VALUE OPTION-5           LINE 18 COL 48.
+           05 VALUE ALL " " PIC X(030) LINE 19 COL 46.
+           05 VALUE ALL " " PIC X(030) LINE 20 COL 46.
+
+           05 VALUE ALL " " PIC X(030) LINE 16 COL 82.
+           05 VALUE ALL " " PIC X(030) LINE 17 COL 82.
+           05 VALUE ALL " " PIC X(030) LINE 18 COL 82.
+           05 VALUE OPTION-6           LINE 18 COL 89
+              HIGHLIGHT FOREGROUND-COLOR 0.
+           05 VALUE ALL " " PIC X(030) LINE 19 COL 82.
+           05 VALUE ALL " " PIC X(030) LINE 20 COL 82.
+
+      ******************************************************************
 
        01  LEAVE-SCREEN BACKGROUND-COLOR 0 FOREGROUND-COLOR 7.
            05 BLANK SCREEN.
@@ -84,22 +116,26 @@
            05 VALUE ALL " " PIC X(048) LINE 17 COL 36.
            05 LINE 01 COL 01 PIC X TO PRESS-KEY AUTO.
 
+      ******************************************************************
+
        01  ERROR-MESSAGE-SCREEN FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
-           05 ERROR-LINE LINE 25 COL 12 PIC X(080).
+           05 ERROR-LINE LINE 25 COL 25 PIC X(080).
            05 LINE 01 COL 01 PIC X TO PRESS-KEY AUTO.
+
+      ******************************************************************
 
        PROCEDURE DIVISION.
        MAIN SECTION.
            PERFORM UNTIL MAIN-OPTION = 6
 
-              DISPLAY CLEAR-SCREEN
               MOVE ZEROS TO SS-OPTION
-              DISPLAY MAIN-SCREEN
-              ACCEPT MAIN-MENU-SCREEN
+              DISPLAY CLEAR-SCREEN
+              DISPLAY MAIN-MENU-SCREEN
+              ACCEPT MAIN-SCREEN
               IF NOT VALID-MAIN-OPTION
                  MOVE OPTION-ERROR TO ERROR-LINE
                  ACCEPT ERROR-MESSAGE-SCREEN
-               END-IF
+              END-IF
 
               EVALUATE MAIN-OPTION
                  WHEN 1     CALL "SCM-MAIN"
