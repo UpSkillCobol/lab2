@@ -13,7 +13,7 @@
        FILE SECTION.
        WORKING-STORAGE SECTION.
 
-       COPY CONSTANTS.
+       COPY CONSTANTS-INGREDS.
 
        01  WS-OPTION                           PIC 9(002).
            88 VALID-OPTION                     VALUE 1 THRU 5.
@@ -29,14 +29,11 @@
            03 VALUE ALL " " PIC X(120) LINE 02 COL 01.
            03 VALUE ALL " " PIC X(120) LINE 03 COL 01.
            03 VALUE ALL " " PIC X(120) LINE 04 COL 01.
-           03 VALUE MODULE-NAME LINE 03 COL 50.
-           03 VALUE ALL " " PIC X(95) LINE 24 COL 01.
-           03 VALUE ALL " " PIC X(95) LINE 25 COL 01.
-           03 VALUE ALL " " PIC X(95) LINE 26 COL 01.
-           03 VALUE ALL " " PIC X(22) LINE 24 COL 98.
-           03 VALUE ALL " " PIC X(22) LINE 25 COL 98.
-           03 VALUE ALL " " PIC X(22) LINE 26 COL 98.
-           03 VALUE BACK-EXIT LINE 25 COL 99 FOREGROUND-COLOR 5.
+           03 VALUE MODULE-NAME-MAIN LINE 03 COL 50.
+           03 VALUE ALL " " PIC X(120) LINE 24 COL 01.
+           03 VALUE ALL " " PIC X(120) LINE 25 COL 01.
+           03 VALUE ALL " " PIC X(120) LINE 26 COL 01.
+
 
        01  MAIN-MENU-SCREEN
            BACKGROUND-COLOR 7, FOREGROUND-COLOR 0, AUTO, REQUIRED.
@@ -63,7 +60,6 @@
            03 SCREEN-DUMMY LINE 26 COL 95 PIC X TO DUMMY AUTO.
 
 
-
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
 
@@ -85,10 +81,10 @@
                WHEN 1
                    CALL "ADD-INGREDS"
                WHEN 2
-                   CALL "VIEW INGREDS"
+                   CALL "VIEW-INGREDS"
                WHEN 3
-                   CALL "EDIT-INGREDS"
+                   CALL "MODIFY-INGREDS"
                WHEN 4
-                   CALL "DELETE-INGREDS"
+                   CALL "REMOVE-INGREDS"
            END-EVALUATE
            EXIT SECTION.
