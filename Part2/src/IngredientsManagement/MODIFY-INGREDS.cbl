@@ -249,9 +249,9 @@
            05 VALUE ALL " " PIC X(095) LINE 26 COL 01.
            05 VALUE MESSAGE-GET-INGREDID LINE 25 COL 15
                FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
-           05 VALUE " | " LINE 25 COL 46.
-           05 MESSAGE-LIST-PAGE LINE 25 COL 49 PIC X(030).
-           05 NEW-INGREDID LINE 25 COL 43 PIC 9(003)
+           05 VALUE " | " LINE 25 COL 53.
+           05 MESSAGE-LIST-PAGE LINE 25 COL 56 PIC X(030).
+           05 NEW-INGREDID LINE 25 COL 48 PIC 9(003)
                FOREGROUND-COLOR 4 BACKGROUND-COLOR 7 TO GET-VALID-ID
                BLANK WHEN ZERO.
       ******************************************************************
