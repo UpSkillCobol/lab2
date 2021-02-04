@@ -288,6 +288,9 @@
               IF NOT VALID-VIEW-OPTION
                  MOVE OPTION-ERROR TO COMMENT-TEXT
                  ACCEPT COMMENTS-SCREEN
+                 IF KEYSTATUS = 1003 THEN
+                    EXIT PROGRAM
+                 END-IF
               END-IF
 
               EVALUATE VIEW-OPTION
