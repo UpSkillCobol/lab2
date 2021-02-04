@@ -272,97 +272,8 @@
               END-IF
               DISPLAY CLEAR-SCREEN
               DISPLAY MAIN-SCREEN
-               IF KEY-STATUS = 1003 THEN
-                   EXIT SECTION
-               END-IF
-               IF KEY-STATUS = 1004 THEN
-                   STOP RUN
-               END-IF
-           PERFORM WITH TEST AFTER UNTIL WS-CONTROL = 1
-      *    READ THE FILE TO CHECK IF THE RECORD THE USER DID CHOOSE IS
-      *    VALID OR NOT, IF IT IS, THE RECORD IS SHOWN TO THE USER AND
-      *    THEN GOES TO THE CHOOSE-EDIT SECTION.
-           OPEN INPUT SCHOOLS
-               READ SCHOOLS
-               INVALID KEY
-                   DISPLAY ID-ERROR-SCREEN
-                   MOVE ZEROS TO CONTINUE-LIST
-                   ACCEPT CONTINUE-LIST
-                       IF KEY-STATUS = 1003 THEN
-                           EXIT SECTION
-                       END-IF
-                       IF KEY-STATUS = 1004 THEN
-                           STOP RUN
-                       END-IF
-               NOT INVALID KEY
-                   PERFORM CLEAR-VARIABLES
-                   MOVE SCHOOL-DETAILS TO ALT-REC
-                   DISPLAY CLEAR-SCREEN
-                   DISPLAY MAIN-SCREEN
-                   DISPLAY ALT-SCREEN
-                       IF KEY-STATUS = 1003 THEN
-                           EXIT SECTION
-                       END-IF
-                       IF KEY-STATUS = 1004 THEN
-                           STOP RUN
-                       END-IF
-                   MOVE 1 TO WS-CONTROL
-               END-READ
-           CLOSE SCHOOLS
-           END-PERFORM
-      *    WHERE THE USER CHOOSES WHAT HE WANTS TO EDIT ON THE RECORD
-      *    THAT HE CHOSE PREVIOUSLY
-           PERFORM WITH TEST AFTER UNTIL WS-OPTION = 8
-               MOVE ZEROS TO WS-OPTION
-               MOVE ZEROS TO EDIT-CHOICE
-               DISPLAY CLEAR-SCREEN
-               DISPLAY MAIN-SCREEN
-               DISPLAY ALT-SCREEN
-               DISPLAY EDIT-WHAT-SCREEN
-               ACCEPT EDIT-CHOICE
-               EVALUATE TRUE
-                   WHEN EDIT-WHAT = 1
-                       PERFORM EDIT-EED
-                           IF KEY-STATUS = 1003 THEN
-                               EXIT SECTION
-                           END-IF
-                           IF KEY-STATUS = 1004 THEN
-                               STOP RUN
-                           END-IF
-                   WHEN EDIT-WHAT = 2
-                       PERFORM EDIT-DESIGNATION
-                           IF KEY-STATUS = 1003 THEN
-                               EXIT SECTION
-                           END-IF
-                           IF KEY-STATUS = 1004 THEN
-                               STOP RUN
-                           END-IF
-                   WHEN EDIT-WHAT = 3
-                       PERFORM EDIT-ADDRESS
-                           IF KEY-STATUS = 1003 THEN
-                               EXIT SECTION
-                           END-IF
-                           IF KEY-STATUS = 1004 THEN
-                               STOP RUN
-                           END-IF
-                   WHEN EDIT-WHAT = 4
-                       PERFORM EDIT-POSTAL-CODE
-                           IF KEY-STATUS = 1003 THEN
-                               EXIT SECTION
-                           END-IF
-                           IF KEY-STATUS = 1004 THEN
-                               STOP RUN
-                           END-IF
-                   WHEN EDIT-WHAT = 5
-                       PERFORM EDIT-TOWN
-                           IF KEY-STATUS = 1003 THEN
-                               EXIT SECTION
-                           END-IF
-                           IF KEY-STATUS = 1004 THEN
-                               STOP RUN
-                           END-IF
-           END-EVALUATE
-           END-PERFORM
+           PERFORM SCHOOL-EXISTS
+           PERFORM CHOOSE-EDIT
            EXIT PROGRAM.
       ******************************************************************
        LIST SECTION.
@@ -443,6 +354,94 @@
               END-READ
            END-PERFORM
            EXIT SECTION.
+      ******************************************************************
+       SCHOOL-EXISTS SECTION.
+           PERFORM WITH TEST AFTER UNTIL WS-CONTROL = 1
+      *    READ THE FILE TO CHECK IF THE RECORD THE USER DID CHOOSE IS
+      *    VALID OR NOT, IF IT IS, THE RECORD IS SHOWN TO THE USER AND
+      *    THEN GOES TO THE CHOOSE-EDIT SECTION.
+           OPEN INPUT SCHOOLS
+               READ SCHOOLS
+               INVALID KEY
+                   DISPLAY ID-ERROR-SCREEN
+                   MOVE ZEROS TO CONTINUE-LIST
+                   ACCEPT CONTINUE-LIST
+                       IF KEY-STATUS = 1003 THEN
+                           EXIT SECTION
+                       END-IF
+                       IF KEY-STATUS = 1004 THEN
+                           STOP RUN
+                       END-IF
+               NOT INVALID KEY
+                   PERFORM CLEAR-VARIABLES
+                   MOVE SCHOOL-DETAILS TO ALT-REC
+                   DISPLAY CLEAR-SCREEN
+                   DISPLAY MAIN-SCREEN
+                   DISPLAY ALT-SCREEN
+                       IF KEY-STATUS = 1003 THEN
+                           EXIT SECTION
+                       END-IF
+                       IF KEY-STATUS = 1004 THEN
+                           STOP RUN
+                       END-IF
+                   MOVE 1 TO WS-CONTROL
+               END-READ
+           CLOSE SCHOOLS
+           END-PERFORM.
+      ******************************************************************
+       CHOOSE-EDIT SECTION.
+      *    WHERE THE USER CHOOSES WHAT HE WANTS TO EDIT ON THE RECORD
+      *    THAT HE CHOSE PREVIOUSLY
+           PERFORM WITH TEST AFTER UNTIL EDIT-WHAT = 8
+               MOVE ZEROS TO EDIT-CHOICE
+               DISPLAY CLEAR-SCREEN
+               DISPLAY MAIN-SCREEN
+               DISPLAY ALT-SCREEN
+               DISPLAY EDIT-WHAT-SCREEN
+               ACCEPT EDIT-CHOICE
+               EVALUATE TRUE
+                   WHEN EDIT-WHAT = 1
+                       PERFORM EDIT-EED
+                           IF KEY-STATUS = 1003 THEN
+                               EXIT SECTION
+                           END-IF
+                           IF KEY-STATUS = 1004 THEN
+                               STOP RUN
+                           END-IF
+                   WHEN EDIT-WHAT = 2
+                       PERFORM EDIT-DESIGNATION
+                           IF KEY-STATUS = 1003 THEN
+                               EXIT SECTION
+                           END-IF
+                           IF KEY-STATUS = 1004 THEN
+                               STOP RUN
+                           END-IF
+                   WHEN EDIT-WHAT = 3
+                       PERFORM EDIT-ADDRESS
+                           IF KEY-STATUS = 1003 THEN
+                               EXIT SECTION
+                           END-IF
+                           IF KEY-STATUS = 1004 THEN
+                               STOP RUN
+                           END-IF
+                   WHEN EDIT-WHAT = 4
+                       PERFORM EDIT-POSTAL-CODE
+                           IF KEY-STATUS = 1003 THEN
+                               EXIT SECTION
+                           END-IF
+                           IF KEY-STATUS = 1004 THEN
+                               STOP RUN
+                           END-IF
+                   WHEN EDIT-WHAT = 5
+                       PERFORM EDIT-TOWN
+                           IF KEY-STATUS = 1003 THEN
+                               EXIT SECTION
+                           END-IF
+                           IF KEY-STATUS = 1004 THEN
+                               STOP RUN
+                           END-IF
+           END-EVALUATE
+           END-PERFORM.
       ******************************************************************
       *    SECTION TO CLEAR ALL VARIABLES THAT THE MODULE USES TO CHANGE
       *    THE RECORD
