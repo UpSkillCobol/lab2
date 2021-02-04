@@ -277,6 +277,22 @@
                FROM CATEGORY-NAME.
       ******************************************************************
 
+       01  EMPTY-LIST-SCREEN
+           BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
+           05 VALUE ALL " " PIC X(050) LINE 09 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 10 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 11 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 12 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 13 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 14 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 15 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 16 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 17 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 18 COL 35.
+           05 VALUE EMPTY-RECORDS      LINE 12 COL 38.
+           05 VALUE EMPTY-RECORDS2     LINE 15 COL 47.
+           05 LINE 01 COL 01 PIC X TO DUMMY AUTO.
+
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
            PERFORM UNTIL CATEEXIST-YES
@@ -299,6 +315,16 @@
            EXIT PROGRAM.
 
        100-CATEGORIES-LIST SECTION.
+           OPEN INPUT FXCATEGO
+           IF CATE-STATUS = 35 THEN
+               DISPLAY CLEAR-SCREEN
+               DISPLAY MAIN-SCREEN
+               ACCEPT EMPTY-LIST-SCREEN
+               MOVE "Y" TO TRUE-YES
+               EXIT SECTION
+           ELSE
+               CLOSE FXCATEGO
+           END-IF
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY LIST-FRAME
