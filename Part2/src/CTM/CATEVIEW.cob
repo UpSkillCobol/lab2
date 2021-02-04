@@ -1,14 +1,14 @@
       ******************************************************************
       *    LAB | SECOND PART | DELICIOUSSANDWICH
       ******************************************************************
-      *    BREADWICH | CATEGORIES MANAGEMENT
+      *    BREADWICH | CATEGORY MANAGEMENT
       ******************************************************************
-      *    CATEGORIES MODULE - EDIT CATEGORY DLL
+      *    CATEGORIES MODULE - VIEW CATEGORY DLL
       ******************************************************************
       *    EM ATUALIZAÇÃO | 03.02.2021
       ******************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. CATEEDIT.
+       PROGRAM-ID. CATEVIEW.
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
        SPECIAL-NAMES.
@@ -24,7 +24,6 @@
                    ALTERNATE KEY IS CATEGORY-NAME WITH DUPLICATES
                    FILE STATUS CATE-STATUS.
 
-
        DATA DIVISION.
        FILE SECTION.
        FD FXCATEGO.
@@ -36,43 +35,26 @@
        COPY CONSTANTS-CTM.
 
        01 WSCATEGORY-DETAILS.
-           05 WSCATEGORY-ID                        PIC 9(003).
-           05 WSCATEGORY-NAME                      PIC X(030).
+           05 WSCATEGORY-ID                    PIC 9(003).
+           05 WSCATEGORY-NAME                  PIC X(030).
            05 WSCATEGORY-DESCRIPTION.
-               10 WSCATEGORY-DESCRIPTION1          PIC X(050).
-           05 WSCATEGORY-IS-ACTIVE                 PIC 9(001).
+               10 WSCATEGORY-DESCRIPTION1      PIC X(050).
+           05 WSCATEGORY-IS-ACTIVE             PIC 9(001).
 
-       01  EDIT-OPTION                         PIC X(002).
-           88 EDIT-VALID-OPTION                VALUE "Y" "y" "N" "n".
-           88 EDIT-OPTION-NO                   VALUE "N" "n".
+       01  VIEW-OPTION                         PIC 9(002).
+           88 VIEW-VALID-OPTION                VALUE 1 THRU 3.
        77  DUMMY                               PIC X(001).
        77  CATE-STATUS                         PIC 9(002).
        77  KEYSTATUS                           PIC 9(004).
        77  FXKEY-STATUS                        PIC 9(002).
-       01  SAVE-IT1                            PIC X(002).
-           88 SAVE-IT1-YES                     VALUE "Y" "y".
-           88 SAVE-IT1-VALID                   VALUE "Y" "y" "N" "n".
        01  GET-VALID-ID                        PIC 9(003).
            88 VALID-ID                         VALUE 1 THRU 999.
        01  CATEEXIST                           PIC X(002).
            88 CATEEXIST-YES                    VALUE "Y".
-       01  EDIT-WHAT                           PIC 9(001).
-           88 EDIT-WHAT-EXIT                   VALUE 8.
-       77 UNSTR                        PIC X(150).
-       77 UNSTR1                       PIC X(050).
-       77 UNSTR2                       PIC X(050).
-       77 UNSTR3                       PIC X(050).
-       77 UNSTR4                       PIC X(050).
-       77 UNSTR5                       PIC X(050).
-       77 UNSTR6                       PIC X(050).
-       77 UNSTR7                       PIC X(050).
-       77 UNSTR8                       PIC X(050).
-       77 UNSTR9                       PIC X(050).
-       77 UNSTR10                      PIC X(050).
-       77 ILIN                         PIC 9(002).
-       77 ICOL                         PIC 9(002).
-       77 EOF                          PIC X(001).
-       77 TRUE-YES                     PIC X(001).
+       77 ILIN                                 PIC 9(002).
+       77 ICOL                                 PIC 9(002).
+       77 EOF                                  PIC X(001).
+       77 TRUE-YES                             PIC X(001).
 
 
        SCREEN SECTION.
@@ -94,7 +76,7 @@
            05 VALUE ALL " " PIC X(22) LINE 26 COL 98.
            05 VALUE BACK-EXIT LINE 25 COL 100 FOREGROUND-COLOR 5.
       ******************************************************************
-       01 EDIT-SCREEN.
+       01 VIEW-CATEGORY.
            05 VALUE ALL " " PIC X(080) LINE 7 COL 08
               BACKGROUND-COLOR 7.
            05 VALUE ALL " " PIC X(080) LINE 22 COL 08
@@ -130,13 +112,34 @@
            05 VALUE SCREEN-CATEGORY-ID LINE 12 COL 15.
            05 VALUE ADD-NAME LINE 14 COL 15.
            05 VALUE ADD-DESCRIPTION LINE 16 COL 15.
-           05 REG-CATE-ID PIC 9(003) LINE 12 COL 29
+           05 REGISTER-RECORD.
+               10 REG-CATE-ID PIC 9(003) LINE 12 COL 29
                    FROM WSCATEGORY-ID.
-           05 REG-CATE-NAME PIC X(030) LINE 14 COL 31
+               10 REG-CATE-NAME PIC X(030) LINE 14 COL 29
                    FROM WSCATEGORY-NAME REQUIRED.
-           05 REG-CATE-DESCRIPTION PIC X(050) LINE 16 COL 27
-                   FROM WSCATEGORY-DESCRIPTION1 REQUIRED AUTO.
+               10 REG-CATE-DESCRIPTION.
+                   15 REG-CATE-DESCRIPTION1 PIC X(050) LINE 16 COL 29
+                       FROM WSCATEGORY-DESCRIPTION1 REQUIRED AUTO.
 
+
+      ******************************************************************
+       01 VIEW-MENU-SCREEN
+           BACKGROUND-COLOR 7, FOREGROUND-COLOR 0, AUTO, REQUIRED.
+           05 VALUE ALL " " PIC X(50) LINE 09 COL 35.
+           05 VALUE ALL " " PIC X(50) LINE 10 COL 35.
+           05 VALUE ALL " " PIC X(50) LINE 11 COL 35.
+           05 VALUE ALL " " PIC X(50) LINE 12 COL 35.
+           05 VALUE ALL " " PIC X(50) LINE 13 COL 35.
+           05 VALUE ALL " " PIC X(50) LINE 14 COL 35.
+           05 VALUE ALL " " PIC X(50) LINE 15 COL 35.
+           05 VALUE ALL " " PIC X(50) LINE 16 COL 35.
+           05 VALUE ALL " " PIC X(50) LINE 17 COL 35.
+           05 VALUE VIEW-MENU-OPTION1 LINE 12 COL 42.
+           05 VALUE VIEW-MENU-OPTION2 LINE 13 COL 42.
+           05 VALUE VIEW-MENU-OPTION3 LINE 14 COL 42.
+           05 VALUE VIEW-MENU-CHOICE LINE 20 COL 45 REVERSE-VIDEO.
+           05 VMS-OPTION PIC 9(002) LINE 20 COL 73 TO VIEW-OPTION
+               BLANK WHEN ZERO REVERSE-VIDEO.
       ******************************************************************
        01 LIST-FRAME.
            05 VALUE ALL " " PIC X(082) LINE 7 COL 07
@@ -192,52 +195,6 @@
            05 VALUE "  " LINE 19 COL 87 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 20 COL 87 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 21 COL 87 BACKGROUND-COLOR 7.
-      ******************************************************************
-       01 UPDATE-RECORD.
-           05 EDIT-CATE-NAME PIC X(030) LINE 09 COL 29
-                   TO WSCATEGORY-NAME REQUIRED.
-           05 EDIT-CATE-DESCRIPTION PIC X(050) LINE 10 COL 29
-                   TO WSCATEGORY-DESCRIPTION REQUIRED AUTO.
-
-      ******************************************************************
-       01 EDIT-WHAT-SCREEN
-           BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
-           05 VALUE ALL " " PIC X(022) LINE 07 COL 98.
-           05 VALUE ALL " " PIC X(022) LINE 08 COL 98.
-           05 VALUE ALL " " PIC X(022) LINE 09 COL 98.
-           05 VALUE ALL " " PIC X(022) LINE 10 COL 98.
-           05 VALUE ALL " " PIC X(022) LINE 11 COL 98.
-           05 VALUE ALL " " PIC X(022) LINE 12 COL 98.
-           05 VALUE ALL " " PIC X(022) LINE 13 COL 98.
-           05 VALUE ALL " " PIC X(022) LINE 14 COL 98.
-           05 VALUE ALL " " PIC X(022) LINE 15 COL 98.
-           05 VALUE ALL " " PIC X(022) LINE 16 COL 98.
-           05 VALUE ALL " " PIC X(022) LINE 17 COL 98.
-           05 VALUE ALL " " PIC X(022) LINE 18 COL 98.
-           05 VALUE ALL " " PIC X(022) LINE 19 COL 98.
-           05 VALUE ALL " " PIC X(022) LINE 20 COL 98.
-           05 VALUE ALL " " PIC X(022) LINE 21 COL 98.
-           05 VALUE ALL " " PIC X(022) LINE 22 COL 98.
-           05 VALUE WHAT-TO-EDIT LINE 08 COL 103.
-           05 VALUE EDIT1 LINE 10 COL 100.
-           05 VALUE EDIT2 LINE 11 COL 100.
-
-      *>      05 VALUE EDIT3 LINE 12 COL 100.
-
-      *>      05 VALUE EDIT4 LINE 13 COL 100.
-
-      *>      05 VALUE EDIT5 LINE 14 COL 100.
-
-      *>      05 VALUE EDIT6 LINE 15 COL 100.
-
-      *>      05 VALUE EDIT7 LINE 16 COL 100.
-
-           05 VALUE EDIT8 LINE 12 COL 100.
-
-           05 VALUE CHOOSE LINE 20 COL 100.
-
-           05 EDIT-CHOICE PIC 9(002) LINE 20 COL 117 BLANK WHEN ZERO
-               REQUIRED TO EDIT-WHAT.
       ******************************************************************
        01 ERROR-ZONE
            BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
@@ -295,33 +252,29 @@
 
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
-           PERFORM UNTIL CATEEXIST-YES
-               PERFORM 100-CATEGORIES-LIST
-                   IF TRUE-YES = "Y" THEN
-                       EXIT PROGRAM
-                   END-IF
-               PERFORM 105-CHECK-IF-CATEID-EXISTS
+           PERFORM WITH TEST AFTER UNTIL VIEW-OPTION = 3
+               MOVE ZERO TO VMS-OPTION VIEW-OPTION
+               DISPLAY CLEAR-SCREEN MAIN-SCREEN
+               ACCEPT VIEW-MENU-SCREEN
+               IF NOT VIEW-VALID-OPTION
+                   MOVE VIEW-CATEGORY-MENU-ERROR TO ERROR-TEXT
+                   ACCEPT ERROR-ZONE
+               END-IF
+               PERFORM 110-EVALUATE-VIEW-CATEGORY-MENU
+               IF TRUE-YES = "Y" THEN
+                   EXIT PROGRAM
+               END-IF
            END-PERFORM
-           MOVE ZERO TO EDIT-WHAT
-           PERFORM WITH TEST AFTER UNTIL EDIT-WHAT = 8
-               PERFORM 110-EDIT-CATEGORY
-               OPEN I-O FXCATEGO
-                   PERFORM 115-EDIT-WHAT
-                   REWRITE CATEGORY-DETAILS FROM WSCATEGORY-DETAILS
-                   END-REWRITE
-               CLOSE FXCATEGO
-           END-PERFORM
-           MOVE SPACE TO CATEEXIST
            EXIT PROGRAM.
 
        100-CATEGORIES-LIST SECTION.
            OPEN INPUT FXCATEGO
-           IF CATE-STATUS = 35 THEN
-               DISPLAY CLEAR-SCREEN
-               DISPLAY MAIN-SCREEN
-               ACCEPT EMPTY-LIST-SCREEN
-               MOVE "Y" TO TRUE-YES
-               EXIT SECTION
+           IF CATE-STATUS = "35" THEN
+              DISPLAY CLEAR-SCREEN
+              DISPLAY MAIN-SCREEN
+              ACCEPT EMPTY-LIST-SCREEN
+              MOVE "Y" TO TRUE-YES
+              EXIT SECTION
            ELSE
                CLOSE FXCATEGO
            END-IF
@@ -391,64 +344,57 @@
            CLOSE FXCATEGO
        EXIT SECTION.
 
-       110-EDIT-CATEGORY SECTION.
-           DISPLAY CLEAR-SCREEN
-           DISPLAY MAIN-SCREEN
-           DISPLAY EDIT-SCREEN
-           ACCEPT EDIT-WHAT-SCREEN
-       EXIT SECTION.
-
-       115-EDIT-WHAT SECTION.
-           MOVE ZERO TO EDIT-CHOICE
-           EVALUATE EDIT-WHAT
+       110-EVALUATE-VIEW-CATEGORY-MENU SECTION.
+           EVALUATE VIEW-OPTION
                WHEN 1
-                   PERFORM 150-GET-NAME
+                   PERFORM 115-VIEW-ALL-CATEGORIES
+                     IF TRUE-YES = "Y" THEN
+                           EXIT SECTION
+                   END-IF
                WHEN 2
-                   PERFORM 155-GET-DESCRIPTION
+                   MOVE SPACE TO CATEEXIST
+                   PERFORM UNTIL CATEEXIST-YES
+                       PERFORM 100-CATEGORIES-LIST
+                       IF TRUE-YES = "Y" THEN
+                           EXIT SECTION
+                       END-IF
+                       PERFORM 105-CHECK-IF-CATEID-EXISTS
+                   END-PERFORM
+                   PERFORM 120-VIEW-SPECIFIC-CATEGORY
            END-EVALUATE
        EXIT SECTION.
 
-       150-GET-NAME SECTION.
-           MOVE MESSAGE-NAME TO INSTRUCTIONS-TEXT
-           DISPLAY INSTRUCTIONS-ZONE
-           MOVE WSCATEGORY-NAME TO EDIT-CATE-NAME
-           ACCEPT EDIT-CATE-NAME
-           MOVE FUNCTION UPPER-CASE (WSCATEGORY-NAME) TO WSCATEGORY-NAME
-           MOVE TRIM(WSCATEGORY-NAME) TO UNSTR
-           PERFORM 190-REMOVE-EXTRA-SPACES
-           MOVE UNSTR TO WSCATEGORY-NAME
-           IF WSCATEGORY-NAME EQUAL SPACES THEN
-               MOVE ERROR-NAME TO ERROR-TEXT ACCEPT ERROR-ZONE
+       115-VIEW-ALL-CATEGORIES SECTION.
+           OPEN INPUT FXCATEGO
+           IF CATE-STATUS = 35 THEN
+               DISPLAY CLEAR-SCREEN
+               DISPLAY MAIN-SCREEN
+               ACCEPT EMPTY-LIST-SCREEN
+               MOVE "Y" TO TRUE-YES
+               CLOSE FXCATEGO
+               EXIT SECTION
            END-IF
+           MOVE SPACE TO EOF
+           PERFORM UNTIL EOF = "S"
+               READ FXCATEGO INTO WSCATEGORY-DETAILS
+                   AT END
+                       MOVE "S" TO EOF
+                   NOT AT END
+                       DISPLAY CLEAR-SCREEN
+                       DISPLAY MAIN-SCREEN
+                       DISPLAY VIEW-CATEGORY
+                       MOVE VIEW-ALL-CATE-NEXT-ONE TO ERROR-TEXT
+                       ACCEPT ERROR-ZONE
+               END-READ
+           END-PERFORM
+           CLOSE FXCATEGO
        EXIT SECTION.
 
-       155-GET-DESCRIPTION SECTION.
-           MOVE MESSAGE-DESCRIPTION TO INSTRUCTIONS-TEXT
-           DISPLAY INSTRUCTIONS-TEXT
-           MOVE WSCATEGORY-DESCRIPTION TO EDIT-CATE-DESCRIPTION
-           ACCEPT EDIT-CATE-DESCRIPTION
-           MOVE FUNCTION UPPER-CASE (WSCATEGORY-DESCRIPTION1)
-               TO WSCATEGORY-DESCRIPTION1
-           MOVE TRIM(WSCATEGORY-DESCRIPTION1) TO UNSTR
-           PERFORM 190-REMOVE-EXTRA-SPACES
-           MOVE UNSTR TO WSCATEGORY-DESCRIPTION1
-       EXIT SECTION.
-
-       190-REMOVE-EXTRA-SPACES SECTION.
-           MOVE SPACE TO UNSTR1 UNSTR2 UNSTR3 UNSTR4 UNSTR5
-           UNSTR6 UNSTR7 UNSTR8 UNSTR9 UNSTR10
-           UNSTRING UNSTR DELIMITED BY ALL SPACES INTO UNSTR1
-               UNSTR2 UNSTR3 UNSTR4 UNSTR5 UNSTR6 UNSTR7 UNSTR8 UNSTR9
-               UNSTR10
-           STRING UNSTR1 DELIMITED BY SPACES SPACE DELIMITED BY SIZE
-                   UNSTR2 DELIMITED BY SPACES SPACE DELIMITED BY SIZE
-                   UNSTR3 DELIMITED BY SPACES SPACE DELIMITED BY SIZE
-                   UNSTR4 DELIMITED BY SPACES SPACE DELIMITED BY SIZE
-                   UNSTR5 DELIMITED BY SPACES SPACE DELIMITED BY SIZE
-                   UNSTR6 DELIMITED BY SPACES SPACE DELIMITED BY SIZE
-                   UNSTR7 DELIMITED BY SPACES SPACE DELIMITED BY SIZE
-                   UNSTR8 DELIMITED BY SPACES SPACE DELIMITED BY SIZE
-                   UNSTR9 DELIMITED BY SPACES SPACE DELIMITED BY SIZE
-                   UNSTR10 DELIMITED BY SPACES SPACE DELIMITED BY SIZE
-           INTO UNSTR
+       120-VIEW-SPECIFIC-CATEGORY SECTION.
+           OPEN INPUT FXCATEGO
+           DISPLAY CLEAR-SCREEN
+           DISPLAY MAIN-SCREEN
+           DISPLAY VIEW-CATEGORY
+           MOVE VIEW-SPECIFIC TO ERROR-TEXT ACCEPT ERROR-ZONE
+           CLOSE FXCATEGO
        EXIT SECTION.
