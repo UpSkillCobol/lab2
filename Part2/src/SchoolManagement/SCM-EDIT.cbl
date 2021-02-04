@@ -35,8 +35,9 @@
 
        WORKING-STORAGE SECTION.
        01  WS-SPACES                                   PIC 9(003).
+       01  WS-ALPHABETIC                               PIC 9(001).
        COPY "CB-WS-SCHOOLS".
-       COPY "CONSTANTSPT".
+       COPY "CONSTANTS".
 
        SCREEN SECTION.
        01  CLEAR-SCREEN BACKGROUND-COLOR 0.
@@ -455,8 +456,9 @@
        EDIT-EED SECTION.
       *    SECTION TO CHANGE EXTERNAL ID
            PERFORM WITH TEST AFTER UNTIL EXTERNAL-ID-VLD
-               AND REG-UNIQ = 1 AND WS-SPACES = 8
+               AND REG-UNIQ = 1 AND WS-SPACES = 8 AND WS-ALPHABETIC = 1
                    MOVE ZEROS TO WS-SPACES
+                   MOVE ZEROS TO WS-ALPHABETIC
                    MOVE ZERO TO REG-UNIQ
                    MOVE SPACES TO ALT-EED
                    MOVE INSTRUCTION-EED TO INSTRUCTION-MESSAGE
@@ -481,6 +483,12 @@
                                END-IF
                        END-READ
                    CLOSE SCHOOLS
+                   IF WS-SCHOOL-EXTERNAL-ID(1:1) IS ALPHABETIC THEN
+                       MOVE 1 TO WS-ALPHABETIC
+                   ELSE
+                       MOVE ERROR-ALPHABETIC TO ERROR-MESSAGE
+                       ACCEPT ERROR-SCREEN
+                   END-IF
                    INSPECT WS-SCHOOL-EXTERNAL-ID TALLYING WS-SPACES
                    FOR ALL SPACES
                    IF NOT EXTERNAL-ID-VLD OR WS-SPACES = 8 THEN
@@ -506,7 +514,8 @@
        EDIT-DESIGNATION SECTION.
       *    SECTION TO CHANGE DESIGNATION
            PERFORM WITH TEST AFTER UNTIL DESIGNATION-VLD
-               AND WS-SPACES <150
+               AND WS-SPACES <150 AND WS-ALPHABETIC = 1
+                   MOVE ZEROS TO WS-ALPHABETIC
                    MOVE ZEROS TO WS-SPACES
                    MOVE INSTRUCTION-DSG TO INSTRUCTION-MESSAGE
                    DISPLAY INSTRUCTIONS-SCREEN
@@ -514,6 +523,12 @@
                    ACCEPT ALT-DESIGNATION
                    IF KEY-STATUS = 1003 THEN
                        EXIT SECTION
+                   END-IF
+                   IF WS-SCHOOL-DESIGNATION1(1:1) IS ALPHABETIC THEN
+                       MOVE 1 TO WS-ALPHABETIC
+                   ELSE
+                       MOVE ERROR-ALPHABETIC TO ERROR-MESSAGE
+                       ACCEPT ERROR-SCREEN
                    END-IF
                    INSPECT WS-SCHOOL-DESIGNATION1 TALLYING WS-SPACES
                            FOR ALL SPACES
@@ -542,6 +557,8 @@
        EDIT-ADDRESS SECTION.
       *    SECTION TO CHANGE ADDRESS
            PERFORM WITH TEST AFTER UNTIL ADDRESS-VLD AND WS-SPACES <50
+               AND WS-ALPHABETIC = 1
+               MOVE ZEROS TO WS-ALPHABETIC
                MOVE ZEROS TO WS-SPACES
                MOVE INSTRUCTION-ADR TO INSTRUCTION-MESSAGE
                DISPLAY INSTRUCTIONS-SCREEN
@@ -549,6 +566,12 @@
                ACCEPT ALT-ADDRESS
                IF KEY-STATUS = 1003 THEN
                    EXIT SECTION
+               END-IF
+               IF WS-SCHL-ADR-MAIN1(1:1) IS ALPHABETIC THEN
+                   MOVE 1 TO WS-ALPHABETIC
+               ELSE
+                   MOVE ERROR-ALPHABETIC TO ERROR-MESSAGE
+                   ACCEPT ERROR-SCREEN
                END-IF
                INSPECT WS-SCHL-ADR-MAIN1 TALLYING WS-SPACES
                FOR ALL SPACES
@@ -606,12 +629,20 @@
            MOVE WS-SCHOOL-TOWN TO ALT-TOWN
            DISPLAY ALT-SCREEN
            PERFORM WITH TEST AFTER UNTIL TOWN-VLD AND WS-SPACES < 30
+               AND WS-ALPHABETIC = 1
+               MOVE ZEROS TO WS-ALPHABETIC
                MOVE ZEROS TO WS-SPACES
                MOVE INSTRUCTION-TOWN TO INSTRUCTION-MESSAGE
                DISPLAY INSTRUCTIONS-SCREEN
                 ACCEPT ALT-TOWN
                 IF KEY-STATUS = 1003 THEN
                    EXIT SECTION
+               END-IF
+               IF WS-SCHOOL-TOWN(1:1) IS ALPHABETIC THEN
+                   MOVE 1 TO WS-ALPHABETIC
+               ELSE
+                   MOVE ERROR-ALPHABETIC TO ERROR-MESSAGE
+                   ACCEPT ERROR-SCREEN
                END-IF
                INSPECT WS-SCHOOL-TOWN TALLYING WS-SPACES
                FOR ALL SPACES

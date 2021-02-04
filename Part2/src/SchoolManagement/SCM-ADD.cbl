@@ -36,12 +36,12 @@
 
        FD  KEYS.
            01 FD-KEYS.
-               05 REGKEY                           PIC 9(003).
+               05 REGKEY                               PIC 9(003).
        WORKING-STORAGE SECTION.
-       01  WS-SPACES                               PIC 9(003).
-       01  WS-ALPHABETIC                           PIC 9(001).
+       01  WS-SPACES                                   PIC 9(003).
+       01  WS-ALPHABETIC                               PIC 9(001).
        COPY "CB-WS-SCHOOLS".
-       COPY "CONSTANTSPT".
+       COPY "CONSTANTS".
        SCREEN SECTION.
        01  CLEAR-SCREEN BACKGROUND-COLOR 0.
            05 VALUE " " BLANK SCREEN LINE 01 COL 01.
@@ -284,8 +284,7 @@
                FOR ALL SPACES
                IF WS-SCHOOL-EXTERNAL-ID(1:1) IS ALPHABETIC THEN
                    MOVE 1 TO WS-ALPHABETIC
-               END-IF
-               IF WS-ALPHABETIC = 0 THEN
+               ELSE
                    MOVE ERROR-ALPHABETIC TO ERROR-MESSAGE
                    ACCEPT ERROR-SCREEN
                END-IF
@@ -315,10 +314,9 @@
                        EXIT SECTION
                    END-IF
       *    CHECK FOR SPACES,FIELD MUST BE FILLED
-                   IF WS-SCHOOL-DESIGNATION1(1:1) IS ALPHABETIC THEN
+                   IF WS-SCHOOL-DESIGNATION1(1:1) IS NOT ALPHABETIC THEN
                        MOVE 1 TO WS-ALPHABETIC
-                   END-IF
-                   IF WS-ALPHABETIC = 0 THEN
+                   ELSE
                        MOVE ERROR-ALPHABETIC TO ERROR-MESSAGE
                        ACCEPT ERROR-SCREEN
                    END-IF
@@ -354,8 +352,7 @@
       *    CHECK FOR SPACES, FIELD MUST BE FILLED
                IF WS-SCHL-ADR-MAIN1(1:1) IS ALPHABETIC THEN
                    MOVE 1 TO WS-ALPHABETIC
-               END-IF
-               IF WS-ALPHABETIC = 0 THEN
+               ELSE
                    MOVE ERROR-ALPHABETIC TO ERROR-MESSAGE
                    ACCEPT ERROR-SCREEN
                END-IF
@@ -412,8 +409,7 @@
       *    CHECK FOR SPACES, FIELD MUST BE FILLED
                IF WS-SCHOOL-TOWN(1:1) IS ALPHABETIC THEN
                    MOVE 1 TO WS-ALPHABETIC
-               END-IF
-               IF WS-ALPHABETIC = 0 THEN
+               ELSE
                    MOVE ERROR-ALPHABETIC TO ERROR-MESSAGE
                    ACCEPT ERROR-SCREEN
                END-IF

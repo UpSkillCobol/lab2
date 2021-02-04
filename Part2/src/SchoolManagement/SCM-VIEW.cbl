@@ -31,7 +31,7 @@
        COPY "CB-SCHOOLS".
        WORKING-STORAGE SECTION.
        COPY "CB-WS-SCHOOLS".
-       COPY "CONSTANTSPT".
+       COPY "CONSTANTS".
        SCREEN SECTION.
        01  CLEAR-SCREEN BACKGROUND-COLOR 0.
            03 VALUE " " BLANK SCREEN LINE 01 COL 01.
@@ -42,24 +42,24 @@
            05 VALUE ALL " " PIC X(120) LINE 03 COL 01.
            05 VALUE ALL " " PIC X(120) LINE 04 COL 01.
            05 VALUE MODULE-NAME LINE 03 COL 50.
-           05 VALUE ALL " " PIC X(95) LINE 24 COL 01.
-           05 VALUE ALL " " PIC X(95) LINE 25 COL 01.
-           05 VALUE ALL " " PIC X(95) LINE 26 COL 01.
-           05 VALUE ALL " " PIC X(23) LINE 24 COL 98.
-           05 VALUE ALL " " PIC X(23) LINE 25 COL 98.
-           05 VALUE ALL " " PIC X(23) LINE 26 COL 98.
+           05 VALUE ALL " " PIC X(095) LINE 24 COL 01.
+           05 VALUE ALL " " PIC X(095) LINE 25 COL 01.
+           05 VALUE ALL " " PIC X(095) LINE 26 COL 01.
+           05 VALUE ALL " " PIC X(023) LINE 24 COL 98.
+           05 VALUE ALL " " PIC X(023) LINE 25 COL 98.
+           05 VALUE ALL " " PIC X(023) LINE 26 COL 98.
            05 VALUE BACK-EXIT
                LINE 25 COL 100 FOREGROUND-COLOR 5.
       ******************************************************************
        01  MAIN-VIEW-SCREEN
            BACKGROUND-COLOR 7, FOREGROUND-COLOR 0, AUTO, REQUIRED.
-           05 VALUE ALL " " PIC X(50) LINE 09 COL 35.
-           05 VALUE ALL " " PIC X(50) LINE 10 COL 35.
-           05 VALUE ALL " " PIC X(50) LINE 11 COL 35.
-           05 VALUE ALL " " PIC X(50) LINE 12 COL 35.
-           05 VALUE ALL " " PIC X(50) LINE 13 COL 35.
-           05 VALUE ALL " " PIC X(50) LINE 14 COL 35.
-           05 VALUE ALL " " PIC X(50) LINE 15 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 09 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 10 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 11 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 12 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 13 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 14 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 15 COL 35.
            05 VALUE VIEW-MENU-OPTION1 LINE 11 COL 42.
            05 VALUE VIEW-MENU-OPTION2 LINE 12 COL 42.
            05 VALUE VIEW-MENU-OPTION3 LINE 13 COL 42.
@@ -144,9 +144,12 @@
       ******************************************************************
        01  ID-ERROR-SCREEN
            FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 25 COL 01 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(095) LINE 24 COL 01
+           BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(095) LINE 25 COL 01
+           BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(095) LINE 26 COL 01
+           BACKGROUND-COLOR 7.
            05 VALUE ID-ERROR-TEXT LINE 25 COL 48.
            05 SCREEN-DUMMY LINE 27 COL 01 PIC X TO DUMMY AUTO.
       ******************************************************************
