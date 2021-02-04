@@ -17,8 +17,8 @@
 | SCM07 |               |                     |   **X**   |    Src Code - View School   |
 | SCM08 |               |                     |   **X**   |    Src Code - Edit School   |
 | SCM09 |               |                     |   **X**   |   Src Code - Delete School  |
-| SCM10 |               |        **X**        |           |       Intensive Testing     |
-| SCM11 |               |        **X**        |           |           Bug Fixing        |
+| SCM10 |               |                     |   **X**   |       Intensive Testing     |
+| SCM11 |               |                     |   **X**   |          Bug Fixing         |
 |       |               |                     |           |                             |
 |  CAM  |               |                     |   **X**   |         Assigned to DL      |
 | CAM01 |               |                     |   **X**   |        Activity Diagram     |
@@ -30,8 +30,8 @@
 | CAM07 |               |                     |   **X**   |   Src Code - View Downtime  |
 | CAM08 |               |                     |   **X**   |   Src Code - Edit Downtime  |
 | CAM09 |               |                     |   **X**   |  Src Code - Delete Downtime |
-| CAM10 |               |        **X**        |           |       Intensive Testing     |
-| CAM11 |               |        **X**        |           |           Bug Fixing        |
+| CAM10 |               |                     |   **X**   |       Intensive Testing     |
+| CAM11 |               |                     |   **X**   |           Bug Fixing        |
 |       |               |                     |           |                             |
 |  INM  |               |                     |   **X**   |         Assigned to BL      |
 | INM01 |               |                     |   **X**   |        Activity Diagram     |
@@ -43,8 +43,8 @@
 | INM07 |               |                     |   **X**   |  Src Code - View Ingredient |
 | INM08 |               |                     |   **X**   |  Src Code - Edit Ingredient |
 | INM09 |               |                     |   **X**   |Src Code - Delete Ingredient |
-| INM10 |               |        **X**        |           |       Intensive Testing     |
-| INM11 |               |        **X**        |           |           Bug Fixing        |
+| INM10 |               |                     |   **X**   |       Intensive Testing     |
+| INM11 |               |                     |   **X**   |          Bug Fixing         |
 |       |               |                     |           |                             |
 |  SUM  |               |                     |   **X**   |         Assigned to FB      |
 | SUM01 |               |                     |   **X**   |        Activity Diagram     |
@@ -54,12 +54,12 @@
 | SUM05 |               |                     |   **X**   |     Src Code - Main Menu    |
 | SUM06 |               |                     |   **X**   |Src Code - Add Supplier Menu |
 | SUM07 |               |                     |   **X**   |Src Code - Add Supp Manually |
-| SUM08 |               |        **X**        |           |    Src Code - Add Supp CSV  |
+| SUM08 |               |                     |   **X**   |    Src Code - Add Supp CSV  |
 | SUM09 |               |                     |   **X**   |  Src Code - Edit Supplier   |
 | SUM10 |               |                     |   **X**   |   Src Code - View Supplier  |
 | SUM11 |               |                     |   **X**   |  Src Code - Delete Supplier |
-| SUM12 |               |        **X**        |           |       Intensive Testing     |
-| SUM13 |               |        **X**        |           |           Bug Fixing        |
+| SUM12 |               |                     |   **X**   |       Intensive Testing     |
+| SUM13 |               |                     |   **X**   |          Bug Fixing         |
 |       |               |                     |           |                             |
 |  CTM  |               |                     |   **X**   |         Assigned to JF      |
 | CTM01 |               |                     |   **X**   |        Activity Diagram     |
@@ -71,8 +71,8 @@
 | CTM07 |               |                     |   **X**   |   Src Code - View Category  |
 | CTM08 |               |                     |   **X**   |   Src Code - Edit Category  |
 | CTM09 |               |                     |   **X**   |  Src Code - Delete Category |
-| CTM10 |               |        **X**        |           |       Intensive Testing     |
-| CTM11 |               |        **X**        |           |           Bug Fixing        |
+| CTM10 |               |                     |   **X**   |       Intensive Testing     |
+| CTM11 |               |                     |   **X**   |          Bug Fixing         |
 
 
 </br>
