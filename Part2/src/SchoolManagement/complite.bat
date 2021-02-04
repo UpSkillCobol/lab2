@@ -1,10 +1,9 @@
 
-cobc -x SCM-MAIN.COB
-cobc -m SCM-ELM.cbl
-cobc -m SCM-CLT.cbl
-cobc -m SCM-ALT.cbl
+cobc -m SCM-MAIN.COB
+cobc -m SCM-DELETE.cbl
+cobc -m SCM-VIEW.cbl
+cobc -m SCM-EDIT.cbl
 cobc -m SCM-ADD.cbl
-cobc -m SPACECHECK.COB
+cobc -x BREADWICH.cob
 cobc -m CPS.cbl
-cobc -m KEYS.cbl
-SCM-MAIN.exe
+BREADWICH.exe

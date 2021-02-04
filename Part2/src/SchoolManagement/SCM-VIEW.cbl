@@ -204,6 +204,9 @@
            05 VALUE END-OF-LIST-TEXT LINE 25 COL 53.
       ******************************************************************
        01  EMPTY-LIST-SCREEN FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(95) LINE 24 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(95) LINE 25 COL 01 BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(95) LINE 26 COL 01 BACKGROUND-COLOR 7.
            05 VALUE EMPTY-LIST-TEXT LINE 25 COL 53.
            05  LINE 01 COL 01 PIC X(1) TO PRESS-KEY AUTO.
       ******************************************************************
@@ -254,6 +257,12 @@
       *    SECTION TO VIEW THE RECORDS WITH ALL DETAILS ONE BY ONE
        VIEW-ONE-IID SECTION.
            OPEN INPUT SCHOOLS
+           IF FILE-STATUS = 35 THEN
+                   DISPLAY CLEAR-SCREEN
+                   DISPLAY MAIN-SCREEN
+                   ACCEPT EMPTY-LIST-SCREEN
+                   SET WS-EOF TO TRUE
+               END-IF
            MOVE ZEROS TO SCHOOL-INTERNAL-ID
            PERFORM WITH TEST AFTER UNTIL WS-EOF
                READ SCHOOLS
@@ -344,12 +353,17 @@
       *    SO THE USER CAN CHOOSE THE ONE HE WANTS
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
-           DISPLAY LIST-SCREEN
            MOVE SPACES TO FLAG
            MOVE SPACES TO CONTINUE-LIST
            MOVE SPACES TO SCHOOL-EXTERNAL-ID
            MOVE 1 TO SCHOOL-INTERNAL-ID
            OPEN INPUT SCHOOLS
+               IF FILE-STATUS = 35 THEN
+                   ACCEPT EMPTY-LIST-SCREEN
+                   MOVE "Y" TO FLAG
+                   SET WS-EOF TO TRUE
+               END-IF
+           DISPLAY LIST-SCREEN
       *    POINT THE FILE IN THE START, IN THIS CASE ON ID "000" SO
       *    WE ARE SURE THAT THE PROGRAM WILL READ ALL RECORDS
            START SCHOOLS KEY IS GREATER OR EQUAL SCHOOL-INTERNAL-ID
@@ -357,6 +371,7 @@
       *    IF THERE ARE NO RECORDS A MESSAGE WILL BE SHOWN
                  ACCEPT EMPTY-LIST-SCREEN
                  MOVE "Y" TO FLAG
+                 SET WS-EOF TO TRUE
                  ACCEPT OMITTED AT LINE 25 COL 01
                  IF FLAG = "Y" THEN
                     CLOSE SCHOOLS

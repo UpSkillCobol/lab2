@@ -38,10 +38,6 @@
            01 FD-KEYS.
                05 REGKEY                           PIC 9(003).
        WORKING-STORAGE SECTION.
-       01  ALPHABET-CHECK                          PIC X(001).
-           88  LETTERS                             VALUE "A" THRU "Z",
-                                                   "a" THRU "z".
-       01  WS-LETTER-COUNT                         PIC 9(003).
        01  WS-SPACES                               PIC 9(003).
        COPY "CB-WS-SCHOOLS".
        COPY "CONSTANTS".
@@ -295,8 +291,8 @@
            MOVE FUNCTION TRIM (WS-SCHOOL-EXTERNAL-ID) TO LINK-TEXT
            PERFORM SPACE-CHECK
            MOVE LINK-TEXT TO WS-SCHOOL-EXTERNAL-ID
+           MOVE WS-SCHOOL-EXTERNAL-ID TO REG-EED
            EXIT SECTION.
-
       ******************************************************************
        REGISTER-DESIGNATION SECTION.
       *    SECTION TO OBTAIN THE DESIGNATION
@@ -326,6 +322,7 @@
            MOVE FUNCTION TRIM (WS-SCHOOL-DESIGNATION) TO LINK-TEXT
            PERFORM SPACE-CHECK
            MOVE LINK-TEXT TO WS-SCHOOL-DESIGNATION
+           MOVE WS-SCHOOL-DESIGNATION TO REG-DESIGNATION
            EXIT SECTION.
       ******************************************************************
        REGISTER-ADDRESS SECTION.
@@ -355,6 +352,7 @@
            MOVE FUNCTION TRIM (WS-SCHL-ADR-MAIN) TO LINK-TEXT
            PERFORM SPACE-CHECK
            MOVE LINK-TEXT TO WS-SCHL-ADR-MAIN
+           MOVE WS-SCHL-ADR-MAIN TO REG-ADDRESS
       ******************************************************************
       *    OBTAIN POSTAL CODE
            PERFORM WITH TEST AFTER UNTIL POSTAL-CODE1-VLD AND
@@ -413,6 +411,7 @@
            MOVE FUNCTION TRIM (WS-SCHOOL-TOWN) TO LINK-TEXT
            PERFORM SPACE-CHECK
            MOVE LINK-TEXT TO WS-SCHOOL-TOWN
+           MOVE WS-SCHOOL-TOWN TO REG-TOWN
            EXIT SECTION.
       ******************************************************************
        CONFIRM-REGISTER SECTION.

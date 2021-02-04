@@ -5,7 +5,7 @@
       * Tectonics: cobc
       ******************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. SCHOOL-MNG.
+       PROGRAM-ID. SCM-MAIN.
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
        REPOSITORY.
@@ -122,3 +122,4 @@
            END-EVALUATE
            END-PERFORM
            STOP RUN.
+       END PROGRAM SCM-MAIN.
