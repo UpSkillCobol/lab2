@@ -450,6 +450,10 @@
                        WRITE SCHOOL-DETAILS
                        MOVE CONFIRM-RECORD TO CONFIRM-MESSAGE
                        ACCEPT CONFIRM-SCREEN
+                       IF KEY-STATUS = 1003 THEN
+                           CLOSE SCHOOLS
+                           EXIT SECTION
+                       END-IF
                    CLOSE SCHOOLS
                    OPEN OUTPUT KEYS
                        MOVE WS-SCHOOL-INTERNAL-ID TO REGKEY
@@ -462,6 +466,10 @@
                        WRITE SCHOOL-DETAILS
                        MOVE CONFIRM-RECORD TO CONFIRM-MESSAGE
                        ACCEPT CONFIRM-SCREEN
+                       IF KEY-STATUS = 1003 THEN
+                           CLOSE SCHOOLS
+                           EXIT SECTION
+                       END-IF
                    CLOSE SCHOOLS
                    OPEN OUTPUT KEYS
                        MOVE WS-SCHOOL-INTERNAL-ID TO REGKEY
@@ -483,6 +491,10 @@
                        MOVE 0 TO REG-UNIQ
                        MOVE ERROR-EED TO ERROR-MESSAGE
                        ACCEPT ERROR-SCREEN
+                       IF KEY-STATUS = 1003 THEN
+                           CLOSE SCHOOLS
+                           EXIT SECTION
+                       END-IF
                END-READ
            CLOSE SCHOOLS
            EXIT SECTION.

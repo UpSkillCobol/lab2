@@ -320,7 +320,7 @@
                  MOVE "Y" TO FLAG
                  SET WS-EOF TO TRUE
                  ACCEPT OMITTED AT LINE 25 COL 01
-                 IF FLAG = "Y" THEN
+                 IF FLAG = "Y" OR KEY-STATUS = 1003 THEN
                     CLOSE SCHOOLS
                     EXIT SECTION
                  END-IF
@@ -336,11 +336,7 @@
       *    ACCEPT THE RECORD TO BE USED
                     ACCEPT CONTINUE-LIST
                     MOVE "S" TO FLAG
-                    IF FLAG = "S" THEN
-                       CLOSE SCHOOLS
-                       EXIT SECTION
-                    END-IF
-                    IF KEY-STATUS = 1003 THEN
+                    IF FLAG = "S"  OR KEY-STATUS = 1003 THEN
                        CLOSE SCHOOLS
                        EXIT SECTION
                     END-IF
@@ -362,14 +358,10 @@
                           MOVE 9 TO SC-LINE
                        ELSE
                           MOVE "S" TO FLAG
-                          IF FLAG = "S" THEN
+                          IF FLAG = "S" OR KEY-STATUS = 1003 THEN
                              CLOSE SCHOOLS
-
                              EXIT SECTION
                           END-IF
-                       END-IF
-                       IF KEY-STATUS = 1003 THEN
-                          EXIT SECTION
                        END-IF
                     END-IF
               END-READ
@@ -388,6 +380,7 @@
                    MOVE ZEROS TO CONTINUE-LIST
                    ACCEPT CONTINUE-LIST
                        IF KEY-STATUS = 1003 THEN
+                           CLOSE SCHOOLS
                            EXIT SECTION
                        END-IF
                NOT INVALID KEY
@@ -457,9 +450,7 @@
       *    SECTION TO CHANGE EXTERNAL ID
            PERFORM WITH TEST AFTER UNTIL EXTERNAL-ID-VLD
                AND REG-UNIQ = 1 AND WS-SPACES = 8 AND WS-ALPHABETIC = 1
-                   MOVE ZEROS TO WS-SPACES
-                   MOVE ZEROS TO WS-ALPHABETIC
-                   MOVE ZERO TO REG-UNIQ
+                   MOVE ZEROS TO WS-SPACES WS-ALPHABETIC REG-UNIQ
                    MOVE SPACES TO ALT-EED
                    MOVE INSTRUCTION-EED TO INSTRUCTION-MESSAGE
                    DISPLAY INSTRUCTIONS-SCREEN
@@ -479,6 +470,7 @@
                                MOVE ERROR-EED TO ERROR-MESSAGE
                                ACCEPT ERROR-SCREEN
                                IF KEY-STATUS = 1003 THEN
+                                   CLOSE SCHOOLS
                                    EXIT SECTION
                                END-IF
                        END-READ
@@ -508,6 +500,12 @@
                MOVE WS-SCHOOL-DETAILS TO SCHOOL-DETAILS
                REWRITE SCHOOL-DETAILS
                END-REWRITE
+               MOVE CONFIRM-RECORD TO CONFIRM-MESSAGE
+               ACCEPT CONFIRM-SCREEN
+               IF KEY-STATUS = 1003 THEN
+                   CLOSE SCHOOLS
+                   EXIT SECTION
+               END-IF
            CLOSE SCHOOLS
            EXIT SECTION.
       ******************************************************************
@@ -515,8 +513,7 @@
       *    SECTION TO CHANGE DESIGNATION
            PERFORM WITH TEST AFTER UNTIL DESIGNATION-VLD
                AND WS-SPACES <150 AND WS-ALPHABETIC = 1
-                   MOVE ZEROS TO WS-ALPHABETIC
-                   MOVE ZEROS TO WS-SPACES
+                   MOVE ZEROS TO WS-ALPHABETIC WS-SPACES
                    MOVE INSTRUCTION-DSG TO INSTRUCTION-MESSAGE
                    DISPLAY INSTRUCTIONS-SCREEN
                    MOVE SPACES TO ALT-DESIGNATION
@@ -551,6 +548,10 @@
                END-REWRITE
                MOVE CONFIRM-RECORD TO CONFIRM-MESSAGE
                ACCEPT CONFIRM-SCREEN
+               IF KEY-STATUS = 1003 THEN
+                   CLOSE SCHOOLS
+                   EXIT SECTION
+               END-IF
            CLOSE SCHOOLS
            EXIT SECTION.
       ******************************************************************
@@ -558,8 +559,7 @@
       *    SECTION TO CHANGE ADDRESS
            PERFORM WITH TEST AFTER UNTIL ADDRESS-VLD AND WS-SPACES <50
                AND WS-ALPHABETIC = 1
-               MOVE ZEROS TO WS-ALPHABETIC
-               MOVE ZEROS TO WS-SPACES
+               MOVE ZEROS TO WS-ALPHABETIC WS-SPACES
                MOVE INSTRUCTION-ADR TO INSTRUCTION-MESSAGE
                DISPLAY INSTRUCTIONS-SCREEN
                MOVE SPACES TO ALT-ADDRESS
@@ -593,6 +593,10 @@
                END-REWRITE
                MOVE CONFIRM-RECORD TO CONFIRM-MESSAGE
                ACCEPT CONFIRM-SCREEN
+               IF KEY-STATUS = 1003 THEN
+                   CLOSE SCHOOLS
+                   EXIT SECTION
+               END-IF
            CLOSE SCHOOLS
            EXIT SECTION.
       ******************************************************************
@@ -630,8 +634,7 @@
            DISPLAY ALT-SCREEN
            PERFORM WITH TEST AFTER UNTIL TOWN-VLD AND WS-SPACES < 30
                AND WS-ALPHABETIC = 1
-               MOVE ZEROS TO WS-ALPHABETIC
-               MOVE ZEROS TO WS-SPACES
+               MOVE ZEROS TO WS-ALPHABETIC WS-SPACES
                MOVE INSTRUCTION-TOWN TO INSTRUCTION-MESSAGE
                DISPLAY INSTRUCTIONS-SCREEN
                 ACCEPT ALT-TOWN
@@ -665,6 +668,10 @@
                END-REWRITE
                MOVE CONFIRM-RECORD TO CONFIRM-MESSAGE
                ACCEPT CONFIRM-SCREEN
+               IF KEY-STATUS = 1003 THEN
+                   CLOSE SCHOOLS
+                   EXIT SECTION
+               END-IF
            CLOSE SCHOOLS
            EXIT SECTION.
       ******************************************************************
