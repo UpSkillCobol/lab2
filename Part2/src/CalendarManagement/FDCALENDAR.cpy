@@ -1,12 +1,13 @@
       ******************************************************************
       *    LAB | SECOND PART | DELICIOUSSANDWICH
       ******************************************************************
-      *    BREADWICH | SUPPLIER MANAGEMENT
+      *    BREADWICH | CALENDAR MANAGEMENT
       ******************************************************************
-      *    FILE DESCRIPTOR VARIABLES | V0.5 | IN UPDATE | 01.02.2021
+      *    FILE DESCRIPTOR VARIABLES | V0.6 | IN UPDATE | 03.02.2021
       ******************************************************************
 
        01  FD-CALENDAR.
+           88  EOF-DOWNTIME-ID                     VALUE HIGH-VALUES.
            05  FD-DOWNTIME-ID                      PIC 9(003).
            05  FD-START-DOWNTIME.
                10  FD-START-DT-YEAR                PIC 9(004).

@@ -1,9 +1,9 @@
       ******************************************************************
       *    LAB | SECOND PART | DELICIOUSSANDWICH
       ******************************************************************
-      *    BREADWICH | SUPPLIER MANAGEMENT
+      *    BREADWICH | CALENDAR MANAGEMENT
       ******************************************************************
-      *    REGULAR VARIABLES | V0.6 | IN UPDATE | 02.02.2021
+      *    REGULAR VARIABLES | V0.7 | IN UPDATE | 03.02.2021
       ******************************************************************
 
        01  MAIN-OPTION                          PIC 9(002).
@@ -15,10 +15,15 @@
        77  CALENDAR-TEST                        PIC 9(002).
        77  KEYS-TEST                            PIC 9(002).
        77  PRESS-KEY                            PIC X(001).
-       01  F3F4EXIT                             PIC 9(004).
-       01  FLAG-TRUE                            PIC X(001).
+       77  KEYSTATUS                            PIC 9(004).
+       77  FLAG-TRUE                            PIC X(001).
        01  VIEW-OPTION                          PIC 9(002).
            88  VALID-VIEW-OPTION                VALUE 1 THRU 3.
-       01  EOF                                  PIC X(001).
-       01  FLAG                                 PIC X(001).
-       01  VIEW-ID                              PIC 9(003).
+       77  EOF                                  PIC X(001).
+       01  REQUEST-ID                           PIC 9(003).
+           88 VALID-ID                          VALUE 1 THRU 999.
+       77  ILIN                                 PIC 9(002).
+       77  ICOL                                 PIC 9(002).
+       01  EDIT-OPTION                          PIC 9(001).
+           88 VALID-EDIT-OPTION                 VALUE 1 THRU 4.
+           88 EDIT-OPTION-EXIT                  VALUE 4.

@@ -3,11 +3,11 @@
       ******************************************************************
       *    BREADWICH | CALENDAR MANAGEMENT
       ******************************************************************
-      *    VIEW MODULE | V0.2 | IN UPDATE | 03.02.2021
+      *    DELETE MODULE | V0.1 | IN UPDATE | 03.02.2021
       ******************************************************************
 
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. CAMVIEW.
+       PROGRAM-ID. CAMDELETE.
 
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
@@ -34,6 +34,8 @@
        COPY CAMCONSTANTS.
        COPY WSCALENDAR.
        COPY WSVAR.
+       COPY VAR-VALIDDATE.
+       COPY VAR-SPACECHECK.
 
        SCREEN SECTION.
        01  CLEAR-SCREEN.
@@ -51,24 +53,6 @@
            05 VALUE ALL " " PIC X(022) LINE 25 COL 98.
            05 VALUE ALL " " PIC X(022) LINE 26 COL 98.
            05 VALUE MAIN-TEXT1 LINE 25 COL 99 FOREGROUND-COLOR 5.
-
-       01  VIEW-MENU-SCREEN
-           BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
-           05 VALUE ALL " " PIC X(050) LINE 09 COL 35.
-           05 VALUE ALL " " PIC X(050) LINE 10 COL 35.
-           05 VALUE ALL " " PIC X(050) LINE 11 COL 35.
-           05 VALUE ALL " " PIC X(050) LINE 12 COL 35.
-           05 VALUE ALL " " PIC X(050) LINE 13 COL 35.
-           05 VALUE ALL " " PIC X(050) LINE 14 COL 35.
-           05 VALUE ALL " " PIC X(050) LINE 15 COL 35.
-           05 VALUE ALL " " PIC X(050) LINE 16 COL 35.
-           05 VALUE ALL " " PIC X(050) LINE 17 COL 35.
-           05 VALUE VIEW-MENU-OPTION1  LINE 12 COL 45.
-           05 VALUE VIEW-MENU-OPTION2  LINE 13 COL 45.
-           05 VALUE VIEW-MENU-OPTION3  LINE 14 COL 45.
-           05 VALUE VIEW-MENU-ACCEPT   LINE 20 COL 45 REVERSE-VIDEO.
-           05 SS-OPTION PIC 9(002) LINE 20 COL 70 TO VIEW-OPTION
-               BLANK WHEN ZERO REVERSE-VIDEO AUTO REQUIRED.
 
        01  LIST-FRAME.
            05 VALUE ALL " " PIC X(082) LINE 7 COL 07
@@ -134,7 +118,6 @@
               10 SHOW-MONT PIC 9(002)     FROM FD-START-DT-MONTH.
               10 VALUE "/".
               10 SHOW-YEAR PIC 9(004)     FROM FD-START-DT-YEAR.
-
 
        01  VIEW-RECORD-SCREEN BACKGROUND-COLOR 0 FOREGROUND-COLOR 7.
            05 VALUE ALL "_" PIC X(082) LINE 10 COL 08.
@@ -204,6 +187,13 @@
        01  EMPTY-FIELD-SCREEN BACKGROUND-COLOR 0 FOREGROUND-COLOR 7.
            05 VALUE EMPTY-FIELD-TEXT LINE 18 COL 35.
 
+       01  INSTRUCTIONS-SCREEN BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
+           05 VALUE ALL " " PIC X(095) LINE 24 COL 01.
+           05 VALUE ALL " " PIC X(095) LINE 25 COL 01.
+           05 VALUE ALL " " PIC X(095) LINE 26 COL 01.
+           05 INSTRUCTIONS-TEXT LINE 25 COL 03 PIC X(092)
+              FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
+
        01  COMMENTS-SCREEN BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
            05 VALUE ALL " " PIC X(095) LINE 24 COL 01.
            05 VALUE ALL " " PIC X(095) LINE 25 COL 01.
@@ -226,78 +216,48 @@
               FOREGROUND-COLOR 0 BACKGROUND-COLOR 7 TO REQUEST-ID
               BLANK WHEN ZERO.
 
+       01  DELETE-SCREEN
+           BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
+           05 VALUE ALL " " PIC X(095) LINE 24 COL 01.
+           05 VALUE ALL " " PIC X(095) LINE 25 COL 01.
+           05 VALUE ALL " " PIC X(095) LINE 26 COL 01.
+           05 VALUE MESSAGE-DELETE LINE 25 COL 03
+              FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
+           05 SS-SAVE LINE 25 COL 74
+              FOREGROUND-COLOR 4 BACKGROUND-COLOR 7 TO SAVE.
+
        PROCEDURE DIVISION.
        VIEW-DOWNTIME-MENU SECTION.
-           PERFORM WITH TEST AFTER UNTIL VIEW-OPTION = 3
-              DISPLAY CLEAR-SCREEN
-              MOVE ZEROS TO SS-OPTION
-              DISPLAY MAIN-SCREEN
-              ACCEPT VIEW-MENU-SCREEN
-              IF KEYSTATUS = 1003 OR 1004 THEN
-                 EXIT PROGRAM
-              END-IF
-              IF NOT VALID-VIEW-OPTION
-                 MOVE OPTION-ERROR TO COMMENT-TEXT
+           PERFORM UNTIL EOF = "T"
+              PERFORM GET-DOWNTIME-ID
+                 IF KEYSTATUS = 1003 OR 1004 THEN
+                    EXIT PROGRAM
+                 END-IF
+           END-PERFORM
+
+           OPEN I-O CALENDAR
+              PERFORM WITH TEST AFTER UNTIL SAVE-VALID
+                 ACCEPT DELETE-SCREEN
+                 IF NOT SAVE-VALID THEN
+                    MOVE INVALID-OPTION TO COMMENT-TEXT
+                    ACCEPT COMMENTS-SCREEN
+                 END-IF
+              END-PERFORM
+
+              IF SAVE = "Y" OR "y"
+                 DELETE CALENDAR
+                 END-DELETE
+                 MOVE MESSAGE-DELETE-YES TO COMMENT-TEXT
+                 ACCEPT COMMENTS-SCREEN
+              ELSE
+                 MOVE MESSAGE-DELETE-NO TO COMMENT-TEXT
                  ACCEPT COMMENTS-SCREEN
               END-IF
-
-              EVALUATE VIEW-OPTION
-                 WHEN 1
-                    PERFORM VIEW-ALL-RECORDS
-                    IF EOF = "T" THEN
-                       EXIT PROGRAM
-                    END-IF
-                 WHEN 2
-                    PERFORM GET-DOWNTIME-ID
-                    IF EOF = "T" THEN
-                       EXIT PROGRAM
-                    END-IF
-                 END-EVALUATE
-           END-PERFORM
-           EXIT PROGRAM.
-
-       VIEW-ALL-RECORDS SECTION.
-           OPEN INPUT CALENDAR
-           MOVE SPACE TO EOF
-           MOVE ZEROS TO FD-DOWNTIME-ID
-
-           START CALENDAR KEY IS GREATER OR EQUAL FD-DOWNTIME-ID
-               INVALID KEY
-                   MOVE EMPTY-RECORDS TO COMMENT-TEXT
-                   ACCEPT COMMENTS-SCREEN
-                   MOVE "T" TO EOF
-                   EXIT SECTION
-           END-START
-
-           PERFORM UNTIL EOF = "T"
-              READ CALENDAR INTO WS-CALENDAR
-                 AT END
-                    MOVE "T" TO EOF
-                    DISPLAY CLEAR-SCREEN
-                    DISPLAY MAIN-SCREEN
-                    MOVE END-RECORDS-VIEW TO COMMENT-TEXT
-                    ACCEPT COMMENTS-SCREEN
-                    IF KEYSTATUS = 1003 OR 1004 THEN
-                       EXIT SECTION
-                    END-IF
-
-                 NOT AT END
-                    DISPLAY CLEAR-SCREEN
-                    DISPLAY MAIN-SCREEN
-                    DISPLAY VIEW-RECORD-SCREEN
-                    IF REG-DESCRIPTION EQUALS SPACES THEN
-                       DISPLAY EMPTY-FIELD-SCREEN
-                    END-IF
-                    MOVE VIEW-RECORDS-ONEBYONE TO COMMENT-TEXT
-                    ACCEPT COMMENTS-SCREEN
-                    IF KEYSTATUS = 1003 OR 1004 THEN
-                       EXIT SECTION
-                    END-IF
-              END-READ
-           END-PERFORM
-
            CLOSE CALENDAR
-           EXIT SECTION.
+
+           MOVE SPACE TO SS-SAVE
+           MOVE SPACE TO EOF
+           EXIT PROGRAM.
 
        GET-DOWNTIME-ID SECTION.
            PERFORM WITH TEST AFTER UNTIL EOF = "T"
@@ -337,8 +297,6 @@
                  IF REG-DESCRIPTION EQUALS SPACES THEN
                     DISPLAY EMPTY-FIELD-SCREEN
                  END-IF
-                 MOVE VIEW-SPECIFIC TO COMMENT-TEXT
-                 ACCEPT COMMENTS-SCREEN
                  MOVE "T" TO EOF
                  IF KEYSTATUS = 1003 OR 1004 THEN
                     EXIT SECTION
@@ -402,4 +360,4 @@
            END-PERFORM
            EXIT SECTION.
 
-       END PROGRAM CAMVIEW.
+       END PROGRAM CAMDELETE.

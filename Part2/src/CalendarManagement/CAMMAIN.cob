@@ -3,7 +3,7 @@
       ******************************************************************
       *    BREADWICH | CALENDAR MANAGEMENT
       ******************************************************************
-      *    MAIN PROGRAM | V0.6 | IN UPDATE | 01.02.2021
+      *    MAIN PROGRAM | V0.7 | IN UPDATE | 03.02.2021
       ******************************************************************
 
        IDENTIFICATION DIVISION.
@@ -12,14 +12,13 @@
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
        SPECIAL-NAMES.
-       CRT STATUS IS F3F4EXIT.
+       CRT STATUS IS KEYSTATUS.
 
        DATA DIVISION.
        FILE SECTION.
 
        WORKING-STORAGE SECTION.
-       COPY LANGUAGE.
-       COPY WSCALENDAR.
+       COPY CAMCONSTANTS.
        COPY WSVAR.
 
        SCREEN SECTION.
@@ -31,13 +30,9 @@
            05 VALUE ALL " " PIC X(120) LINE 03 COL 01.
            05 VALUE ALL " " PIC X(120) LINE 04 COL 01.
            05 VALUE MAIN-TEXT          LINE 03 COL 50.
-           05 VALUE ALL " " PIC X(95) LINE 24 COL 01.
-           05 VALUE ALL " " PIC X(95) LINE 25 COL 01.
-           05 VALUE ALL " " PIC X(95) LINE 26 COL 01.
-           05 VALUE ALL " " PIC X(22) LINE 24 COL 98.
-           05 VALUE ALL " " PIC X(22) LINE 25 COL 98.
-           05 VALUE ALL " " PIC X(22) LINE 26 COL 98.
-           05 VALUE MAIN-TEXT1 LINE 25 COL 99 FOREGROUND-COLOR 5.
+           05 VALUE ALL " " PIC X(120) LINE 24 COL 01.
+           05 VALUE ALL " " PIC X(120) LINE 25 COL 01.
+           05 VALUE ALL " " PIC X(120) LINE 26 COL 01.
 
        01  MAIN-MENU-SCREEN BACKGROUND-COLOR 7 FOREGROUND-COLOR 0
            AUTO REQUIRED.
@@ -78,19 +73,19 @@
 
               EVALUATE MAIN-OPTION
                  WHEN 1     CALL "CAMADD"
-                            IF F3F4EXIT = 1004 THEN
+                            IF KEYSTATUS = 1004 THEN
                                EXIT PROGRAM
                             END-IF
                  WHEN 2     CALL "CAMVIEW"
-                            IF F3F4EXIT = 1004 THEN
+                            IF KEYSTATUS = 1004 THEN
                                EXIT PROGRAM
                             END-IF
                  WHEN 3     CALL "CAMEDIT"
-                            IF F3F4EXIT = 1004 THEN
+                            IF KEYSTATUS = 1004 THEN
                                EXIT PROGRAM
                             END-IF
                  WHEN 4     CALL "CAMDELETE"
-                            IF F3F4EXIT = 1004 THEN
+                            IF KEYSTATUS = 1004 THEN
                                EXIT PROGRAM
                             END-IF
               END-EVALUATE
