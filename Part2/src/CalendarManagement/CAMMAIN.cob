@@ -25,6 +25,8 @@
        01  CLEAR-SCREEN.
            05 BLANK SCREEN.
 
+      ******************************************************************
+
        01  MAIN-SCREEN BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
            05 VALUE ALL " " PIC X(120) LINE 02 COL 01.
            05 VALUE ALL " " PIC X(120) LINE 03 COL 01.
@@ -33,6 +35,8 @@
            05 VALUE ALL " " PIC X(120) LINE 24 COL 01.
            05 VALUE ALL " " PIC X(120) LINE 25 COL 01.
            05 VALUE ALL " " PIC X(120) LINE 26 COL 01.
+
+      ******************************************************************
 
        01  MAIN-MENU-SCREEN BACKGROUND-COLOR 7 FOREGROUND-COLOR 0
            AUTO REQUIRED.
@@ -54,13 +58,17 @@
            05 SS-OPTION PIC 9(002) LINE 20 COL 70 TO MAIN-OPTION
               BLANK WHEN ZERO REVERSE-VIDEO.
 
+      ******************************************************************
+
        01  ERROR-MESSAGE-SCREEN FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
            05 ERROR-LINE LINE 25 COL 12 PIC X(080).
            05 LINE 01 COL 01 PIC X TO PRESS-KEY AUTO.
 
+      ******************************************************************
+
        PROCEDURE DIVISION.
        MAIN SECTION.
-           PERFORM UNTIL MAIN-OPTION = 5
+           PERFORM WITH TEST AFTER UNTIL MAIN-OPTION = 5
 
               DISPLAY CLEAR-SCREEN
               MOVE ZEROS TO SS-OPTION
@@ -73,21 +81,9 @@
 
               EVALUATE MAIN-OPTION
                  WHEN 1     CALL "CAMADD"
-                            IF KEYSTATUS = 1004 THEN
-                               EXIT PROGRAM
-                            END-IF
                  WHEN 2     CALL "CAMVIEW"
-                            IF KEYSTATUS = 1004 THEN
-                               EXIT PROGRAM
-                            END-IF
                  WHEN 3     CALL "CAMEDIT"
-                            IF KEYSTATUS = 1004 THEN
-                               EXIT PROGRAM
-                            END-IF
                  WHEN 4     CALL "CAMDELETE"
-                            IF KEYSTATUS = 1004 THEN
-                               EXIT PROGRAM
-                            END-IF
               END-EVALUATE
 
            END-PERFORM
