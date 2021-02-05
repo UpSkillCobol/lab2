@@ -12,7 +12,7 @@
            FUNCTION ALL INTRINSIC.
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
-           SELECT CPS ASSIGN TO "cps.dat"
+           SELECT CPS ASSIGN TO "cps"
                ORGANIZATION IS INDEXED
                ACCESS IS DYNAMIC
                RECORD KEY IS FD-CP

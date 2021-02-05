@@ -42,6 +42,7 @@
        01  WS-ALPHABETIC                               PIC 9(001).
        COPY "CB-WS-SCHOOLS".
        COPY "CONSTANTS".
+
        SCREEN SECTION.
        01  CLEAR-SCREEN BACKGROUND-COLOR 0.
            05 VALUE " " BLANK SCREEN LINE 01 COL 01.

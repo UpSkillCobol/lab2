@@ -35,6 +35,7 @@
        WORKING-STORAGE SECTION.
        COPY "CB-WS-SCHOOLS".
        COPY "CONSTANTS".
+
       ******************************************************************
        SCREEN SECTION.
        01  CLEAR-SCREEN BACKGROUND-COLOR 0.

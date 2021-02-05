@@ -512,6 +512,8 @@
            MOVE FUNCTION TRIM (WS-SCHOOL-EXTERNAL-ID) TO LINK-TEXT
            PERFORM SPACE-CHECK
            MOVE LINK-TEXT TO WS-SCHOOL-EXTERNAL-ID
+           MOVE LINK-TEXT TO ALT-EED
+           DISPLAY ALT-SCREEN
       ******************************************************************
       *    SAVING CHANGES ON FILE
            OPEN I-O SCHOOLS
@@ -558,10 +560,12 @@
            MOVE FUNCTION TRIM (WS-SCHOOL-DESIGNATION) TO LINK-TEXT
            PERFORM SPACE-CHECK
            MOVE LINK-TEXT TO WS-SCHOOL-DESIGNATION
+           MOVE LINK-TEXT TO ALT-DESIGNATION
+           DISPLAY ALT-SCREEN
       ******************************************************************
       *    SAVING CHANGES ON FILE
            OPEN I-O SCHOOLS
-               MOVE WS-SCHOOL-DETAILS TO SCHOOL-DETAILS
+               MOVE ALT-REC TO SCHOOL-DETAILS
                REWRITE SCHOOL-DETAILS
                END-REWRITE
                MOVE CONFIRM-RECORD TO CONFIRM-MESSAGE
@@ -603,10 +607,12 @@
            MOVE FUNCTION TRIM (WS-SCHL-ADR-MAIN) TO LINK-TEXT
            PERFORM SPACE-CHECK
            MOVE LINK-TEXT TO WS-SCHL-ADR-MAIN
+           MOVE LINK-TEXT TO ALT-ADDRESS
+           DISPLAY ALT-SCREEN
       ******************************************************************
       *    SAVING CHANGES ON FILE
            OPEN I-O SCHOOLS
-               MOVE WS-SCHOOL-DETAILS TO SCHOOL-DETAILS
+               MOVE ALT-REC TO SCHOOL-DETAILS
                REWRITE SCHOOL-DETAILS
                END-REWRITE
                MOVE CONFIRM-RECORD TO CONFIRM-MESSAGE
@@ -678,10 +684,12 @@
            MOVE FUNCTION TRIM (WS-SCHOOL-TOWN) TO LINK-TEXT
            PERFORM SPACE-CHECK
            MOVE LINK-TEXT TO WS-SCHOOL-TOWN
+           MOVE LINK-TEXT TO ALT-TOWN
+           DISPLAY ALT-SCREEN
       ******************************************************************
       *    SAVING CHANGES ON FILE
            OPEN I-O SCHOOLS
-               MOVE WS-SCHOOL-DETAILS TO SCHOOL-DETAILS
+               MOVE ALT-REC TO SCHOOL-DETAILS
                REWRITE SCHOOL-DETAILS
                END-REWRITE
                MOVE CONFIRM-RECORD TO CONFIRM-MESSAGE
