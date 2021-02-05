@@ -240,15 +240,21 @@
       *    SHOW A LIST OF ALL RECORDS AND ACCEPT THE ONE TO BE SHOW AND DELETED
            PERFORM LIST
                IF FLAG = "Y" THEN
-                 EXIT SECTION
+                 EXIT PROGRAM
               END-IF
               IF KEY-STATUS = 1003 THEN
-                 EXIT SECTION
+                 EXIT PROGRAM
               END-IF
               DISPLAY CLEAR-SCREEN
               DISPLAY MAIN-SCREEN
            PERFORM SCHOOL-EXISTS
+               IF KEY-STATUS = 1003 THEN
+                 EXIT PROGRAM
+              END-IF
            PERFORM CONFIRM-DELETE
+               IF KEY-STATUS = 1003 THEN
+                 EXIT PROGRAM
+              END-IF
            EXIT PROGRAM.
       ******************************************************************
        SCHOOL-EXISTS SECTION.
@@ -293,7 +299,7 @@
                WHEN WS-DLT = "S" OR WS-DLT = "Y"
                    PERFORM DELETE-RECORD
                    DISPLAY DELETED-SCREEN
-                   ACCEPT OMITTED AT LINE 25 COL 09
+                   ACCEPT OMITTED AT LINE 27 COL 01
                    IF KEY-STATUS = 1003 THEN
                        CLOSE SCHOOLS
                        EXIT SECTION
@@ -337,8 +343,8 @@
                    SET WS-EOF TO TRUE
                    CLOSE SCHOOLS
                    MOVE "Y" TO FLAG
+                   EXIT SECTION
                END-IF
-           DISPLAY LIST-SCREEN
       *    POINT THE FILE IN THE START, IN THIS CASE ON ID "000" SO
       *    WE ARE SURE THAT THE PROGRAM WILL READ ALL RECORDS
            START SCHOOLS KEY IS GREATER OR EQUAL SCHOOL-INTERNAL-ID

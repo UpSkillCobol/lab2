@@ -21,6 +21,7 @@
        01  CLEAR-SCREEN.
            05 BLANK SCREEN.
 
+
       ******************************************************************
 
        01  MAIN-SCREEN BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.

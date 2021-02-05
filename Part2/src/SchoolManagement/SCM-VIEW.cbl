@@ -354,6 +354,7 @@
                    ACCEPT EMPTY-LIST-SCREEN
                    MOVE "Y" TO FLAG
                    SET WS-EOF TO TRUE
+                   EXIT SECTION
                END-IF
       *    POINT THE FILE IN THE START, IN THIS CASE ON ID "000" SO
       *    WE ARE SURE THAT THE PROGRAM WILL READ ALL RECORDS

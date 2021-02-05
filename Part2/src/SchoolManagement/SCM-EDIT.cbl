@@ -232,17 +232,6 @@
            BACKGROUND-COLOR 7.
            05 VALUE "|" LINE 25 COL 52.
            05 VALUE NEXT-LIST-TEXT LINE 25 COL 53.
-
-      ******************************************************************
-       01  ID-ERROR-SCREEN
-           FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(095) LINE 24 COL 01
-           BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(095) LINE 25 COL 01
-           BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(095) LINE 26 COL 01
-           BACKGROUND-COLOR 7.
-           05 VALUE ID-ERROR-TEXT LINE 25 COL 10.
       ******************************************************************
        01  INSTRUCTIONS-SCREEN.
            05 VALUE ALL " " PIC X(095) LINE 24 COL 01
@@ -279,21 +268,64 @@
        PROCEDURE DIVISION.
        MAIN SECTION.
            MOVE ZEROS TO KEY-STATUS
+           MOVE SPACE TO FLAG
+           MOVE ZEROS TO SCHOOL-INTERNAL-ID
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
       *    CALL THE LIST SECTION TO SHOW A LIST OF ALL RECORDS ALREADY
       *    SAVED ON THE FILE SO THE USER CAN CHOOSE ONE TO USE
            PERFORM LIST
-               IF FLAG = "Y" THEN
-                 EXIT SECTION
-              END-IF
-              IF KEY-STATUS = 1003 THEN
-                 EXIT SECTION
-              END-IF
-              DISPLAY CLEAR-SCREEN
-              DISPLAY MAIN-SCREEN
-           PERFORM SCHOOL-EXISTS
+               IF FLAG = "Y" OR KEY-STATUS = 1003 THEN
+                   MOVE ZEROS TO SCHOOL-INTERNAL-ID
+                   EXIT PROGRAM
+               END-IF
+           MOVE ZEROS TO WS-CONTROL
+           PERFORM WITH TEST AFTER UNTIL WS-CONTROL = 1
+      *    READ THE FILE TO CHECK IF THE RECORD THE USER DID CHOOSE IS
+      *    VALID OR NOT, IF IT IS, THE RECORD IS SHOWN TO THE USER AND
+      *    THEN GOES TO THE CHOOSE-EDIT SECTION.
+           OPEN INPUT SCHOOLS
+               READ SCHOOLS
+               INVALID KEY
+                   DISPLAY CLEAR-SCREEN
+                   DISPLAY MAIN-SCREEN
+                   DISPLAY LIST-SCREEN
+                   MOVE ID-ERROR-TEXT TO ERROR-MESSAGE
+                   ACCEPT ERROR-SCREEN
+                       IF KEY-STATUS = 1003 THEN
+                           MOVE 1 TO WS-CONTROL
+                           CLOSE SCHOOLS
+                           EXIT PROGRAM
+                       END-IF
+                   MOVE ZEROS TO CONTINUE-LIST
+                   ACCEPT CONTINUE-LIST
+                       IF KEY-STATUS = 1003 THEN
+                           MOVE 1 TO WS-CONTROL
+                           CLOSE SCHOOLS
+                           EXIT PROGRAM
+                       END-IF
+               NOT INVALID KEY
+                   PERFORM CLEAR-VARIABLES
+                   MOVE SCHOOL-DETAILS TO ALT-REC
+                   DISPLAY CLEAR-SCREEN
+                   DISPLAY MAIN-SCREEN
+                   DISPLAY ALT-SCREEN
+                       IF KEY-STATUS = 1003 THEN
+                           MOVE 1 TO WS-CONTROL
+                           CLOSE SCHOOLS
+                           EXIT PROGRAM
+                       END-IF
+                   MOVE 1 TO WS-CONTROL
+               END-READ
+           CLOSE SCHOOLS
+           END-PERFORM
+               IF KEY-STATUS = 1003 THEN
+                   EXIT PROGRAM
+               END-IF
            PERFORM CHOOSE-EDIT
+               IF KEY-STATUS = 1003 THEN
+                   EXIT PROGRAM
+               END-IF
            EXIT PROGRAM.
       ******************************************************************
        LIST SECTION.
@@ -309,8 +341,8 @@
                    ACCEPT EMPTY-LIST-SCREEN
                    MOVE "Y" TO FLAG
                    SET WS-EOF TO TRUE
+                   EXIT SECTION
                END-IF
-           DISPLAY LIST-SCREEN
       *    POINT THE FILE IN THE START, IN THIS CASE ON ID "000" SO
       *    WE ARE SURE THAT THE PROGRAM WILL READ ALL RECORDS
            START SCHOOLS KEY IS GREATER OR EQUAL SCHOOL-INTERNAL-ID
@@ -336,7 +368,7 @@
       *    ACCEPT THE RECORD TO BE USED
                     ACCEPT CONTINUE-LIST
                     MOVE "S" TO FLAG
-                    IF FLAG = "S"  OR KEY-STATUS = 1003 THEN
+                    IF FLAG = "S" OR KEY-STATUS = 1003 THEN
                        CLOSE SCHOOLS
                        EXIT SECTION
                     END-IF
@@ -376,7 +408,8 @@
            OPEN INPUT SCHOOLS
                READ SCHOOLS
                INVALID KEY
-                   DISPLAY ID-ERROR-SCREEN
+                   MOVE ID-ERROR-TEXT TO ERROR-MESSAGE
+                   ACCEPT ERROR-SCREEN
                    MOVE ZEROS TO CONTINUE-LIST
                    ACCEPT CONTINUE-LIST
                        IF KEY-STATUS = 1003 THEN
@@ -390,6 +423,7 @@
                    DISPLAY MAIN-SCREEN
                    DISPLAY ALT-SCREEN
                        IF KEY-STATUS = 1003 THEN
+                           CLOSE SCHOOLS
                            EXIT SECTION
                        END-IF
                    MOVE 1 TO WS-CONTROL
@@ -407,30 +441,39 @@
                DISPLAY ALT-SCREEN
                DISPLAY EDIT-WHAT-SCREEN
                ACCEPT EDIT-CHOICE
+                   IF KEY-STATUS = 1003 THEN
+                       MOVE 8 TO EDIT-WHAT
+                       EXIT SECTION
+                   END-IF
                EVALUATE TRUE
                    WHEN EDIT-WHAT = 1
                        PERFORM EDIT-EED
                            IF KEY-STATUS = 1003 THEN
+                               MOVE 8 TO EDIT-WHAT
                                EXIT SECTION
                            END-IF
                    WHEN EDIT-WHAT = 2
                        PERFORM EDIT-DESIGNATION
                            IF KEY-STATUS = 1003 THEN
+                               MOVE 8 TO EDIT-WHAT
                                EXIT SECTION
                            END-IF
                    WHEN EDIT-WHAT = 3
                        PERFORM EDIT-ADDRESS
                            IF KEY-STATUS = 1003 THEN
+                               MOVE 8 TO EDIT-WHAT
                                EXIT SECTION
                            END-IF
                    WHEN EDIT-WHAT = 4
                        PERFORM EDIT-POSTAL-CODE
                            IF KEY-STATUS = 1003 THEN
+                               MOVE 8 TO EDIT-WHAT
                                EXIT SECTION
                            END-IF
                    WHEN EDIT-WHAT = 5
                        PERFORM EDIT-TOWN
                            IF KEY-STATUS = 1003 THEN
+                               MOVE 8 TO EDIT-WHAT
                                EXIT SECTION
                            END-IF
            END-EVALUATE
