@@ -396,8 +396,6 @@
 
            START CALENDAR KEY IS GREATER OR EQUAL FD-DOWNTIME-ID
               INVALID KEY
-                 DISPLAY CLEAR-SCREEN
-                 DISPLAY MAIN-SCREEN
                  ACCEPT EMPTY-LIST-SCREEN
                  MOVE "T" TO EOF
                  EXIT SECTION

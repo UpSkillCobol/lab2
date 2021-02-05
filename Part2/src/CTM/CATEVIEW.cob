@@ -256,12 +256,18 @@
                MOVE ZERO TO VMS-OPTION VIEW-OPTION
                DISPLAY CLEAR-SCREEN MAIN-SCREEN
                ACCEPT VIEW-MENU-SCREEN
+               IF KEYSTATUS = 1003 THEN
+                   EXIT PROGRAM
+               END-IF
                IF NOT VIEW-VALID-OPTION
                    MOVE VIEW-CATEGORY-MENU-ERROR TO ERROR-TEXT
                    ACCEPT ERROR-ZONE
+                   IF KEYSTATUS = 1003 THEN
+                       EXIT PROGRAM
+                   END-IF
                END-IF
                PERFORM 110-EVALUATE-VIEW-CATEGORY-MENU
-               IF TRUE-YES = "Y" THEN
+               IF TRUE-YES = "Y" OR KEYSTATUS = 1003 THEN
                    EXIT PROGRAM
                END-IF
            END-PERFORM
@@ -301,6 +307,7 @@
                    ACCEPT GET-CATEID
                    EXIT SECTION
                    IF KEYSTATUS = 1003 THEN
+                       CLOSE FXCATEGO
                        EXIT SECTION
                    END-IF
                    NOT AT END
@@ -323,6 +330,7 @@
                                EXIT SECTION
                            END-IF
                            IF KEYSTATUS = 1003
+                               CLOSE FXCATEGO
                                EXIT SECTION
                            END-IF
                        END-IF
@@ -340,6 +348,10 @@
                    INVALID KEY
                        MOVE ERROR-CATEID-NO TO ERROR-TEXT
                        ACCEPT ERROR-ZONE
+                       IF KEYSTATUS = 1003 THEN
+                           CLOSE FXCATEGO
+                           EXIT SECTION
+                       END-IF
                END-READ
            CLOSE FXCATEGO
        EXIT SECTION.
@@ -348,19 +360,25 @@
            EVALUATE VIEW-OPTION
                WHEN 1
                    PERFORM 115-VIEW-ALL-CATEGORIES
-                     IF TRUE-YES = "Y" THEN
+                     IF TRUE-YES = "Y" OR KEYSTATUS = 1003 THEN
                            EXIT SECTION
                    END-IF
                WHEN 2
                    MOVE SPACE TO CATEEXIST
                    PERFORM UNTIL CATEEXIST-YES
                        PERFORM 100-CATEGORIES-LIST
-                       IF TRUE-YES = "Y" THEN
+                       IF TRUE-YES = "Y" OR KEYSTATUS = 1003 THEN
                            EXIT SECTION
                        END-IF
                        PERFORM 105-CHECK-IF-CATEID-EXISTS
+                       IF KEYSTATUS = 1003 THEN
+                           EXIT SECTION
+                       END-IF
                    END-PERFORM
                    PERFORM 120-VIEW-SPECIFIC-CATEGORY
+                   IF KEYSTATUS = 1003 THEN
+                           EXIT SECTION
+                   END-IF
            END-EVALUATE
        EXIT SECTION.
 
@@ -385,6 +403,10 @@
                        DISPLAY VIEW-CATEGORY
                        MOVE VIEW-ALL-CATE-NEXT-ONE TO ERROR-TEXT
                        ACCEPT ERROR-ZONE
+                       IF KEYSTATUS = 1003 THEN
+                           CLOSE FXCATEGO
+                           EXIT SECTION
+                       END-IF
                END-READ
            END-PERFORM
            CLOSE FXCATEGO
@@ -395,6 +417,11 @@
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY VIEW-CATEGORY
-           MOVE VIEW-SPECIFIC TO ERROR-TEXT ACCEPT ERROR-ZONE
+           MOVE VIEW-SPECIFIC TO ERROR-TEXT
+           ACCEPT ERROR-ZONE
+           IF KEYSTATUS = 1003 THEN
+               CLOSE FXCATEGO
+               EXIT SECTION
+           END-IF
            CLOSE FXCATEGO
        EXIT SECTION.

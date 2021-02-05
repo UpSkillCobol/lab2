@@ -132,9 +132,9 @@
            05 VALUE ADD-DESCRIPTION LINE 16 COL 15.
            05 REG-CATE-ID PIC 9(003) LINE 12 COL 29
                    FROM WSCATEGORY-ID.
-           05 REG-CATE-NAME PIC X(030) LINE 14 COL 31
+           05 REG-CATE-NAME PIC X(030) LINE 14 COL 29
                    FROM WSCATEGORY-NAME REQUIRED.
-           05 REG-CATE-DESCRIPTION PIC X(050) LINE 16 COL 27
+           05 REG-CATE-DESCRIPTION PIC X(050) LINE 16 COL 29
                    FROM WSCATEGORY-DESCRIPTION1 REQUIRED AUTO.
 
       ******************************************************************
@@ -194,9 +194,9 @@
            05 VALUE "  " LINE 21 COL 87 BACKGROUND-COLOR 7.
       ******************************************************************
        01 UPDATE-RECORD.
-           05 EDIT-CATE-NAME PIC X(030) LINE 09 COL 29
+           05 EDIT-CATE-NAME PIC X(030) LINE 14 COL 29
                    TO WSCATEGORY-NAME REQUIRED.
-           05 EDIT-CATE-DESCRIPTION PIC X(050) LINE 10 COL 29
+           05 EDIT-CATE-DESCRIPTION PIC X(050) LINE 16 COL 29
                    TO WSCATEGORY-DESCRIPTION REQUIRED AUTO.
 
       ******************************************************************
@@ -297,7 +297,8 @@
        MAIN-PROCEDURE.
            PERFORM UNTIL CATEEXIST-YES
                PERFORM 100-CATEGORIES-LIST
-                   IF TRUE-YES = "Y" THEN
+                   IF TRUE-YES = "Y" OR KEYSTATUS = 1003 THEN
+                       MOVE SPACE TO CATEEXIST
                        EXIT PROGRAM
                    END-IF
                PERFORM 105-CHECK-IF-CATEID-EXISTS
@@ -305,8 +306,17 @@
            MOVE ZERO TO EDIT-WHAT
            PERFORM WITH TEST AFTER UNTIL EDIT-WHAT = 8
                PERFORM 110-EDIT-CATEGORY
+               IF KEYSTATUS = 1003 THEN
+                   MOVE SPACE TO CATEEXIST
+                   EXIT PROGRAM
+               END-IF
                OPEN I-O FXCATEGO
                    PERFORM 115-EDIT-WHAT
+                   IF KEYSTATUS = 1003 THEN
+                       MOVE SPACE TO CATEEXIST
+                       CLOSE FXCATEGO
+                       EXIT PROGRAM
+                   END-IF
                    REWRITE CATEGORY-DETAILS FROM WSCATEGORY-DETAILS
                    END-REWRITE
                CLOSE FXCATEGO
@@ -396,6 +406,9 @@
            DISPLAY MAIN-SCREEN
            DISPLAY EDIT-SCREEN
            ACCEPT EDIT-WHAT-SCREEN
+           IF KEYSTATUS = 1003 THEN
+               EXIT SECTION
+           END-IF
        EXIT SECTION.
 
        115-EDIT-WHAT SECTION.
@@ -403,8 +416,14 @@
            EVALUATE EDIT-WHAT
                WHEN 1
                    PERFORM 150-GET-NAME
+                       IF KEYSTATUS = 1003 THEN
+                           EXIT SECTION
+                       END-IF
                WHEN 2
                    PERFORM 155-GET-DESCRIPTION
+                       IF KEYSTATUS = 1003 THEN
+                           EXIT SECTION
+                       END-IF
            END-EVALUATE
        EXIT SECTION.
 
@@ -413,12 +432,19 @@
            DISPLAY INSTRUCTIONS-ZONE
            MOVE WSCATEGORY-NAME TO EDIT-CATE-NAME
            ACCEPT EDIT-CATE-NAME
+           IF KEYSTATUS = 1003 THEN
+               EXIT SECTION
+           END-IF
            MOVE FUNCTION UPPER-CASE (WSCATEGORY-NAME) TO WSCATEGORY-NAME
            MOVE TRIM(WSCATEGORY-NAME) TO UNSTR
            PERFORM 190-REMOVE-EXTRA-SPACES
            MOVE UNSTR TO WSCATEGORY-NAME
            IF WSCATEGORY-NAME EQUAL SPACES THEN
-               MOVE ERROR-NAME TO ERROR-TEXT ACCEPT ERROR-ZONE
+               MOVE ERROR-NAME TO ERROR-TEXT
+               ACCEPT ERROR-ZONE
+               IF KEYSTATUS = 1003 THEN
+                   EXIT SECTION
+               END-IF
            END-IF
        EXIT SECTION.
 
@@ -427,6 +453,9 @@
            DISPLAY INSTRUCTIONS-TEXT
            MOVE WSCATEGORY-DESCRIPTION TO EDIT-CATE-DESCRIPTION
            ACCEPT EDIT-CATE-DESCRIPTION
+           IF KEYSTATUS = 1003 THEN
+               EXIT SECTION
+           END-IF
            MOVE FUNCTION UPPER-CASE (WSCATEGORY-DESCRIPTION1)
                TO WSCATEGORY-DESCRIPTION1
            MOVE TRIM(WSCATEGORY-DESCRIPTION1) TO UNSTR

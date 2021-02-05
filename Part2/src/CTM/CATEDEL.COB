@@ -258,7 +258,13 @@
            MOVE SPACE TO CATEEXIST
            PERFORM UNTIL CATEEXIST-YES
                PERFORM 100-CATEGORIES-LIST
+               IF TRUE-YES = "Y" OR KEYSTATUS = 1003 THEN
+                   EXIT PROGRAM
+               END-IF
                PERFORM 105-CHECK-IF-CATEID-EXISTS
+               IF KEYSTATUS = 1003
+                   EXIT PROGRAM
+               END-IF
            END-PERFORM
            PERFORM 120-DELETE-CATEGORY
            EXIT PROGRAM.
@@ -336,6 +342,9 @@
                    INVALID KEY
                        MOVE ERROR-CATEID-NO TO ERROR-TEXT
                        ACCEPT ERROR-ZONE
+                       IF KEYSTATUS = 1003
+                               EXIT SECTION
+                       END-IF
                END-READ
            CLOSE FXCATEGO
        EXIT SECTION.
@@ -358,9 +367,17 @@
            PERFORM WITH TEST AFTER UNTIL DELETE-CATE-VALID
                MOVE SPACE TO DEL-CATE
                ACCEPT DELETE-CATEGORY-SCREEN
+               IF KEYSTATUS = 1003
+                   CLOSE FXCATEGO FXCATEGODEL
+                   EXIT SECTION
+               END-IF
                IF NOT DELETE-CATE-VALID THEN
                    MOVE VIEW-CATEGORY-MENU-ERROR TO ERROR-TEXT
                    ACCEPT ERROR-ZONE
+                   IF KEYSTATUS = 1003
+                       CLOSE FXCATEGO FXCATEGODEL
+                       EXIT SECTION
+                   END-IF
                END-IF
            END-PERFORM
            IF DELETE-CATE = "Y" OR "y" THEN
@@ -372,9 +389,16 @@
                END-DELETE
                MOVE DELETE-YES TO ERROR-TEXT
                ACCEPT ERROR-ZONE
+               IF KEYSTATUS = 1003
+                   CLOSE FXCATEGO FXCATEGODEL
+                   EXIT SECTION
+               END-IF
            ELSE
                MOVE DELETE-NO TO ERROR-TEXT
                ACCEPT ERROR-ZONE
+               IF KEYSTATUS = 1003
+                   CLOSE FXCATEGO FXCATEGODEL
+                   EXIT SECTION
            END-IF
            CLOSE FXCATEGO FXCATEGODEL
        EXIT SECTION.

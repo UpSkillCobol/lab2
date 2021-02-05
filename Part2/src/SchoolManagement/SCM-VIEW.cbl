@@ -345,31 +345,29 @@
       *    SO THE USER CAN CHOOSE THE ONE HE WANTS
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
-           MOVE SPACES TO FLAG
+           MOVE SPACE TO FLAG
            MOVE SPACES TO CONTINUE-LIST
-           MOVE SPACES TO SCHOOL-EXTERNAL-ID
-           MOVE 1 TO SCHOOL-INTERNAL-ID
            OPEN INPUT SCHOOLS
                IF FILE-STATUS = 35 THEN
                    ACCEPT EMPTY-LIST-SCREEN
                    MOVE "Y" TO FLAG
                    SET WS-EOF TO TRUE
+                   EXIT SECTION
                END-IF
-           DISPLAY LIST-SCREEN
       *    POINT THE FILE IN THE START, IN THIS CASE ON ID "000" SO
       *    WE ARE SURE THAT THE PROGRAM WILL READ ALL RECORDS
-           START SCHOOLS KEY IS GREATER OR EQUAL SCHOOL-INTERNAL-ID
-              INVALID KEY
-      *    IF THERE ARE NO RECORDS A MESSAGE WILL BE SHOWN
-                 ACCEPT EMPTY-LIST-SCREEN
-                 MOVE "Y" TO FLAG
-                 SET WS-EOF TO TRUE
-                 ACCEPT OMITTED AT LINE 25 COL 01
-                 IF FLAG = "Y" OR KEY-STATUS = 1003 THEN
-                    CLOSE SCHOOLS
-                    EXIT SECTION
-                 END-IF
-           END-START
+      *     START SCHOOLS KEY IS GREATER OR EQUAL SCHOOL-INTERNAL-ID
+      *        INVALID KEY
+      **    IF THERE ARE NO RECORDS A MESSAGE WILL BE SHOWN
+      *           ACCEPT EMPTY-LIST-SCREEN
+      *           MOVE "Y" TO FLAG
+      *           SET WS-EOF TO TRUE
+      *           ACCEPT OMITTED AT LINE 25 COL 01
+      *           IF FLAG = "Y" OR KEY-STATUS = 1003 THEN
+      *              CLOSE SCHOOLS
+      *              EXIT SECTION
+      *           END-IF
+      *     END-START
            MOVE 9 TO SC-LINE
            PERFORM UNTIL WS-EOF
       *    READ THE FILE GOING THROUGH EACH RECORD AND POSITIONING IT ON

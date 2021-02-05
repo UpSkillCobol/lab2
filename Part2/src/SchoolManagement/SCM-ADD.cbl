@@ -26,7 +26,7 @@
            ACCESS IS DYNAMIC
            FILE STATUS IS FILE-STATUS.
 
-           SELECT KEYS ASSIGN TO "KEYS-SCM.txt"
+           SELECT KEYS ASSIGN TO "KEYS-SCM"
            ORGANIZATION IS SEQUENTIAL
            FILE STATUS IS FILE-STATUS.
        DATA DIVISION.
@@ -202,6 +202,7 @@
       ******************************************************************
        PROCEDURE DIVISION.
        MAIN SECTION.
+           PERFORM CLEAR-VARIABLES
            MOVE ZEROS TO KEY-STATUS
            PERFORM CHECK-FILE
            PERFORM REGISTER-MANUAL
@@ -312,7 +313,7 @@
                        EXIT SECTION
                    END-IF
       *    CHECK FOR SPACES,FIELD MUST BE FILLED
-                   IF WS-SCHOOL-DESIGNATION1(1:1) IS NOT ALPHABETIC THEN
+                   IF WS-SCHOOL-DESIGNATION1(1:1) IS ALPHABETIC THEN
                        MOVE 1 TO WS-ALPHABETIC
                    ELSE
                        MOVE ERROR-ALPHABETIC TO ERROR-MESSAGE
@@ -514,7 +515,7 @@
            OPEN I-O KEYS
                IF FILE-STATUS = 35 THEN
                    OPEN OUTPUT KEYS
-                       MOVE ZEROS TO REGKEY
+                       MOVE 0 TO REGKEY
                        WRITE REGKEY
                    CLOSE KEYS
                END-IF
@@ -573,5 +574,12 @@
                SPACE-CHECK15 DELIMITED BY SPACES
                              SPACE DELIMITED BY SIZE
                INTO LINK-TEXT
+           EXIT SECTION.
+       CLEAR-VARIABLES SECTION.
+           MOVE SPACES TO WS-SCHOOL-EXTERNAL-ID WS-SCHOOL-DESIGNATION
+           WS-SCHOOL-ADRESS WS-SCHOOL-TOWN REG-EED REG-DESIGNATION
+           REG-ADDRESS REG-TOWN
+           MOVE ZEROS TO WS-SCHOOL-INTERNAL-ID WS-SCHOOL-POSTAL-CODE
+           WS-SCHOOL-IS-ACTIVE REG-IID REG-POSTAL-CODE
            EXIT SECTION.
        END PROGRAM SCM-ADD.
