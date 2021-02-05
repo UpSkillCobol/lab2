@@ -255,6 +255,7 @@
        REGISTER-INTERNAL-ID SECTION.
       *    SECTION TO OBTAIN THE INTERNAL ID, IT IS AUTOMATIC, BRINGING THE ID
       *    FROM THE FILE KEYS-SCM
+           PERFORM WITH TEST AFTER UNTIL REG-UNIQ = 1
            MOVE ZERO TO REG-UNIQ
            OPEN INPUT KEYS
                READ KEYS
@@ -262,9 +263,19 @@
                MOVE REGKEY TO WS-SCHOOL-INTERNAL-ID
            CLOSE KEYS
            MOVE WS-SCHOOL-INTERNAL-ID TO SCHOOL-INTERNAL-ID
+           OPEN INPUT SCHOOLS
+               READ SCHOOLS RECORD
+                   KEY IS SCHOOL-INTERNAL-ID
+                   INVALID KEY
+                       MOVE 1 TO REG-UNIQ
+                   NOT INVALID KEY
+                       ADD 1 TO SCHOOL-INTERNAL-ID
+               END-READ
+           CLOSE SCHOOLS
            MOVE WS-SCHOOL-INTERNAL-ID TO REG-IID
            DISPLAY REGISTER-SCREEN
            MOVE 1 TO WS-SCHOOL-IS-ACTIVE
+           END-PERFORM
            EXIT SECTION.
       ******************************************************************
        REGISTER-EXTERNAL-ID SECTION.
