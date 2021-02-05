@@ -279,48 +279,9 @@
                    MOVE ZEROS TO SCHOOL-INTERNAL-ID
                    EXIT PROGRAM
                END-IF
-           MOVE ZEROS TO WS-CONTROL
-           PERFORM WITH TEST AFTER UNTIL WS-CONTROL = 1
-      *    READ THE FILE TO CHECK IF THE RECORD THE USER DID CHOOSE IS
-      *    VALID OR NOT, IF IT IS, THE RECORD IS SHOWN TO THE USER AND
-      *    THEN GOES TO THE CHOOSE-EDIT SECTION.
-           OPEN INPUT SCHOOLS
-               READ SCHOOLS
-               INVALID KEY
-                   DISPLAY CLEAR-SCREEN
-                   DISPLAY MAIN-SCREEN
-                   DISPLAY LIST-SCREEN
-                   MOVE ID-ERROR-TEXT TO ERROR-MESSAGE
-                   ACCEPT ERROR-SCREEN
-                       IF KEY-STATUS = 1003 THEN
-                           MOVE 1 TO WS-CONTROL
-                           CLOSE SCHOOLS
-                           EXIT PROGRAM
-                       END-IF
-                   MOVE ZEROS TO CONTINUE-LIST
-                   ACCEPT CONTINUE-LIST
-                       IF KEY-STATUS = 1003 THEN
-                           MOVE 1 TO WS-CONTROL
-                           CLOSE SCHOOLS
-                           EXIT PROGRAM
-                       END-IF
-               NOT INVALID KEY
-                   PERFORM CLEAR-VARIABLES
-                   MOVE SCHOOL-DETAILS TO ALT-REC
-                   DISPLAY CLEAR-SCREEN
-                   DISPLAY MAIN-SCREEN
-                   DISPLAY ALT-SCREEN
-                       IF KEY-STATUS = 1003 THEN
-                           MOVE 1 TO WS-CONTROL
-                           CLOSE SCHOOLS
-                           EXIT PROGRAM
-                       END-IF
-                   MOVE 1 TO WS-CONTROL
-               END-READ
-           CLOSE SCHOOLS
-           END-PERFORM
-               IF KEY-STATUS = 1003 THEN
-                   EXIT PROGRAM
+           PERFORM SCHOOL-EXISTS
+               IF KEY-STATUS = 1003 OR WS-CONTROL = 2 THEN
+                 EXIT PROGRAM
                END-IF
            PERFORM CHOOSE-EDIT
                IF KEY-STATUS = 1003 THEN
@@ -402,6 +363,7 @@
       ******************************************************************
        SCHOOL-EXISTS SECTION.
            PERFORM WITH TEST AFTER UNTIL WS-CONTROL = 1
+               OR WS-CONTROL = 2
       *    READ THE FILE TO CHECK IF THE RECORD THE USER DID CHOOSE IS
       *    VALID OR NOT, IF IT IS, THE RECORD IS SHOWN TO THE USER AND
       *    THEN GOES TO THE CHOOSE-EDIT SECTION.
@@ -410,12 +372,13 @@
                INVALID KEY
                    MOVE ID-ERROR-TEXT TO ERROR-MESSAGE
                    ACCEPT ERROR-SCREEN
-                   MOVE ZEROS TO CONTINUE-LIST
-                   ACCEPT CONTINUE-LIST
                        IF KEY-STATUS = 1003 THEN
                            CLOSE SCHOOLS
+                           MOVE 2 TO WS-CONTROL
                            EXIT SECTION
                        END-IF
+                       MOVE 2 TO WS-CONTROL
+                       CLOSE SCHOOLS
                NOT INVALID KEY
                    PERFORM CLEAR-VARIABLES
                    MOVE SCHOOL-DETAILS TO ALT-REC

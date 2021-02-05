@@ -227,6 +227,17 @@
            05 VALUE "|" LINE 25 COL 52.
            05 VALUE NEXT-LIST-TEXT LINE 25 COL 53.
       ******************************************************************
+       01  ERROR-SCREEN.
+           05 VALUE ALL " " PIC X(095) LINE 24 COL 01
+           BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(095) LINE 25 COL 01
+           BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(095) LINE 26 COL 01
+           BACKGROUND-COLOR 7.
+           05 ERROR-MESSAGE PIC X(085) LINE 25 COL 10
+           FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
+           05 SCREEN-DUMMY LINE 27 COL 01 PIC X TO DUMMY AUTO.
+      ******************************************************************
        PROCEDURE DIVISION.
        DELETE-REGISTER SECTION.
       *    DELETE REGISTERS SECTION
@@ -245,10 +256,8 @@
               IF KEY-STATUS = 1003 THEN
                  EXIT PROGRAM
               END-IF
-              DISPLAY CLEAR-SCREEN
-              DISPLAY MAIN-SCREEN
            PERFORM SCHOOL-EXISTS
-               IF KEY-STATUS = 1003 THEN
+               IF KEY-STATUS = 1003 OR WS-CONTROL = 2 THEN
                  EXIT PROGRAM
               END-IF
            PERFORM CONFIRM-DELETE
@@ -260,19 +269,23 @@
        SCHOOL-EXISTS SECTION.
            MOVE ZEROS TO WS-CONTROL
            PERFORM WITH TEST AFTER UNTIL WS-CONTROL = 1
+               OR WS-CONTROL = 2
       *    DISPLAY THE RECORD THE USER DID CHOOSE ON THE LIST SECTION
-           DISPLAY CLEAR-SCREEN
-           DISPLAY MAIN-SCREEN
-           DISPLAY DELETE-SCREEN
            OPEN INPUT SCHOOLS
                READ SCHOOLS
                INVALID KEY
       *    IF THE RECORD DOESN'T EXIST A MESSAGE WILL BE SHOWN
-                       DISPLAY EMPTY-LIST-SCREEN
+                       DISPLAY CLEAR-SCREEN
+                       DISPLAY MAIN-SCREEN
+                       MOVE ID-ERROR-TEXT TO ERROR-MESSAGE
+                       ACCEPT ERROR-SCREEN
                        IF KEY-STATUS = 1003 THEN
                            CLOSE SCHOOLS
+                           MOVE 2 TO WS-CONTROL
                            EXIT SECTION
                        END-IF
+                       MOVE 2 TO WS-CONTROL
+                       CLOSE SCHOOLS
                NOT INVALID KEY
       *    THE RECORD IS SHOWN IN THE SCREEN
                    MOVE SCHOOL-DETAILS TO DLT-REC
@@ -282,7 +295,8 @@
                    MOVE 1 TO WS-CONTROL
                END-READ
            CLOSE SCHOOLS
-           END-PERFORM.
+           END-PERFORM
+           EXIT SECTION.
       ******************************************************************
        CONFIRM-DELETE SECTION.
            PERFORM WITH TEST AFTER UNTIL DLT-VLD
@@ -304,11 +318,11 @@
                        CLOSE SCHOOLS
                        EXIT SECTION
                    END-IF
-
       *    IF THE USER INTRODUCES "N" THEN THE RECORD IS KEPT
                WHEN WS-DLT = "N"
                    PERFORM CLEAR-VARIABLES
-           END-EVALUATE.
+           END-EVALUATE
+           EXIT SECTION.
       ******************************************************************
        DELETE-RECORD SECTION.
       *    SECTION TO DELETE THE RECORD, IT ACTUALLY DOESNT DELETE THE RECORD
@@ -347,19 +361,19 @@
                END-IF
       *    POINT THE FILE IN THE START, IN THIS CASE ON ID "000" SO
       *    WE ARE SURE THAT THE PROGRAM WILL READ ALL RECORDS
-           START SCHOOLS KEY IS GREATER OR EQUAL SCHOOL-INTERNAL-ID
-              INVALID KEY
-      *    IF THERE ARE NO RECORDS A MESSAGE WILL BE SHOWN
-                 ACCEPT EMPTY-LIST-SCREEN
-                 CLOSE SCHOOLS
-                 MOVE "Y" TO FLAG
-                 SET WS-EOF TO TRUE
-                 ACCEPT OMITTED AT LINE 25 COL 01
-                 IF FLAG = "Y" OR KEY-STATUS = 1003 THEN
-                    CLOSE SCHOOLS
-                    EXIT SECTION
-                 END-IF
-           END-START
+      *     START SCHOOLS KEY IS GREATER OR EQUAL SCHOOL-INTERNAL-ID
+      *        INVALID KEY
+      **    IF THERE ARE NO RECORDS A MESSAGE WILL BE SHOWN
+      *           ACCEPT EMPTY-LIST-SCREEN
+      *           CLOSE SCHOOLS
+      *           MOVE "Y" TO FLAG
+      *           SET WS-EOF TO TRUE
+      *           ACCEPT OMITTED AT LINE 25 COL 01
+      *           IF FLAG = "Y" OR KEY-STATUS = 1003 THEN
+      *              CLOSE SCHOOLS
+      *              EXIT SECTION
+      *           END-IF
+      *     END-START
            MOVE 9 TO SC-LINE
            PERFORM UNTIL WS-EOF
       *    READ THE FILE GOING THROUGH EACH RECORD AND POSITIONING IT ON
@@ -372,9 +386,13 @@
       *    ACCEPT THE RECORD TO BE USED
                     ACCEPT CONTINUE-LIST
                     MOVE "S" TO FLAG
-                    IF FLAG = "S" OR KEY-STATUS = 1003 THEN
+                    IF FLAG = "S" THEN
                        CLOSE SCHOOLS
                        EXIT SECTION
+                    END-IF
+                    IF KEY-STATUS = 1003 THEN
+                           CLOSE SCHOOLS
+                           EXIT SECTION
                     END-IF
                  NOT AT END
                     DISPLAY LIST-SCREEN
