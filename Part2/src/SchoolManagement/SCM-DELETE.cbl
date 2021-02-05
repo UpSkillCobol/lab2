@@ -267,7 +267,6 @@
            EXIT PROGRAM.
       ******************************************************************
        SCHOOL-EXISTS SECTION.
-           MOVE ZEROS TO WS-CONTROL
            PERFORM WITH TEST AFTER UNTIL WS-CONTROL = 1
                OR WS-CONTROL = 2
       *    DISPLAY THE RECORD THE USER DID CHOOSE ON THE LIST SECTION
@@ -361,19 +360,19 @@
                END-IF
       *    POINT THE FILE IN THE START, IN THIS CASE ON ID "000" SO
       *    WE ARE SURE THAT THE PROGRAM WILL READ ALL RECORDS
-      *     START SCHOOLS KEY IS GREATER OR EQUAL SCHOOL-INTERNAL-ID
-      *        INVALID KEY
+           START SCHOOLS KEY IS GREATER OR EQUAL SCHOOL-INTERNAL-ID
+              INVALID KEY
       **    IF THERE ARE NO RECORDS A MESSAGE WILL BE SHOWN
-      *           ACCEPT EMPTY-LIST-SCREEN
-      *           CLOSE SCHOOLS
-      *           MOVE "Y" TO FLAG
-      *           SET WS-EOF TO TRUE
-      *           ACCEPT OMITTED AT LINE 25 COL 01
-      *           IF FLAG = "Y" OR KEY-STATUS = 1003 THEN
-      *              CLOSE SCHOOLS
-      *              EXIT SECTION
-      *           END-IF
-      *     END-START
+                 ACCEPT EMPTY-LIST-SCREEN
+                 CLOSE SCHOOLS
+                 MOVE "Y" TO FLAG
+                 SET WS-EOF TO TRUE
+                 ACCEPT OMITTED AT LINE 25 COL 01
+                 IF FLAG = "Y" OR KEY-STATUS = 1003 THEN
+                    CLOSE SCHOOLS
+                    EXIT SECTION
+                 END-IF
+           END-START
            MOVE 9 TO SC-LINE
            PERFORM UNTIL WS-EOF
       *    READ THE FILE GOING THROUGH EACH RECORD AND POSITIONING IT ON

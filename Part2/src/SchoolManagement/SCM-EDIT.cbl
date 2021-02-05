@@ -198,7 +198,7 @@
            05 VALUE ALT-MENU-OPTION LINE 25 COL 10
            FOREGROUND-COLOUR 4 BACKGROUND-COLOR 7.
            05  CONTINUE-LIST.
-               10  CONTINUE-IID PIC 9(003) LINE 25 COL 44
+               10  CONTINUE-IID PIC 9(003) LINE 25 COL 45
                TO SCHOOL-INTERNAL-ID
                FOREGROUND-COLOUR 0 BACKGROUND-COLOR 7.
       ******************************************************************
@@ -268,6 +268,9 @@
        PROCEDURE DIVISION.
        MAIN SECTION.
            MOVE ZEROS TO KEY-STATUS
+           PERFORM CLEAR-VARIABLES
+           MOVE ZEROS TO CONTINUE-IID
+           MOVE ZEROS TO EDIT-CHOICE
            MOVE SPACE TO FLAG
            MOVE ZEROS TO SCHOOL-INTERNAL-ID
            DISPLAY CLEAR-SCREEN
@@ -275,8 +278,11 @@
       *    CALL THE LIST SECTION TO SHOW A LIST OF ALL RECORDS ALREADY
       *    SAVED ON THE FILE SO THE USER CAN CHOOSE ONE TO USE
            PERFORM LIST
-               IF FLAG = "Y" OR KEY-STATUS = 1003 THEN
-                   MOVE ZEROS TO SCHOOL-INTERNAL-ID
+               IF FLAG = "Y" THEN
+                   EXIT PROGRAM
+               END-IF
+               IF KEY-STATUS = 1003 THEN
+                   MOVE "Y" TO FLAG
                    EXIT PROGRAM
                END-IF
            PERFORM SCHOOL-EXISTS
@@ -296,20 +302,23 @@
            DISPLAY MAIN-SCREEN
            MOVE SPACES TO FLAG
            MOVE SPACES TO CONTINUE-LIST
+           MOVE SPACES TO SCHOOL-EXTERNAL-ID
            MOVE ZEROS TO SCHOOL-INTERNAL-ID
            OPEN INPUT SCHOOLS
                IF FILE-STATUS = 35 THEN
                    ACCEPT EMPTY-LIST-SCREEN
-                   MOVE "Y" TO FLAG
                    SET WS-EOF TO TRUE
+                   CLOSE SCHOOLS
+                   MOVE "Y" TO FLAG
                    EXIT SECTION
                END-IF
       *    POINT THE FILE IN THE START, IN THIS CASE ON ID "000" SO
       *    WE ARE SURE THAT THE PROGRAM WILL READ ALL RECORDS
            START SCHOOLS KEY IS GREATER OR EQUAL SCHOOL-INTERNAL-ID
               INVALID KEY
-      *    IF THERE ARE NO RECORDS A MESSAGE WILL BE SHOWN
+      **    IF THERE ARE NO RECORDS A MESSAGE WILL BE SHOWN
                  ACCEPT EMPTY-LIST-SCREEN
+                 CLOSE SCHOOLS
                  MOVE "Y" TO FLAG
                  SET WS-EOF TO TRUE
                  ACCEPT OMITTED AT LINE 25 COL 01
@@ -320,18 +329,23 @@
            END-START
            MOVE 9 TO SC-LINE
            PERFORM UNTIL WS-EOF
-      *    READ THE FILE GOING THROUGH EACH RECORD AND DISPLAYING THEM ON
+      *    READ THE FILE GOING THROUGH EACH RECORD AND POSITIONING IT ON
       *    THE SCREEN
               READ SCHOOLS NEXT RECORD
+      *             KEY IS SCHOOL-EXTERNAL-ID
                  AT END SET WS-EOF TO TRUE
       *    WHEN THE LAST RECORD IS REACHED, A MESSAGE IS SHOWN TO THE USER
                     DISPLAY END-LIST-SCREEN
       *    ACCEPT THE RECORD TO BE USED
                     ACCEPT CONTINUE-LIST
                     MOVE "S" TO FLAG
-                    IF FLAG = "S" OR KEY-STATUS = 1003 THEN
+                    IF FLAG = "S" THEN
                        CLOSE SCHOOLS
                        EXIT SECTION
+                    END-IF
+                    IF KEY-STATUS = 1003 THEN
+                           CLOSE SCHOOLS
+                           EXIT SECTION
                     END-IF
                  NOT AT END
                     DISPLAY LIST-SCREEN
@@ -364,14 +378,15 @@
        SCHOOL-EXISTS SECTION.
            PERFORM WITH TEST AFTER UNTIL WS-CONTROL = 1
                OR WS-CONTROL = 2
-      *    READ THE FILE TO CHECK IF THE RECORD THE USER DID CHOOSE IS
-      *    VALID OR NOT, IF IT IS, THE RECORD IS SHOWN TO THE USER AND
-      *    THEN GOES TO THE CHOOSE-EDIT SECTION.
+      *    DISPLAY THE RECORD THE USER DID CHOOSE ON THE LIST SECTION
            OPEN INPUT SCHOOLS
                READ SCHOOLS
                INVALID KEY
-                   MOVE ID-ERROR-TEXT TO ERROR-MESSAGE
-                   ACCEPT ERROR-SCREEN
+      *    IF THE RECORD DOESN'T EXIST A MESSAGE WILL BE SHOWN
+                       DISPLAY CLEAR-SCREEN
+                       DISPLAY MAIN-SCREEN
+                       MOVE ID-ERROR-TEXT TO ERROR-MESSAGE
+                       ACCEPT ERROR-SCREEN
                        IF KEY-STATUS = 1003 THEN
                            CLOSE SCHOOLS
                            MOVE 2 TO WS-CONTROL
@@ -380,19 +395,16 @@
                        MOVE 2 TO WS-CONTROL
                        CLOSE SCHOOLS
                NOT INVALID KEY
-                   PERFORM CLEAR-VARIABLES
+      *    THE RECORD IS SHOWN IN THE SCREEN
                    MOVE SCHOOL-DETAILS TO ALT-REC
                    DISPLAY CLEAR-SCREEN
                    DISPLAY MAIN-SCREEN
                    DISPLAY ALT-SCREEN
-                       IF KEY-STATUS = 1003 THEN
-                           CLOSE SCHOOLS
-                           EXIT SECTION
-                       END-IF
                    MOVE 1 TO WS-CONTROL
                END-READ
            CLOSE SCHOOLS
-           END-PERFORM.
+           END-PERFORM
+           EXIT SECTION.
       ******************************************************************
        CHOOSE-EDIT SECTION.
       *    WHERE THE USER CHOOSES WHAT HE WANTS TO EDIT ON THE RECORD
