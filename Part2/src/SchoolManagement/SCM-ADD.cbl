@@ -26,7 +26,7 @@
            ACCESS IS DYNAMIC
            FILE STATUS IS FILE-STATUS.
 
-           SELECT KEYS ASSIGN TO "KEYS-SCM.txt"
+           SELECT KEYS ASSIGN TO "KEYS-SCM"
            ORGANIZATION IS SEQUENTIAL
            FILE STATUS IS FILE-STATUS.
        DATA DIVISION.
@@ -312,7 +312,7 @@
                        EXIT SECTION
                    END-IF
       *    CHECK FOR SPACES,FIELD MUST BE FILLED
-                   IF WS-SCHOOL-DESIGNATION1(1:1) IS NOT ALPHABETIC THEN
+                   IF WS-SCHOOL-DESIGNATION1(1:1) IS ALPHABETIC THEN
                        MOVE 1 TO WS-ALPHABETIC
                    ELSE
                        MOVE ERROR-ALPHABETIC TO ERROR-MESSAGE
@@ -514,7 +514,7 @@
            OPEN I-O KEYS
                IF FILE-STATUS = 35 THEN
                    OPEN OUTPUT KEYS
-                       MOVE ZEROS TO REGKEY
+                       MOVE 0 TO REGKEY
                        WRITE REGKEY
                    CLOSE KEYS
                END-IF
