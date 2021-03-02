@@ -1,0 +1,103 @@
+@startuml
+left to right direction
+
+header
+UpSkillCobol: DeliciousSandwich
+endheader
+
+title \nBREADWICH - Entity-Relationship Diagram\n
+
+entity "School" as sch {
+  * InternalId: ID <<Generated>>
+  --
+  * ExternalId
+  * Designation
+  * Address
+}
+
+entity "Ingredient" as ing {
+  * InternalID: ID <<Generated>>
+  --
+  * Designation
+  * UnitSuppliers
+  * UnitSandwich
+  * TresholdQt
+}
+
+entity "Supplier" as sup {
+  * InternalID: ID <<Generated>>
+  --
+  * CompanyName
+  * CompanyDescription
+  * CompanyAddress
+  * CompanyEmail(s)
+  * CompanyTelephone(s)
+}
+
+entity "Categorie" as cat {
+  * InternalID: ID <<Generated>>
+  --
+  * Description
+}
+
+entity "Calendar" as cal {
+  * InternalID: ID <<Generated>>
+  --
+  * DowntimeStartDate
+  * DowntimeEndDate
+}
+
+entity "Reg-Order" as ord {
+  * OrderID: ID <<Generated>>
+  --
+  * OrderDate
+  * InternalID School: text <<FK School>>
+  * InternalID Sanswich: text <<FK Sandwichs>>
+  * Quantity
+}
+
+entity "Sandwich" as sand {
+  * InternalID: ID <<Generated>>
+  --
+  * ExternalID
+  * Price
+  * ShortDesc
+  * LongDesc
+  * InternalID Categories: text <<FK Categorie>>
+}
+
+entity "Sandw-Ing" as sand1 {
+  * InternalID: text <<FK Sandwich>>
+  * InternalID: text <<FK Ingredients>>
+  --
+  * Quantity
+}
+
+entity "Ing-Supp" as ingsup {
+  * InternalID: text <<FK Ingredients>>
+  * InternalID: text <<FK Suppliers>>
+  --
+  * UnitPrice
+  * PriceValidity
+}
+
+entity "Inventory" as inv {
+  * InternalID: ID <<Generated>>
+  --
+  * InternalID: text <<FK Ingredients>>
+  * TypeOfEntry
+  * Quantity
+  * ProcessingDate
+  * UpdateDateTime
+}
+
+ing  ||..|{ ingsup
+sup  }|..o{ ingsup
+ing  }o..o{ inv
+ing  }|..|{ sand1
+sand ||..|{ sand1
+sch  }o..o{ ord
+sand ||..o{ ord
+cat  }o..|{ sand
+
+@enduml
