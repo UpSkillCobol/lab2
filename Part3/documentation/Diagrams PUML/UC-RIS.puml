@@ -1,0 +1,23 @@
+@startuml
+left to right direction
+
+header
+UPskillCobol: Breadwich
+endheader
+
+title \nDeliciousSandwich\n
+
+
+
+package 	RegistrationOfIngredientsSuppliers{
+  usecase "UC1: Register Ingredients Suppliers " as UC1
+  usecase "UC2: Search Ingredients Suppliers " as UC2
+  usecase "UC3: Create Report" as UC3
+
+}
+
+Admin --> UC1
+Admin --> UC2
+Admin --> UC3
+
+@enduml

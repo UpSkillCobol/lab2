@@ -1,0 +1,37 @@
+@startuml
+:INGREDIENTS MANAGEMENT;
+IF (FXINGRED EXISTS?) THEN (<COLOR:RED>NO)
+    :CREATE FILE;
+ELSE (<COLOR:GREEN>YES)
+ENDIF
+
+    : 1 - REGISTER INGREDIENT 
+     2 - VIEW INGREDIENT
+     3 - EDIT INGREDIENT
+     4 - DELETE INGREDIENT
+     5 - REPORTS
+
+     6 - EXIT;
+     REPEAT
+    IF (OPTION = 1) THEN (<COLOR:GREEN>YES)
+        :MANUALLY ADD INGREDIENT;
+    ELSEIF (OPTION = 2) THEN (<COLOR:GREEN>YES)
+        :VIEW INGREDIENT;
+    ELSEIF (OPTION = 3) THEN (<COLOR:GREEN>YES)
+        :EDIT INGREDIENT;
+    ELSEIF (OPTION = 4) THEN (<COLOR:GREEN>YES)
+        :DELETE INGREDIENT;
+        note right
+The ingredients can't be
+deleted permanently.
+They are flagged and
+can't be used.
+        END NOTE
+    ELSEIF (OPTION = 5) THEN (<COLOR:GREEN>YES)
+        :REPORTS;
+
+    ELSEIF (OPTION = 6) THEN (<COLOR:GREEN>YES)
+        :END;
+stop
+    ENDIF
+@enduml
