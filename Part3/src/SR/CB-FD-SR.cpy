@@ -1,4 +1,5 @@
        01  SR-REC.
+           88  SR-EOF                  VALUE HIGH-VALUES.
            05  SR-IID                  PIC 9(003).
            05  SR-EID                  PIC X(005).
            05  SR-S-DESCRIPTION        PIC X(025).

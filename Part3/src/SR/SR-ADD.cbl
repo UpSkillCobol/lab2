@@ -216,7 +216,18 @@
        PROCEDURE DIVISION.
            PERFORM 800-FILE-CHECK.
        050-OBTAIN-TABLES SECTION.
-           DISPLAY "01-TABELA ING"
+           SET SR-INDEX TO 1
+           OPEN INPUT SANDWICHES
+           PERFORM UNTIL SR-EOF
+               READ SANDWICHES NEXT RECORD
+                   AT END
+                       SET SR-EOF TO TRUE
+                       MOVE SR-INDEX TO NUMBER-SR
+                   NOT AT END
+                       PERFORM 080-LOAD-SR-TABLE
+               END-READ
+           END-PERFORM
+           CLOSE SANDWICHES
            SET ING-INDEX TO 1
            OPEN INPUT INGREDIENTS
            PERFORM UNTIL EOFINGREDS
@@ -249,6 +260,10 @@
        070-LOAD-CAT-TABLE SECTION.
            MOVE CATEGORY-DETAILS TO CAT-TABLE (CAT-INDEX)
            SET CAT-INDEX UP BY 1
+           EXIT SECTION.
+       080-LOAD-SR-TABLE SECTION.
+           MOVE SR-REC TO SR-TABLE (SR-INDEX)
+           SET SR-INDEX UP BY 1
            EXIT SECTION.
        100-MAIN SECTION.
            DISPLAY MAIN-SCREEN
@@ -286,13 +301,11 @@
                END-IF
            EXIT SECTION.
        120-OBTAIN-IID SECTION.
-           MOVE ZERO TO REG-UNIQUE
-           OPEN INPUT KEYS
-               READ KEYS
-                   ADD 1 TO REGKEY
-                   MOVE REGKEY TO WS-SR-IID
-           CLOSE KEYS
-           PERFORM 180-IID-EXISTS
+           MOVE SR-TABLE (NUMBER-SR) TO WS-SR-IID
+           IF WS-SR-IID NOT NUMERIC
+               MOVE ZEROS TO WS-SR-IID
+           END-IF
+           ADD 1 TO WS-SR-IID
            EXIT SECTION.
        130-OBTAIN-EID SECTION.
            PERFORM WITH TEST AFTER UNTIL REG-UNIQUE = 1
@@ -346,22 +359,6 @@
            EXIT SECTION.
        160-OBTAIN-CATEGORIES SECTION.
        170-OBTAIN-INGREDIENTS SECTION.
-       180-IID-EXISTS SECTION.
-           PERFORM WITH TEST AFTER UNTIL REG-UNIQUE = 1
-               MOVE WS-SR-IID TO SR-IID
-               OPEN INPUT SANDWICHES
-                   READ SANDWICHES
-                       NOT INVALID KEY
-                           MOVE ZERO TO REG-UNIQUE
-                       INVALID KEY
-                           MOVE 1 TO REG-UNIQUE
-                   END-READ
-               CLOSE SANDWICHES
-               IF REG-UNIQUE = 0 THEN
-                   ADD 1 TO WS-SR-IID
-               END-IF
-           END-PERFORM
-           EXIT SECTION.
        190-EID-EXISTS SECTION.
            MOVE WS-SR-EID TO SR-EID
            OPEN INPUT SANDWICHES
