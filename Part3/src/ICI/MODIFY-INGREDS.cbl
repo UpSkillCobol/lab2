@@ -23,26 +23,13 @@
                    ACCESS MODE IS DYNAMIC
                    RECORD KEY IS INGREDS-ID
                    FILE STATUS INGRED-STATUS.
-               SELECT FXSUPPLY ASSIGN TO "FXSUPPLIERS"
-                   ORGANIZATION IS INDEXED
-                   ACCESS MODE IS DYNAMIC
-                   RECORD KEY IS SUPPLIER-ID
-                   ALTERNATE KEY IS SUPPLIER-TOWN WITH DUPLICATES
-                   ALTERNATE KEY IS SUPPLIER-NAME WITH DUPLICATES
-                   FILE STATUS SUPP-STATUS.
        DATA DIVISION.
        FILE SECTION.
        FD FXINGRED.
-
        COPY FD-INGREDSFX.
-       FD FXSUPPLY.
-
-       COPY SUPPLIERFX.
 
        WORKING-STORAGE SECTION.
-
        COPY CONSTANTS-INGREDS.
-
        COPY WS-INGREDSFX.
 
        01  EDIT-OPTION                             PIC X(002).
