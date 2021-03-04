@@ -73,12 +73,12 @@
            05 REG-REC.
                10 REG-EID PIC X(008) LINE 12 COL 41
                    TO WS-SR-EID.
-               10 REG-S-DESCRIPTION PIC X(030) LINE 13 COL 41
+               10 REG-S-DESCRIPTION PIC A(030) LINE 13 COL 41
                        TO WS-SR-S-DESCRIPTION.
                10 REG-L-DESCRIPTION.
-                   15 REG-L-DESIGNATION1 PIC X(050) LINE 14 COL 41
+                   15 REG-L-DESIGNATION1 PIC A(050) LINE 14 COL 41
                        TO WS-SR-L-DESCRIPTION1 AUTO.
-                   15 REG-L-DESIGNATION2 PIC X(050) LINE 15 COL 41
+                   15 REG-L-DESIGNATION2 PIC A(050) LINE 15 COL 41
                        TO WS-SR-L-DESCRIPTION2.
       ******************************************************************
        01  INSTRUCTIONS-SCREEN.
@@ -114,35 +114,41 @@
            05 SCREEN-DUMMY LINE 27 COL 01 PIC X TO DUMMY AUTO.
       ******************************************************************
        PROCEDURE DIVISION.
+       050-OBTAIN-TABLES SECTION.
+           EXIT SECTION.
        100-MAIN SECTION.
            PERFORM 900-CLEAR-VARIABLES
            PERFORM 800-FILE-CHECK
            DISPLAY MAIN-SCREEN
            DISPLAY REGISTER-SCREEN
+           PERFORM 110-REGISTER
+               IF KEY-STATUS = F3 THEN
+                   EXIT PROGRAM
+               END-IF
            EXIT PROGRAM.
        110-REGISTER SECTION.
            PERFORM 120-OBTAIN-IID
-               IF KEY-STATUS = 1003 THEN
+               IF KEY-STATUS = F3 THEN
                    EXIT SECTION
                END-IF
            PERFORM 130-OBTAIN-EID
-               IF KEY-STATUS = 1003 THEN
+               IF KEY-STATUS = F3 THEN
                    EXIT SECTION
                END-IF
            PERFORM 140-OBTAIN-SHORT-DESCRIPTION
-               IF KEY-STATUS = 1003 THEN
+               IF KEY-STATUS = F3 THEN
                    EXIT SECTION
                END-IF
            PERFORM 150-OBTAIN-LONG-DESCRIPTION
-               IF KEY-STATUS = 1003 THEN
+               IF KEY-STATUS = F3 THEN
                    EXIT SECTION
                END-IF
            PERFORM 160-OBTAIN-CATEGORIES
-               IF KEY-STATUS = 1003 THEN
+               IF KEY-STATUS = F3 THEN
                    EXIT SECTION
                END-IF
            PERFORM 170-OBTAIN-INGREDIENTS
-               IF KEY-STATUS = 1003 THEN
+               IF KEY-STATUS = F3 THEN
                    EXIT SECTION
                END-IF
            EXIT SECTION.
@@ -161,11 +167,50 @@
            MOVE EID-INSTR TO INSTRUCTION-MESSAGE
                DISPLAY INSTRUCTIONS-SCREEN
            ACCEPT REG-EID
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
            PERFORM 190-EID-EXISTS
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
            END-PERFORM
+           MOVE SPACES TO LINK-TEXT
+           MOVE UPPER-CASE(WS-SR-EID) TO WS-SR-EID
+           MOVE TRIM(WS-SR-EID) TO LINK-TEXT
+           PERFORM 700-SPACE-CHECK
+           MOVE LINK-TEXT TO WS-SR-EID
+           MOVE LINK-TEXT TO REG-EID
+           DISPLAY REGISTER-SCREEN
            EXIT SECTION.
        140-OBTAIN-SHORT-DESCRIPTION SECTION.
+           MOVE S-DESCR-INSTR TO INSTRUCTION-MESSAGE
+               DISPLAY INSTRUCTIONS-SCREEN
+           ACCEPT REG-S-DESCRIPTION
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
+           MOVE UPPER-CASE(WS-SR-S-DESCRIPTION) TO WS-SR-S-DESCRIPTION
+           MOVE TRIM(WS-SR-S-DESCRIPTION) TO LINK-TEXT
+           PERFORM 700-SPACE-CHECK
+           MOVE LINK-TEXT TO WS-SR-S-DESCRIPTION
+           MOVE LINK-TEXT TO REG-S-DESCRIPTION
+           DISPLAY REGISTER-SCREEN
+           EXIT SECTION.
        150-OBTAIN-LONG-DESCRIPTION SECTION.
+           MOVE L-DESCR-INSTR TO INSTRUCTION-MESSAGE
+               DISPLAY INSTRUCTIONS-SCREEN
+           ACCEPT REG-L-DESCRIPTION
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
+           MOVE UPPER-CASE(WS-SR-L-DESCRIPTION) TO WS-SR-L-DESCRIPTION
+           MOVE TRIM(WS-SR-L-DESCRIPTION) TO LINK-TEXT
+           PERFORM 700-SPACE-CHECK
+           MOVE LINK-TEXT TO WS-SR-L-DESCRIPTION
+           MOVE LINK-TEXT TO REG-L-DESCRIPTION
+           DISPLAY REGISTER-SCREEN
+           EXIT SECTION.
        160-OBTAIN-CATEGORIES SECTION.
        170-OBTAIN-INGREDIENTS SECTION.
        180-IID-EXISTS SECTION.
@@ -192,7 +237,7 @@
                        MOVE ZERO TO REG-UNIQUE
                        MOVE ERROR-EID TO ERROR-MESSAGE
                        ACCEPT ERROR-SCREEN
-                           IF KEY-STATUS = 1003 THEN
+                           IF KEY-STATUS = F3 THEN
                                EXIT SECTION
                            END-IF
                    INVALID KEY
