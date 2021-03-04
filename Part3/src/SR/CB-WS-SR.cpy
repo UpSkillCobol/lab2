@@ -60,3 +60,12 @@
        77  PAGINA                          PIC 999.
        78  MAX-SR                          VALUE 999.
        77  NUMBER-SR                       PIC 9(003) VALUE 999.
+       77  WS-CATEGORIE1                   PIC 9(003).
+       77  WS-CATEGORIE2                   PIC 9(003).
+       77  WS-CATEGORIE3                   PIC 9(003).
+       77  WS-INGREDIENT1                  PIC 9(003).
+       77  WS-INGREDIENT2                  PIC 9(003).
+       77  WS-INGREDIENT3                  PIC 9(003).
+       77  WS-INGREDIENT4                  PIC 9(003).
+       77  WS-INGREDIENT5                  PIC 9(003).
+       77  WS-INGREDIENT6                  PIC 9(003).

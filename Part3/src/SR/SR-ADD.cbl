@@ -116,6 +116,107 @@
                    15 REG-L-DESIGNATION2 PIC A(025) LINE 15 COL 32
                        TO WS-SR-L-DESCRIPTION2.
       ******************************************************************
+       01  REGISTER-CAT-SCREEN
+           BACKGROUND-COLOR 0, FOREGROUND-COLOR 7.
+           05 VALUE ADD-CAT-MENU-TEXT LINE 9 COL 17.
+           05 VALUE ADD-CAT-MENU-TEXT1 LINE 12 COL 13.
+      *     05 VALUE ADD-CAT-MENU-TEXT2 LINE 13 COL 13.
+      *     05 VALUE ADD-CAT-MENU-TEXT3 LINE 14 COL 13.
+           05 VALUE ALL " " PIC X(055) LINE 7 COL 09
+               BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(055) LINE 22 COL 09
+               BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 8 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 9 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 8 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 9 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 62 BACKGROUND-COLOR 7.
+           05 REG-CAT-REC.
+               10 REG-CAT1 PIC X(003) LINE 12 COL 32 TO WS-CATEGORIE1
+               AUTO.
+               10 REG-CAT2 PIC X(003) LINE 13 COL 32 TO WS-CATEGORIE2
+               AUTO.
+               10 REG-CAT3 PIC X(003) LINE 14 COL 32 TO WS-CATEGORIE3
+               AUTO.
+      ******************************************************************
+       01  REGISTER-ING-SCREEN
+           BACKGROUND-COLOR 0, FOREGROUND-COLOR 7.
+           05 VALUE ADD-ING-MENU-TEXT LINE 9 COL 17.
+           05 VALUE ADD-ING-MENU-TEXT1 LINE 12 COL 13.
+      *     05 VALUE ADD-ING-MENU-TEXT2 LINE 13 COL 13.
+      *     05 VALUE ADD-ING-MENU-TEXT3 LINE 14 COL 13.
+      *     05 VALUE ADD-ING-MENU-TEXT4 LINE 15 COL 13.
+      *     05 VALUE ADD-ING-MENU-TEXT5 LINE 16 COL 13.
+      *     05 VALUE ADD-ING-MENU-TEXT6 LINE 17 COL 13.
+           05 VALUE ALL " " PIC X(055) LINE 7 COL 09
+               BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(055) LINE 22 COL 09
+               BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 8 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 9 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 8 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 9 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 62 BACKGROUND-COLOR 7.
+           05 REG-ING-REC.
+               10 REG-ING1 PIC X(003) LINE 12 COL 32 TO WS-INGREDIENT1
+               AUTO.
+               10 REG-ING2 PIC X(003) LINE 13 COL 32 TO WS-INGREDIENT2
+               AUTO.
+               10 REG-ING3 PIC X(003) LINE 14 COL 32 TO WS-INGREDIENT3
+               AUTO.
+               10 REG-ING4 PIC X(003) LINE 15 COL 32 TO WS-INGREDIENT4
+               AUTO.
+               10 REG-ING5 PIC X(003) LINE 16 COL 32 TO WS-INGREDIENT5
+               AUTO.
+               10 REG-ING6 PIC X(003) LINE 17 COL 32 TO WS-INGREDIENT6
+               AUTO.
+      ******************************************************************
        01  INSTRUCTIONS-SCREEN.
            05 VALUE ALL " " PIC X(095) LINE 24 COL 01
            BACKGROUND-COLOR 7.
@@ -291,10 +392,10 @@
                IF KEY-STATUS = F3 THEN
                    EXIT SECTION
                END-IF
-           PERFORM 160-OBTAIN-CATEGORIES
-               IF KEY-STATUS = F3 THEN
-                   EXIT SECTION
-               END-IF
+      *     PERFORM 160-OBTAIN-CATEGORIES
+      *         IF KEY-STATUS = F3 THEN
+      *             EXIT SECTION
+      *         END-IF
            PERFORM 170-OBTAIN-INGREDIENTS
                IF KEY-STATUS = F3 THEN
                    EXIT SECTION
@@ -358,7 +459,19 @@
            DISPLAY REGISTER-SCREEN
            EXIT SECTION.
        160-OBTAIN-CATEGORIES SECTION.
+           MOVE ZEROS TO REG-CAT-REC
+           DISPLAY CLEAR-SCREEN
+           DISPLAY MAIN-SCREEN
+           DISPLAY REGISTER-CAT-SCREEN
+           PERFORM 210-LISTAGEM-CAT
+           EXIT SECTION.
        170-OBTAIN-INGREDIENTS SECTION.
+           MOVE ZEROS TO REG-ING-REC
+           DISPLAY CLEAR-SCREEN
+           DISPLAY MAIN-SCREEN
+           DISPLAY REGISTER-ING-SCREEN
+           PERFORM 200-LISTAGEM-ING
+           EXIT SECTION.
        190-EID-EXISTS SECTION.
            MOVE WS-SR-EID TO SR-EID
            OPEN INPUT SANDWICHES
@@ -379,6 +492,72 @@
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY LIST-FRAME
+           DISPLAY REGISTER-ING-SCREEN
+           MOVE ZEROES TO NEW-INGREDID
+           MOVE SPACES TO TRUE-YES
+
+           SET ING-INDEX TO 1
+
+           MOVE 09 TO ILIN
+           MOVE 72 TO ICOL
+           MOVE 1 TO COUNTPAGE
+           MOVE 12 TO PAGINA
+           PERFORM UNTIL ING-INDEX >= NUMBER-ING
+               DISPLAY INGREDIENT-LIST1
+               ADD 1 TO ILIN
+               ADD 1 TO PAGINA
+               SET ING-INDEX UP BY 1
+               IF ILIN = 21 THEN
+                   ACCEPT REG-ING-REC
+                   IF KEY-STATUS = 1003 THEN
+                       EXIT SECTION
+                   END-IF
+                   IF KEY-STATUS =1001 AND COUNTPAGE > 1
+                       DISPLAY CLEAR-SCREEN
+                       DISPLAY MAIN-SCREEN
+                       DISPLAY LIST-FRAME
+                       MOVE 09 TO ILIN
+                       SET ING-INDEX DOWN BY PAGINA
+                       SUBTRACT 1 FROM COUNTPAGE
+                       MOVE 12 TO PAGINA
+                   ELSE
+                       IF KEY-STATUS = 1002 THEN
+                           DISPLAY CLEAR-SCREEN
+                           DISPLAY MAIN-SCREEN
+                           DISPLAY LIST-FRAME
+                           MOVE 09 TO ILIN
+                           ADD 1 TO COUNTPAGE
+                           MOVE 12 TO PAGINA
+                       ELSE
+                           EXIT SECTION
+                       END-IF
+                   END-IF
+               END-IF
+               IF ING-INDEX >= NUMBER-ING
+                   ACCEPT REG-ING-REC
+                   IF KEY-STATUS = 1003 THEN
+                       EXIT SECTION
+                   END-IF
+                   IF KEY-STATUS =1001 AND COUNTPAGE > 1
+                       DISPLAY CLEAR-SCREEN
+                       DISPLAY MAIN-SCREEN
+                       DISPLAY LIST-FRAME
+                       MOVE 09 TO ILIN
+                       SET ING-INDEX DOWN BY PAGINA
+                       SUBTRACT 1 FROM COUNTPAGE
+                       MOVE 12 TO PAGINA
+                   END-IF
+               END-IF
+           END-PERFORM
+      *>     ACCEPT GET-INGREDID
+      *>     IF KEYSTATUS = 1003 THEN
+      *>         EXIT SECTION
+      *>     END-IF
+       EXIT SECTION.
+       210-LISTAGEM-CAT SECTION.
+           DISPLAY CLEAR-SCREEN
+           DISPLAY MAIN-SCREEN
+           DISPLAY LIST-FRAME
            MOVE ZEROES TO NEW-INGREDID
            MOVE SPACES TO TRUE-YES
            SET ING-INDEX TO 1
@@ -387,7 +566,7 @@
            MOVE 1 TO COUNTPAGE
            MOVE 12 TO PAGINA
            PERFORM UNTIL ING-INDEX >= NUMBER-ING
-               DISPLAY INGREDIENT-LIST1
+               DISPLAY CATEGORY-LIST1
                ADD 1 TO ILIN
                ADD 1 TO PAGINA
                SET ING-INDEX UP BY 1
@@ -432,84 +611,7 @@
                        MOVE 12 TO PAGINA
                    END-IF
                END-IF
-           END-PERFORM
-      *>     ACCEPT GET-INGREDID
-      *>     IF KEYSTATUS = 1003 THEN
-      *>         EXIT SECTION
-      *>     END-IF
-       EXIT SECTION.
-       210-LISTAGEM-CAT SECTION.
-           DISPLAY CLEAR-SCREEN
-           DISPLAY MAIN-SCREEN
-           DISPLAY LIST-FRAME
-           MOVE ZEROES TO NEW-INGREDID
-           MOVE SPACES TO TRUE-YES
-           SET ING-INDEX TO 1
-           MOVE 09 TO ILIN
-           MOVE 11 TO ICOL
-           MOVE 1 TO COUNTPAGE
-           MOVE 24 TO PAGINA
-           PERFORM UNTIL ING-INDEX >= NUMBER-ING
-               DISPLAY INGREDIENT-LIST1
-               ADD 1 TO ILIN
-               ADD 1 TO PAGINA
-               SET ING-INDEX UP BY 1
-               IF ILIN = 21 AND ICOL = 11 THEN
-                   MOVE 09 TO ILIN
-                   MOVE 51 TO ICOL
-               ELSE
-                   IF ILIN = 21 AND ICOL = 51 THEN
-      *                 MOVE NEXT-PAGE TO MESSAGE-LIST-PAGE
-                       ACCEPT GET-INGREDID
-                       IF KEY-STATUS = 1003 THEN
-                           EXIT SECTION
-                       END-IF
-                       IF KEY-STATUS =1001 AND COUNTPAGE > 1
-                           DISPLAY CLEAR-SCREEN
-                           DISPLAY MAIN-SCREEN
-                           DISPLAY LIST-FRAME
-                           MOVE 09 TO ILIN
-                           MOVE 11 TO ICOL
-                           SET ING-INDEX DOWN BY PAGINA
-                           SUBTRACT 1 FROM COUNTPAGE
-                           MOVE 24 TO PAGINA
-                       ELSE
-                           IF KEY-STATUS = 1002 THEN
-                               DISPLAY CLEAR-SCREEN
-                               DISPLAY MAIN-SCREEN
-                               DISPLAY LIST-FRAME
-                               MOVE 09 TO ILIN
-                               MOVE 11 TO ICOL
-                               ADD 1 TO COUNTPAGE
-                               MOVE 24 TO PAGINA
-                           ELSE
-                               EXIT SECTION
-                           END-IF
-                       END-IF
-                   END-IF
-               END-IF
-               IF ING-INDEX >= NUMBER-ING
-                   ACCEPT GET-INGREDID
-                   IF KEY-STATUS = 1003 THEN
-                       EXIT SECTION
-                   END-IF
-                   IF KEY-STATUS =1001 AND COUNTPAGE > 1
-                       DISPLAY CLEAR-SCREEN
-                       DISPLAY MAIN-SCREEN
-                       DISPLAY LIST-FRAME
-                       MOVE 09 TO ILIN
-                       MOVE 11 TO ICOL
-                       SET ING-INDEX DOWN BY PAGINA
-                       SUBTRACT 1 FROM COUNTPAGE
-                       MOVE 24 TO PAGINA
-                   END-IF
-               END-IF
-           END-PERFORM
-      *>     ACCEPT GET-INGREDID
-      *>     IF KEYSTATUS = 1003 THEN
-      *>         EXIT SECTION
-      *>     END-IF
-       EXIT SECTION.
+           END-PERFORM.
        700-SPACE-CHECK SECTION.
       *    SPACE-CHECK SECTION TO REMOVE ALL EXTRA SPACES
            MOVE SPACES TO
