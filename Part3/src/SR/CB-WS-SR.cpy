@@ -1,10 +1,10 @@
        01  WS-SR-REC.
            05  WS-SR-IID                   PIC 9(003).
            05  WS-SR-EID                   PIC X(005).
-           05  WS-SR-S-DESCRIPTION         PIC X(030).
+           05  WS-SR-S-DESCRIPTION         PIC X(025).
            05  WS-SR-L-DESCRIPTION.
-               10  WS-SR-L-DESCRIPTION1    PIC X(050).
-               10  WS-SR-L-DESCRIPTION2    PIC X(050).
+               10  WS-SR-L-DESCRIPTION1    PIC X(025).
+               10  WS-SR-L-DESCRIPTION2    PIC X(025).
        01  WS-SR-ING-REC.
            05  WS-SR-SAND-ING-ID.
                10  WS-SR-SANDWICH-ID       PIC 9(003).
@@ -52,3 +52,11 @@
        77  NUMBER-ING                      PIC 9(003) VALUE 999.
        78  MAX-CAT                         VALUE 999.
        77  NUMBER-CAT                      PIC 9(003) VALUE 999.
+       77  GET-VALID-ID                    PIC 9(003).
+       77  TRUE-YES                        PIC X(001).
+       77  ILIN                            PIC 9(002).
+       77  ICOL                            PIC 9(002).
+       77  COUNTPAGE                       PIC 9.
+       77  PAGINA                          PIC 999.
+       78  MAX-SR                          VALUE 999.
+       77  NUMBER-SR                       PIC 9(003) VALUE 999.

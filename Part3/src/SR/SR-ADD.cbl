@@ -21,6 +21,16 @@
        WORKING-STORAGE SECTION.
        COPY "CB-WS-SR".
        COPY "SR-CONST".
+
+       01  SR-TABLE OCCURS 1 TO MAX-SR TIMES
+           DEPENDING ON NUMBER-SR
+           INDEXED BY SR-INDEX.
+           05 TABLE-SR-IID                     PIC 9(003).
+           05 TABLE-SR-EID                     PIC X(005).
+           05 TABLE-SR-S-DESC                  PIC X(025).
+           05 TABLE-SR-L-DESC.
+           10 TABLE-SR-L-DESC1                 PIC X(025).
+           10 TABLE-SR-L-DESC2                 PIC X(025).
        01  ING-TABLE OCCURS 1 TO MAX-ING TIMES
            DEPENDING ON NUMBER-ING
            INDEXED BY ING-INDEX.
@@ -59,43 +69,51 @@
       ******************************************************************
        01  REGISTER-SCREEN
            BACKGROUND-COLOR 0, FOREGROUND-COLOR 7.
-           05 VALUE ADD-MENU-TEXT LINE 9 COL 40.
-           05 VALUE ADD-MENU-TEXT1 LINE 12 COL 22.
-           05 VALUE ADD-MENU-TEXT2 LINE 13 COL 22.
-           05 VALUE ADD-MENU-TEXT3 LINE 14 COL 22.
-           05 VALUE ALL " " PIC X(080) LINE 7 COL 18
+           05 VALUE ADD-MENU-TEXT LINE 9 COL 17.
+           05 VALUE ADD-MENU-TEXT1 LINE 12 COL 13.
+           05 VALUE ADD-MENU-TEXT2 LINE 13 COL 13.
+           05 VALUE ADD-MENU-TEXT3 LINE 14 COL 13.
+           05 VALUE ALL " " PIC X(055) LINE 7 COL 09
                BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(080) LINE 18 COL 18
+           05 VALUE ALL " " PIC X(055) LINE 22 COL 09
                BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 8 COL 18 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 9 COL 18 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 10 COL 18 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 11 COL 18 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 12 COL 18 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 13 COL 18 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 14 COL 18 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 15 COL 18 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 16 COL 18 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 17 COL 18 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 8 COL 96 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 9 COL 96 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 10 COL 96 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 11 COL 96 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 12 COL 96 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 13 COL 96 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 14 COL 96 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 15 COL 96 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 16 COL 96 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 17 COL 96 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 8 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 9 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 8 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 9 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 62 BACKGROUND-COLOR 7.
            05 REG-REC.
-               10 REG-EID PIC X(008) LINE 12 COL 41
+               10 REG-EID PIC X(008) LINE 12 COL 32
                    TO WS-SR-EID.
-               10 REG-S-DESCRIPTION PIC A(030) LINE 13 COL 41
+               10 REG-S-DESCRIPTION PIC A(025) LINE 13 COL 32
                        TO WS-SR-S-DESCRIPTION.
                10 REG-L-DESCRIPTION.
-                   15 REG-L-DESIGNATION1 PIC A(050) LINE 14 COL 41
+                   15 REG-L-DESIGNATION1 PIC A(025) LINE 14 COL 32
                        TO WS-SR-L-DESCRIPTION1 AUTO.
-                   15 REG-L-DESIGNATION2 PIC A(050) LINE 15 COL 41
+                   15 REG-L-DESIGNATION2 PIC A(025) LINE 15 COL 32
                        TO WS-SR-L-DESCRIPTION2.
       ******************************************************************
        01  INSTRUCTIONS-SCREEN.
@@ -130,8 +148,75 @@
            FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
            05 SCREEN-DUMMY LINE 27 COL 01 PIC X TO DUMMY AUTO.
       ******************************************************************
+       01  LIST-FRAME.
+           05 VALUE ALL " " PIC X(042) LINE 7 COL 68
+              BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(042) LINE 22 COL 68
+              BACKGROUND-COLOR 7.
+           05 VALUE LIST-FRAME1 LINE 08 COL 72 FOREGROUND-COLOR 5.
+           05 VALUE LIST-FRAME2 LINE 08 COL PLUS 4 FOREGROUND-COLOR 5.
+           05 VALUE "  " LINE 07 COL 68 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 08 COL 68 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 09 COL 68 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 68 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 68 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 68 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 68 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 68 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 68 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 68 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 68 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 68 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 68 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 68 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 68 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 07 COL 110 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 08 COL 110 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 09 COL 110 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 110 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 110 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 110 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 110 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 110 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 110 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 110 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 110 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 110 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 110 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 110 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 110 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 22 COL 110 BACKGROUND-COLOR 7.
+      ******************************************************************
+       01  GET-INGREDID
+           BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
+           05 VALUE ALL " " PIC X(095) LINE 24 COL 01.
+           05 VALUE ALL " " PIC X(095) LINE 25 COL 01.
+           05 VALUE ALL " " PIC X(095) LINE 26 COL 01.
+      *     05 VALUE MESSAGE-GET-INGREDID LINE 25 COL 15
+      *         FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
+           05 NEW-INGREDID LINE 25 COL PLUS 1 PIC 9(003)
+               FOREGROUND-COLOR 4 BACKGROUND-COLOR 7 TO GET-VALID-ID
+               BLANK WHEN ZERO.
+           05 MESSAGE-LIST-PAGE LINE 25 COL 56 PIC X(030).
+      ******************************************************************
+       01  INGREDIENT-LIST1.
+           05 LIST-INGRED-ID1 PIC 9(003) LINE ILIN COL ICOL
+               FROM ING-TABLE (ING-INDEX).
+           05 VALUE "|" LINE ILIN COL PLUS 1.
+           05 LIST-INGRED-NAME1 PIC X(030) LINE ILIN COL PLUS 1
+               FROM TABLE-ING-NAME (ING-INDEX).
+      ******************************************************************
+       01  CATEGORY-LIST1.
+           05 LIST-CAT-ID1 PIC 9(003) LINE ILIN COL ICOL
+               FROM CAT-TABLE (CAT-INDEX).
+           05 VALUE "|" LINE ILIN COL PLUS 1.
+           05 LIST-CAT-NAME1 PIC X(030) LINE ILIN COL PLUS 1
+               FROM TABLE-CAT-NAME (CAT-INDEX).
+      ******************************************************************
        PROCEDURE DIVISION.
+           PERFORM 800-FILE-CHECK.
        050-OBTAIN-TABLES SECTION.
+           DISPLAY "01-TABELA ING"
            SET ING-INDEX TO 1
            OPEN INPUT INGREDIENTS
            PERFORM UNTIL EOFINGREDS
@@ -143,8 +228,7 @@
                        PERFORM 060-LOAD-ING-TABLE
                END-READ
            END-PERFORM
-           CLOSE INGREDIENTS
-
+           CLOSE INGREDIENTS.
            SET CAT-INDEX TO 1
            OPEN INPUT CATEGORIES
            PERFORM UNTIL EOFCATEGORY
@@ -156,7 +240,7 @@
                        PERFORM 070-LOAD-CAT-TABLE
                END-READ
            END-PERFORM
-           CLOSE INGREDIENTS
+           CLOSE CATEGORIES
            EXIT SECTION.
        060-LOAD-ING-TABLE SECTION.
            MOVE INGREDS-DETAILS TO ING-TABLE (ING-INDEX)
@@ -167,10 +251,9 @@
            SET CAT-INDEX UP BY 1
            EXIT SECTION.
        100-MAIN SECTION.
-           PERFORM 900-CLEAR-VARIABLES
-           PERFORM 800-FILE-CHECK
            DISPLAY MAIN-SCREEN
            DISPLAY REGISTER-SCREEN
+           PERFORM 900-CLEAR-VARIABLES
            PERFORM 110-REGISTER
                IF KEY-STATUS = F3 THEN
                    EXIT PROGRAM
@@ -295,6 +378,141 @@
                END-READ
            CLOSE SANDWICHES
            EXIT SECTION.
+       200-LISTAGEM-ING SECTION.
+           DISPLAY CLEAR-SCREEN
+           DISPLAY MAIN-SCREEN
+           DISPLAY LIST-FRAME
+           MOVE ZEROES TO NEW-INGREDID
+           MOVE SPACES TO TRUE-YES
+           SET ING-INDEX TO 1
+           MOVE 09 TO ILIN
+           MOVE 72 TO ICOL
+           MOVE 1 TO COUNTPAGE
+           MOVE 12 TO PAGINA
+           PERFORM UNTIL ING-INDEX >= NUMBER-ING
+               DISPLAY INGREDIENT-LIST1
+               ADD 1 TO ILIN
+               ADD 1 TO PAGINA
+               SET ING-INDEX UP BY 1
+               IF ILIN = 21 THEN
+                   ACCEPT GET-INGREDID
+                   IF KEY-STATUS = 1003 THEN
+                       EXIT SECTION
+                   END-IF
+                   IF KEY-STATUS =1001 AND COUNTPAGE > 1
+                       DISPLAY CLEAR-SCREEN
+                       DISPLAY MAIN-SCREEN
+                       DISPLAY LIST-FRAME
+                       MOVE 09 TO ILIN
+                       SET ING-INDEX DOWN BY PAGINA
+                       SUBTRACT 1 FROM COUNTPAGE
+                       MOVE 12 TO PAGINA
+                   ELSE
+                       IF KEY-STATUS = 1002 THEN
+                           DISPLAY CLEAR-SCREEN
+                           DISPLAY MAIN-SCREEN
+                           DISPLAY LIST-FRAME
+                           MOVE 09 TO ILIN
+                           ADD 1 TO COUNTPAGE
+                           MOVE 12 TO PAGINA
+                       ELSE
+                           EXIT SECTION
+                       END-IF
+                   END-IF
+               END-IF
+               IF ING-INDEX >= NUMBER-ING
+                   ACCEPT GET-INGREDID
+                   IF KEY-STATUS = 1003 THEN
+                       EXIT SECTION
+                   END-IF
+                   IF KEY-STATUS =1001 AND COUNTPAGE > 1
+                       DISPLAY CLEAR-SCREEN
+                       DISPLAY MAIN-SCREEN
+                       DISPLAY LIST-FRAME
+                       MOVE 09 TO ILIN
+                       SET ING-INDEX DOWN BY PAGINA
+                       SUBTRACT 1 FROM COUNTPAGE
+                       MOVE 12 TO PAGINA
+                   END-IF
+               END-IF
+           END-PERFORM
+      *>     ACCEPT GET-INGREDID
+      *>     IF KEYSTATUS = 1003 THEN
+      *>         EXIT SECTION
+      *>     END-IF
+       EXIT SECTION.
+       210-LISTAGEM-CAT SECTION.
+           DISPLAY CLEAR-SCREEN
+           DISPLAY MAIN-SCREEN
+           DISPLAY LIST-FRAME
+           MOVE ZEROES TO NEW-INGREDID
+           MOVE SPACES TO TRUE-YES
+           SET ING-INDEX TO 1
+           MOVE 09 TO ILIN
+           MOVE 11 TO ICOL
+           MOVE 1 TO COUNTPAGE
+           MOVE 24 TO PAGINA
+           PERFORM UNTIL ING-INDEX >= NUMBER-ING
+               DISPLAY INGREDIENT-LIST1
+               ADD 1 TO ILIN
+               ADD 1 TO PAGINA
+               SET ING-INDEX UP BY 1
+               IF ILIN = 21 AND ICOL = 11 THEN
+                   MOVE 09 TO ILIN
+                   MOVE 51 TO ICOL
+               ELSE
+                   IF ILIN = 21 AND ICOL = 51 THEN
+      *                 MOVE NEXT-PAGE TO MESSAGE-LIST-PAGE
+                       ACCEPT GET-INGREDID
+                       IF KEY-STATUS = 1003 THEN
+                           EXIT SECTION
+                       END-IF
+                       IF KEY-STATUS =1001 AND COUNTPAGE > 1
+                           DISPLAY CLEAR-SCREEN
+                           DISPLAY MAIN-SCREEN
+                           DISPLAY LIST-FRAME
+                           MOVE 09 TO ILIN
+                           MOVE 11 TO ICOL
+                           SET ING-INDEX DOWN BY PAGINA
+                           SUBTRACT 1 FROM COUNTPAGE
+                           MOVE 24 TO PAGINA
+                       ELSE
+                           IF KEY-STATUS = 1002 THEN
+                               DISPLAY CLEAR-SCREEN
+                               DISPLAY MAIN-SCREEN
+                               DISPLAY LIST-FRAME
+                               MOVE 09 TO ILIN
+                               MOVE 11 TO ICOL
+                               ADD 1 TO COUNTPAGE
+                               MOVE 24 TO PAGINA
+                           ELSE
+                               EXIT SECTION
+                           END-IF
+                       END-IF
+                   END-IF
+               END-IF
+               IF ING-INDEX >= NUMBER-ING
+                   ACCEPT GET-INGREDID
+                   IF KEY-STATUS = 1003 THEN
+                       EXIT SECTION
+                   END-IF
+                   IF KEY-STATUS =1001 AND COUNTPAGE > 1
+                       DISPLAY CLEAR-SCREEN
+                       DISPLAY MAIN-SCREEN
+                       DISPLAY LIST-FRAME
+                       MOVE 09 TO ILIN
+                       MOVE 11 TO ICOL
+                       SET ING-INDEX DOWN BY PAGINA
+                       SUBTRACT 1 FROM COUNTPAGE
+                       MOVE 24 TO PAGINA
+                   END-IF
+               END-IF
+           END-PERFORM
+      *>     ACCEPT GET-INGREDID
+      *>     IF KEYSTATUS = 1003 THEN
+      *>         EXIT SECTION
+      *>     END-IF
+       EXIT SECTION.
        700-SPACE-CHECK SECTION.
       *    SPACE-CHECK SECTION TO REMOVE ALL EXTRA SPACES
            MOVE SPACES TO
