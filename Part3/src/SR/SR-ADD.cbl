@@ -24,13 +24,20 @@
        01  ING-TABLE OCCURS 1 TO MAX-ING TIMES
            DEPENDING ON NUMBER-ING
            INDEXED BY ING-INDEX.
-           05 TABLEINGREDS-ID                      PIC 9(003).
-           05 TABLEINGREDS-NAME                    PIC X(030).
-           05 TABLEINGREDS-DESCRIPTION             PIC X(050).
-           05 TABLEINGREDS-UNIT-SUPPLIER           PIC X(003).
-           05 TABLEINGREDS-UNIT-SANDWICH           PIC X(003).
-           05 TABLETRESHOLD                        PIC 9(003).
-           05 TABLEINGREDS-IS-ACTIVE               PIC 9(001).
+           05 TABLE-ING-ID                      PIC 9(003).
+           05 TABLE-ING-NAME                    PIC X(030).
+           05 TABLE-ING-DESCRIPTION             PIC X(050).
+           05 TABLE-ING-UNIT-SUPPLIER           PIC X(003).
+           05 TABLE-ING-UNIT-SANDWICH           PIC X(003).
+           05 TABLE-TRESHOLD                        PIC 9(003).
+           05 TABLE-ING-IS-ACTIVE               PIC 9(001).
+       01  CAT-TABLE OCCURS 1 TO MAX-CAT TIMES
+           DEPENDING ON NUMBER-CAT
+           INDEXED BY CAT-INDEX.
+           05 TABLE-CAT-ID                          PIC 9(003).
+           05 TABLE-CAT-NAME                        PIC X(030).
+           05 TABLE-CAT-DESCRIPTION                 PIC X(050).
+           05 TABLE-CAT-IS-ACTIVE                   PIC 9(001).
        SCREEN SECTION.
        01  CLEAR-SCREEN BACKGROUND-COLOR 0.
            05 VALUE " " BLANK SCREEN LINE 01 COL 01.
@@ -137,13 +144,27 @@
                END-READ
            END-PERFORM
            CLOSE INGREDIENTS
+
+           SET CAT-INDEX TO 1
+           OPEN INPUT CATEGORIES
+           PERFORM UNTIL EOFCATEGORY
+               READ CATEGORIES NEXT RECORD
+                   AT END
+                       SET EOFCATEGORY TO TRUE
+                       MOVE CAT-INDEX TO NUMBER-CAT
+                   NOT AT END
+                       PERFORM 070-LOAD-CAT-TABLE
+               END-READ
+           END-PERFORM
+           CLOSE INGREDIENTS
            EXIT SECTION.
        060-LOAD-ING-TABLE SECTION.
            MOVE INGREDS-DETAILS TO ING-TABLE (ING-INDEX)
            SET ING-INDEX UP BY 1
            EXIT SECTION.
        070-LOAD-CAT-TABLE SECTION.
-
+           MOVE CATEGORY-DETAILS TO CAT-TABLE (CAT-INDEX)
+           SET CAT-INDEX UP BY 1
            EXIT SECTION.
        100-MAIN SECTION.
            PERFORM 900-CLEAR-VARIABLES

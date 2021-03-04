@@ -50,3 +50,5 @@
        77  SPACE-CHECK15                   PIC X(050).
        78  MAX-ING                         VALUE 999.
        77  NUMBER-ING                      PIC 9(003) VALUE 999.
+       78  MAX-CAT                         VALUE 999.
+       77  NUMBER-CAT                      PIC 9(003) VALUE 999.
