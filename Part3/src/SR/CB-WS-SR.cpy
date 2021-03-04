@@ -48,3 +48,5 @@
        77  SPACE-CHECK13                   PIC X(050).
        77  SPACE-CHECK14                   PIC X(050).
        77  SPACE-CHECK15                   PIC X(050).
+       78  MAX-ING                         VALUE 999.
+       77  NUMBER-ING                      PIC 9(003) VALUE 999.

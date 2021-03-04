@@ -21,6 +21,16 @@
        WORKING-STORAGE SECTION.
        COPY "CB-WS-SR".
        COPY "SR-CONST".
+       01  ING-TABLE OCCURS 1 TO MAX-ING TIMES
+           DEPENDING ON NUMBER-ING
+           INDEXED BY ING-INDEX.
+           05 TABLEINGREDS-ID                      PIC 9(003).
+           05 TABLEINGREDS-NAME                    PIC X(030).
+           05 TABLEINGREDS-DESCRIPTION             PIC X(050).
+           05 TABLEINGREDS-UNIT-SUPPLIER           PIC X(003).
+           05 TABLEINGREDS-UNIT-SANDWICH           PIC X(003).
+           05 TABLETRESHOLD                        PIC 9(003).
+           05 TABLEINGREDS-IS-ACTIVE               PIC 9(001).
        SCREEN SECTION.
        01  CLEAR-SCREEN BACKGROUND-COLOR 0.
            05 VALUE " " BLANK SCREEN LINE 01 COL 01.
@@ -115,6 +125,25 @@
       ******************************************************************
        PROCEDURE DIVISION.
        050-OBTAIN-TABLES SECTION.
+           SET ING-INDEX TO 1
+           OPEN INPUT INGREDIENTS
+           PERFORM UNTIL EOFINGREDS
+               READ INGREDIENTS NEXT RECORD
+                   AT END
+                       SET EOFINGREDS TO TRUE
+                       MOVE ING-INDEX TO NUMBER-ING
+                   NOT AT END
+                       PERFORM 060-LOAD-ING-TABLE
+               END-READ
+           END-PERFORM
+           CLOSE INGREDIENTS
+           EXIT SECTION.
+       060-LOAD-ING-TABLE SECTION.
+           MOVE INGREDS-DETAILS TO ING-TABLE (ING-INDEX)
+           SET ING-INDEX UP BY 1
+           EXIT SECTION.
+       070-LOAD-CAT-TABLE SECTION.
+
            EXIT SECTION.
        100-MAIN SECTION.
            PERFORM 900-CLEAR-VARIABLES
