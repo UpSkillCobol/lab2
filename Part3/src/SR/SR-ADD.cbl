@@ -73,10 +73,9 @@
            05 REG-REC.
                10 REG-EID PIC X(008) LINE 12 COL 41
                    TO WS-SR-EID.
-               10 REG-S-DESIGNATION.
-                   15 REG-S-DESIGNATION1 PIC X(030) LINE 13 COL 41
+               10 REG-S-DESCRIPTION PIC X(030) LINE 13 COL 41
                        TO WS-SR-S-DESCRIPTION.
-               10 REG-L-DESIGNATION.
+               10 REG-L-DESCRIPTION.
                    15 REG-L-DESIGNATION1 PIC X(050) LINE 14 COL 41
                        TO WS-SR-L-DESCRIPTION1 AUTO.
                    15 REG-L-DESIGNATION2 PIC X(050) LINE 15 COL 41
@@ -87,4 +86,60 @@
            DISPLAY MAIN-SCREEN
            DISPLAY REGISTER-SCREEN
            ACCEPT REG-EID.
+
+           EXIT PROGRAM.
+
+       800-FILE-CHECK SECTION.
+           MOVE ZEROS TO FILE-STATUS
+           OPEN I-O SANDWICHES
+               IF FILE-STATUS = 35 THEN
+                   OPEN OUTPUT SANDWICHES
+                   CLOSE SANDWICHES
+               END-IF
+           CLOSE SANDWICHES
+           MOVE ZEROS TO FILE-STATUS
+           OPEN I-O CATEGORIES
+               IF FILE-STATUS = 35 THEN
+                   OPEN OUTPUT CATEGORIES
+                   CLOSE CATEGORIES
+               END-IF
+           CLOSE CATEGORIES
+           MOVE ZEROS TO FILE-STATUS
+           OPEN I-O INGREDIENTS
+               IF FILE-STATUS = 35 THEN
+                   OPEN OUTPUT INGREDIENTS
+                   CLOSE INGREDIENTS
+               END-IF
+           CLOSE INGREDIENTS
+           MOVE ZEROS TO FILE-STATUS
+           OPEN I-O SR-ING
+               IF FILE-STATUS = 35 THEN
+                   OPEN OUTPUT SR-ING
+                   CLOSE SR-ING
+               END-IF
+           CLOSE SR-ING
+           MOVE ZEROS TO FILE-STATUS
+           OPEN I-O SR-CAT
+               IF FILE-STATUS = 35 THEN
+                   OPEN OUTPUT SR-CAT
+                   CLOSE SR-CAT
+               END-IF
+           CLOSE SR-CAT
+           MOVE ZEROS TO FILE-STATUS
+           OPEN I-O KEYS
+               IF FILE-STATUS = 35 THEN
+                   OPEN OUTPUT KEYS
+                       MOVE ZEROS TO REGKEY
+                       WRITE REGKEY
+                   CLOSE KEYS
+               END-IF
+           CLOSE KEYS
+           EXIT SECTION.
+      ******************************************************************
+       900-CLEAR-VARIABLES SECTION.
+           MOVE ZEROS TO WS-SR-IID
+           MOVE SPACES TO WS-SR-EID WS-SR-S-DESCRIPTION
+           WS-SR-L-DESCRIPTION REG-EID REG-S-DESCRIPTION
+           REG-L-DESCRIPTION
+           EXIT SECTION.
        END PROGRAM SR-ADD.
