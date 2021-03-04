@@ -22,7 +22,6 @@
                    ORGANIZATION IS INDEXED
                    ACCESS MODE IS DYNAMIC
                    RECORD KEY IS INGREDS-ID
-                   ALTERNATE KEY IS INGREDS-NAME
                    FILE STATUS INGRED-STATUS.
                SELECT FXSUPPLY ASSIGN TO "FXSUPPLIERS"
                    ORGANIZATION IS INDEXED
@@ -44,94 +43,58 @@
 
        COPY CONSTANTS-INGREDS.
 
-       01  WSINGREDS-DETAILS.
-           05 WSINGREDS-ID                          PIC 9(003).
-           05 WSINGREDS-NAME                        PIC X(030).
-           05 WSINGREDS-DESCRIPTION                 PIC X(050).
-           05 WSINGREDS-IS-ACTIVE                   PIC 9(001).
+       COPY WS-INGREDSFX.
 
-       01  EDIT-OPTION                         PIC X(002).
-           88 EDIT-VALID-OPTION                VALUE "Y" "y" "N" "n".
-           88 EDIT-OPTION-NO                   VALUE "N" "n".
-       77  DUMMY                               PIC X(001).
-       77  INGRED-STATUS                       PIC 9(002).
-       77  KEYSTATUS                           PIC 9(004).
-       77  FXKEY-STATUS                        PIC 9(002).
-       77 SUPP-STATUS                          PIC 9(002).
-       01  SAVE-IT1                            PIC X(002).
-           88 SAVE-IT1-YES                     VALUE "Y" "y".
-           88 SAVE-IT1-VALID                   VALUE "Y" "y" "N" "n".
-       01  GET-VALID-ID                        PIC 9(003).
-           88 VALID-ID                         VALUE 1 THRU 999.
-       01  INGREDEXIST                           PIC X(002).
-           88 INGREDEXIST-YES                    VALUE "Y".
-       01  EDIT-WHAT                           PIC 9(001).
-           88 EDIT-WHAT-EXIT                   VALUE 8.
-       77 UNSTR                        PIC X(150).
-       77 UNSTRTEMP                    PIC X(150).
-       77 UNSTR1                       PIC X(050).
-       77 UNSTR2                       PIC X(050).
-       77 UNSTR3                       PIC X(050).
-       77 UNSTR4                       PIC X(050).
-       77 UNSTR5                       PIC X(050).
-       77 UNSTR6                       PIC X(050).
-       77 UNSTR7                       PIC X(050).
-       77 UNSTR8                       PIC X(050).
-       77 UNSTR9                       PIC X(050).
-       77 UNSTR10                      PIC X(050).
-       77 ILIN                         PIC 9(002).
-       77 ICOL                         PIC 9(002).
-       77 EOF                          PIC X(001).
-       77 TRUE-YES                     PIC X(001).
-       77 COUNTPAGE                    PIC 9(002).
-      * 78 MAX-PAG                      VALUE 999.
-      * 01 PAGINA OCCURS 1 TO MAX-PAG TIMES
-      *     DEPENDING ON NUMBER-ING
-      *     INDEXED BY INDEX-PAGINA.
-      *     05 PAGTESTE             PIC 9(003).
-      * 01 PAGINATEMP                   PIC 999.
-       01 PAGINA                      PIC 9(003).
-       78 MAX-ING                  VALUE 999.
+       01  EDIT-OPTION                             PIC X(002).
+           88 EDIT-VALID-OPTION                    VALUE "Y" "y" "N"
+                                                           "n".
+           88 EDIT-OPTION-NO                       VALUE "N" "n".
+       77  DUMMY                                   PIC X(001).
+       77  INGRED-STATUS                           PIC 9(002).
+       77  KEYSTATUS                               PIC 9(004).
+       77  FXKEY-STATUS                            PIC 9(002).
+       77 SUPP-STATUS                              PIC 9(002).
+       01  SAVE-IT1                                PIC X(002).
+           88 SAVE-IT1-YES                         VALUE "Y" "y".
+           88 SAVE-IT1-VALID                       VALUE "Y" "y" "N"
+                                                           "n".
+       01  GET-VALID-ID                            PIC 9(003).
+           88 VALID-ID                             VALUE 1 THRU 999.
+       01  INGREDEXIST                             PIC X(002).
+           88 INGREDEXIST-YES                      VALUE "Y".
+       01  EDIT-WHAT                               PIC 9(001).
+           88 EDIT-WHAT-EXIT                       VALUE 8.
+       77 UNSTR                                    PIC X(150).
+       77 UNSTRTEMP                                PIC X(150).
+       77 UNSTR1                                   PIC X(050).
+       77 UNSTR2                                   PIC X(050).
+       77 UNSTR3                                   PIC X(050).
+       77 UNSTR4                                   PIC X(050).
+       77 UNSTR5                                   PIC X(050).
+       77 UNSTR6                                   PIC X(050).
+       77 UNSTR7                                   PIC X(050).
+       77 UNSTR8                                   PIC X(050).
+       77 UNSTR9                                   PIC X(050).
+       77 UNSTR10                                  PIC X(050).
+       77 ILIN                                     PIC 9(002).
+       77 ICOL                                     PIC 9(002).
+       77 EOF                                      PIC X(001).
+       77 TRUE-YES                                 PIC X(001).
+       77 COUNTPAGE                                PIC 9(002).
+       01 PAGINA                                   PIC 9(003).
+       78 MAX-ING                                  VALUE 999.
        01 TABLE-INGREDS OCCURS 1 TO MAX-ING TIMES
            DEPENDING ON NUMBER-ING
            INDEXED BY ING-INDEX.
-           05 TABLEINGREDS-ID                          PIC 9(003).
-           05 TABLEINGREDS-NAME                        PIC X(030).
-           05 TABLEINGREDS-DESCRIPTION                 PIC X(050).
-           05 TABLEINGREDS-IS-ACTIVE                   PIC 9(001).
-
-       01 NUMBER-ING               PIC 9(003) VALUE 999.
-       01 FLAGTABLE                PIC 9(001).
-
-       78 MAX-SUPP                  VALUE 999.
-       01 TABLE-SUPP OCCURS 1 TO MAX-SUPP TIMES
-           DEPENDING ON NUMBER-SUPP
-           INDEXED BY SUP-INDEX.
-           05 TABLESUPPLIER-ID                          PIC 9(003).
-           05 TABLESUPPLIER-NAME                        PIC X(030).
-           05 TABLESUPPLIER-DESCRIPTION.
-               10 TABLESUPPLIER-DESCRIPTION1            PIC X(050).
-               10 TABLESUPPLIER-DESCRIPTION2            PIC X(050).
-               10 TABLESUPPLIER-DESCRIPTION3            PIC X(050).
-           05 TABLESUPPLIER-ADRESS.
-               10 TABLESUPP-ADR-MAIN.
-                   15 TABLESUPP-ADR-MAIN1               PIC X(050).
-                   15 TABLESUPP-ADR-MAIN2               PIC X(050).
-               10 TABLESUPPLIER-POSTAL-CODE.
-                   15 TABLESUPPLIER-POSTAL-CODE1        PIC 9(004).
-                   15 TABLESUPPLIER-POSTAL-CODE2        PIC 9(003).
-               10 TABLESUPPLIER-TOWN                    PIC X(030).
-           05 TABLESUPPLIER-EMAIL.
-               10 TABLESUPPLIER-EMAIL1                  PIC X(040).
-               10 TABLESUPPLIER-EMAIL2                  PIC X(040).
-               10 TABLESUPPLIER-EMAIL3                  PIC X(040).
-           05 TABLESUPPLIER-TELEPHONE.
-               10 TABLESUPPLIER-TELEPHONE1              PIC 9(009).
-               10 TABLESUPPLIER-TELEPHONE2              PIC 9(009).
-               10 TABLESUPPLIER-TELEPHONE3              PIC 9(009).
-           05 TABLESUPPLIER-IS-ACTIVE                   PIC 9(001).
-       01 NUMBER-SUPP               PIC 9(003) VALUE 999.
-
+           05 TABLEINGREDS-ID                      PIC 9(003).
+           05 TABLEINGREDS-NAME                    PIC X(030).
+           05 TABLEINGREDS-DESCRIPTION             PIC X(050).
+           05 TABLEINGREDS-UNIT-SUPPLIER           PIC X(003).
+           05 TABLEINGREDS-UNIT-SANDWICH           PIC X(003).
+           05 TABLETRESHOLD                        PIC 9(003).
+           05 TABLEINGREDS-IS-ACTIVE               PIC 9(001).
+       01 NUMBER-ING                               PIC 9(003) VALUE 999.
+       01 FLAGTABLE                                PIC 9(001).
 
        SCREEN SECTION.
       ******************************************************************
@@ -152,7 +115,6 @@
            05 VALUE ALL " " PIC X(22) LINE 26 COL 98.
            05 VALUE BACK-EXIT LINE 25 COL 100 FOREGROUND-COLOR 5.
       ******************************************************************
-
        01 EDIT-SCREEN.
            05 VALUE ALL " " PIC X(080) LINE 7 COL 08
               BACKGROUND-COLOR 7.
@@ -186,18 +148,26 @@
            05 VALUE "  " LINE 19 COL 86 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 20 COL 86 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 21 COL 86 BACKGROUND-COLOR 7.
-           05 VALUE SCREEN-INGREDS-ID LINE 12 COL 15.
-           05 VALUE MANUALLY-ADD-NAME LINE 14 COL 15.
-           05 VALUE MANUALLY-ADD-DESCRIPTION LINE 16 COL 15.
-           05 REGISTER-RECORD.
-               10 REG-INGRED-ID PIC 9(003) LINE 12 COL 29
+           05 VALUE SCREEN-INGREDS-ID LINE 09 COL 19.
+           05 REG-INGRED-ID PIC 9(003) LINE 09 COL PLUS 1
                    FROM WSINGREDS-ID.
-               10 REG-INGRED-NAME PIC X(030) LINE 14 COL 31
+           05 VALUE MANUALLY-ADD-NAME LINE 12 COL 21.
+           05 REG-INGRED-NAME PIC X(030) LINE 12 COL PLUS 1
                    FROM WSINGREDS-NAME REQUIRED.
-               10 REG-INGREDS-DESCRIPTION.
-                   15 REG-INGRED-DESCRIPTION PIC X(150) LINE 16 COL 27
-                       FROM WSINGREDS-DESCRIPTION REQUIRED AUTO.
-
+           05 VALUE MANUALLY-ADD-DESCRIPTION LINE 14 COL 21.
+           05 REG-INGRED-DESCRIPTION PIC X(050) LINE 14 COL PLUS 1
+                   FROM WSINGREDS-DESCRIPTION REQUIRED AUTO.
+           05 VALUE MANUALLY-ADD-UN-SUPP LINE 16 COL 11.
+           05 REG-UNIT-SUPPLIER PIC X(003) LINE 16 COL PLUS 1
+               FROM WSINGREDS-UNIT-SUPPLIER AUTO REQUIRED.
+           05 VALUE MANUALLY-ADD-UN-SAND LINE 18 COL 11.
+           05 REG-UNIT-SANDWICH PIC X(003) LINE 18 COL PLUS 1
+               FROM WSINGREDS-UNIT-SANDWICH AUTO REQUIRED.
+           05 VALUE MANUALLY-ADD-TRESHOLD LINE 20 COL 11.
+           05 REG-TRESHOLD PIC X(003) LINE 20 COL PLUS 1
+               FROM WSTRESHOLD AUTO REQUIRED.
+           05 REG-UNIT-SUPPLIER1 PIC X(003) LINE 20 COL PLUS 2
+               FROM WSINGREDS-UNIT-SUPPLIER.
       ******************************************************************
        01 LIST-FRAME.
            05 VALUE ALL " " PIC X(082) LINE 7 COL 07
@@ -255,13 +225,16 @@
            05 VALUE "  " LINE 21 COL 87 BACKGROUND-COLOR 7.
       ******************************************************************
        01 UPDATE-RECORD.
-           05 EDIT-RECORD.
-               10 EDIT-INGREDS-NAME PIC X(030) LINE 14 COL 31
-                   TO WSINGREDS-NAME REQUIRED.
-               10 EDIT-INGREDS-DESCRIPTION.
-                   15 EDIT-INGRED-DESCRIPTION PIC X(050) LINE 16 COL 27
-                       TO WSINGREDS-DESCRIPTION REQUIRED AUTO.
-
+           05 EDIT-INGREDS-NAME PIC X(030) LINE 14 COL 31
+               TO WSINGREDS-NAME REQUIRED.
+           05 EDIT-INGRED-DESCRIPTION PIC X(050) LINE 16 COL 27
+               TO WSINGREDS-DESCRIPTION REQUIRED AUTO.
+           05 EDIT-UNIT-SUPPLIER PIC X(003) LINE 16 COL 35
+               TO WSINGREDS-UNIT-SUPPLIER AUTO REQUIRED.
+           05 EDIT-UNIT-SANDWICH PIC X(003) LINE 18 COL 35
+               TO WSINGREDS-UNIT-SANDWICH AUTO REQUIRED.
+           05 EDIT-TRESHOLD PIC X(003) LINE 20 COL 35
+               TO WSTRESHOLD AUTO REQUIRED.
       ******************************************************************
        01 EDIT-WHAT-SCREEN
            BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
@@ -282,9 +255,12 @@
            05 VALUE ALL " " PIC X(022) LINE 21 COL 98.
            05 VALUE ALL " " PIC X(022) LINE 22 COL 98.
            05 VALUE WHAT-TO-EDIT LINE 08 COL 103.
-           05 VALUE EDIT1 LINE 10 COL 100.
-           05 VALUE EDIT2 LINE 11 COL 100.
-           05 VALUE EDIT8 LINE 12 COL 100.
+           05 VALUE EDIT1 LINE 11 COL 100.
+           05 VALUE EDIT2 LINE 12 COL 100.
+           05 VALUE EDIT3 LINE 13 COL 100.
+           05 VALUE EDIT4 LINE 14 COL 100.
+           05 VALUE EDIT5 LINE 15 COL 100.
+           05 VALUE EDIT8 LINE 16 COL 100.
            05 VALUE CHOOSE LINE 20 COL 100.
            05 EDIT-CHOICE PIC 9(002) LINE 20 COL 117 BLANK WHEN ZERO
                REQUIRED TO EDIT-WHAT.
@@ -313,11 +289,10 @@
            05 VALUE ALL " " PIC X(095) LINE 26 COL 01.
            05 VALUE MESSAGE-GET-INGREDID LINE 25 COL 15
                FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
-           05 VALUE " | " LINE 25 COL 53.
-           05 MESSAGE-LIST-PAGE LINE 25 COL 56 PIC X(030).
-           05 NEW-INGREDID LINE 25 COL 48 PIC 9(003)
+           05 NEW-INGREDID LINE 25 COL PLUS 1 PIC 9(003)
                FOREGROUND-COLOR 4 BACKGROUND-COLOR 7 TO GET-VALID-ID
                BLANK WHEN ZERO.
+           05 MESSAGE-LIST-PAGE LINE 25 COL 56 PIC X(030).
       ******************************************************************
        01 INGREDIENT-LIST1.
            05 LIST-INGRED-ID1 PIC 9(003) LINE ILIN COL ICOL
@@ -353,14 +328,13 @@
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
            PERFORM 050-FILL-TABLES
-      *     PERFORM SHOW-TABLE
+      *>      PERFORM SHOW-TABLE
            PERFORM UNTIL INGREDEXIST-YES
-
                PERFORM 101-INGREDIENT-LIST
-                   IF TRUE-YES = "Y" OR KEYSTATUS = 1003 THEN
-                       MOVE SPACE TO INGREDEXIST
-                       EXIT PROGRAM
-                   END-IF
+               IF TRUE-YES = "Y" OR KEYSTATUS = 1003 THEN
+                   MOVE SPACE TO INGREDEXIST
+                   EXIT PROGRAM
+               END-IF
                PERFORM 106-CHECK-IF-INGRED-ID-EXISTS
                IF KEYSTATUS = 1003 THEN
                    MOVE SPACE TO INGREDEXIST
@@ -370,26 +344,25 @@
            MOVE ZERO TO EDIT-WHAT
            PERFORM WITH TEST AFTER UNTIL EDIT-WHAT = 8
                PERFORM 110-EDIT-INGREDIENT
-                   IF KEYSTATUS = 1003 THEN
-                       MOVE SPACE TO INGREDEXIST
-                       EXIT PROGRAM
-                   END-IF
+               IF KEYSTATUS = 1003 THEN
+                   MOVE SPACE TO INGREDEXIST
+                   EXIT PROGRAM
+               END-IF
                OPEN I-O FXINGRED
-                   PERFORM 115-EDIT-WHAT
-                   IF KEYSTATUS = 1003 THEN
-                       MOVE SPACE TO INGREDEXIST
-                       CLOSE FXINGRED
-                       EXIT PROGRAM
-                   END-IF
-                   REWRITE INGREDS-DETAILS FROM WSINGREDS-DETAILS
-                   END-REWRITE
+               PERFORM 115-EDIT-WHAT
+               IF KEYSTATUS = 1003 THEN
+                   MOVE SPACE TO INGREDEXIST
+                   CLOSE FXINGRED
+                   EXIT PROGRAM
+               END-IF
+               REWRITE INGREDS-DETAILS FROM WSINGREDS-DETAILS
+               END-REWRITE
                CLOSE FXINGRED
            END-PERFORM
            MOVE SPACES TO INGREDEXIST
            EXIT PROGRAM.
 
        050-FILL-TABLES SECTION.
-
            SET ING-INDEX TO 1
            OPEN INPUT FXINGRED
            PERFORM UNTIL EOFINGREDS
@@ -402,28 +375,11 @@
                END-READ
            END-PERFORM
            CLOSE FXINGRED
-
-           SET SUP-INDEX TO 1
-           OPEN INPUT FXSUPPLY
-           PERFORM UNTIL EOFSUPPLIER
-           READ FXSUPPLY
-               AT END SET EOFSUPPLIER TO TRUE
-               MOVE SUP-INDEX TO NUMBER-SUPP
-               NOT AT END
-                   PERFORM LOAD-TABLE1
-               END-READ
-           END-PERFORM
-           CLOSE FXSUPPLY
        EXIT SECTION.
 
        LOAD-TABLE SECTION.
            MOVE INGREDS-DETAILS TO TABLE-INGREDS (ING-INDEX)
            SET ING-INDEX UP BY 1
-       EXIT SECTION.
-
-       LOAD-TABLE1 SECTION.
-           MOVE SUPPLIER-DETAILS TO TABLE-SUPP (SUP-INDEX)
-           SET SUP-INDEX UP BY 1
        EXIT SECTION.
 
        SHOW-TABLE SECTION.
@@ -432,207 +388,80 @@
                DISPLAY TABLE-INGREDS (ING-INDEX) ACCEPT OMITTED
                SET ING-INDEX UP BY 1
            END-PERFORM
-           SET SUP-INDEX TO 1
-           PERFORM UNTIL SUP-INDEX >= NUMBER-SUPP
-               DISPLAY TABLE-SUPP (SUP-INDEX) ACCEPT OMITTED
-               SET SUP-INDEX UP BY 1
-           END-PERFORM
        EXIT SECTION.
-
-      * 101-INGREDIENT-LIST SECTION.
-      *     DISPLAY CLEAR-SCREEN
-      *     DISPLAY MAIN-SCREEN
-      *     DISPLAY LIST-FRAME
-      *     MOVE ZEROES TO NEW-INGREDID
-      *     MOVE SPACES TO TRUE-YES
-      *     SET ING-INDEX TO 1
-      *     MOVE 09 TO ILIN
-      *     MOVE 11 TO ICOL
-      *     MOVE 1 TO COUNTPAGE
-      *     SET INDEX-PAGINA TO 1
-      *     MOVE ING-INDEX TO PAGINA (INDEX-PAGINA)
-      *     PERFORM UNTIL ING-INDEX >= NUMBER-ING
-      *         DISPLAY INGREDIENT-LIST1
-      *         ADD 1 TO ILIN
-      *         SET ING-INDEX UP BY 1
-      *         IF ILIN = 21 AND ICOL = 11 THEN
-      *             MOVE 09 TO ILIN
-      *             MOVE 51 TO ICOL
-      *         ELSE
-      *             IF ILIN = 21 AND ICOL = 51 THEN
-      *                 MOVE NEXT-PAGE TO MESSAGE-LIST-PAGE
-      *                 ACCEPT GET-INGREDID
-      *                 IF KEYSTATUS =1001 AND COUNTPAGE > 1
-      *                     SUBTRACT 1 FROM COUNTPAGE
-      *                     DISPLAY CLEAR-SCREEN
-      *                     DISPLAY MAIN-SCREEN
-      *                     DISPLAY LIST-FRAME
-      *                     MOVE 09 TO ILIN
-      *                     MOVE 11 TO ICOL
-      *                     SET INDEX-PAGINA TO COUNTPAGE
-      *                     SET ING-INDEX TO PAGINA (INDEX-PAGINA)
-      *                 ELSE
-      *                     IF KEYSTATUS = 1002 THEN
-      *                         ADD 1 TO COUNTPAGE
-      *                         DISPLAY CLEAR-SCREEN
-      *                         DISPLAY MAIN-SCREEN
-      *                         DISPLAY LIST-FRAME
-      *                         MOVE 09 TO ILIN
-      *                         MOVE 11 TO ICOL
-      *                         SET INDEX-PAGINA UP BY 1
-      *                         MOVE ING-INDEX TO PAGINATEMP
-      *                         ADD 1 TO PAGINATEMP
-      *                         MOVE PAGINATEMP TO PAGINA (INDEX-PAGINA)
-      *                     ELSE
-      *                         EXIT SECTION
-      *                     END-IF
-      *                 END-IF
-      *             END-IF
-      *         END-IF
-      *         IF ING-INDEX >= NUMBER-ING
-      *             ACCEPT GET-INGREDID
-      *             IF KEYSTATUS =1001 AND COUNTPAGE > 1
-      *                     SUBTRACT 1 FROM COUNTPAGE
-      *                     DISPLAY CLEAR-SCREEN
-      *                     DISPLAY MAIN-SCREEN
-      *                     DISPLAY LIST-FRAME
-      *                     MOVE 09 TO ILIN
-      *                     MOVE 11 TO ICOL
-      *                     SET INDEX-PAGINA TO COUNTPAGE
-      *                     SET ING-INDEX TO PAGINA (INDEX-PAGINA)
-      *                 END-IF
-      *         END-IF
-      *     END-PERFORM
 
         101-INGREDIENT-LIST SECTION.
-            DISPLAY CLEAR-SCREEN
-            DISPLAY MAIN-SCREEN
-            DISPLAY LIST-FRAME
-            MOVE ZEROES TO NEW-INGREDID
-            MOVE SPACES TO TRUE-YES
-            SET ING-INDEX TO 1
-            MOVE 09 TO ILIN
-            MOVE 11 TO ICOL
-            MOVE 1 TO COUNTPAGE
-            MOVE 24 TO PAGINA
-            PERFORM UNTIL ING-INDEX >= NUMBER-ING
-                DISPLAY INGREDIENT-LIST1
-                ADD 1 TO ILIN
+           DISPLAY CLEAR-SCREEN
+           DISPLAY MAIN-SCREEN
+           DISPLAY LIST-FRAME
+           MOVE ZEROES TO NEW-INGREDID
+           MOVE SPACES TO TRUE-YES
+           SET ING-INDEX TO 1
+           MOVE 09 TO ILIN
+           MOVE 11 TO ICOL
+           MOVE 1 TO COUNTPAGE
+           MOVE 24 TO PAGINA
+           PERFORM UNTIL ING-INDEX >= NUMBER-ING
+               DISPLAY INGREDIENT-LIST1
+               ADD 1 TO ILIN
                ADD 1 TO PAGINA
-                SET ING-INDEX UP BY 1
+               SET ING-INDEX UP BY 1
                IF ILIN = 21 AND ICOL = 11 THEN
-                    MOVE 09 TO ILIN
-                    MOVE 51 TO ICOL
-                ELSE
-                    IF ILIN = 21 AND ICOL = 51 THEN
-                        MOVE NEXT-PAGE TO MESSAGE-LIST-PAGE
-                        ACCEPT GET-INGREDID
-                        IF KEYSTATUS =1001 AND COUNTPAGE > 1
-                            DISPLAY CLEAR-SCREEN
-                            DISPLAY MAIN-SCREEN
-                            DISPLAY LIST-FRAME
-                            MOVE 09 TO ILIN
-                            MOVE 11 TO ICOL
-                            SET ING-INDEX DOWN BY PAGINA
-                            SUBTRACT 1 FROM COUNTPAGE
-                            MOVE 24 TO PAGINA
-                        ELSE
-                            IF KEYSTATUS = 1002 THEN
-                                DISPLAY CLEAR-SCREEN
-                                DISPLAY MAIN-SCREEN
-                                DISPLAY LIST-FRAME
-                                MOVE 09 TO ILIN
-                                MOVE 11 TO ICOL
-                                ADD 1 TO COUNTPAGE
-                                MOVE 24 TO PAGINA
-                            ELSE
-                                EXIT SECTION
-                            END-IF
-                        END-IF
-                    END-IF
-                END-IF
-                IF ING-INDEX >= NUMBER-ING
-                    ACCEPT GET-INGREDID
-                    IF KEYSTATUS =1001 AND COUNTPAGE > 1
-                            DISPLAY CLEAR-SCREEN
-                            DISPLAY MAIN-SCREEN
-                            DISPLAY LIST-FRAME
-                            MOVE 09 TO ILIN
-                            MOVE 11 TO ICOL
-                            SET ING-INDEX DOWN BY PAGINA
-                            SUBTRACT 1 FROM COUNTPAGE
-                            MOVE 24 TO PAGINA
-                        END-IF
-                END-IF
-            END-PERFORM
-            ACCEPT GET-INGREDID
-
+                   MOVE 09 TO ILIN
+                   MOVE 51 TO ICOL
+               ELSE
+                   IF ILIN = 21 AND ICOL = 51 THEN
+                       MOVE NEXT-PAGE TO MESSAGE-LIST-PAGE
+                       ACCEPT GET-INGREDID
+                       IF KEYSTATUS = 1003 THEN
+                           EXIT SECTION
+                       END-IF
+                       IF KEYSTATUS =1001 AND COUNTPAGE > 1
+                           DISPLAY CLEAR-SCREEN
+                           DISPLAY MAIN-SCREEN
+                           DISPLAY LIST-FRAME
+                           MOVE 09 TO ILIN
+                           MOVE 11 TO ICOL
+                           SET ING-INDEX DOWN BY PAGINA
+                           SUBTRACT 1 FROM COUNTPAGE
+                           MOVE 24 TO PAGINA
+                       ELSE
+                           IF KEYSTATUS = 1002 THEN
+                               DISPLAY CLEAR-SCREEN
+                               DISPLAY MAIN-SCREEN
+                               DISPLAY LIST-FRAME
+                               MOVE 09 TO ILIN
+                               MOVE 11 TO ICOL
+                               ADD 1 TO COUNTPAGE
+                               MOVE 24 TO PAGINA
+                           ELSE
+                               EXIT SECTION
+                           END-IF
+                       END-IF
+                   END-IF
+               END-IF
+               IF ING-INDEX >= NUMBER-ING
+                   ACCEPT GET-INGREDID
+                   IF KEYSTATUS = 1003 THEN
+                       EXIT SECTION
+                   END-IF
+                   IF KEYSTATUS =1001 AND COUNTPAGE > 1
+                       DISPLAY CLEAR-SCREEN
+                       DISPLAY MAIN-SCREEN
+                       DISPLAY LIST-FRAME
+                       MOVE 09 TO ILIN
+                       MOVE 11 TO ICOL
+                       SET ING-INDEX DOWN BY PAGINA
+                       SUBTRACT 1 FROM COUNTPAGE
+                       MOVE 24 TO PAGINA
+                   END-IF
+               END-IF
+           END-PERFORM
+      *>     ACCEPT GET-INGREDID
+      *>     IF KEYSTATUS = 1003 THEN
+      *>         EXIT SECTION
+      *>     END-IF
        EXIT SECTION.
-
-      * 100-INGREDIENT-LIST SECTION.
-      *     OPEN INPUT FXINGRED
-      *     IF INGRED-STATUS = 35 THEN
-      *         DISPLAY CLEAR-SCREEN
-      *         DISPLAY MAIN-SCREEN
-      *         ACCEPT EMPTY-LIST-SCREEN
-      *         MOVE "Y" TO TRUE-YES
-      *         EXIT SECTION
-      *     ELSE
-      *         CLOSE FXINGRED
-      *     END-IF
-      *     DISPLAY CLEAR-SCREEN
-      *     DISPLAY MAIN-SCREEN
-      *     DISPLAY LIST-FRAME
-      *     MOVE ZEROES TO NEW-INGREDID
-      *     MOVE SPACES TO TRUE-YES
-      *     MOVE 1 TO INGREDS-ID
-      *     OPEN INPUT FXINGRED
-      *     START FXINGRED KEY IS GREATER OR EQUAL INGREDS-ID
-      *         INVALID KEY
-      *             ACCEPT EMPTY-LIST-SCREEN
-      *             MOVE "Y" TO TRUE-YES
-      *             EXIT SECTION
-      *     END-START
-      *     MOVE 09 TO ILIN
-      *     MOVE 11 TO ICOL
-      *     PERFORM UNTIL EOFINGREDS
-      *         READ FXINGRED NEXT RECORD
-      *             AT END SET EOFINGREDS TO TRUE
-      *             MOVE NO-MORE-INGREDS TO MESSAGE-LIST-PAGE
-      *             ACCEPT GET-INGREDID
-      *             EXIT SECTION
-      *             IF KEYSTATUS = 1003 THEN
-      *                 CLOSE FXINGRED
-      *                 EXIT SECTION
-      *             END-IF
-      *             NOT AT END
-      *             DISPLAY INGREDIENT-LIST
-      *             ADD 1 TO ILIN
-      *             IF ILIN = 21 AND ICOL = 11 THEN
-      *                 MOVE 09 TO ILIN
-      *                 MOVE 51 TO ICOL
-      *             ELSE
-      *                 IF ILIN = 21 AND ICOL = 51 THEN
-      *                     MOVE NEXT-PAGE TO MESSAGE-LIST-PAGE
-      *                     ACCEPT GET-INGREDID
-      *                     IF KEYSTATUS = 1002 THEN
-      *                         DISPLAY CLEAR-SCREEN
-      *                         DISPLAY MAIN-SCREEN
-      *                         DISPLAY LIST-FRAME
-      *                         MOVE 09 TO ILIN
-      *                         MOVE 11 TO ICOL
-      *                     ELSE
-      *                         EXIT SECTION
-      *                     END-IF
-      *                     IF KEYSTATUS = 1003
-      *                         CLOSE FXINGRED
-      *                         EXIT SECTION
-      *                     END-IF
-      *                 END-IF
-      *             END-IF
-      *         END-READ
-      *     END-PERFORM
-      *     EXIT SECTION.
 
        106-CHECK-IF-INGRED-ID-EXISTS SECTION.
            SET ING-INDEX TO 1
@@ -654,23 +483,6 @@
            END-IF
        EXIT SECTION.
 
-      * 105-CHECK-IF-INGRED-ID-EXISTS SECTION.
-      *     OPEN INPUT FXINGRED
-      *     MOVE GET-VALID-ID TO INGREDS-ID
-      *         READ FXINGRED INTO WSINGREDS-DETAILS
-      *             NOT INVALID KEY
-      *                 MOVE "Y" TO INGREDEXIST
-      *             INVALID KEY
-      *                 MOVE ERROR-INGREDID-NO TO ERROR-TEXT
-      *                 ACCEPT ERROR-ZONE
-      *                 IF KEYSTATUS = 1003 THEN
-      *                     CLOSE FXINGRED
-      *                     EXIT SECTION
-      *                 END-IF
-      *         END-READ
-      *     CLOSE FXINGRED
-      * EXIT SECTION.
-
        110-EDIT-INGREDIENT SECTION.
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
@@ -691,6 +503,21 @@
                    END-IF
                WHEN 2
                    PERFORM 155-GET-DESCRIPTION
+                   IF KEYSTATUS = 1003 THEN
+                       EXIT SECTION
+                   END-IF
+               WHEN 3
+                   PERFORM 160-GET-UNIT-SUPPLY
+                   IF KEYSTATUS = 1003 THEN
+                       EXIT SECTION
+                   END-IF
+               WHEN 4
+                   PERFORM 165-GET-UNIT-SANDWICH
+                   IF KEYSTATUS = 1003 THEN
+                       EXIT SECTION
+                   END-IF
+               WHEN 5
+                   PERFORM 170-GET-TRESHOLD
                    IF KEYSTATUS = 1003 THEN
                        EXIT SECTION
                    END-IF
@@ -722,16 +549,77 @@
        155-GET-DESCRIPTION SECTION.
            MOVE MESSAGE-DESCRIPTION TO INSTRUCTIONS-TEXT
            DISPLAY INSTRUCTIONS-TEXT
-           MOVE REG-INGRED-DESCRIPTION TO EDIT-INGREDS-DESCRIPTION
+           MOVE REG-INGRED-DESCRIPTION TO EDIT-INGRED-DESCRIPTION
            ACCEPT EDIT-INGRED-DESCRIPTION
            IF KEYSTATUS = 1003 THEN
                EXIT SECTION
            END-IF
-           MOVE FUNCTION UPPER-CASE (EDIT-INGREDS-DESCRIPTION) TO
+           MOVE FUNCTION UPPER-CASE (EDIT-INGRED-DESCRIPTION) TO
                WSINGREDS-DESCRIPTION
            MOVE TRIM(WSINGREDS-DESCRIPTION) TO UNSTR
            PERFORM 190-REMOVE-EXTRA-SPACES
            MOVE UNSTR TO WSINGREDS-DESCRIPTION
+       EXIT SECTION.
+
+       160-GET-UNIT-SUPPLY SECTION.
+           PERFORM WITH TEST AFTER UNTIL WSINGREDS-UNIT-SUPPLIER IS
+           ALPHABETIC
+      *         MOVE SPACE TO EDIT-UNIT-SUPPLIER
+               MOVE MESSAGE-UNIT-SUPPLIER TO INSTRUCTIONS-TEXT
+               DISPLAY INSTRUCTIONS-TEXT
+               ACCEPT EDIT-UNIT-SUPPLIER
+               IF KEYSTATUS = 1003 THEN
+                   EXIT SECTION
+               END-IF
+               MOVE FUNCTION UPPER-CASE (EDIT-UNIT-SUPPLIER) TO
+                  WSINGREDS-UNIT-SUPPLIER
+               MOVE TRIM(WSINGREDS-UNIT-SUPPLIER) TO UNSTR
+               PERFORM 190-REMOVE-EXTRA-SPACES
+               MOVE UNSTR TO WSINGREDS-UNIT-SUPPLIER
+               IF WSINGREDS-UNIT-SUPPLIER IS NOT ALPHABETIC THEN
+                   MOVE ERROR-UNIT TO ERROR-TEXT
+                   ACCEPT ERROR-ZONE
+                   IF KEYSTATUS = 1003 THEN
+                       EXIT SECTION
+                   END-IF
+               END-IF
+           END-PERFORM
+           DISPLAY REG-UNIT-SUPPLIER1
+       EXIT SECTION.
+
+       165-GET-UNIT-SANDWICH SECTION.
+           PERFORM WITH TEST AFTER UNTIL WSINGREDS-UNIT-SANDWICH IS
+           ALPHABETIC
+               MOVE SPACE TO EDIT-UNIT-SANDWICH
+               MOVE MESSAGE-UNIT-SANDWICH TO INSTRUCTIONS-TEXT
+               DISPLAY INSTRUCTIONS-TEXT
+               ACCEPT EDIT-UNIT-SANDWICH
+               IF KEYSTATUS = 1003 THEN
+                   EXIT SECTION
+               END-IF
+               MOVE FUNCTION UPPER-CASE (EDIT-UNIT-SANDWICH) TO
+                  WSINGREDS-UNIT-SANDWICH
+               MOVE TRIM(WSINGREDS-UNIT-SANDWICH) TO UNSTR
+               PERFORM 190-REMOVE-EXTRA-SPACES
+               MOVE UNSTR TO WSINGREDS-UNIT-SANDWICH
+               IF WSINGREDS-UNIT-SANDWICH IS NOT ALPHABETIC THEN
+                   MOVE ERROR-UNIT TO ERROR-TEXT
+                   ACCEPT ERROR-ZONE
+                   IF KEYSTATUS = 1003 THEN
+                       EXIT SECTION
+                   END-IF
+               END-IF
+           END-PERFORM
+       EXIT SECTION.
+
+       170-GET-TRESHOLD SECTION.
+           MOVE SPACE TO REG-TRESHOLD
+           MOVE MESSAGE-TRESHOLD TO INSTRUCTIONS-TEXT
+           DISPLAY INSTRUCTIONS-TEXT
+           ACCEPT EDIT-TRESHOLD
+           IF KEYSTATUS = 1003 THEN
+               EXIT SECTION
+           END-IF
        EXIT SECTION.
 
        190-REMOVE-EXTRA-SPACES SECTION.
