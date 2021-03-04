@@ -21,7 +21,6 @@
                    ORGANIZATION IS INDEXED
                    ACCESS MODE IS DYNAMIC
                    RECORD KEY IS CATEGORY-ID
-                   ALTERNATE KEY IS CATEGORY-NAME WITH DUPLICATES
                    FILE STATUS CATE-STATUS.
 
                SELECT FXKEYS ASSIGN TO "CATEKEYS"
