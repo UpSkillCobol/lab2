@@ -32,3 +32,19 @@
        77  FILE-STATUS                     PIC 9(002).
        77  REG-UNIQUE                      PIC 9(001).
        77  DUMMY                           PIC X(001).
+       77  LINK-TEXT                       PIC X(150).
+       77  SPACE-CHECK1                    PIC X(050).
+       77  SPACE-CHECK2                    PIC X(050).
+       77  SPACE-CHECK3                    PIC X(050).
+       77  SPACE-CHECK4                    PIC X(050).
+       77  SPACE-CHECK5                    PIC X(050).
+       77  SPACE-CHECK6                    PIC X(050).
+       77  SPACE-CHECK7                    PIC X(050).
+       77  SPACE-CHECK8                    PIC X(050).
+       77  SPACE-CHECK9                    PIC X(050).
+       77  SPACE-CHECK10                   PIC X(050).
+       77  SPACE-CHECK11                   PIC X(050).
+       77  SPACE-CHECK12                   PIC X(050).
+       77  SPACE-CHECK13                   PIC X(050).
+       77  SPACE-CHECK14                   PIC X(050).
+       77  SPACE-CHECK15                   PIC X(050).
