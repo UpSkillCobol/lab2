@@ -155,14 +155,20 @@
            05 VALUE "  " LINE 19 COL 62 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 20 COL 62 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 21 COL 62 BACKGROUND-COLOR 7.
-           05 CAT-ACCEPT PIC 9(003) LINE 11 COL 32 TO WS-CAT-ACCEPT.
+           05 CAT-ACCEPT PIC 9(003) LINE 12 COL 32 TO WS-CAT-ACCEPT.
            05 REG-CAT-REC.
-               10 REG-CAT1 PIC 9(003) LINE 12 COL 32 FROM WS-CATEGORIE1
+               10 REG-CAT1 PIC 9(003) LINE 13 COL 18 FROM WS-CATEGORIE1
                BLANK WHEN ZERO.
-               10 REG-CAT2 PIC 9(003) LINE 13 COL 32 FROM WS-CATEGORIE2
+               10 REG-CAT-NAME1 PIC X(030) LINE 13 COL 23
+               FROM WS-CAT-NAME1.
+               10 REG-CAT2 PIC 9(003) LINE 14 COL 18 FROM WS-CATEGORIE2
                BLANK WHEN ZERO.
-               10 REG-CAT3 PIC 9(003) LINE 14 COL 32 FROM WS-CATEGORIE3
+               10 REG-CAT-NAME2 PIC X(030) LINE 14 COL 23
+               FROM WS-CAT-NAME2.
+               10 REG-CAT3 PIC 9(003) LINE 15 COL 18 FROM WS-CATEGORIE3
                BLANK WHEN ZERO.
+               10 REG-CATE-NAME3 PIC X(030) LINE 14 COL 23
+               FROM WS-CAT-NAME3.
       ******************************************************************
        01  REGISTER-ING-SCREEN
            BACKGROUND-COLOR 0, FOREGROUND-COLOR 7.
@@ -324,7 +330,7 @@
       ******************************************************************
        01  CATEGORY-LIST1.
            05 LIST-CAT-ID1 PIC 9(003) LINE ILIN COL ICOL
-               FROM CAT-TABLE (CAT-INDEX).
+               FROM TABLE-CAT-ID (CAT-INDEX).
            05 VALUE "|" LINE ILIN COL PLUS 1.
            05 LIST-CAT-NAME1 PIC X(030) LINE ILIN COL PLUS 1
                FROM TABLE-CAT-NAME (CAT-INDEX).
@@ -336,6 +342,7 @@
        PROCEDURE DIVISION.
            PERFORM 800-FILE-CHECK.
        050-OBTAIN-TABLES SECTION.
+           DISPLAY "01 TABLE" ACCEPT OMITTED
            SET SR-INDEX TO 1
            OPEN INPUT SANDWICHES
            PERFORM UNTIL SR-EOF
@@ -348,7 +355,9 @@
                END-READ
            END-PERFORM
            CLOSE SANDWICHES
+           DISPLAY "02 TABLE" ACCEPT OMITTED
            SET ING-INDEX TO 1
+           DISPLAY "03 TABLE" ACCEPT OMITTED
            OPEN INPUT INGREDIENTS
            PERFORM UNTIL EOFINGREDS
                READ INGREDIENTS NEXT RECORD
@@ -360,7 +369,9 @@
                END-READ
            END-PERFORM
            CLOSE INGREDIENTS.
+           DISPLAY "04 TABLE" ACCEPT OMITTED
            SET CAT-INDEX TO 1
+           DISPLAY "05 TABLE" ACCEPT OMITTED
            OPEN INPUT CATEGORIES
            PERFORM UNTIL EOFCATEGORY
                READ CATEGORIES NEXT RECORD
@@ -372,6 +383,7 @@
                END-READ
            END-PERFORM
            CLOSE CATEGORIES
+           DISPLAY "06 TABLE" ACCEPT OMITTED
            EXIT SECTION.
        060-LOAD-ING-TABLE SECTION.
            MOVE INGREDS-DETAILS TO ING-TABLE (ING-INDEX)
@@ -386,6 +398,7 @@
            SET SR-INDEX UP BY 1
            EXIT SECTION.
        100-MAIN SECTION.
+           PERFORM 050-OBTAIN-TABLES
            DISPLAY MAIN-SCREEN
            DISPLAY REGISTER-SCREEN
            PERFORM 900-CLEAR-VARIABLES
@@ -411,14 +424,14 @@
                IF KEY-STATUS = F3 THEN
                    EXIT SECTION
                END-IF
-      *     PERFORM 160-OBTAIN-CATEGORIES
-      *         IF KEY-STATUS = F3 THEN
-      *             EXIT SECTION
-      *         END-IF
-           PERFORM 170-OBTAIN-INGREDIENTS
+           PERFORM 160-OBTAIN-CATEGORIES
                IF KEY-STATUS = F3 THEN
                    EXIT SECTION
                END-IF
+      *     PERFORM 170-OBTAIN-INGREDIENTS
+      *         IF KEY-STATUS = F3 THEN
+      *             EXIT SECTION
+      *         END-IF
            EXIT SECTION.
        120-OBTAIN-IID SECTION.
            MOVE SR-TABLE (NUMBER-SR) TO WS-SR-IID
@@ -482,7 +495,7 @@
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY REGISTER-CAT-SCREEN
-           PERFORM 210-LISTAGEM-CAT
+           PERFORM 260-OBTAIN-CATEGORIES
            EXIT SECTION.
        170-OBTAIN-INGREDIENTS SECTION.
            MOVE ZEROS TO REG-ING-REC
@@ -616,8 +629,7 @@
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY LIST-FRAME
-           MOVE ZEROES TO NEW-INGREDID
-           MOVE SPACES TO TRUE-YES
+           DISPLAY REGISTER-CAT-SCREEN
            SET CAT-INDEX TO 1
            MOVE 09 TO ILIN
            MOVE 72 TO ICOL
@@ -629,12 +641,13 @@
                ADD 1 TO PAGINA
                SET CAT-INDEX UP BY 1
                IF ILIN = 21 THEN
-                   ACCEPT GET-INGREDID
+                   ACCEPT CAT-ACCEPT
                    IF KEY-STATUS = F3 THEN
                        EXIT SECTION
                    END-IF
                    IF KEY-STATUS = F1 AND COUNTPAGE > 1
                        DISPLAY CLEAR-SCREEN
+                       DISPLAY REGISTER-CAT-SCREEN
                        DISPLAY MAIN-SCREEN
                        DISPLAY LIST-FRAME
                        MOVE 09 TO ILIN
@@ -644,6 +657,7 @@
                    ELSE
                        IF KEY-STATUS = F2 THEN
                            DISPLAY CLEAR-SCREEN
+                           DISPLAY REGISTER-CAT-SCREEN
                            DISPLAY MAIN-SCREEN
                            DISPLAY LIST-FRAME
                            MOVE 09 TO ILIN
@@ -654,13 +668,14 @@
                        END-IF
                    END-IF
                END-IF
-               IF ING-INDEX >= NUMBER-ING
-                   ACCEPT GET-INGREDID
+               IF CAT-INDEX >= NUMBER-CAT
+                   ACCEPT CAT-ACCEPT
                    IF KEY-STATUS = F3 THEN
                        EXIT SECTION
                    END-IF
                    IF KEY-STATUS = F1 AND COUNTPAGE > 1
                        DISPLAY CLEAR-SCREEN
+                       DISPLAY REGISTER-CAT-SCREEN
                        DISPLAY MAIN-SCREEN
                        DISPLAY LIST-FRAME
                        MOVE 09 TO ILIN
@@ -672,12 +687,13 @@
            END-PERFORM.
        220-ING-EXISTS SECTION.
            MOVE 0 TO WS-ING-EXISTS
+           MOVE SPACES TO WS-ING-ACCEPT-NAME
            SET ING-INDEX TO 1
            PERFORM UNTIL ING-INDEX >= NUMBER-ING
                IF WS-ING-ACCEPT = TABLE-ING-ID (ING-INDEX) THEN
                    MOVE 1 TO WS-ING-EXISTS
                    MOVE TABLE-ING-NAME (ING-INDEX) TO WS-ING-ACCEPT-NAME
-                   MOVE NUMBER-ING TO ING-INDEX
+                   EXIT SECTION
                ELSE
                    SET ING-INDEX UP BY 1
                END-IF
@@ -746,10 +762,49 @@
            END-IF
            EXIT SECTION.
        260-OBTAIN-CATEGORIES SECTION.
+           MOVE ZEROS TO CAT-ACCEPT WS-CAT-ACCEPT
+           PERFORM WITH TEST AFTER UNTIL WS-CAT-ACCEPT = ZEROS OR
+               (WS-CAT-EXISTS = 1 AND WS-CAT-DUPLICATE = 1)
+               PERFORM 210-LISTAGEM-CAT
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
+               IF WS-CAT-ACCEPT = ZEROS THEN
+                   EXIT SECTION
+               ELSE
+                   PERFORM 270-CHECK-CAT-EXISTS
+                   IF WS-CAT-EXISTS = 1 THEN
+                       PERFORM 280-CHECK-CAT-DUPLICATE
+                           IF WS-ING-DUPLICATE <> 1 THEN
+                               MOVE CAT-DUPLICATE-ERROR TO ERROR-MESSAGE
+                               ACCEPT ERROR-SCREEN
+                           END-IF
+                   ELSE
+                       MOVE CAT-ERROR TO ERROR-MESSAGE
+                       ACCEPT ERROR-SCREEN
+                   END-IF
+               END-IF
+           END-PERFORM
            EXIT SECTION.
        270-CHECK-CAT-EXISTS SECTION.
+           MOVE 0 TO WS-CAT-EXISTS
+           MOVE SPACES TO WS-CAT-ACCEPT-NAME
+           SET CAT-INDEX TO 1
+           PERFORM UNTIL CAT-INDEX >= NUMBER-CAT
+               IF WS-CAT-ACCEPT = TABLE-CAT-ID (CAT-INDEX) THEN
+                   MOVE 1 TO WS-CAT-EXISTS
+                   MOVE TABLE-CAT-NAME (CAT-INDEX) TO WS-CAT-ACCEPT-NAME
+                   EXIT SECTION
+               ELSE
+                   SET CAT-INDEX UP BY 1
+               END-IF
+           END-PERFORM
            EXIT SECTION.
        280-CHECK-CAT-DUPLICATE SECTION.
+           MOVE ZEROS TO WS-CAT-DUPLICATE
+           IF WS-CAT-ACCEPT <> WS-CATEGORIE1 AND WS-CATEGORIE2
+               MOVE 1 TO WS-CAT-DUPLICATE
+           END-IF
            EXIT SECTION.
        700-SPACE-CHECK SECTION.
       *    SPACE-CHECK SECTION TO REMOVE ALL EXTRA SPACES

@@ -63,6 +63,9 @@
        77  WS-CATEGORIE1                   PIC 9(003).
        77  WS-CATEGORIE2                   PIC 9(003).
        77  WS-CATEGORIE3                   PIC 9(003).
+       77  WS-CAT-NAME1                    PIC X(030).
+       77  WS-CAT-NAME2                    PIC X(030).
+       77  WS-CAT-NAME3                    PIC X(030).
        77  WS-INGREDIENT1                  PIC 9(003).
        77  WS-INGREDIENT2                  PIC 9(003).
        77  WS-INGREDIENT3                  PIC 9(003).
@@ -81,3 +84,5 @@
        77  WS-CAT-EXISTS                   PIC 9(001).
        77  WS-ING-DUPLICATE                PIC 9(001).
        77  WS-ING-ACCEPT-NAME              PIC X(030).
+       77  WS-CAT-DUPLICATE                PIC 9(001).
+       77  WS-CAT-ACCEPT-NAME              PIC X(030).
