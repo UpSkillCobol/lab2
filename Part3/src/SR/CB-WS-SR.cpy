@@ -86,3 +86,11 @@
        77  WS-ING-ACCEPT-NAME              PIC X(030).
        77  WS-CAT-DUPLICATE                PIC 9(001).
        77  WS-CAT-ACCEPT-NAME              PIC X(030).
+       77  INGREDIENT-EMPTY                PIC 9(001).
+       77  CATEGORY-EMPTY                  PIC 9(001).
+       77  WS-CATEGORIES-STRING1           PIC X(060).
+       77  WS-CATEGORIES-STRING2           PIC X(060).
+       77  WS-INGREDIENTS-STRING1          PIC X(060).
+       77  WS-INGREDIENTS-STRING2          PIC X(060).
+       77  WS-INGREDIENTS-STRING3          PIC X(060).
+       77  WS-REG                          PIC X(001).

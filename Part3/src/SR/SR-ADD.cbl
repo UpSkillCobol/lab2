@@ -107,7 +107,7 @@
            05 VALUE "  " LINE 20 COL 62 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 21 COL 62 BACKGROUND-COLOR 7.
            05 REG-REC.
-               10 REG-EID PIC X(008) LINE 12 COL 32
+               10 REG-EID PIC X(005) LINE 12 COL 32
                    TO WS-SR-EID.
                10 REG-S-DESCRIPTION PIC A(025) LINE 13 COL 32
                        TO WS-SR-S-DESCRIPTION.
@@ -167,7 +167,7 @@
                FROM WS-CAT-NAME2.
                10 REG-CAT3 PIC 9(003) LINE 15 COL 18 FROM WS-CATEGORIE3
                BLANK WHEN ZERO.
-               10 REG-CATE-NAME3 PIC X(030) LINE 14 COL 23
+               10 REG-CATE-NAME3 PIC X(030) LINE 15 COL 23
                FROM WS-CAT-NAME3.
       ******************************************************************
        01  REGISTER-ING-SCREEN
@@ -238,6 +238,69 @@
                10 REG-ING-NAME6 PIC X(030) LINE 18 COL 23
                FROM WS-ING-NAME6.
       ******************************************************************
+       01  CONFIRM-RECORD-SCREEN.
+           05 VALUE ALL " " PIC X(105) LINE 7 col 05
+               BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(105) LINE 22 col 05
+               BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 8 col 05 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 9 col 05 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 col 05 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 col 05 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 col 05 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 col 05 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 col 05 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 col 05 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 col 05 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 col 05 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 col 05 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 col 05 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 col 05 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 col 05 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 8 col 110 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 9 col 110 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 col 110 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 col 110 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 col 110 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 col 110 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 col 110 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 col 110 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 col 110 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 col 110 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 col 110 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 col 110 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 col 110 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 col 110 BACKGROUND-COLOR 7.
+           05 CONFIRM-REC.
+               10 CONFIRM-SANDWICH-REC.
+                   15 CONFIRM-EED PIC X(005) LINE 11 COL 29
+                   FROM WS-SR-EID.
+                   15 CONFIRM-S-DESCRIPTION PIC X(025) LINE 12 COL 29
+                   FROM WS-SR-S-DESCRIPTION.
+                   15 CONFIRM-L-DESCRIPTION.
+                       20 CONFIRM-L-DESCRIPTION1 PIC X(025)
+                       LINE 13 COL 29 FROM WS-SR-L-DESCRIPTION1.
+                       20 CONFIRM-L-DESCRIPTION2 PIC X(025)
+                       LINE 14 COL 29 FROM WS-SR-L-DESCRIPTION2.
+               10 CONFIRM-CATEGORIES-REC.
+                   15 CONFIRM-CATEGORIE1 PIC X(060) LINE 15 COL 29
+                   FROM WS-CATEGORIES-STRING1.
+                   15 CONFIRM-CATEGORIE2 PIC X(060) LINE 16 COL 29
+                   FROM WS-CATEGORIES-STRING2.
+               10 CONFIRM-INGREDIENTS-REC.
+                   15 CONFIRM-INGREDIENT1 PIC X(060) LINE 18 COL 29
+                   FROM WS-INGREDIENTS-STRING1.
+                   15 CONFIRM-INGREDIENT2 PIC X(060) LINE 19 COL 29
+                   FROM WS-INGREDIENTS-STRING2.
+                   15 CONFIRM-INGREDIENT3 PIC X(060) LINE 20 COL 29
+                   FROM WS-INGREDIENTS-STRING3.
+           05 VALUE CONFIRM-TEXT LINE 09 COL 10.
+           05 VALUE CONFIRM-TEXT1 LINE 11 COL 10.
+           05 VALUE CONFIRM-TEXT2 LINE 12 COL 10.
+           05 VALUE CONFIRM-TEXT3 LINE 13 COL 10.
+           05 VALUE CONFIRM-TEXT4 LINE 15 COL 10.
+           05 VALUE CONFIRM-TEXT5 LINE 18 COL 10.
+      ******************************************************************
        01  INSTRUCTIONS-SCREEN.
            05 VALUE ALL " " PIC X(095) LINE 24 COL 01
            BACKGROUND-COLOR 7.
@@ -276,7 +339,7 @@
            05 VALUE ALL " " PIC X(042) LINE 22 COL 68
               BACKGROUND-COLOR 7.
            05 VALUE LIST-FRAME1 LINE 08 COL 72 FOREGROUND-COLOR 5.
-           05 VALUE LIST-FRAME2 LINE 08 COL PLUS 4 FOREGROUND-COLOR 5.
+           05 VALUE LIST-FRAME2 LINE 08 COL PLUS 3 FOREGROUND-COLOR 5.
            05 VALUE "  " LINE 07 COL 68 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 08 COL 68 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 09 COL 68 BACKGROUND-COLOR 7.
@@ -336,13 +399,27 @@
                FROM TABLE-CAT-NAME (CAT-INDEX).
       ******************************************************************
        01  PREVIOUS-NEXT-TEXT.
-           05 PREVIOUS-NEXT-MESSAGE PIC X(90) LINE 26 COL 10
+           05 PREVIOUS-NEXT-MESSAGE PIC X(70) LINE 26 COL 10
            FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
+      ******************************************************************
+       01  CONFIRM-REG-SCREEN.
+           05 VALUE ALL " " PIC X(095) LINE 24 COL 01
+           BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(095) LINE 25 COL 01
+           BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(095) LINE 26 COL 01
+           BACKGROUND-COLOR 7.
+           05 CONFIRM-REG-MESSAGE PIC X(085) LINE 25 COL 10
+           FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
+           05 CONFIRM-X LINE 25 COL PLUS 2 PIC X(002) TO WS-REG AUTO.
       ******************************************************************
        PROCEDURE DIVISION.
            PERFORM 800-FILE-CHECK.
+           IF INGREDIENT-EMPTY = 1 THEN
+               MOVE NO-INGREDIENTS TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
+               EXIT PROGRAM
+           END-IF.
        050-OBTAIN-TABLES SECTION.
-           DISPLAY "01 TABLE" ACCEPT OMITTED
            SET SR-INDEX TO 1
            OPEN INPUT SANDWICHES
            PERFORM UNTIL SR-EOF
@@ -355,10 +432,16 @@
                END-READ
            END-PERFORM
            CLOSE SANDWICHES
-           DISPLAY "02 TABLE" ACCEPT OMITTED
            SET ING-INDEX TO 1
-           DISPLAY "03 TABLE" ACCEPT OMITTED
            OPEN INPUT INGREDIENTS
+           MOVE 001 TO INGREDS-ID
+           START INGREDIENTS KEY IS GREATER OR EQUAL INGREDS-ID
+               INVALID KEY
+               MOVE 1 TO INGREDIENT-EMPTY
+               CLOSE INGREDIENTS
+               MOVE NO-INGREDIENTS TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
+               EXIT PROGRAM
+           END-START
            PERFORM UNTIL EOFINGREDS
                READ INGREDIENTS NEXT RECORD
                    AT END
@@ -369,10 +452,17 @@
                END-READ
            END-PERFORM
            CLOSE INGREDIENTS.
-           DISPLAY "04 TABLE" ACCEPT OMITTED
            SET CAT-INDEX TO 1
-           DISPLAY "05 TABLE" ACCEPT OMITTED
            OPEN INPUT CATEGORIES
+           MOVE ZEROS TO INGREDIENT-EMPTY
+           MOVE 001 TO CATEGORY-ID
+           START CATEGORIES KEY IS GREATER OR EQUAL CATEGORY-ID
+               INVALID KEY
+               MOVE 1 TO CATEGORY-EMPTY
+               CLOSE CATEGORIES
+      *    ADICIONAR MENSAGEM DE ERRO
+               EXIT PROGRAM
+           END-START
            PERFORM UNTIL EOFCATEGORY
                READ CATEGORIES NEXT RECORD
                    AT END
@@ -383,7 +473,6 @@
                END-READ
            END-PERFORM
            CLOSE CATEGORIES
-           DISPLAY "06 TABLE" ACCEPT OMITTED
            EXIT SECTION.
        060-LOAD-ING-TABLE SECTION.
            MOVE INGREDS-DETAILS TO ING-TABLE (ING-INDEX)
@@ -398,7 +487,6 @@
            SET SR-INDEX UP BY 1
            EXIT SECTION.
        100-MAIN SECTION.
-           PERFORM 050-OBTAIN-TABLES
            DISPLAY MAIN-SCREEN
            DISPLAY REGISTER-SCREEN
            PERFORM 900-CLEAR-VARIABLES
@@ -424,14 +512,21 @@
                IF KEY-STATUS = F3 THEN
                    EXIT SECTION
                END-IF
-           PERFORM 160-OBTAIN-CATEGORIES
+      *    IF FICHEIRO DAS CATEGORIES NAO EXISTEM OU ESTA VAZIO PASSA
+      *     DIRETO PARA OS INGREDIENTS
+           IF CATEGORY-EMPTY <> 1 THEN
+               PERFORM 160-OBTAIN-CATEGORIES
+                   IF KEY-STATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
+           ELSE
+               MOVE NO-CATEGORIES TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
+           END-IF
+           PERFORM 170-OBTAIN-INGREDIENTS
                IF KEY-STATUS = F3 THEN
                    EXIT SECTION
                END-IF
-      *     PERFORM 170-OBTAIN-INGREDIENTS
-      *         IF KEY-STATUS = F3 THEN
-      *             EXIT SECTION
-      *         END-IF
+           PERFORM 290-CHECK-RECORD
            EXIT SECTION.
        120-OBTAIN-IID SECTION.
            MOVE SR-TABLE (NUMBER-SR) TO WS-SR-IID
@@ -491,11 +586,34 @@
            DISPLAY REGISTER-SCREEN
            EXIT SECTION.
        160-OBTAIN-CATEGORIES SECTION.
-           MOVE ZEROS TO REG-CAT-REC
+           MOVE ZEROS TO CAT-ACCEPT WS-CATEGORIE1 WS-CATEGORIE2
+               WS-CATEGORIE3
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY REGISTER-CAT-SCREEN
            PERFORM 260-OBTAIN-CATEGORIES
+           IF WS-CAT-ACCEPT = ZEROS THEN
+               EXIT SECTION
+           END-IF
+           MOVE WS-CAT-ACCEPT TO WS-CATEGORIE1
+           MOVE WS-CAT-ACCEPT-NAME TO WS-CAT-NAME1
+           DISPLAY REGISTER-CAT-SCREEN
+           PERFORM 260-OBTAIN-CATEGORIES
+           IF WS-CAT-ACCEPT = ZEROS THEN
+               EXIT SECTION
+           END-IF
+           MOVE WS-CAT-ACCEPT TO WS-CATEGORIE2
+           MOVE WS-CAT-ACCEPT-NAME TO WS-CAT-NAME2
+           DISPLAY REGISTER-CAT-SCREEN
+           PERFORM 260-OBTAIN-CATEGORIES
+           IF WS-CAT-ACCEPT = ZEROS THEN
+               EXIT SECTION
+           END-IF
+           MOVE WS-CAT-ACCEPT TO WS-CATEGORIE3
+           MOVE WS-CAT-ACCEPT-NAME TO WS-CAT-NAME3
+           DISPLAY REGISTER-CAT-SCREEN
+           MOVE CATEGORIES-FILLED TO CONFIRM-MESSAGE
+           ACCEPT CONFIRM-SCREEN
            EXIT SECTION.
        170-OBTAIN-INGREDIENTS SECTION.
            MOVE ZEROS TO REG-ING-REC
@@ -555,7 +673,7 @@
                END-READ
            CLOSE SANDWICHES
            EXIT SECTION.
-       200-LISTAGEM-ING SECTION.
+       200-LIST-ING SECTION.
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY LIST-FRAME
@@ -568,6 +686,7 @@
            MOVE 1 TO COUNTPAGE
            MOVE 12 TO PAGINA
            PERFORM UNTIL ING-INDEX >= NUMBER-ING
+           DISPLAY REGISTER-ING-SCREEN
                DISPLAY INGREDIENT-LIST1
                ADD 1 TO ILIN
                ADD 1 TO PAGINA
@@ -583,6 +702,7 @@
                    END-IF
                    IF KEY-STATUS = F1 AND COUNTPAGE > 1
                        DISPLAY CLEAR-SCREEN
+                       DISPLAY REGISTER-ING-SCREEN
                        DISPLAY MAIN-SCREEN
                        DISPLAY LIST-FRAME
                        MOVE 09 TO ILIN
@@ -592,6 +712,7 @@
                    ELSE
                        IF KEY-STATUS = F2 THEN
                            DISPLAY CLEAR-SCREEN
+                           DISPLAY REGISTER-ING-SCREEN
                            DISPLAY MAIN-SCREEN
                            DISPLAY LIST-FRAME
                            MOVE 09 TO ILIN
@@ -605,12 +726,15 @@
                IF ING-INDEX >= NUMBER-ING
                    MOVE ING-INSTR TO INSTRUCTION-MESSAGE
                    DISPLAY INSTRUCTION-MESSAGE
+                   MOVE F1-F2 TO PREVIOUS-NEXT-MESSAGE
+                   DISPLAY PREVIOUS-NEXT-TEXT
                    ACCEPT ING-ACCEPT
                    IF KEY-STATUS = F3 THEN
                        EXIT SECTION
                    END-IF
                    IF KEY-STATUS = F1 AND COUNTPAGE > 1
                        DISPLAY CLEAR-SCREEN
+                       DISPLAY REGISTER-ING-SCREEN
                        DISPLAY MAIN-SCREEN
                        DISPLAY LIST-FRAME
                        MOVE 09 TO ILIN
@@ -625,7 +749,7 @@
       *>         EXIT SECTION
       *>     END-IF
        EXIT SECTION.
-       210-LISTAGEM-CAT SECTION.
+       210-LIST-CAT SECTION.
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY LIST-FRAME
@@ -636,11 +760,16 @@
            MOVE 1 TO COUNTPAGE
            MOVE 12 TO PAGINA
            PERFORM UNTIL CAT-INDEX >= NUMBER-CAT
+               DISPLAY REGISTER-CAT-SCREEN
                DISPLAY CATEGORY-LIST1
                ADD 1 TO ILIN
                ADD 1 TO PAGINA
                SET CAT-INDEX UP BY 1
                IF ILIN = 21 THEN
+                   MOVE CAT-INSTR TO INSTRUCTION-MESSAGE
+                   DISPLAY INSTRUCTION-MESSAGE
+                   MOVE F1-F2 TO PREVIOUS-NEXT-MESSAGE
+                   DISPLAY PREVIOUS-NEXT-TEXT
                    ACCEPT CAT-ACCEPT
                    IF KEY-STATUS = F3 THEN
                        EXIT SECTION
@@ -669,6 +798,10 @@
                    END-IF
                END-IF
                IF CAT-INDEX >= NUMBER-CAT
+                   MOVE CAT-INSTR TO INSTRUCTION-MESSAGE
+                   DISPLAY INSTRUCTION-MESSAGE
+                   MOVE F1-F2 TO PREVIOUS-NEXT-MESSAGE
+                   DISPLAY PREVIOUS-NEXT-TEXT
                    ACCEPT CAT-ACCEPT
                    IF KEY-STATUS = F3 THEN
                        EXIT SECTION
@@ -703,7 +836,7 @@
            MOVE ZEROS TO ING-ACCEPT WS-ING-ACCEPT
            PERFORM WITH TEST AFTER UNTIL WS-ING-ACCEPT NOT ZEROS
                AND WS-ING-EXISTS = 1
-               PERFORM 200-LISTAGEM-ING
+               PERFORM 200-LIST-ING
                IF KEY-STATUS = F3 THEN
                    EXIT SECTION
                END-IF
@@ -731,7 +864,7 @@
            MOVE ZEROS TO ING-ACCEPT WS-ING-ACCEPT
            PERFORM WITH TEST AFTER UNTIL WS-ING-ACCEPT = ZEROS OR
                (WS-ING-EXISTS = 1 AND WS-ING-DUPLICATE = 1)
-               PERFORM 200-LISTAGEM-ING
+               PERFORM 200-LIST-ING
                IF KEY-STATUS = F3 THEN
                    EXIT SECTION
                END-IF
@@ -765,7 +898,7 @@
            MOVE ZEROS TO CAT-ACCEPT WS-CAT-ACCEPT
            PERFORM WITH TEST AFTER UNTIL WS-CAT-ACCEPT = ZEROS OR
                (WS-CAT-EXISTS = 1 AND WS-CAT-DUPLICATE = 1)
-               PERFORM 210-LISTAGEM-CAT
+               PERFORM 210-LIST-CAT
                IF KEY-STATUS = F3 THEN
                    EXIT SECTION
                END-IF
@@ -775,7 +908,7 @@
                    PERFORM 270-CHECK-CAT-EXISTS
                    IF WS-CAT-EXISTS = 1 THEN
                        PERFORM 280-CHECK-CAT-DUPLICATE
-                           IF WS-ING-DUPLICATE <> 1 THEN
+                           IF WS-CAT-DUPLICATE <> 1 THEN
                                MOVE CAT-DUPLICATE-ERROR TO ERROR-MESSAGE
                                ACCEPT ERROR-SCREEN
                            END-IF
@@ -805,6 +938,27 @@
            IF WS-CAT-ACCEPT <> WS-CATEGORIE1 AND WS-CATEGORIE2
                MOVE 1 TO WS-CAT-DUPLICATE
            END-IF
+           EXIT SECTION.
+       290-CHECK-RECORD SECTION.
+           STRING
+               TRIM(WS-CAT-NAME1), " | ", TRIM(WS-CAT-NAME2),
+           INTO WS-CATEGORIES-STRING1
+           STRING
+               TRIM(WS-CAT-NAME3),
+           INTO WS-CATEGORIES-STRING2
+           STRING
+               TRIM(WS-ING-NAME1), " | ", TRIM(WS-ING-NAME2),
+           INTO WS-INGREDIENTS-STRING1
+           STRING
+               TRIM(WS-ING-NAME3), " | ", TRIM(WS-ING-NAME4),
+           INTO WS-INGREDIENTS-STRING2
+           STRING
+               TRIM(WS-ING-NAME5), " | ", TRIM(WS-ING-NAME6),
+           INTO WS-INGREDIENTS-STRING3
+           DISPLAY CLEAR-SCREEN
+           DISPLAY MAIN-SCREEN
+           DISPLAY CONFIRM-RECORD-SCREEN
+           ACCEPT OMITTED
            EXIT SECTION.
        700-SPACE-CHECK SECTION.
       *    SPACE-CHECK SECTION TO REMOVE ALL EXTRA SPACES
@@ -853,15 +1007,19 @@
                END-IF
            CLOSE SANDWICHES
            MOVE ZEROS TO FILE-STATUS
+           MOVE ZERO TO CATEGORY-EMPTY
            OPEN I-O CATEGORIES
                IF FILE-STATUS = 35 THEN
+                   MOVE 1 TO CATEGORY-EMPTY
                    OPEN OUTPUT CATEGORIES
                    CLOSE CATEGORIES
                END-IF
            CLOSE CATEGORIES
            MOVE ZEROS TO FILE-STATUS
+           MOVE ZERO TO INGREDIENT-EMPTY
            OPEN I-O INGREDIENTS
                IF FILE-STATUS = 35 THEN
+                   MOVE 1 TO INGREDIENT-EMPTY
                    OPEN OUTPUT INGREDIENTS
                    CLOSE INGREDIENTS
                END-IF
