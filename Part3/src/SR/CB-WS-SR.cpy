@@ -69,3 +69,15 @@
        77  WS-INGREDIENT4                  PIC 9(003).
        77  WS-INGREDIENT5                  PIC 9(003).
        77  WS-INGREDIENT6                  PIC 9(003).
+       77  WS-ING-NAME1                    PIC X(030).
+       77  WS-ING-NAME2                    PIC X(030).
+       77  WS-ING-NAME3                    PIC X(030).
+       77  WS-ING-NAME4                    PIC X(030).
+       77  WS-ING-NAME5                    PIC X(030).
+       77  WS-ING-NAME6                    PIC X(030).
+       77  WS-ING-ACCEPT                   PIC 9(003).
+       77  WS-ING-EXISTS                   PIC 9(001).
+       77  WS-CAT-ACCEPT                   PIC 9(003).
+       77  WS-CAT-EXISTS                   PIC 9(001).
+       77  WS-ING-DUPLICATE                PIC 9(001).
+       77  WS-ING-ACCEPT-NAME              PIC X(030).

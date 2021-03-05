@@ -46,7 +46,8 @@
            INDEXED BY CAT-INDEX.
            05 TABLE-CAT-ID                          PIC 9(003).
            05 TABLE-CAT-NAME                        PIC X(030).
-           05 TABLE-CAT-DESCRIPTION                 PIC X(050).
+           05 TABLE-CAT-DESCRIPTION.
+               10 TABLE-CAT-DESCRIPTION1            PIC X(050).
            05 TABLE-CAT-IS-ACTIVE                   PIC 9(001).
        SCREEN SECTION.
        01  CLEAR-SCREEN BACKGROUND-COLOR 0.
@@ -154,18 +155,19 @@
            05 VALUE "  " LINE 19 COL 62 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 20 COL 62 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 21 COL 62 BACKGROUND-COLOR 7.
+           05 CAT-ACCEPT PIC 9(003) LINE 11 COL 32 TO WS-CAT-ACCEPT.
            05 REG-CAT-REC.
-               10 REG-CAT1 PIC X(003) LINE 12 COL 32 TO WS-CATEGORIE1
-               AUTO.
-               10 REG-CAT2 PIC X(003) LINE 13 COL 32 TO WS-CATEGORIE2
-               AUTO.
-               10 REG-CAT3 PIC X(003) LINE 14 COL 32 TO WS-CATEGORIE3
-               AUTO.
+               10 REG-CAT1 PIC 9(003) LINE 12 COL 32 FROM WS-CATEGORIE1
+               BLANK WHEN ZERO.
+               10 REG-CAT2 PIC 9(003) LINE 13 COL 32 FROM WS-CATEGORIE2
+               BLANK WHEN ZERO.
+               10 REG-CAT3 PIC 9(003) LINE 14 COL 32 FROM WS-CATEGORIE3
+               BLANK WHEN ZERO.
       ******************************************************************
        01  REGISTER-ING-SCREEN
            BACKGROUND-COLOR 0, FOREGROUND-COLOR 7.
            05 VALUE ADD-ING-MENU-TEXT LINE 9 COL 17.
-           05 VALUE ADD-ING-MENU-TEXT1 LINE 12 COL 13.
+           05 VALUE ADD-ING-MENU-TEXT1 LINE 12 COL 08.
       *     05 VALUE ADD-ING-MENU-TEXT2 LINE 13 COL 13.
       *     05 VALUE ADD-ING-MENU-TEXT3 LINE 14 COL 13.
       *     05 VALUE ADD-ING-MENU-TEXT4 LINE 15 COL 13.
@@ -203,19 +205,32 @@
            05 VALUE "  " LINE 19 COL 62 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 20 COL 62 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 21 COL 62 BACKGROUND-COLOR 7.
+           05 ING-ACCEPT PIC 9(003) LINE 12 COL 27 TO WS-ING-ACCEPT.
            05 REG-ING-REC.
-               10 REG-ING1 PIC X(003) LINE 12 COL 32 TO WS-INGREDIENT1
-               AUTO.
-               10 REG-ING2 PIC X(003) LINE 13 COL 32 TO WS-INGREDIENT2
-               AUTO.
-               10 REG-ING3 PIC X(003) LINE 14 COL 32 TO WS-INGREDIENT3
-               AUTO.
-               10 REG-ING4 PIC X(003) LINE 15 COL 32 TO WS-INGREDIENT4
-               AUTO.
-               10 REG-ING5 PIC X(003) LINE 16 COL 32 TO WS-INGREDIENT5
-               AUTO.
-               10 REG-ING6 PIC X(003) LINE 17 COL 32 TO WS-INGREDIENT6
-               AUTO.
+               10 REG-ING1 PIC 9(003) LINE 13 COL 18
+               FROM WS-INGREDIENT1 BLANK WHEN ZERO.
+               10 REG-ING-NAME1 PIC X(030) LINE 13 COL 23
+               FROM WS-ING-NAME1.
+               10 REG-ING2 PIC 9(003) LINE 14 COL 18
+               FROM WS-INGREDIENT2 BLANK WHEN ZERO.
+               10 REG-ING-NAME2 PIC X(030) LINE 14 COL 23
+               FROM WS-ING-NAME2.
+               10 REG-ING3 PIC 9(003) LINE 15 COL 18
+               FROM WS-INGREDIENT3 BLANK WHEN ZERO.
+               10 REG-ING-NAME3 PIC X(030) LINE 15 COL 23
+               FROM WS-ING-NAME3.
+               10 REG-ING4 PIC 9(003) LINE 16 COL 18
+               FROM WS-INGREDIENT4 BLANK WHEN ZERO.
+               10 REG-ING-NAME4 PIC X(030) LINE 16 COL 23
+               FROM WS-ING-NAME4.
+               10 REG-ING5 PIC 9(003) LINE 17 COL 18
+               FROM WS-INGREDIENT5 BLANK WHEN ZERO.
+               10 REG-ING-NAME5 PIC X(030) LINE 17 COL 23
+               FROM WS-ING-NAME5.
+               10 REG-ING6 PIC 9(003) LINE 18 COL 18
+               FROM WS-INGREDIENT6 BLANK WHEN ZERO.
+               10 REG-ING-NAME6 PIC X(030) LINE 18 COL 23
+               FROM WS-ING-NAME6.
       ******************************************************************
        01  INSTRUCTIONS-SCREEN.
            05 VALUE ALL " " PIC X(095) LINE 24 COL 01
@@ -313,6 +328,10 @@
            05 VALUE "|" LINE ILIN COL PLUS 1.
            05 LIST-CAT-NAME1 PIC X(030) LINE ILIN COL PLUS 1
                FROM TABLE-CAT-NAME (CAT-INDEX).
+      ******************************************************************
+       01  PREVIOUS-NEXT-TEXT.
+           05 PREVIOUS-NEXT-MESSAGE PIC X(90) LINE 26 COL 10
+           FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
       ******************************************************************
        PROCEDURE DIVISION.
            PERFORM 800-FILE-CHECK.
@@ -470,7 +489,42 @@
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY REGISTER-ING-SCREEN
-           PERFORM 200-LISTAGEM-ING
+      *    OBTAIN THE FIRST INGREDIENT
+      *    FIRST INGREDIENT MUST BE FILLED, SO IT CANT BE ZEROS
+           PERFORM 230-OBTAIN-ING-1
+           MOVE WS-ING-ACCEPT-NAME TO WS-ING-NAME1
+      *    OBTAIN THE OTHER INGREDIENTS, IT CAN BE NULL.
+      *    SO IF IT IS ZEROS IT JUST LEAVES THIS SECTION.
+           PERFORM 240-OBTAIN-ING-2-6
+           IF WS-ING-ACCEPT = ZEROS THEN
+               EXIT SECTION
+           END-IF
+           MOVE WS-ING-ACCEPT TO WS-INGREDIENT2
+           MOVE WS-ING-ACCEPT-NAME TO WS-ING-NAME2
+           PERFORM 240-OBTAIN-ING-2-6
+           IF WS-ING-ACCEPT = ZEROS THEN
+               EXIT SECTION
+           END-IF
+           MOVE WS-ING-ACCEPT TO WS-INGREDIENT3
+           MOVE WS-ING-ACCEPT-NAME TO WS-ING-NAME3
+           PERFORM 240-OBTAIN-ING-2-6
+           IF WS-ING-ACCEPT = ZEROS THEN
+               EXIT SECTION
+           END-IF
+           MOVE WS-ING-ACCEPT TO WS-INGREDIENT4
+           MOVE WS-ING-ACCEPT-NAME TO WS-ING-NAME4
+           PERFORM 240-OBTAIN-ING-2-6
+           IF WS-ING-ACCEPT = ZEROS THEN
+               EXIT SECTION
+           END-IF
+           MOVE WS-ING-ACCEPT TO WS-INGREDIENT5
+           MOVE WS-ING-ACCEPT-NAME TO WS-ING-NAME5
+           PERFORM 240-OBTAIN-ING-2-6
+           IF WS-ING-ACCEPT = ZEROS THEN
+               EXIT SECTION
+           END-IF
+           MOVE WS-ING-ACCEPT TO WS-INGREDIENT6
+           MOVE WS-ING-ACCEPT-NAME TO WS-ING-NAME6
            EXIT SECTION.
        190-EID-EXISTS SECTION.
            MOVE WS-SR-EID TO SR-EID
@@ -495,9 +549,7 @@
            DISPLAY REGISTER-ING-SCREEN
            MOVE ZEROES TO NEW-INGREDID
            MOVE SPACES TO TRUE-YES
-
            SET ING-INDEX TO 1
-
            MOVE 09 TO ILIN
            MOVE 72 TO ICOL
            MOVE 1 TO COUNTPAGE
@@ -508,11 +560,15 @@
                ADD 1 TO PAGINA
                SET ING-INDEX UP BY 1
                IF ILIN = 21 THEN
-                   ACCEPT REG-ING-REC
-                   IF KEY-STATUS = 1003 THEN
+                   MOVE ING-INSTR TO INSTRUCTION-MESSAGE
+                   DISPLAY INSTRUCTION-MESSAGE
+                   MOVE F1-F2 TO PREVIOUS-NEXT-MESSAGE
+                   DISPLAY PREVIOUS-NEXT-TEXT
+                   ACCEPT ING-ACCEPT
+                   IF KEY-STATUS = F3 THEN
                        EXIT SECTION
                    END-IF
-                   IF KEY-STATUS =1001 AND COUNTPAGE > 1
+                   IF KEY-STATUS = F1 AND COUNTPAGE > 1
                        DISPLAY CLEAR-SCREEN
                        DISPLAY MAIN-SCREEN
                        DISPLAY LIST-FRAME
@@ -521,7 +577,7 @@
                        SUBTRACT 1 FROM COUNTPAGE
                        MOVE 12 TO PAGINA
                    ELSE
-                       IF KEY-STATUS = 1002 THEN
+                       IF KEY-STATUS = F2 THEN
                            DISPLAY CLEAR-SCREEN
                            DISPLAY MAIN-SCREEN
                            DISPLAY LIST-FRAME
@@ -534,11 +590,13 @@
                    END-IF
                END-IF
                IF ING-INDEX >= NUMBER-ING
-                   ACCEPT REG-ING-REC
-                   IF KEY-STATUS = 1003 THEN
+                   MOVE ING-INSTR TO INSTRUCTION-MESSAGE
+                   DISPLAY INSTRUCTION-MESSAGE
+                   ACCEPT ING-ACCEPT
+                   IF KEY-STATUS = F3 THEN
                        EXIT SECTION
                    END-IF
-                   IF KEY-STATUS =1001 AND COUNTPAGE > 1
+                   IF KEY-STATUS = F1 AND COUNTPAGE > 1
                        DISPLAY CLEAR-SCREEN
                        DISPLAY MAIN-SCREEN
                        DISPLAY LIST-FRAME
@@ -560,22 +618,22 @@
            DISPLAY LIST-FRAME
            MOVE ZEROES TO NEW-INGREDID
            MOVE SPACES TO TRUE-YES
-           SET ING-INDEX TO 1
+           SET CAT-INDEX TO 1
            MOVE 09 TO ILIN
            MOVE 72 TO ICOL
            MOVE 1 TO COUNTPAGE
            MOVE 12 TO PAGINA
-           PERFORM UNTIL ING-INDEX >= NUMBER-ING
+           PERFORM UNTIL CAT-INDEX >= NUMBER-CAT
                DISPLAY CATEGORY-LIST1
                ADD 1 TO ILIN
                ADD 1 TO PAGINA
-               SET ING-INDEX UP BY 1
+               SET CAT-INDEX UP BY 1
                IF ILIN = 21 THEN
                    ACCEPT GET-INGREDID
-                   IF KEY-STATUS = 1003 THEN
+                   IF KEY-STATUS = F3 THEN
                        EXIT SECTION
                    END-IF
-                   IF KEY-STATUS =1001 AND COUNTPAGE > 1
+                   IF KEY-STATUS = F1 AND COUNTPAGE > 1
                        DISPLAY CLEAR-SCREEN
                        DISPLAY MAIN-SCREEN
                        DISPLAY LIST-FRAME
@@ -584,7 +642,7 @@
                        SUBTRACT 1 FROM COUNTPAGE
                        MOVE 12 TO PAGINA
                    ELSE
-                       IF KEY-STATUS = 1002 THEN
+                       IF KEY-STATUS = F2 THEN
                            DISPLAY CLEAR-SCREEN
                            DISPLAY MAIN-SCREEN
                            DISPLAY LIST-FRAME
@@ -598,10 +656,10 @@
                END-IF
                IF ING-INDEX >= NUMBER-ING
                    ACCEPT GET-INGREDID
-                   IF KEY-STATUS = 1003 THEN
+                   IF KEY-STATUS = F3 THEN
                        EXIT SECTION
                    END-IF
-                   IF KEY-STATUS =1001 AND COUNTPAGE > 1
+                   IF KEY-STATUS = F1 AND COUNTPAGE > 1
                        DISPLAY CLEAR-SCREEN
                        DISPLAY MAIN-SCREEN
                        DISPLAY LIST-FRAME
@@ -612,6 +670,87 @@
                    END-IF
                END-IF
            END-PERFORM.
+       220-ING-EXISTS SECTION.
+           MOVE 0 TO WS-ING-EXISTS
+           SET ING-INDEX TO 1
+           PERFORM UNTIL ING-INDEX >= NUMBER-ING
+               IF WS-ING-ACCEPT = TABLE-ING-ID (ING-INDEX) THEN
+                   MOVE 1 TO WS-ING-EXISTS
+                   MOVE TABLE-ING-NAME (ING-INDEX) TO WS-ING-ACCEPT-NAME
+                   MOVE NUMBER-ING TO ING-INDEX
+               ELSE
+                   SET ING-INDEX UP BY 1
+               END-IF
+           END-PERFORM
+           EXIT SECTION.
+       230-OBTAIN-ING-1 SECTION.
+           MOVE ZEROS TO ING-ACCEPT WS-ING-ACCEPT
+           PERFORM WITH TEST AFTER UNTIL WS-ING-ACCEPT NOT ZEROS
+               AND WS-ING-EXISTS = 1
+               PERFORM 200-LISTAGEM-ING
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
+               IF WS-ING-ACCEPT = ZEROS THEN
+                   MOVE ING-ZERO TO ERROR-MESSAGE
+                   ACCEPT ERROR-SCREEN
+                   IF KEY-STATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
+                   MOVE ZEROS TO ING-ACCEPT WS-ING-ACCEPT
+               ELSE
+                   PERFORM 220-ING-EXISTS
+                   IF KEY-STATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
+                   IF WS-ING-EXISTS <> 1 THEN
+                       MOVE ING-ERROR TO ERROR-MESSAGE
+                       ACCEPT ERROR-SCREEN
+                   END-IF
+               END-IF
+           END-PERFORM
+           MOVE WS-ING-ACCEPT TO WS-INGREDIENT1
+           EXIT SECTION.
+       240-OBTAIN-ING-2-6 SECTION.
+           MOVE ZEROS TO ING-ACCEPT WS-ING-ACCEPT
+           PERFORM WITH TEST AFTER UNTIL WS-ING-ACCEPT = ZEROS OR
+               (WS-ING-EXISTS = 1 AND WS-ING-DUPLICATE = 1)
+               PERFORM 200-LISTAGEM-ING
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
+               IF WS-ING-ACCEPT = ZEROS THEN
+                   EXIT SECTION
+               ELSE
+                   PERFORM 220-ING-EXISTS
+                   IF WS-ING-EXISTS = 1 THEN
+                       PERFORM 250-CHECK-ING-DUPLICATE
+                           IF WS-ING-DUPLICATE <> 1 THEN
+                               MOVE ING-DUPLICATE-ERROR TO ERROR-MESSAGE
+                               ACCEPT ERROR-SCREEN
+                           END-IF
+                   ELSE
+                       MOVE ING-ERROR TO ERROR-MESSAGE
+                       ACCEPT ERROR-SCREEN
+                   END-IF
+               END-IF
+           END-PERFORM
+           EXIT SECTION.
+       250-CHECK-ING-DUPLICATE SECTION.
+      *    COMPARE ONLY WITH 1,2,3,4 AND 5 AS 6 IS THE LAST ONE TO BE
+      *    ASSIGNED
+           MOVE ZEROS TO WS-ING-DUPLICATE
+           IF WS-ING-ACCEPT <> WS-INGREDIENT1 AND WS-INGREDIENT2 AND
+               WS-INGREDIENT3 AND WS-INGREDIENT4 AND WS-INGREDIENT5
+               MOVE 1 TO WS-ING-DUPLICATE
+           END-IF
+           EXIT SECTION.
+       260-OBTAIN-CATEGORIES SECTION.
+           EXIT SECTION.
+       270-CHECK-CAT-EXISTS SECTION.
+           EXIT SECTION.
+       280-CHECK-CAT-DUPLICATE SECTION.
+           EXIT SECTION.
        700-SPACE-CHECK SECTION.
       *    SPACE-CHECK SECTION TO REMOVE ALL EXTRA SPACES
            MOVE SPACES TO
