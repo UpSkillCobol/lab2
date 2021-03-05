@@ -31,7 +31,7 @@
            05 VALUE ALL " " PIC X(120) LINE 02 COL 01.
            05 VALUE ALL " " PIC X(120) LINE 03 COL 01.
            05 VALUE ALL " " PIC X(120) LINE 04 COL 01.
-           05 VALUE MAIN-TEXT          LINE 03 COL 44.
+           05 VALUE MAIN-TEXT          LINE 03 COL 45.
            05 VALUE ALL " " PIC X(120) LINE 24 COL 01.
            05 VALUE ALL " " PIC X(120) LINE 25 COL 01.
            05 VALUE ALL " " PIC X(120) LINE 26 COL 01.
@@ -80,8 +80,8 @@
 
               EVALUATE MAIN-OPTION
                  WHEN 1     CALL "RSOREGISTER"
-                 WHEN 2     CALL "RSOSEARCH"
-                 WHEN 3     CALL "RSOREPORT"
+      *>            WHEN 2     CALL "RSOSEARCH"
+      *>            WHEN 3     CALL "RSOREPORT"
               END-EVALUATE
 
            END-PERFORM

@@ -68,7 +68,7 @@
        77 EOF                                      PIC X(001).
        77 TRUE-YES                                 PIC X(001).
        77 COUNTPAGE                                PIC 9(002).
-       01 PAGINA                                   PIC 9(003).
+       77 PAGINA                                   PIC 9(003).
        78 MAX-ING                                  VALUE 999.
        01 TABLE-INGREDS OCCURS 1 TO MAX-ING TIMES
            DEPENDING ON NUMBER-ING
@@ -80,8 +80,7 @@
            05 TABLEINGREDS-UNIT-SANDWICH           PIC X(003).
            05 TABLETRESHOLD                        PIC 9(003).
            05 TABLEINGREDS-IS-ACTIVE               PIC 9(001).
-       01 NUMBER-ING                               PIC 9(003) VALUE 999.
-       01 FLAGTABLE                                PIC 9(001).
+       77 NUMBER-ING                               PIC 9(003) VALUE 999.
 
        SCREEN SECTION.
       ******************************************************************
@@ -315,14 +314,14 @@
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
            PERFORM 050-FILL-TABLES
-      *>      PERFORM SHOW-TABLE
+      *>      PERFORM 060-SHOW-TABLE
            PERFORM UNTIL INGREDEXIST-YES
-               PERFORM 101-INGREDIENT-LIST
+               PERFORM 100-INGREDIENT-LIST
                IF TRUE-YES = "Y" OR KEYSTATUS = 1003 THEN
                    MOVE SPACE TO INGREDEXIST
                    EXIT PROGRAM
                END-IF
-               PERFORM 106-CHECK-IF-INGRED-ID-EXISTS
+               PERFORM 105-CHECK-IF-INGRED-ID-EXISTS
                IF KEYSTATUS = 1003 THEN
                    MOVE SPACE TO INGREDEXIST
                    EXIT PROGRAM
@@ -358,18 +357,18 @@
                        SET EOFINGREDS TO TRUE
                        MOVE ING-INDEX TO NUMBER-ING
                    NOT AT END
-                       PERFORM LOAD-TABLE
+                       PERFORM 055-LOAD-TABLE
                END-READ
            END-PERFORM
            CLOSE FXINGRED
        EXIT SECTION.
 
-       LOAD-TABLE SECTION.
+       055-LOAD-TABLE SECTION.
            MOVE INGREDS-DETAILS TO TABLE-INGREDS (ING-INDEX)
            SET ING-INDEX UP BY 1
        EXIT SECTION.
 
-       SHOW-TABLE SECTION.
+       060-SHOW-TABLE SECTION.
            SET ING-INDEX TO 1
            PERFORM UNTIL ING-INDEX >= NUMBER-ING
                DISPLAY TABLE-INGREDS (ING-INDEX) ACCEPT OMITTED
@@ -377,7 +376,9 @@
            END-PERFORM
        EXIT SECTION.
 
-        101-INGREDIENT-LIST SECTION.
+
+
+       100-INGREDIENT-LIST SECTION.
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY LIST-FRAME
@@ -450,7 +451,7 @@
       *>     END-IF
        EXIT SECTION.
 
-       106-CHECK-IF-INGRED-ID-EXISTS SECTION.
+       105-CHECK-IF-INGRED-ID-EXISTS SECTION.
            SET ING-INDEX TO 1
            PERFORM UNTIL ING-INDEX >= NUMBER-ING
                IF GET-VALID-ID = TABLEINGREDS-ID (ING-INDEX)
