@@ -15,7 +15,7 @@
                    15  WS-DELIVERY-DAY              PIC 9(002).
                10  WS-DELIVERY-TIME.
                    15  WS-DELIVERY-HOUR             PIC 9(002).
-                       88  VALID-DELIVERY-HOUR      VALUE 00 THRU 23.
+                       88  VALID-DELIVERY-HOUR      VALUE 09 THRU 17.
                    15  WS-DELIVERY-MINUTE           PIC 9(002).
                        88  VALID-DELIVERY-MINUTE    VALUE 00 THRU 59.
            05  WS-ORDERS-SCHOOL-INTERNAL-ID         PIC 9(003).
