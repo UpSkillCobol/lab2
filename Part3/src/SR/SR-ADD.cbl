@@ -239,9 +239,9 @@
                FROM WS-ING-NAME6.
       ******************************************************************
        01  CONFIRM-RECORD-SCREEN.
-           05 VALUE ALL " " PIC X(105) LINE 7 col 05
+           05 VALUE ALL " " PIC X(107) LINE 7 col 05
                BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(105) LINE 22 col 05
+           05 VALUE ALL " " PIC X(107) LINE 22 col 05
                BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 8 col 05 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 9 col 05 BACKGROUND-COLOR 7.
@@ -411,7 +411,8 @@
            BACKGROUND-COLOR 7.
            05 CONFIRM-REG-MESSAGE PIC X(085) LINE 25 COL 10
            FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
-           05 CONFIRM-X LINE 25 COL PLUS 2 PIC X(002) TO WS-REG AUTO.
+           05 CONFIRM-X LINE 25 COL 54 PIC X(002) TO WS-REG
+           FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
       ******************************************************************
        PROCEDURE DIVISION.
            PERFORM 800-FILE-CHECK.
@@ -497,28 +498,28 @@
            EXIT PROGRAM.
        110-REGISTER SECTION.
            PERFORM 120-OBTAIN-IID
-               IF KEY-STATUS = F3 THEN
-                   EXIT SECTION
-               END-IF
+           IF KEY-STATUS = F3 THEN
+               EXIT SECTION
+           END-IF
            PERFORM 130-OBTAIN-EID
-               IF KEY-STATUS = F3 THEN
-                   EXIT SECTION
-               END-IF
+           IF KEY-STATUS = F3 THEN
+               EXIT SECTION
+           END-IF
            PERFORM 140-OBTAIN-SHORT-DESCRIPTION
-               IF KEY-STATUS = F3 THEN
-                   EXIT SECTION
-               END-IF
+           IF KEY-STATUS = F3 THEN
+               EXIT SECTION
+           END-IF
            PERFORM 150-OBTAIN-LONG-DESCRIPTION
-               IF KEY-STATUS = F3 THEN
-                   EXIT SECTION
-               END-IF
+           IF KEY-STATUS = F3 THEN
+               EXIT SECTION
+           END-IF
       *    IF FICHEIRO DAS CATEGORIES NAO EXISTEM OU ESTA VAZIO PASSA
       *     DIRETO PARA OS INGREDIENTS
            IF CATEGORY-EMPTY <> 1 THEN
                PERFORM 160-OBTAIN-CATEGORIES
-                   IF KEY-STATUS = F3 THEN
-                       EXIT SECTION
-                   END-IF
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
            ELSE
                MOVE NO-CATEGORIES TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
            END-IF
@@ -527,6 +528,9 @@
                    EXIT SECTION
                END-IF
            PERFORM 290-CHECK-RECORD
+           IF KEY-STATUS = F3 THEN
+               EXIT SECTION
+           END-IF
            EXIT SECTION.
        120-OBTAIN-IID SECTION.
            MOVE SR-TABLE (NUMBER-SR) TO WS-SR-IID
@@ -958,7 +962,157 @@
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY CONFIRM-RECORD-SCREEN
-           ACCEPT OMITTED
+           PERFORM WITH TEST AFTER UNTIL REG-OPTION-VLD
+               MOVE WANT-TO-SAVE TO CONFIRM-REG-MESSAGE
+               ACCEPT CONFIRM-REG-SCREEN
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
+           END-PERFORM
+           MOVE UPPER-CASE(WS-REG) TO WS-REG
+           EVALUATE WS-REG
+               WHEN "Y"
+                   OPEN I-O SANDWICHES
+                       MOVE WS-SR-REC TO SR-REC
+                       WRITE SR-REC
+                   CLOSE SANDWICHES
+                   OPEN I-O SR-CAT
+                       IF WS-CATEGORIE1 <> ZEROS THEN
+                           STRING WS-SR-IID, WS-CATEGORIE1
+                           INTO WS-SR-SAND-CAT-ID
+                           MOVE WS-SR-SAND-CAT-ID TO SR-SAND-CAT-ID
+                           WRITE SR-CAT-REC
+                       END-IF
+                       IF WS-CATEGORIE2 <> ZEROS THEN
+                           STRING WS-SR-IID, WS-CATEGORIE2
+                           INTO WS-SR-SAND-CAT-ID
+                           MOVE WS-SR-SAND-CAT-ID TO SR-SAND-CAT-ID
+                           WRITE SR-CAT-REC
+                       END-IF
+                       IF WS-CATEGORIE3 <> ZEROS THEN
+                           STRING WS-SR-IID, WS-CATEGORIE3
+                           INTO WS-SR-SAND-CAT-ID
+                           MOVE WS-SR-SAND-CAT-ID TO SR-SAND-CAT-ID
+                           WRITE SR-CAT-REC
+                       END-IF
+                   CLOSE SR-CAT
+                   OPEN I-O SR-ING
+                       IF WS-INGREDIENT1 <> ZEROS THEN
+                           STRING WS-SR-IID, WS-INGREDIENT1
+                           INTO WS-SR-SAND-ING-ID
+                           MOVE WS-SR-SAND-ING-ID TO SR-SAND-ING-ID
+                           WRITE SR-ING-REC
+                       END-IF
+                       IF WS-INGREDIENT2 <> ZEROS THEN
+                           STRING WS-SR-IID, WS-INGREDIENT2
+                           INTO WS-SR-SAND-ING-ID
+                           MOVE WS-SR-SAND-ING-ID TO SR-SAND-ING-ID
+                           WRITE SR-ING-REC
+                       END-IF
+                       IF WS-INGREDIENT3 <> ZEROS THEN
+                           STRING WS-SR-IID, WS-INGREDIENT3
+                           INTO WS-SR-SAND-ING-ID
+                           MOVE WS-SR-SAND-ING-ID TO SR-SAND-ING-ID
+                           WRITE SR-ING-REC
+                       END-IF
+                       IF WS-INGREDIENT4 <> ZEROS THEN
+                           STRING WS-SR-IID, WS-INGREDIENT4
+                           INTO WS-SR-SAND-ING-ID
+                           MOVE WS-SR-SAND-ING-ID TO SR-SAND-ING-ID
+                           WRITE SR-ING-REC
+                       END-IF
+                       IF WS-INGREDIENT5 <> ZEROS THEN
+                           STRING WS-SR-IID, WS-INGREDIENT5
+                           INTO WS-SR-SAND-ING-ID
+                           MOVE WS-SR-SAND-ING-ID TO SR-SAND-ING-ID
+                           WRITE SR-ING-REC
+                       END-IF
+                       IF WS-INGREDIENT6 <> ZEROS THEN
+                           STRING WS-SR-IID, WS-INGREDIENT6
+                           INTO WS-SR-SAND-ING-ID
+                           MOVE WS-SR-SAND-ING-ID TO SR-SAND-ING-ID
+                           WRITE SR-ING-REC
+                       END-IF
+                   CLOSE SR-ING
+                   MOVE RECORD-SAVED TO CONFIRM-MESSAGE
+                   ACCEPT CONFIRM-SCREEN
+                   IF KEY-STATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
+               WHEN "S"
+                   OPEN I-O SANDWICHES
+                       MOVE WS-SR-REC TO SR-REC
+                       WRITE SR-REC
+                   CLOSE SANDWICHES
+                   OPEN I-O SR-CAT
+                       IF WS-CATEGORIE1 <> ZEROS THEN
+                           STRING WS-SR-IID, WS-CATEGORIE1
+                           INTO WS-SR-SAND-CAT-ID
+                           MOVE WS-SR-SAND-CAT-ID TO SR-SAND-CAT-ID
+                           WRITE SR-CAT-REC
+                       END-IF
+                       IF WS-CATEGORIE2 <> ZEROS THEN
+                           STRING WS-SR-IID, WS-CATEGORIE2
+                           INTO WS-SR-SAND-CAT-ID
+                           MOVE WS-SR-SAND-CAT-ID TO SR-SAND-CAT-ID
+                           WRITE SR-CAT-REC
+                       END-IF
+                       IF WS-CATEGORIE3 <> ZEROS THEN
+                           STRING WS-SR-IID, WS-CATEGORIE3
+                           INTO WS-SR-SAND-CAT-ID
+                           MOVE WS-SR-SAND-CAT-ID TO SR-SAND-CAT-ID
+                           WRITE SR-CAT-REC
+                       END-IF
+                   CLOSE SR-CAT
+                   OPEN I-O SR-ING
+                       IF WS-INGREDIENT1 <> ZEROS THEN
+                           STRING WS-SR-IID, WS-INGREDIENT1
+                           INTO WS-SR-SAND-ING-ID
+                           MOVE WS-SR-SAND-ING-ID TO SR-SAND-ING-ID
+                           WRITE SR-ING-REC
+                       END-IF
+                       IF WS-INGREDIENT2 <> ZEROS THEN
+                           STRING WS-SR-IID, WS-INGREDIENT2
+                           INTO WS-SR-SAND-ING-ID
+                           MOVE WS-SR-SAND-ING-ID TO SR-SAND-ING-ID
+                           WRITE SR-ING-REC
+                       END-IF
+                       IF WS-INGREDIENT3 <> ZEROS THEN
+                           STRING WS-SR-IID, WS-INGREDIENT3
+                           INTO WS-SR-SAND-ING-ID
+                           MOVE WS-SR-SAND-ING-ID TO SR-SAND-ING-ID
+                           WRITE SR-ING-REC
+                       END-IF
+                       IF WS-INGREDIENT4 <> ZEROS THEN
+                           STRING WS-SR-IID, WS-INGREDIENT4
+                           INTO WS-SR-SAND-ING-ID
+                           MOVE WS-SR-SAND-ING-ID TO SR-SAND-ING-ID
+                           WRITE SR-ING-REC
+                       END-IF
+                       IF WS-INGREDIENT5 <> ZEROS THEN
+                           STRING WS-SR-IID, WS-INGREDIENT5
+                           INTO WS-SR-SAND-ING-ID
+                           MOVE WS-SR-SAND-ING-ID TO SR-SAND-ING-ID
+                           WRITE SR-ING-REC
+                       END-IF
+                       IF WS-INGREDIENT6 <> ZEROS THEN
+                           STRING WS-SR-IID, WS-INGREDIENT6
+                           INTO WS-SR-SAND-ING-ID
+                           MOVE WS-SR-SAND-ING-ID TO SR-SAND-ING-ID
+                           WRITE SR-ING-REC
+                       END-IF
+                   CLOSE SR-ING
+                   MOVE RECORD-SAVED TO CONFIRM-MESSAGE
+                   ACCEPT CONFIRM-SCREEN
+                   IF KEY-STATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
+               WHEN "N"
+                   MOVE RECORD-NOT-SAVED TO CONFIRM-MESSAGE
+                   ACCEPT CONFIRM-SCREEN
+                   IF KEY-STATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
            EXIT SECTION.
        700-SPACE-CHECK SECTION.
       *    SPACE-CHECK SECTION TO REMOVE ALL EXTRA SPACES
@@ -1054,9 +1208,17 @@
            WS-CATEGORIE3 WS-INGREDIENT1 WS-INGREDIENT2 WS-INGREDIENT3
            WS-INGREDIENT4 WS-INGREDIENT5 WS-INGREDIENT6
            REG-CAT1 REG-CAT2 REG-CAT3 REG-ING1 REG-ING2 REG-ING3
-           REG-ING4 REG-ING5 REG-ING6
+           REG-ING4 REG-ING5 REG-ING6 WS-ING-ACCEPT WS-ING-EXISTS
+           WS-CAT-ACCEPT WS-CAT-EXISTS WS-ING-DUPLICATE WS-CAT-DUPLICATE
            MOVE SPACES TO WS-SR-EID WS-SR-S-DESCRIPTION
            WS-SR-L-DESCRIPTION REG-EID REG-S-DESCRIPTION
-           REG-L-DESCRIPTION
+           REG-L-DESCRIPTION REG-ING-NAME1 REG-ING-NAME2 REG-ING-NAME3
+           REG-ING-NAME4 REG-ING-NAME5 REG-ING-NAME6 REG-CAT-NAME1
+           REG-CAT-NAME2 REG-CATE-NAME3 WS-ING-NAME1 WS-ING-NAME2
+           WS-ING-NAME3 WS-ING-NAME4 WS-ING-NAME5 WS-ING-NAME6
+           WS-CAT-NAME1 WS-CAT-NAME2 WS-CAT-NAME3 WS-CATEGORIES-STRING1
+           WS-CATEGORIES-STRING2 WS-INGREDIENTS-STRING1
+           WS-INGREDIENTS-STRING2 WS-INGREDIENTS-STRING3 WS-REG
+           WS-CAT-ACCEPT-NAME WS-ING-ACCEPT-NAME
            EXIT SECTION.
        END PROGRAM SR-ADD.

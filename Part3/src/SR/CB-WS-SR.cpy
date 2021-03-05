@@ -94,3 +94,5 @@
        77  WS-INGREDIENTS-STRING2          PIC X(060).
        77  WS-INGREDIENTS-STRING3          PIC X(060).
        77  WS-REG                          PIC X(001).
+           88 REG-OPTION-VLD               VALUE "Y","y","N","n",
+                                               "s","S".
