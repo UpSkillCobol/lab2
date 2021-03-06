@@ -68,9 +68,10 @@
        COPY WSSupplierFX.
 
       *> UTILITY VARIBLES
-       01  EDIT-OPTION                         PIC X(002).
-           88 EDIT-VALID-OPTION                VALUE "Y" "y" "N" "n".
-           88 EDIT-OPTION-NO                   VALUE "N" "n".
+        01  SAVE-OPTION                         PIC X(001).
+           88 SAVE-VALID-OPTION                VALUE "Y" "y" "N" "n".
+           88 SAVE-OPTION-NO                   VALUE "N" "n".
+           88 SAVE-VALID-YES                   VALUE "Y","y".
        77  DUMMY                               PIC X(001).
        77  INGRED-STATUS                       PIC 9(002).
        77  KEYSTATUS                           PIC 9(004).
@@ -144,7 +145,26 @@
       *>       05 TABLESUPPLIER-IS-ACTIVE                   PIC 9(001).
        01 NUMBER-SUPP               PIC 9(003) VALUE 999.
 
+      *> DATE VERIFY VARIABLES
+            01  WS-DATA.
+               05  WS-DIA                PIC 9(002) VALUE ZEROS.
+                   88 DIA30              VALUE 01 THRU 30.
+                   88 DIA-FEV            VALUE 01 THRU 28.
+                   88 FEV-BISSEXTO       VALUE 01 THRU 29.
+                   88 DIA-VALIDO         VALUE 01 THRU 31.
+               05  WS-MES                PIC 9(002) VALUE ZEROS.
+                   88 MES-VALIDO         VALUE 01 THRU 12.
+                   88 MES30              VALUE 4 6 9 11.
+                   88 MES-FEV            VALUE 2.
+               05  WS-ANO                PIC 9(004) VALUE ZEROS.
+                   88 ANO-VALIDO         VALUE 2021 THRU 2100.
+               05  WS-DIA-SEMANA         PIC X(007) VALUE SPACES.
+               05  WS-SIGLA-UNIDADE      PIC X(005) VALUE SPACES.
+               05  WS-SIGLA-PROF         PIC X(004) VALUE SPACES.
 
+       01  BISSEXTO                      PIC X(004).
+           88 BISSEXTO-YES               VALUE "S".
+       01  DATAVAL                         PIC X(01).
        SCREEN SECTION.
       ******************************************************************
        01  CLEAR-SCREEN.
@@ -179,21 +199,21 @@
                BACKGROUND-COLOR 7.
            05 GET-SUPPLIER-ID PIC 9(003) LINE 09 COL 27
                TO WS-RIS-ID-SUPP.
-            05 SUPP-NAME-VIEW PIC X(30) LINE 11 COL 14
+            05 SUPP-NAME-VIEW PIC X(30) LINE 11 COL 18
                    FROM VIEW-NAME-SUPP.
            05 GET-INGREDIENT-ID PIC 9(003) LINE 13 COL 28
                TO WS-RIS-ID-ING.
-            05 INGRED-NAME-VIEW PIC X(30) LINE 15 COL 13
+            05 INGRED-NAME-VIEW PIC X(30) LINE 15 COL 18
                    FROM VIEW-NAME-ING.
            05 GET-PRICE PIC 9(003) LINE 17 COL 19
                TO WS-RIS-PRICE.
            05 GET-EXPIRATION-DATE.
                10 GET-DAY PIC 9(002) LINE 17 COL 41
-                   TO WS-RIS-DAY.
+                   TO WS-DIA.
                10 GET-MONTH PIC 9(002) LINE 17 COL 44
-                   TO WS-RIS-MONTH.
+                   TO WS-MES.
                10 GET-YEAR PIC 9(004) LINE 17 COL 47
-                   TO WS-RIS-YEAR.
+                   TO WS-ANO.
            05 VALUE PRICE-EURO LINE 17 COL 23.
            05 VALUE "/"  LINE 17 COL 43.
            05 VALUE "/"  LINE 17 COL 46.
@@ -226,18 +246,6 @@
            05 VALUE "  " LINE 19 COL 62 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 20 COL 62 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 21 COL 62 BACKGROUND-COLOR 7.
-
-      ******************************************************************
-      *> VIEW NAME SUPPLIER
-      *>  01 VIEW-SUPP.
-      *>      05 SUPP-NAME-VIEW PIC X(30) LINE 11 COL 14
-      *>          FROM VIEW-NAME-SUPP.
-
-
-      *> VIEW NAME INGREDIENT
-      *>  01 VIEW-INGRED.
-      *>      05 INGRED-NAME-VIEW PIC X(30) LINE 15 COL 13
-      *>          FROM WSINGREDS-NAME.
 
       ******************************************************************
        01  LIST-FRAME.
@@ -340,12 +348,25 @@
            05 VALUE EMPTY-RECORDS      LINE 12 COL 38.
            05 VALUE EMPTY-RECORDS2     LINE 15 COL 47.
            05 LINE 01 COL 01 PIC X TO DUMMY AUTO.
+
+      ******************************************************************
+             *>SCREEN SE UTILIZADOR PRETENDE GUADAR O REGISTO (S),(N)
+       01 WANT-TO-SAVE
+           BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
+           05 VALUE ALL " " PIC X(095) LINE 24 COL 01.
+           05 VALUE ALL " " PIC X(095) LINE 25 COL 01.
+           05 VALUE ALL " " PIC X(095) LINE 26 COL 01.
+           05 VALUE MESSAGE-SAVE LINE 25 COL 15
+               FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
+           05 WANT-TO-SAVE1 PIC X LINE 25 COL 67
+               FOREGROUND-COLOR 4 BACKGROUND-COLOR 7 TO SAVE-OPTION.
       ******************************************************************
 
        PROCEDURE DIVISION.
 
        MAIN-PROCEDURE.
       *>      PERFORM UNTIL TRUE-YES = "Y"
+
            DISPLAY MAIN-SCREEN
            DISPLAY REGISTER-SCREEN
            PERFORM CHECK-FILES-OK
@@ -354,7 +375,9 @@
 
            PERFORM GET-SUPPLIER
            PERFORM GET-INGREDIENT
-
+           PERFORM CHECK-PRICE
+           PERFORM GET-DATE
+           PERFORM SAVE-RECORD
 
       *>      END-PERFORM
 
@@ -482,7 +505,7 @@
                ADD 1 TO PAGINA
                SET SUPP-INDEX UP BY 1
                IF ILIN = 21 THEN
-                    MOVE "ING-INST" TO INSTRUCTION-MESSAGE
+                    MOVE SUPP-RECORD TO INSTRUCTION-MESSAGE
                     DISPLAY INSTRUCTION-MESSAGE
                     MOVE F1-F2 TO PREVIOUS-NEXT-MESSAGE
                     DISPLAY PREVIOUS-NEXT-TEXT
@@ -513,7 +536,7 @@
                END-IF
 
                IF SUPP-INDEX >= NUMBER-SUPP
-                   MOVE "ING-INSTR" TO INSTRUCTION-MESSAGE
+                   MOVE SUPP-RECORD TO INSTRUCTION-MESSAGE
                    DISPLAY INSTRUCTION-MESSAGE
                    ACCEPT GET-SUPPLIER-ID
                    IF KEYSTATUS = F3 THEN
@@ -553,7 +576,7 @@
                ADD 1 TO PAGINA
                SET ING-INDEX UP BY 1
                IF ILIN = 21 THEN
-                    MOVE "ING-INST" TO INSTRUCTION-MESSAGE
+                    MOVE INGRED-RECORD TO INSTRUCTION-MESSAGE
                     DISPLAY INSTRUCTION-MESSAGE
                     MOVE F1-F2 TO PREVIOUS-NEXT-MESSAGE
                     DISPLAY PREVIOUS-NEXT-TEXT
@@ -583,7 +606,7 @@
                    END-IF
                END-IF
                IF ING-INDEX >= NUMBER-ING
-                   MOVE "ING-INSTR" TO INSTRUCTION-MESSAGE
+                   MOVE INGRED-RECORD TO INSTRUCTION-MESSAGE
                    DISPLAY INSTRUCTION-MESSAGE
                    ACCEPT GET-INGREDIENT-ID
                    IF KEYSTATUS = F3 THEN
@@ -677,7 +700,102 @@
                END-IF
            END-IF
 
-
-
-
        EXIT SECTION.
+
+       CHECK-PRICE SECTION.
+           DISPLAY LIST-FRAME
+           DISPLAY MAIN-SCREEN
+           DISPLAY REGISTER-SCREEN
+           MOVE ZEROS TO GET-PRICE
+
+           PERFORM WITH TEST AFTER UNTIL GET-PRICE > 1
+
+           ACCEPT GET-PRICE
+
+           END-PERFORM
+           EXIT SECTION.
+
+      *> GET FATE AND VERIFY WITH SECTION BELOW (VALID-DATE)
+       GET-DATE SECTION.
+           PERFORM WITH TEST AFTER UNTIL DATAVAL = "S"
+           MOVE ZEROS TO GET-DAY, GET-MONTH, GET-YEAR
+
+           ACCEPT GET-DAY
+           ACCEPT GET-MONTH
+           ACCEPT GET-YEAR
+
+           PERFORM VALID-DATE
+           MOVE WS-DIA TO WS-RIS-DAY
+           MOVE WS-MES TO WS-RIS-MONTH
+           MOVE WS-ANO TO WS-RIS-YEAR
+
+
+           END-PERFORM
+           EXIT SECTION.
+
+
+       VALID-DATE SECTION.
+
+           IF ANO-VALIDO AND DIA-VALIDO AND MES-VALIDO THEN
+                   IF NOT MES-FEV AND NOT MES30 THEN
+                       MOVE "S" TO DATAVAL
+                   ELSE
+                       IF MES30 AND DIA30 THEN
+                           MOVE "S" TO DATAVAL
+                       END-IF
+                       IF MES-FEV THEN
+                           PERFORM IS-BISSEXTO
+                           IF BISSEXTO-YES AND FEV-BISSEXTO THEN
+                               MOVE "S" TO DATAVAL
+                           ELSE
+                               IF NOT BISSEXTO-YES AND DIA-FEV THEN
+                                   MOVE "S" TO DATAVAL
+                               END-IF
+                           END-IF
+                       END-IF
+                   END-IF
+               END-IF
+
+           IF DATAVAL NOT = "S" THEN
+               MOVE INVALID-DATE TO ERROR-TEXT
+               ACCEPT ERROR-ZONE
+           END-IF
+           EXIT SECTION.
+          *> VERIFICACAO DE ANO BISSEXTO
+       IS-BISSEXTO SECTION.
+
+           MOVE SPACE TO BISSEXTO
+           IF FUNCTION MOD (WS-ANO,4) = 0 THEN
+               IF FUNCTION MOD (WS-ANO,100) <> 0 THEN
+                   MOVE "S" TO BISSEXTO
+               ELSE
+                   IF FUNCTION MOD (WS-ANO,400) = 0 THEN
+                       MOVE "S" TO BISSEXTO
+                   END-IF
+               END-IF
+           END-IF
+           EXIT SECTION.
+
+       SAVE-RECORD SECTION.
+           PERFORM WITH TEST AFTER UNTIL SAVE-VALID-OPTION
+               DISPLAY WANT-TO-SAVE
+               ACCEPT  WANT-TO-SAVE1
+               IF KEYSTATUS = F3 THEN
+                   EXIT PROGRAM
+               END-IF
+               IF NOT SAVE-VALID-OPTION THEN
+                   MOVE ERROR-SAVE TO ERROR-TEXT
+                       ACCEPT ERROR-ZONE
+                       IF KEYSTATUS = F3 THEN
+                           EXIT PROGRAM
+                       END-IF
+                END-IF
+           END-PERFORM
+           IF SAVE-VALID-YES THEN
+
+               OPEN I-O FXRISUPPLY
+
+                   WRITE RIS-DETAILS FROM WS-RIS-DETAILS
+                   END-WRITE
+               CLOSE   FXRISUPPLY
+           EXIT SECTION.

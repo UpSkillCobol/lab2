@@ -62,7 +62,7 @@
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
 
-           PERFORM WITH TEST AFTER UNTIL WS-OPTION = 4
+           PERFORM WITH TEST AFTER UNTIL WS-OPTION = 3
                MOVE ZERO TO WS-OPTION MM-OPTION
                DISPLAY CLEAR-SCREEN
                DISPLAY MAIN-SCREEN
@@ -83,8 +83,8 @@
                    CALL "SEARCH-RIS"
                WHEN 3
                    CALL "REPORT-RIS"
-               WHEN 4
-                   EXIT PROGRAM
+               WHEN OTHER
+                  EXIT PROGRAM
 
 
            END-EVALUATE
