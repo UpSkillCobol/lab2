@@ -3,7 +3,7 @@
       ******************************************************************
       *    BREADWICH | REGISTRATION OF SANDWICH ORDERS
       ******************************************************************
-      *    ENGLISH LANGUAGE | V0.2 | IN UPDATE | 05.03.2021
+      *    ENGLISH LANGUAGE | V0.3 | IN UPDATE | 07.03.2021
       ******************************************************************
 
        78  MAIN-TEXT        VALUE "REGISTRATION OF SANDWICH ORDERS".
@@ -19,13 +19,13 @@
            VALUE "INVALID OPTION. PLEASE SELECT A VALID OPTION | PRESS A
       -    "NY KEY TO CONTINUE".
 
-       78  REGISTER-TEXT               VALUE "             NEW ORDER".
-       78  REGISTER-TEXT-ID            VALUE "             ORDER ID:".
-       78  REGISTER-TEXT-DELIVERY-DATE VALUE "        DELIVERY DATE:".
-       78  REGISTER-TEXT-SCHOOL        VALUE "            SCHOOL ID:".
-       78  REGISTER-TEXT-SANDWICH      VALUE "          SANDWICH ID:".
-       78  REGISTER-TEXT-QUANTITY      VALUE "             QUANTITY:".
-       78  REGISTER-TEXT-ORDER-DATE    VALUE "           ORDER DATE:".
+       78  REGISTER-TEXT               VALUE "          NEW ORDER".
+       78  REGISTER-TEXT-ID            VALUE "          ORDER ID:".
+       78  REGISTER-TEXT-DELIVERY-DATE VALUE "     DELIVERY DATE:".
+       78  REGISTER-TEXT-SCHOOL        VALUE "         SCHOOL ID:".
+       78  REGISTER-TEXT-SANDWICH      VALUE "       SANDWICH ID:".
+       78  REGISTER-TEXT-QUANTITY      VALUE "          QUANTITY:".
+       78  REGISTER-TEXT-ORDER-DATE    VALUE "        ORDER DATE:".
 
        78  SCHOOLS-INEXISTENT
            VALUE "TO DO AN ORDER YOU NEED AT LEAST ONE SCHOOL REGISTRED
@@ -95,6 +95,16 @@
        78  MESSAGE-WRITE-NO
            VALUE "SANDWICH ORDER NOT SAVED | PRESS ANY KEY TO CONTINUE".
 
+       78  LIST-FRAME1 VALUE "ID  |  NAME".
+
+       78  LIST-FRAME2 VALUE "LIST OF PERIODS OF UNAVAILABILITY".
+
+       78  PREVIOUS-PAGE VALUE "F1 - PREVIOUS PAGE".
+
+       78  NEXT-PAGE VALUE "     F2 - NEXT PAGE".
+
+       78  LAST-PAGE VALUE "          LAST PAGE".
+
 
 
       ******************************************************************
@@ -129,14 +139,6 @@
            VALUE "THERE IS NO REGISTERS RECORDED IN THIS FILE".
 
        78  EMPTY-RECORDS2 VALUE "PRESS ANY KEY TO CONTINUE".
-
-       78  LIST-FRAME1 VALUE "ID".
-
-       78  LIST-FRAME2 VALUE "DOWNTIME START DATE".
-
-       78  NEXT-PAGE VALUE "PRESS F2 TO NEXT PAGE OF THE LIST".
-
-       78  LAST-PAGE VALUE "THIS IS THE LAST PAGE OF THE LIST".
 
        78  WHAT-TO-EDIT VALUE "WHAT TO EDIT".
 
