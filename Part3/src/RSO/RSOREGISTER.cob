@@ -3,7 +3,7 @@
       ******************************************************************
       *    BREADWICH | REGISTRATION OF SANDWICH ORDERS
       ******************************************************************
-      *    REGISTER ORDERS | V0.2 | IN UPDATE | 05.03.2021
+      *    REGISTER ORDERS | V0.3 | IN UPDATE | 07.03.2021
       ******************************************************************
 
        IDENTIFICATION DIVISION.
@@ -39,10 +39,10 @@
 
        WORKING-STORAGE SECTION.
        COPY RSOWS.
-       COPY RSOCONTANTS.
        COPY RSOWSVAR.
-       COPY VAR-VALIDDATE.
        COPY RSOTABLES.
+       COPY VAR-VALIDDATE.
+       COPY RSOCONTANTS.
 
       ******************************************************************
 
@@ -68,79 +68,179 @@
       ******************************************************************
 
        01  REGISTER-SCREEN BACKGROUND-COLOR 0 FOREGROUND-COLOR 7.
-           05 VALUE ALL "_" PIC X(082) LINE 10 COL 08.
-           05 VALUE ALL " " PIC X(082) LINE 07 COL 08
+           05 VALUE ALL "_" PIC X(046) LINE 10 COL 03.
+           05 VALUE ALL " " PIC X(048) LINE 07 COL 03
               BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(082) LINE 22 COL 08
+           05 VALUE ALL " " PIC X(048) LINE 22 COL 03
               BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 08 COL 08 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 09 COL 08 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 10 COL 08 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 11 COL 08 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 12 COL 08 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 13 COL 08 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 14 COL 08 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 15 COL 08 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 16 COL 08 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 17 COL 08 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 18 COL 08 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 19 COL 08 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 20 COL 08 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 21 COL 08 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 08 COL 88 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 09 COL 88 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 10 COL 88 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 11 COL 88 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 12 COL 88 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 13 COL 88 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 14 COL 88 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 15 COL 88 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 16 COL 88 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 17 COL 88 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 18 COL 88 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 19 COL 88 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 20 COL 88 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 21 COL 88 BACKGROUND-COLOR 7.
-           05 VALUE REGISTER-TEXT               LINE 09 COL 31.
-           05 VALUE REGISTER-TEXT-ID            LINE 13 COL 11.
-           05 VALUE REGISTER-TEXT-DELIVERY-DATE LINE 15 COL 11.
-           05 VALUE REGISTER-TEXT-SCHOOL        LINE 16 COL 11.
-           05 VALUE REGISTER-TEXT-SANDWICH      LINE 17 COL 11.
-           05 VALUE REGISTER-TEXT-QUANTITY      LINE 18 COL 11.
-           05 VALUE REGISTER-TEXT-ORDER-DATE    LINE 19 COL 11.
-           05 REG-ID PIC 9(005) LINE 13 COL 35 USING WS-ORDERS-ID.
+           05 VALUE "  " LINE 08 COL 03 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 09 COL 03 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 03 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 03 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 03 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 03 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 03 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 03 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 03 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 03 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 03 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 03 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 03 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 03 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 08 COL 49 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 09 COL 49 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 49 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 49 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 49 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 49 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 49 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 49 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 49 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 49 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 49 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 49 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 49 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 49 BACKGROUND-COLOR 7.
+           05 VALUE REGISTER-TEXT               LINE 09 COL 12.
+           05 VALUE REGISTER-TEXT-ID            LINE 13 COL 05.
+           05 VALUE REGISTER-TEXT-DELIVERY-DATE LINE 15 COL 05.
+           05 VALUE REGISTER-TEXT-SCHOOL        LINE 16 COL 05.
+           05 VALUE REGISTER-TEXT-SANDWICH      LINE 17 COL 05.
+           05 VALUE REGISTER-TEXT-QUANTITY      LINE 18 COL 05.
+           05 VALUE REGISTER-TEXT-ORDER-DATE    LINE 19 COL 05.
+           05 REG-ID PIC 9(005) LINE 13 COL 26 USING WS-ORDERS-ID.
            05 REG-REC.
               10 REG-DELIVERY-DATE.
-                 15 REG-DELIVERY-DAY PIC X(002) LINE 15 COL 35 TO
+                 15 REG-DELIVERY-DAY PIC X(002) LINE 15 COL 26 TO
                     WS-DELIVERY-DAY AUTO REQUIRED.
-                 15 LINE 15 COL 37 VALUE "/".
-                 15 REG-DELIVERY-MONTH PIC X(002) LINE 15 COL 38 TO
+                 15 LINE 15 COL 28 VALUE "/".
+                 15 REG-DELIVERY-MONTH PIC X(002) LINE 15 COL 29 TO
                     WS-DELIVERY-MONTH AUTO REQUIRED.
-                 15 LINE 15 COL 40 VALUE "/".
-                 15 REG-DELIVERY-YEAR PIC X(004) LINE 15 COL 41 TO
+                 15 LINE 15 COL 31 VALUE "/".
+                 15 REG-DELIVERY-YEAR PIC X(004) LINE 15 COL 32 TO
                     WS-DELIVERY-YEAR AUTO REQUIRED.
               10 REG-DELIVERY-TIME.
-                 15 LINE 15 COL 46 VALUE "|".
-                 15 REG-DELIVERY-HOUR PIC X(002) LINE 15 COL 48 TO
+                 15 LINE 15 COL 37 VALUE "|".
+                 15 REG-DELIVERY-HOUR PIC X(002) LINE 15 COL 39 TO
                     WS-DELIVERY-HOUR AUTO REQUIRED.
-                 15 LINE 15 COL 50 VALUE ":".
-                 15 REG-DELIVERY-MINUTE PIC X(002) LINE 15 COL 51 TO
+                 15 LINE 15 COL 41 VALUE ":".
+                 15 REG-DELIVERY-MINUTE PIC X(002) LINE 15 COL 42 TO
                     WS-DELIVERY-MINUTE AUTO REQUIRED.
-              10 REG-SCHOOL PIC 9(003) LINE 16 COL 35
+              10 REG-SCHOOL PIC 9(003) LINE 16 COL 26
                  TO WS-ORDERS-SCHOOL-INTERNAL-ID AUTO REQUIRED.
-              10 REG-SANDWICH PIC 9(003) LINE 17 COL 35
+              10 REG-SANDWICH PIC 9(003) LINE 17 COL 26
                  TO WS-ORDERS-SANDWICH-INTERNAL-ID AUTO REQUIRED.
-              10 REG-QUANTITY PIC 9(003) LINE 18 COL 35
+              10 REG-QUANTITY PIC 9(003) LINE 18 COL 26
                  TO WS-ORDERS-QUANTITY AUTO REQUIRED.
               10 REG-ORDERS-DATE.
-                 15 REG-ORDERS-DAY PIC 9(002) LINE 19 COL 35 FROM
+                 15 REG-ORDERS-DAY PIC 9(002) LINE 19 COL 26 FROM
                     WS-ORDERS-DAY AUTO REQUIRED.
-                 15 LINE 19 COL 37 VALUE "/".
-                 15 REG-ORDERS-MONTH PIC 9(002) LINE 19 COL 38 FROM
+                 15 LINE 19 COL 28 VALUE "/".
+                 15 REG-ORDERS-MONTH PIC 9(002) LINE 19 COL 29 FROM
                     WS-ORDERS-MONTH AUTO REQUIRED.
-                 15 LINE 19 COL 40 VALUE "/".
-                 15 REG-ORDERS-YEAR PIC 9(004) LINE 19 COL 41 FROM
+                 15 LINE 19 COL 31 VALUE "/".
+                 15 REG-ORDERS-YEAR PIC 9(004) LINE 19 COL 32 FROM
                     WS-ORDERS-YEAR AUTO REQUIRED.
+
+      ******************************************************************
+
+       01  LIST-FRAME.
+           05 VALUE ALL " " PIC X(064) LINE 07 COL 54
+              BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(064) LINE 22 COL 54
+              BACKGROUND-COLOR 7.
+           05 TEXT0 PIC X(038)  LINE 08 COL 58 FOREGROUND-COLOR 5.
+           05 VALUE ALL "Ä" PIC X(064) LINE 09 COL 54.
+           05 VALUE ALL "Ä" PIC X(064) LINE 20 COL 54.
+           05 TEXT1 PIC X(020)    LINE 21 COL 58  FOREGROUND-COLOR 5.
+           05 TEXT2 PIC X(019)    LINE 21 COL 97 FOREGROUND-COLOR 5.
+           05 VALUE "  " LINE 07 COL 54  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 08 COL 54  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 09 COL 54  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 54  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 54  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 54  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 54  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 54  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 54  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 54  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 54  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 54  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 54  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 54  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 54  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 07 COL 118 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 08 COL 118 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 09 COL 118 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 118 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 118 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 118 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 118 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 118 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 118 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 118 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 118 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 118 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 118 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 118 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 118 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 22 COL 118 BACKGROUND-COLOR 7.
+
+      ******************************************************************
+
+       01  CALENDAR-LIST LINE ILIN COL ICOL.
+           05 LIST-BEGIN-DAY   PIC X(002) FROM AGG-BEGIN-DAY (IND-AGG).
+           05 VALUE "/".
+           05 LIST-BEGIN-MONTH PIC X(002)
+              FROM AGG-BEGIN-MONTH (IND-AGG).
+           05 VALUE "/".
+           05 LIST-BEGIN-YEAR PIC X(004)  FROM AGG-BEGIN-YEAR (IND-AGG).
+           05 VALUE " - ".
+           05 LIST-BEGIN-HOUR PIC X(002)  FROM AGG-BEGIN-HOUR (IND-AGG).
+           05 VALUE ":".
+           05 LIST-BEGIN-MIN PIC X(002)   FROM AGG-BEGIN-MIN (IND-AGG).
+           05 VALUE "        UNTIL        ".
+           05 LIST-END-DAY   PIC X(002)   FROM AGG-END-DAY (IND-AGG).
+           05 VALUE "/".
+           05 LIST-END-MONTH PIC X(002)   FROM AGG-END-MONTH (IND-AGG).
+           05 VALUE "/".
+           05 LIST-END-YEAR PIC X(004)    FROM AGG-END-YEAR (IND-AGG).
+           05 VALUE " - ".
+           05 LIST-END-HOUR PIC X(002)    FROM AGG-END-HOUR (IND-AGG).
+           05 VALUE ":".
+           05 LIST-END-MIN PIC X(002)     FROM AGG-END-MIN (IND-AGG).
+
+      ******************************************************************
+
+       01  SCHOOL-LIST.
+           05 LIST-SCHOOL-ID PIC 9(003)   LINE ILIN COL ICOL
+              FROM TAB-SCHOOL-INTERNAL-ID (IND-SCHOOL).
+           05 VALUE "|"                   LINE ILIN COL PLUS 2.
+           05 LIST-SCHOOL-NAME PIC X(050) LINE ILIN COL PLUS 2
+              FROM TAB-SCHOOL-DESIGNATION (IND-SCHOOL).
+
+      ******************************************************************
+
+       01  SANDWICH-LIST.
+           05 LIST-SANDWICH-ID PIC 9(003)   LINE ILIN COL ICOL
+              FROM TAB-SR-IID (IND-SANDWICH).
+           05 VALUE "|"                   LINE ILIN COL PLUS 2.
+           05 LIST-SANDWICH-NAME PIC X(025) LINE ILIN COL PLUS 2
+              FROM TAB-SR-S-DESCRIPTION (IND-SANDWICH).
+
+      ******************************************************************
+
+       01  CLEAR-LIST.
+           05 VALUE ALL " " PIC X(060) LINE 10 COL 56.
+           05 VALUE ALL " " PIC X(060) LINE 11 COL 56.
+           05 VALUE ALL " " PIC X(060) LINE 12 COL 56.
+           05 VALUE ALL " " PIC X(060) LINE 13 COL 56.
+           05 VALUE ALL " " PIC X(060) LINE 14 COL 56.
+           05 VALUE ALL " " PIC X(060) LINE 15 COL 56.
+           05 VALUE ALL " " PIC X(060) LINE 16 COL 56.
+           05 VALUE ALL " " PIC X(060) LINE 17 COL 56.
+           05 VALUE ALL " " PIC X(060) LINE 18 COL 56.
+           05 VALUE ALL " " PIC X(060) LINE 19 COL 56.
 
       ******************************************************************
 
@@ -177,7 +277,7 @@
 
        PROCEDURE DIVISION.
        MAIN SECTION.
-           MOVE SPACES TO FLAG-TRUE, CALENDAR-EXIST
+           MOVE SPACES TO FLAG-TRUE, CALENDAR-EXISTS
       *>      PERFORM CHECK-SCHOOL-SANDIWICH-FILE
       *>      IF FLAG-TRUE = "N" THEN
       *>         EXIT PROGRAM
@@ -187,7 +287,7 @@
 
            PERFORM LOAD-ALL-TABLES
 
-           PERFORM REGISTER-DOWNTIME
+           PERFORM REGISTER-ORDER
               IF KEYSTATUS = F3 THEN
                  EXIT PROGRAM
               END-IF
@@ -195,7 +295,7 @@
 
       ******************************************************************
 
-       REGISTER-DOWNTIME SECTION.
+       REGISTER-ORDER SECTION.
            PERFORM GET-ORDER-ID
 
            ACCEPT WS-ORDERS-DATE FROM DATE YYYYMMDD
@@ -318,39 +418,41 @@
               MOVE INSTRUCTIONS-DATE TO INSTRUCTIONS-TEXT
               DISPLAY INSTRUCTIONS-SCREEN
 
-              ACCEPT REG-DELIVERY-DAY
-              IF KEYSTATUS = F3 THEN
-                 EXIT SECTION
-              END-IF
-
-              ACCEPT REG-DELIVERY-MONTH
-              IF KEYSTATUS = F3 THEN
-                 EXIT SECTION
-              END-IF
-
-              ACCEPT REG-DELIVERY-YEAR
+              PERFORM LIST-CALENDAR
               IF KEYSTATUS = F3 THEN
                  EXIT SECTION
               END-IF
 
               MOVE WS-DELIVERY-DATE TO WS-VALID-DATE
               PERFORM CHECK-DATE
+              IF KEYSTATUS = F3 THEN
+                 EXIT SECTION
+              END-IF
               MOVE WS-VALID-DATE TO WS-DELIVERY-DATE
 
               IF DATE-VALID = "Y" THEN
                  PERFORM CHECK-BEFORE-3DAYS
+                 IF KEYSTATUS = F3 THEN
+                    EXIT SECTION
+                 END-IF
               END-IF
 
               IF DATE-VALID = "Y" AND FLAG-TRUE = "Y" THEN
-                 PERFORM DELIVERY-TIME
+                 PERFORM GET-DELIVERY-TIME
+                 IF KEYSTATUS = F3 THEN
+                    EXIT SECTION
+                 END-IF
               END-IF
 
-              IF CALENDAR-EXIST NOT = "N" AND DATE-VALID = "Y"
+              IF CALENDAR-EXISTS NOT = "N" AND DATE-VALID = "Y"
               AND FLAG-TRUE = "Y" THEN
                  PERFORM CHECK-UNAVAILABILITY
+                 IF KEYSTATUS = F3 THEN
+                    EXIT SECTION
+                 END-IF
               END-IF
 
-              IF CALENDAR-EXIST = "N" THEN
+              IF CALENDAR-EXISTS = "N" THEN
                  MOVE "Y" TO FLAG-CALENDAR
               END-IF
 
@@ -359,7 +461,7 @@
 
       ******************************************************************
 
-       DELIVERY-TIME SECTION.
+       GET-DELIVERY-TIME SECTION.
            PERFORM WITH TEST AFTER UNTIL VALID-DELIVERY-HOUR
            AND VALID-DELIVERY-MINUTE
            AND REG-DELIVERY-HOUR IS NOT EQUALS "HH"
@@ -398,7 +500,7 @@
 
        GET-SCHOOL-ID SECTION.
            PERFORM WITH TEST AFTER UNTIL WS-ORDERS-SCHOOL-INTERNAL-ID
-           NOT EQUALS ALL ZEROS
+           NOT EQUALS ALL ZEROS AND SCHOOL-EXISTS = "Y"
 
               MOVE ZEROS TO REG-SCHOOL
               DISPLAY REG-SCHOOL
@@ -406,12 +508,15 @@
               MOVE INSTRUCTIONS-SCHOOL TO INSTRUCTIONS-TEXT
               DISPLAY INSTRUCTIONS-SCREEN
 
-              ACCEPT REG-SCHOOL
+              PERFORM LIST-SCHOOLS
               IF KEYSTATUS = F3 THEN
                  EXIT SECTION
               END-IF
 
-              IF WS-ORDERS-SCHOOL-INTERNAL-ID EQUALS ALL ZEROS THEN
+              PERFORM CHECK-SCHOOL-EXISTS
+
+              IF WS-ORDERS-SCHOOL-INTERNAL-ID EQUALS ALL ZEROS
+              OR SCHOOL-EXISTS NOT = "Y" THEN
                  MOVE INVALID-SCHOOL TO COMMENT-TEXT
                  ACCEPT COMMENTS-SCREEN
                  IF KEYSTATUS = F3 THEN
@@ -419,14 +524,13 @@
                  END-IF
               END-IF
            END-PERFORM
-
-       EXIT SECTION.
+           EXIT SECTION.
 
       ******************************************************************
 
        GET-SANDWICH-ID SECTION.
            PERFORM WITH TEST AFTER UNTIL WS-ORDERS-SANDWICH-INTERNAL-ID
-           NOT EQUALS ALL ZEROS
+           NOT EQUALS ALL ZEROS AND SANDWICH-EXISTS = "Y"
 
               MOVE ZEROS TO REG-SANDWICH
               DISPLAY REG-SANDWICH
@@ -434,12 +538,15 @@
               MOVE INSTRUCTIONS-SANDWICH TO INSTRUCTIONS-TEXT
               DISPLAY INSTRUCTIONS-SCREEN
 
-              ACCEPT REG-SANDWICH
+              PERFORM LIST-SANDWICHS
               IF KEYSTATUS = F3 THEN
                  EXIT SECTION
               END-IF
 
-              IF WS-ORDERS-SANDWICH-INTERNAL-ID EQUALS ALL ZEROS THEN
+              PERFORM CHECK-SANDWICH-EXISTS
+
+              IF WS-ORDERS-SANDWICH-INTERNAL-ID EQUALS ALL ZEROS
+              OR SANDWICH-EXISTS NOT = "Y" THEN
                  MOVE INVALID-SANDWICH TO COMMENT-TEXT
                  ACCEPT COMMENTS-SCREEN
                  IF KEYSTATUS = F3 THEN
@@ -447,8 +554,7 @@
                  END-IF
               END-IF
            END-PERFORM
-
-       EXIT SECTION.
+           EXIT SECTION.
 
       ******************************************************************
 
@@ -475,8 +581,7 @@
                  END-IF
               END-IF
            END-PERFORM
-
-       EXIT SECTION.
+           EXIT SECTION.
 
       ******************************************************************
 
@@ -546,7 +651,7 @@
 
            OPEN INPUT CALENDAR
            IF CALENDAR-FS = "35"
-              MOVE "N" TO CALENDAR-EXIST
+              MOVE "N" TO CALENDAR-EXISTS
            END-IF
            CLOSE CALENDAR
            EXIT SECTION.
@@ -554,24 +659,27 @@
       ******************************************************************
 
        LOAD-ALL-TABLES SECTION.
-           IF CALENDAR-EXIST NOT = "N" THEN
-              PERFORM FILL-TABLES
-              IF CALENDAR-EXIST NOT = "N" THEN
-                 PERFORM SORT-ASCENDING
-                 PERFORM AGG-TABLE
+           IF CALENDAR-EXISTS NOT = "N" THEN
+              PERFORM FILL-TABLE-CAL
+              IF CALENDAR-EXISTS NOT = "N" THEN
+                 PERFORM SORT-ASCENDING-CAL
+                 PERFORM AGG-TABLE-CAL
               END-IF
            END-IF
 
+           PERFORM FILL-TABLE-SCHOOL
+
+      *>      PERFORM FILL-TABLE-SANDWICH
            EXIT SECTION.
 
       ******************************************************************
 
-       FILL-TABLES SECTION.
+       FILL-TABLE-CAL SECTION.
            OPEN INPUT CALENDAR
            MOVE 001 TO FD-DOWNTIME-ID
            START CALENDAR KEY IS GREATER OR EQUAL FD-DOWNTIME-ID
               INVALID KEY
-                 MOVE "N" TO CALENDAR-EXIST
+                 MOVE "N" TO CALENDAR-EXISTS
                  EXIT SECTION
            END-START
 
@@ -580,16 +688,16 @@
               READ CALENDAR
                  AT END
                     SET EOF-DOWNTIME-ID TO TRUE
-                    MOVE IND-CAL TO MAX-CAL1
+                    MOVE IND-CAL TO MAX-CAL
                  NOT AT END
                     SET IND-CAL UP BY 1
-                    PERFORM LOAD-TABLE
+                    PERFORM LOAD-TABLE-CAL
               END-READ
            END-PERFORM
            CLOSE CALENDAR
            EXIT SECTION.
 
-       LOAD-TABLE SECTION.
+       LOAD-TABLE-CAL SECTION.
            STRING FD-START-DOWNTIME FD-START-TIME INTO
            TAB-BEGIN (IND-CAL)
            IF FD-END-DOWNTIME = ZERO THEN
@@ -600,18 +708,18 @@
            END-IF
            EXIT SECTION.
 
-       SORT-ASCENDING SECTION.
+       SORT-ASCENDING-CAL SECTION.
            SORT TAB-CAL
            ON ASCENDING TAB-BEGIN
            ON ASCENDING TAB-END
            DUPLICATES
            EXIT SECTION.
 
-       AGG-TABLE SECTION.
+       AGG-TABLE-CAL SECTION.
            MOVE TAB-CAL (1) TO TAB-AGG (1)
            SET IND-CAL TO 2
            SET IND-AGG TO 1
-           PERFORM WITH TEST AFTER UNTIL IND-CAL > MAX-CAL1
+           PERFORM WITH TEST AFTER UNTIL IND-CAL > MAX-CAL
               IF TAB-BEGIN (IND-CAL) <= AGG-END (IND-AGG) THEN
                  IF TAB-END (IND-CAL) > AGG-END (IND-AGG) THEN
                     MOVE TAB-END (IND-CAL) TO AGG-END (IND-AGG)
@@ -624,6 +732,124 @@
               SET IND-CAL UP BY 1
            END-PERFORM
            MOVE IND-AGG TO MAX-AGG
+           EXIT SECTION.
+
+      ******************************************************************
+
+       FILL-TABLE-SCHOOL SECTION.
+           OPEN INPUT SCHOOLS
+           SET IND-SCHOOL TO 0
+           PERFORM UNTIL EOFSCHOOLS
+              READ SCHOOLS
+                 AT END
+                    SET EOFSCHOOLS TO TRUE
+                    MOVE IND-SCHOOL TO MAX-SCHOOL
+                 NOT AT END
+                    SET IND-SCHOOL UP BY 1
+                    PERFORM LOAD-TABLE-SCHOOL
+              END-READ
+           END-PERFORM
+           CLOSE SCHOOLS
+           EXIT SECTION.
+
+       LOAD-TABLE-SCHOOL SECTION.
+           MOVE SCHOOL-INTERNAL-ID TO
+           TAB-SCHOOL-INTERNAL-ID (IND-SCHOOL)
+           MOVE SCHOOL-DESIGNATION1 TO
+           TAB-SCHOOL-DESIGNATION (IND-SCHOOL)
+           EXIT SECTION.
+
+      ******************************************************************
+
+       FILL-TABLE-SANDWICH SECTION.
+           OPEN INPUT SANDWICHES
+           SET IND-SANDWICH TO 0
+           PERFORM UNTIL SR-EOF
+              READ SANDWICHES
+                 AT END
+                    SET SR-EOF TO TRUE
+                    MOVE IND-SANDWICH TO MAX-SANDWICH
+                 NOT AT END
+                    SET IND-SANDWICH UP BY 1
+                    PERFORM LOAD-TABLE-SANDWICH
+              END-READ
+           END-PERFORM
+           CLOSE SANDWICHES
+           EXIT SECTION.
+
+       LOAD-TABLE-SANDWICH SECTION.
+           MOVE SR-IID TO TAB-SR-IID (IND-SANDWICH)
+           MOVE SR-S-DESCRIPTION TO TAB-SR-S-DESCRIPTION (IND-SANDWICH)
+           EXIT SECTION.
+
+      ******************************************************************
+
+       LIST-CALENDAR SECTION.
+           MOVE LIST-FRAME2 TO TEXT0
+           DISPLAY LIST-FRAME
+           SET IND-AGG TO 1
+           MOVE 10 TO ILIN
+           MOVE 58 TO ICOL
+           MOVE 1 TO COUNTPAGE
+           MOVE 10 TO MAXPERPAGE
+           PERFORM UNTIL IND-AGG >= MAX-AGG
+              DISPLAY CALENDAR-LIST
+              ADD 1 TO ILIN
+              ADD 1 TO MAXPERPAGE
+              SET IND-AGG UP BY 1
+              IF ILIN = 20 THEN
+                 MOVE NEXT-PAGE TO TEXT2
+                 DISPLAY LIST-FRAME
+                 ACCEPT REG-DELIVERY-DATE
+                 IF KEYSTATUS = F3 THEN
+                    EXIT SECTION
+                 END-IF
+                 IF KEYSTATUS = F1 AND COUNTPAGE > 1
+                    MOVE SPACES TO TEXT2
+                    DISPLAY LIST-FRAME
+                    DISPLAY CLEAR-LIST
+                    DISPLAY CALENDAR-LIST
+                    MOVE 10 TO ILIN
+                    SET IND-AGG DOWN BY MAXPERPAGE
+                    SUBTRACT 1 FROM COUNTPAGE
+                    MOVE 10 TO MAXPERPAGE
+                    IF COUNTPAGE = 1 THEN
+                       MOVE SPACES TO TEXT1
+                       DISPLAY LIST-FRAME
+                    END-IF
+                 ELSE
+                    IF KEYSTATUS = F2 THEN
+                       MOVE PREVIOUS-PAGE TO TEXT1
+                       MOVE NEXT-PAGE TO TEXT2
+                       DISPLAY LIST-FRAME
+                       DISPLAY CLEAR-LIST
+                       DISPLAY CALENDAR-LIST
+                       MOVE 10 TO ILIN
+                       ADD 1 TO COUNTPAGE
+                       MOVE 10 TO MAXPERPAGE
+                    ELSE
+                       EXIT SECTION
+                    END-IF
+                 END-IF
+              END-IF
+              IF IND-AGG >= MAX-AGG
+                 MOVE LAST-PAGE TO TEXT2
+                 DISPLAY LIST-FRAME
+                 ACCEPT REG-DELIVERY-DATE
+                 IF KEYSTATUS = F3 THEN
+                    EXIT SECTION
+                 END-IF
+                 IF KEYSTATUS = F1 AND COUNTPAGE > 1
+                    DISPLAY CLEAR-LIST
+                    DISPLAY CALENDAR-LIST
+                    MOVE 10 TO ILIN
+                    SET IND-AGG DOWN BY MAXPERPAGE
+                    SUBTRACT 1 FROM COUNTPAGE
+                    MOVE 10 TO MAXPERPAGE
+                 END-IF
+              END-IF
+           END-PERFORM
+           MOVE SPACES TO TEXT0
            EXIT SECTION.
 
       ******************************************************************
@@ -699,6 +925,7 @@
            EXIT SECTION.
 
       ******************************************************************
+
        CHECK-UNAVAILABILITY SECTION.
            SET IND-AGG TO 1
 
@@ -712,6 +939,9 @@
                     MOVE "N" TO FLAG-CALENDAR
                     MOVE INVALID-DATE3 TO COMMENT-TEXT
                     ACCEPT COMMENTS-SCREEN
+                    IF KEYSTATUS = F3 THEN
+                       EXIT SECTION
+                    END-IF
                     MOVE MAX-AGG TO IND-AGG
                  END-IF
               END-IF
@@ -721,6 +951,180 @@
            IF FLAG-CALENDAR = SPACE THEN
               MOVE "Y" TO FLAG-CALENDAR
            END-IF
+           EXIT SECTION.
+
+      ******************************************************************
+
+       LIST-SCHOOLS SECTION.
+           DISPLAY CLEAR-LIST
+           MOVE LIST-FRAME1 TO TEXT0
+           DISPLAY LIST-FRAME
+           SET IND-SCHOOL TO 1
+           MOVE 10 TO ILIN
+           MOVE 58 TO ICOL
+           MOVE 1 TO COUNTPAGE
+           MOVE 10 TO MAXPERPAGE
+           PERFORM UNTIL IND-SCHOOL >= MAX-SCHOOL
+              DISPLAY SCHOOL-LIST
+              ADD 1 TO ILIN
+              ADD 1 TO MAXPERPAGE
+              SET IND-SCHOOL UP BY 1
+              IF ILIN = 20 THEN
+                 MOVE NEXT-PAGE TO TEXT2
+                 DISPLAY LIST-FRAME
+                 ACCEPT REG-SCHOOL
+                 IF KEYSTATUS = F3 THEN
+                    EXIT SECTION
+                 END-IF
+                 IF KEYSTATUS = F1 AND COUNTPAGE > 1
+                    MOVE SPACES TO TEXT2
+                    DISPLAY LIST-FRAME
+                    DISPLAY CLEAR-LIST
+                    DISPLAY SCHOOL-LIST
+                    MOVE 10 TO ILIN
+                    SET IND-SCHOOL DOWN BY MAXPERPAGE
+                    SUBTRACT 1 FROM COUNTPAGE
+                    MOVE 10 TO MAXPERPAGE
+                    IF COUNTPAGE = 1 THEN
+                       MOVE SPACES TO TEXT1
+                       DISPLAY LIST-FRAME
+                    END-IF
+                 ELSE
+                    IF KEYSTATUS = F2 THEN
+                       MOVE PREVIOUS-PAGE TO TEXT1
+                       MOVE NEXT-PAGE TO TEXT2
+                       DISPLAY LIST-FRAME
+                       DISPLAY CLEAR-LIST
+                       DISPLAY SCHOOL-LIST
+                       MOVE 10 TO ILIN
+                       ADD 1 TO COUNTPAGE
+                       MOVE 10 TO MAXPERPAGE
+                    ELSE
+                       EXIT SECTION
+                    END-IF
+                 END-IF
+              END-IF
+              IF IND-SCHOOL >= MAX-SCHOOL
+                 MOVE LAST-PAGE TO TEXT2
+                 DISPLAY LIST-FRAME
+                 ACCEPT REG-SCHOOL
+                 IF KEYSTATUS = F3 THEN
+                    EXIT SECTION
+                 END-IF
+                 IF KEYSTATUS = F1 AND COUNTPAGE > 1
+                    DISPLAY CLEAR-LIST
+                    DISPLAY SCHOOL-LIST
+                    MOVE 10 TO ILIN
+                    SET IND-SCHOOL DOWN BY MAXPERPAGE
+                    SUBTRACT 1 FROM COUNTPAGE
+                    MOVE 10 TO MAXPERPAGE
+                 END-IF
+              END-IF
+           END-PERFORM
+           MOVE SPACES TO TEXT0
+           EXIT SECTION.
+
+      ******************************************************************
+
+       CHECK-SCHOOL-EXISTS SECTION.
+           MOVE SPACES TO SCHOOL-EXISTS
+           SET IND-SCHOOL TO 1
+           PERFORM UNTIL IND-SCHOOL > MAX-SCHOOL
+              IF WS-ORDERS-SCHOOL-INTERNAL-ID =
+              TAB-SCHOOL-INTERNAL-ID (IND-SCHOOL) THEN
+                 MOVE "Y" TO SCHOOL-EXISTS
+                 EXIT SECTION
+              ELSE
+                 SET IND-SCHOOL UP BY 1
+              END-IF
+           END-PERFORM
+           EXIT SECTION.
+
+      ******************************************************************
+
+       LIST-SANDWICHS SECTION.
+           DISPLAY CLEAR-LIST
+           MOVE LIST-FRAME1 TO TEXT0
+           DISPLAY LIST-FRAME
+           SET IND-SANDWICH TO 1
+           MOVE 10 TO ILIN
+           MOVE 58 TO ICOL
+           MOVE 1 TO COUNTPAGE
+           MOVE 10 TO MAXPERPAGE
+           PERFORM UNTIL IND-SANDWICH >= MAX-SANDWICH
+              DISPLAY SANDWICH-LIST
+              ADD 1 TO ILIN
+              ADD 1 TO MAXPERPAGE
+              SET IND-SANDWICH UP BY 1
+              IF ILIN = 20 THEN
+                 MOVE NEXT-PAGE TO TEXT2
+                 DISPLAY LIST-FRAME
+                 ACCEPT REG-SANDWICH
+                 IF KEYSTATUS = F3 THEN
+                    EXIT SECTION
+                 END-IF
+                 IF KEYSTATUS = F1 AND COUNTPAGE > 1
+                    MOVE SPACES TO TEXT2
+                    DISPLAY LIST-FRAME
+                    DISPLAY CLEAR-LIST
+                    DISPLAY SANDWICH-LIST
+                    MOVE 10 TO ILIN
+                    SET IND-SANDWICH DOWN BY MAXPERPAGE
+                    SUBTRACT 1 FROM COUNTPAGE
+                    MOVE 10 TO MAXPERPAGE
+                    IF COUNTPAGE = 1 THEN
+                       MOVE SPACES TO TEXT1
+                       DISPLAY LIST-FRAME
+                    END-IF
+                 ELSE
+                    IF KEYSTATUS = F2 THEN
+                       MOVE PREVIOUS-PAGE TO TEXT1
+                       MOVE NEXT-PAGE TO TEXT2
+                       DISPLAY LIST-FRAME
+                       DISPLAY CLEAR-LIST
+                       DISPLAY SANDWICH-LIST
+                       MOVE 10 TO ILIN
+                       ADD 1 TO COUNTPAGE
+                       MOVE 10 TO MAXPERPAGE
+                    ELSE
+                       EXIT SECTION
+                    END-IF
+                 END-IF
+              END-IF
+              IF IND-SANDWICH >= MAX-SANDWICH
+                 MOVE LAST-PAGE TO TEXT2
+                 DISPLAY LIST-FRAME
+                 ACCEPT REG-SANDWICH
+                 IF KEYSTATUS = F3 THEN
+                    EXIT SECTION
+                 END-IF
+                 IF KEYSTATUS = F1 AND COUNTPAGE > 1
+                    DISPLAY CLEAR-LIST
+                    DISPLAY SANDWICH-LIST
+                    MOVE 10 TO ILIN
+                    SET IND-SANDWICH DOWN BY MAXPERPAGE
+                    SUBTRACT 1 FROM COUNTPAGE
+                    MOVE 10 TO MAXPERPAGE
+                 END-IF
+              END-IF
+           END-PERFORM
+           MOVE SPACES TO TEXT0
+           EXIT SECTION.
+
+      ******************************************************************
+
+       CHECK-SANDWICH-EXISTS SECTION.
+           MOVE SPACES TO SANDWICH-EXISTS
+           SET IND-SANDWICH TO 1
+           PERFORM UNTIL IND-SANDWICH > MAX-SANDWICH
+              IF WS-ORDERS-SANDWICH-INTERNAL-ID =
+              TAB-SR-IID (IND-SANDWICH) THEN
+                 MOVE "Y" TO SANDWICH-EXISTS
+                 EXIT SECTION
+              ELSE
+                 SET IND-SANDWICH UP BY 1
+              END-IF
+           END-PERFORM
            EXIT SECTION.
 
       ******************************************************************
