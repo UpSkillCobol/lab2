@@ -350,7 +350,7 @@
            05 LINE 01 COL 01 PIC X TO DUMMY AUTO.
 
       ******************************************************************
-             *>SCREEN SE UTILIZADOR PRETENDE GUADAR O REGISTO (S),(N)
+      *>SCREEN SE UTILIZADOR PRETENDE GUADAR O REGISTO (S),(N)
        01 WANT-TO-SAVE
            BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
            05 VALUE ALL " " PIC X(095) LINE 24 COL 01.
