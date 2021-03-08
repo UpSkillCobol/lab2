@@ -51,7 +51,7 @@
            03 VALUE MAIN-MENU-OPTION3 LINE 13 COL 50.
            03 VALUE MAIN-MENU-OPTION5 LINE 14 COL 50.
            03 VALUE MAIN-MENU-CHOICE LINE 20 COL 45 REVERSE-VIDEO.
-           03 MM-OPTION PIC 9(002)   LINE 20 COL 73 TO WS-OPTION
+           03 MM-OPTION PIC 9(002) LINE 20 COL 62 TO WS-OPTION
                BLANK WHEN ZERO REVERSE-VIDEO.
 
        01 ERROR-MESSAGE FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
@@ -62,7 +62,7 @@
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
 
-           PERFORM WITH TEST AFTER UNTIL WS-OPTION = 4
+           PERFORM WITH TEST AFTER UNTIL WS-OPTION = 3
                MOVE ZERO TO WS-OPTION MM-OPTION
                DISPLAY CLEAR-SCREEN
                DISPLAY MAIN-SCREEN
@@ -73,19 +73,16 @@
                END-IF
                PERFORM EVALUATE-MAIN-MENU
            END-PERFORM
-           STOP RUN.
+           EXIT PROGRAM.
 
        EVALUATE-MAIN-MENU SECTION.
            EVALUATE WS-OPTION
                WHEN 1
-                   CALL "REGISTER-RIS"
+                   CALL "RECORD-RIS"
                WHEN 2
                    CALL "SEARCH-RIS"
                WHEN 3
                    CALL "REPORT-RIS"
-               WHEN 4
-                   EXIT PROGRAM
-
 
            END-EVALUATE
            EXIT SECTION.

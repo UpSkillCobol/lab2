@@ -3,10 +3,10 @@
       ******************************************************************
       *    BREADWICH | REGISTRATION OF SANDWICH ORDERS
       ******************************************************************
-      *    FILE DESCRIPTOR VARIABLES | V0.1 | IN UPDATE | 04.03.2021
+      *    FILE DESCRIPTOR VARIABLES | V0.2 | IN UPDATE | 05.03.2021
       ******************************************************************
 
-       01  FD-ORDER.
+       01  FD-ORDERS.
            05  FD-ORDERS-ID                         PIC 9(005).
            05  FD-DELIVERY-DATE-TIME.
                10  FD-DELIVERY-DATE.
