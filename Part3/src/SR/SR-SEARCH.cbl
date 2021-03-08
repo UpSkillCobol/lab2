@@ -5,7 +5,7 @@
       * Tectonics: cobc
       ******************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. SR-SEARCH.
+       PROGRAM-ID. SR-SEARCH IS INITIAL.
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
        SPECIAL-NAMES.
@@ -21,6 +21,7 @@
        WORKING-STORAGE SECTION.
        COPY "CB-WS-SR".
        COPY "SR-CONST".
+       77  WS-ACCEPT-OPTION   PIC 9(003).
 
        01  SR-TABLE OCCURS 1 TO MAX-SR TIMES
            DEPENDING ON NUMBER-SR
@@ -31,6 +32,7 @@
            05 TABLE-SR-L-DESC.
            10 TABLE-SR-L-DESC1                     PIC X(025).
            10 TABLE-SR-L-DESC2                     PIC X(025).
+           05 TABLE-SR-PRICE                       PIC 9(002),9(002).
        01  ING-TABLE OCCURS 1 TO MAX-ING TIMES
            DEPENDING ON NUMBER-ING
            INDEXED BY ING-INDEX.
@@ -64,6 +66,36 @@
            05 TABLE-SC-ID.
                10 TABLE-SC-SAND-ID                 PIC 9(003).
                10 TABLE-SC-CAT-ID                  PIC 9(003).
+       01  SHOW-TABLE OCCURS 1 TO MAX-SC TIMES
+           DEPENDING ON NUMBER-SHOW
+           INDEXED BY SHOW-INDEX.
+           05 SHOW-SR-IID                         PIC 9(003).
+           05 SHOW-SR-EID                         PIC X(005).
+           05 SHOW-SR-S-DESC                      PIC X(025).
+           05 SHOW-SR-L-DESC.
+           10 SHOW-SR-L-DESC1                     PIC X(025).
+           10 SHOW-SR-L-DESC2                     PIC X(025).
+           05 SHOW-INGREDIENT1                    PIC X(030).
+           05 SHOW-INGREDIENT1-QTD                PIC 9(003).
+           05 SHOW-INGREDIENT1-UNIT               PIC X(003).
+           05 SHOW-INGREDIENT2                    PIC X(030).
+           05 SHOW-INGREDIENT2-QTD                PIC 9(003).
+           05 SHOW-INGREDIENT2-UNIT               PIC X(003).
+           05 SHOW-INGREDIENT3                    PIC X(030).
+           05 SHOW-INGREDIENT3-QTD                PIC 9(003).
+           05 SHOW-INGREDIENT3-UNIT               PIC X(003).
+           05 SHOW-INGREDIENT4                    PIC X(030).
+           05 SHOW-INGREDIENT4-QTD                PIC 9(003).
+           05 SHOW-INGREDIENT4-UNIT               PIC X(003).
+           05 SHOW-INGREDIENT5                    PIC X(030).
+           05 SHOW-INGREDIENT5-QTD                PIC 9(003).
+           05 SHOW-INGREDIENT5-UNIT               PIC X(003).
+           05 SHOW-INGREDIENT6                    PIC X(030).
+           05 SHOW-INGREDIENT6-QTD                PIC 9(003).
+           05 SHOW-INGREDIENT6-UNIT               PIC X(003).
+           05 SHOW-CATEGORIE1                     PIC X(030).
+           05 SHOW-CATEGORIE2                     PIC X(030).
+           05 SHOW-CATEGORIE3                     PIC X(030).
        SCREEN SECTION.
        01  CLEAR-SCREEN BACKGROUND-COLOR 0.
            05 VALUE " " BLANK SCREEN LINE 01 COL 01.
@@ -117,33 +149,30 @@
            05 VALUE "  " LINE 21 col 110 BACKGROUND-COLOR 7.
            05 CONFIRM-REC.
                10 CONFIRM-SANDWICH-REC.
-                   15 CONFIRM-EED PIC X(005) LINE 11 COL 29
-                   FROM WS-SR-EID.
-                   15 CONFIRM-S-DESCRIPTION PIC X(025) LINE 12 COL 29
-                   FROM WS-SR-S-DESCRIPTION.
+                   15 CONFIRM-EED PIC X(005) LINE 11 COL 29.
+                   15 CONFIRM-S-DESCRIPTION PIC X(025) LINE 12 COL 29.
                    15 CONFIRM-L-DESCRIPTION.
                        20 CONFIRM-L-DESCRIPTION1 PIC X(025)
-                       LINE 13 COL 29 FROM WS-SR-L-DESCRIPTION1.
+                       LINE 13 COL 29.
                        20 CONFIRM-L-DESCRIPTION2 PIC X(025)
-                       LINE 14 COL 29 FROM WS-SR-L-DESCRIPTION2.
+                       LINE 14 COL 29.
                10 CONFIRM-CATEGORIES-REC.
-                   15 CONFIRM-CATEGORIE1 PIC X(060) LINE 15 COL 29
-                   FROM WS-CATEGORIES-STRING1.
-                   15 CONFIRM-CATEGORIE2 PIC X(060) LINE 16 COL 29
-                   FROM WS-CATEGORIES-STRING2.
+                   15 CONFIRM-CATEGORIE1 PIC X(030) LINE 15 COL 29.
+                   15 CONFIRM-CATEGORIE2 PIC X(030) LINE 16 COL 29.
+                   15 CONFIRM-CATEGORIE3 PIC X(030) LINE 17 COL 29.
                10 CONFIRM-INGREDIENTS-REC.
-                   15 CONFIRM-INGREDIENT1 PIC X(060) LINE 18 COL 29
-                   FROM WS-INGREDIENTS-STRING1.
-                   15 CONFIRM-INGREDIENT2 PIC X(060) LINE 19 COL 29
-                   FROM WS-INGREDIENTS-STRING2.
-                   15 CONFIRM-INGREDIENT3 PIC X(060) LINE 20 COL 29
-                   FROM WS-INGREDIENTS-STRING3.
+                   15 CONFIRM-INGREDIENT1 PIC X(040) LINE 20 COL 29.
+                   15 CONFIRM-INGREDIENT2 PIC X(040) LINE 21 COL 29.
+                   15 CONFIRM-INGREDIENT3 PIC X(040) LINE 22 COL 29.
+                   15 CONFIRM-INGREDIENT4 PIC X(040) LINE 20 COL 70.
+                   15 CONFIRM-INGREDIENT5 PIC X(040) LINE 20 COL 70.
+                   15 CONFIRM-INGREDIENT6 PIC X(040) LINE 20 COL 70.
            05 VALUE CONFIRM-TEXT LINE 09 COL 10.
            05 VALUE CONFIRM-TEXT1 LINE 11 COL 10.
            05 VALUE CONFIRM-TEXT2 LINE 12 COL 10.
            05 VALUE CONFIRM-TEXT3 LINE 13 COL 10.
            05 VALUE CONFIRM-TEXT4 LINE 15 COL 10.
-           05 VALUE CONFIRM-TEXT5 LINE 18 COL 10.
+           05 VALUE CONFIRM-TEXT5 LINE 19 COL 10.
       ******************************************************************
        01  LIST-FRAME.
            05 VALUE ALL " " PIC X(042) LINE 7 COL 68
@@ -152,6 +181,10 @@
               BACKGROUND-COLOR 7.
            05 VALUE LIST-FRAME1 LINE 08 COL 72 FOREGROUND-COLOR 5.
            05 VALUE LIST-FRAME2 LINE 08 COL PLUS 3 FOREGROUND-COLOR 5.
+           05 VALUE ALL "Ä" PIC X(042) LINE 09 COL 70.
+           05 VALUE ALL "Ä" PIC X(042) LINE 20 COL 70.
+           05 TEXT1 PIC X(020) LINE 21 COL 70 FOREGROUND-COLOR 5.
+           05 TEXT2 PIC X(019) LINE 21 COL 90 FOREGROUND-COLOR 5.
            05 VALUE "  " LINE 07 COL 68 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 08 COL 68 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 09 COL 68 BACKGROUND-COLOR 7.
@@ -263,6 +296,7 @@
                CLOSE SANDWICHES
                MOVE NO-SANDWICHES TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
                EXIT PROGRAM
+           END-START
            PERFORM UNTIL SR-EOF
                READ SANDWICHES NEXT RECORD
                    AT END
@@ -292,7 +326,7 @@
                        PERFORM 030-LOAD-ING-TABLE
                END-READ
            END-PERFORM
-           CLOSE INGREDIENTS.
+           CLOSE INGREDIENTS
            SET CAT-INDEX TO 1
            OPEN INPUT CATEGORIES
            MOVE ZEROS TO INGREDIENT-EMPTY
@@ -324,6 +358,7 @@
                        PERFORM 050-LOAD-SI-TABLE
                END-READ
            END-PERFORM
+           CLOSE SR-ING
            SET SC-INDEX TO 1
            OPEN INPUT SR-CAT
            PERFORM UNTIL SC-EOF
@@ -335,6 +370,7 @@
                        PERFORM 060-LOAD-SC-TABLE
                 END-READ
            END-PERFORM
+           CLOSE SR-CAT
            EXIT SECTION.
        020-LOAD-SR-TABLE SECTION.
            MOVE SR-REC TO SR-TABLE (SR-INDEX)
@@ -356,14 +392,173 @@
            MOVE SR-CAT-REC TO SC-TABLE (SC-INDEX)
            SET SC-INDEX UP BY 1
            EXIT SECTION.
-       MAIN-PROCEDURE.
-            DISPLAY "Hello world"
-            STOP RUN.
+       100-MAIN SECTION.
+           PERFORM TEST-TABLE
+           DISPLAY CLEAR-SCREEN
+           DISPLAY MAIN-SCREEN
+           PERFORM WITH TEST AFTER UNTIL WS-ACCEPT-OPTION = ZEROS
+               PERFORM SEARCH1
+           END-PERFORM
+           EXIT PROGRAM.
+       TEST-TABLE SECTION.
+           SET ING-INDEX TO 0
+           PERFORM WITH TEST AFTER UNTIL ING-INDEX >= NUMBER-ING
+               SET ING-INDEX UP BY 1
+               DISPLAY ING-TABLE (ING-INDEX) AT 0101
+               ACCEPT OMITTED
+           END-PERFORM
+           EXIT SECTION.
+       SEARCH1 SECTION.
+           PERFORM LIST-ING
+           SET SI-INDEX TO 1
+           PERFORM UNTIL SI-INDEX >= NUMBER-SI
+               IF TABLE-SI-ING-ID (SI-INDEX) = WS-ACCEPT-OPTION THEN
+                   MOVE TABLE-SI-SAND-ID (SI-INDEX) TO WS-TEMP-ID
+                   PERFORM FILL-RECORD
+               END-IF
+               SET SI-INDEX UP BY 1
+           END-PERFORM
+           EXIT SECTION.
+       FILL-RECORD SECTION.
+           SET SR-INDEX TO 1
+           PERFORM UNTIL SR-INDEX >= NUMBER-SR
+               IF TABLE-SR-IID (SR-INDEX) = WS-TEMP-ID THEN
+                   PERFORM OBTAIN-SANDWICH-INFO
+                   PERFORM OBTAIN-INGREDIENTS-INFO
+                   PERFORM OBTAIN-CATEGORIES-INFO
+                   DISPLAY CLEAR-SCREEN
+                   DISPLAY MAIN-SCREEN
+                   DISPLAY CONFIRM-RECORD-SCREEN
+                   ACCEPT OMITTED
+               ELSE
+                   DISPLAY CLEAR-SCREEN
+                   DISPLAY MAIN-SCREEN
+               END-IF
+               SET SR-INDEX UP BY 1
+           END-PERFORM
+           EXIT SECTION.
+       LIST-ING SECTION.
+           DISPLAY CLEAR-SCREEN
+           DISPLAY MAIN-SCREEN
+           DISPLAY LIST-FRAME
+           MOVE ZEROES TO NEW-INGREDID
+           MOVE SPACES TO TRUE-YES
+           SET ING-INDEX TO 1
+           MOVE 10 TO ILIN
+           MOVE 72 TO ICOL
+           MOVE 1 TO COUNTPAGE
+           MOVE 10 TO MAXPERPAGE
+           PERFORM UNTIL ING-INDEX >= NUMBER-ING
+               DISPLAY INGREDIENT-LIST1
+               ADD 1 TO ILIN
+               ADD 1 TO MAXPERPAGE
+               SET ING-INDEX UP BY 1
+               IF ILIN = 20 THEN
+                   MOVE NEXT-PAGE TO TEXT2
+                   DISPLAY LIST-FRAME
+                   MOVE ING-INSTR TO INSTRUCTION-MESSAGE
+                   DISPLAY INSTRUCTION-MESSAGE
+                   ACCEPT WS-ACCEPT-OPTION
+                   IF KEY-STATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
+                   IF KEY-STATUS = F1 AND COUNTPAGE > 1
+                       MOVE SPACE TO TEXT2
+                       DISPLAY CLEAR-SCREEN
+                       DISPLAY MAIN-SCREEN
+                       DISPLAY LIST-FRAME
+                       MOVE 10 TO ILIN
+                       SET ING-INDEX DOWN BY MAXPERPAGE
+                       SUBTRACT 1 FROM COUNTPAGE
+                       MOVE 10 TO MAXPERPAGE
+                           IF COUNTPAGE = 1 THEN
+                               MOVE SPACES TO TEXT1
+                               DISPLAY LIST-FRAME
+                           END-IF
+                   ELSE
+                       IF KEY-STATUS = F2 THEN
+                           MOVE PREVIOUS-PAGE TO TEXT1
+                           MOVE NEXT-PAGE TO TEXT2
+                           DISPLAY CLEAR-SCREEN
+                           DISPLAY MAIN-SCREEN
+                           DISPLAY LIST-FRAME
+                           MOVE 10 TO ILIN
+                           ADD 1 TO COUNTPAGE
+                           MOVE 10 TO MAXPERPAGE
+                       ELSE
+                           EXIT SECTION
+                       END-IF
+                   END-IF
+               END-IF
+               IF ING-INDEX >= NUMBER-ING
+                   MOVE LAST-PAGE TO TEXT2
+                   DISPLAY LIST-FRAME
+                   MOVE ING-INSTR TO INSTRUCTION-MESSAGE
+                   DISPLAY INSTRUCTION-MESSAGE
+                   ACCEPT WS-ACCEPT-OPTION
+                   IF KEY-STATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
+                   IF KEY-STATUS = F1 AND COUNTPAGE > 1
+                       DISPLAY CLEAR-SCREEN
+                       DISPLAY MAIN-SCREEN
+                       DISPLAY LIST-FRAME
+                       MOVE 10 TO ILIN
+                       SET ING-INDEX DOWN BY MAXPERPAGE
+                       SUBTRACT 1 FROM COUNTPAGE
+                       MOVE 10 TO MAXPERPAGE
+                   END-IF
+               END-IF
+           END-PERFORM
+       EXIT SECTION.
+       OBTAIN-SANDWICH-INFO SECTION.
+           MOVE TABLE-SR-IID (SR-INDEX) TO WS-SEARCH-ID
+           MOVE TABLE-SR-EID (SR-INDEX) TO CONFIRM-EED
+           MOVE TABLE-SR-S-DESC (SR-INDEX) TO CONFIRM-S-DESCRIPTION
+           MOVE TABLE-SR-L-DESC1 (SR-INDEX) TO CONFIRM-L-DESCRIPTION1
+           MOVE TABLE-SR-L-DESC2 (SR-INDEX) TO CONFIRM-L-DESCRIPTION2
+           EXIT SECTION.
+       OBTAIN-INGREDIENTS-INFO SECTION.
+           SET SI-INDEX TO 1
+           PERFORM WITH TEST AFTER UNTIL SI-INDEX >= NUMBER-SI
+               IF TABLE-SI-SAND-ID (SI-INDEX) = WS-SEARCH-ID THEN
+                   MOVE TABLE-SI-ING-ID (SI-INDEX) TO WS-INGREDIENT1
+                   MOVE TABLE-SI-ING-QTD (SI-INDEX)
+                   TO WS-INGREDIENT-QTD1
+                   SET ING-INDEX TO 1
+                   PERFORM WITH TEST AFTER UNTIL
+                   TABLE-ING-ID (ING-INDEX) = WS-INGREDIENT1
+                       IF TABLE-ING-ID (ING-INDEX) = WS-INGREDIENT1 THEN
+                           MOVE TABLE-ING-NAME (ING-INDEX) TO
+                           WS-ING-NAME1
+                       END-IF
+                   END-PERFORM
+               END-IF
+               SET SI-INDEX UP BY 1
+           END-PERFORM
+           EXIT SECTION.
+       OBTAIN-CATEGORIES-INFO SECTION.
+           SET SC-INDEX TO 1
+           PERFORM WITH TEST AFTER UNTIL SC-INDEX >= NUMBER-SC
+               IF TABLE-SC-SAND-ID (SC-INDEX) = WS-SEARCH-ID THEN
+                   MOVE TABLE-SC-CAT-ID (SC-INDEX) TO WS-CATEGORIE1
+                   SET CAT-INDEX TO 1
+                   PERFORM WITH TEST AFTER UNTIL
+                   TABLE-CAT-ID (CAT-INDEX) = WS-CATEGORIE1
+                       MOVE TABLE-CAT-NAME (CAT-INDEX) TO WS-CAT-NAME1
+                       SET CAT-INDEX UP BY 1
+                   END-PERFORM
+
+               END-IF
+               SET SC-INDEX UP BY 1
+           END-PERFORM
+           EXIT SECTION.
       ******************************************************************
        800-FILE-CHECK SECTION.
            MOVE ZEROS TO FILE-STATUS
            OPEN I-O SANDWICHES
                IF FILE-STATUS = 35 THEN
+                   MOVE 1 TO SANDWICH-EMPTY
                    OPEN OUTPUT SANDWICHES
                    CLOSE SANDWICHES
                END-IF

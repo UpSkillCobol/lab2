@@ -1,0 +1,379 @@
+      ******************************************************************
+      *    LAB | SECOND PART | DELICIOUSSANDWICH
+      ******************************************************************
+      *    BREADWICH | CALENDAR MANAGEMENT
+      ******************************************************************
+      *    VIEW MODULE | V0.3 | IN UPDATE | 04.02.2021
+      ******************************************************************
+
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. CAMSEARCH.
+
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+       SPECIAL-NAMES.
+       CRT STATUS IS KEYSTATUS.
+       REPOSITORY.
+           FUNCTION ALL INTRINSIC.
+
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT CALENDAR ASSIGN TO "CALENDARFILE"
+              ORGANIZATION IS INDEXED
+              ACCESS MODE IS DYNAMIC
+              RECORD KEY IS FD-DOWNTIME-ID
+              ALTERNATE KEY IS FD-START-DOWNTIME WITH DUPLICATES
+              FILE STATUS IS CALENDAR-TEST.
+
+       DATA DIVISION.
+       FILE SECTION.
+       FD  CALENDAR.
+       COPY FDCALENDAR.
+
+       WORKING-STORAGE SECTION.
+       COPY CAMCONSTANTS.
+       COPY WSCALENDAR.
+       COPY WSVAR.
+       78 MAX-CAL                  VALUE 999.
+       77 MAX-CAL1                 PIC 999 VALUE 999.
+       77 MAX-AGG                  PIC 999 VALUE 999.
+
+       01 TAB-CAL OCCURS 1 TO MAX-CAL TIMES
+           DEPENDING ON MAX-CAL1 INDEXED BY IND-CAL.
+           05 TAB-BEGIN            PIC X(12).
+           05 TAB-END              PIC X(12).
+
+       01 TAB-AGG OCCURS 1 TO MAX-CAL TIMES
+           DEPENDING ON MAX-AGG INDEXED BY IND-AGG.
+           05 AGG-BEGIN.
+               10 AGG-BEGIN-YEAR   PIC X(004).
+               10 AGG-BEGIN-MONTH  PIC X(002).
+               10 AGG-BEGIN-DAY    PIC X(002).
+               10 AGG-BEGIN-HOUR   PIC X(002).
+               10 AGG-BEGIN-MIN    PIC X(002).
+           05 AGG-END.
+               10 AGG-END-YEAR     PIC X(004).
+               10 AGG-END-MONTH    PIC X(002).
+               10 AGG-END-DAY      PIC X(002).
+               10 AGG-END-HOUR     PIC X(002).
+               10 AGG-END-MIN      PIC X(002).
+           77 DUMMY PIC X.
+
+       SCREEN SECTION.
+       01  CLEAR-SCREEN.
+           05 BLANK SCREEN.
+      ******************************************************************
+       01  MAIN-SCREEN BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
+           05 VALUE ALL " " PIC X(120) LINE 02 COL 01.
+           05 VALUE ALL " " PIC X(120) LINE 03 COL 01.
+           05 VALUE ALL " " PIC X(120) LINE 04 COL 01.
+           05 VALUE MAIN-TEXT          LINE 03 COL 50.
+           05 VALUE ALL " " PIC X(095) LINE 24 COL 01.
+           05 VALUE ALL " " PIC X(095) LINE 25 COL 01.
+           05 VALUE ALL " " PIC X(095) LINE 26 COL 01.
+           05 VALUE ALL " " PIC X(023) LINE 24 COL 98.
+           05 VALUE ALL " " PIC X(023) LINE 25 COL 98.
+           05 VALUE ALL " " PIC X(023) LINE 26 COL 98.
+           05 VALUE MAIN-TEXT1 LINE 25 COL 99 FOREGROUND-COLOR 5.
+      ******************************************************************
+       01  VIEW-MENU-SCREEN
+           BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
+           05 VALUE ALL " " PIC X(050) LINE 09 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 10 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 11 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 12 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 13 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 14 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 15 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 16 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 17 COL 35.
+           05 VALUE SEARCH-MENU-OPTION1  LINE 12 COL 45.
+           05 VALUE SEARCH-MENU-OPTION2  LINE 13 COL 45.
+           05 VALUE SEARCH-MENU-OPTION3  LINE 14 COL 45.
+           05 VALUE SEARCH-MENU-CHOICE   LINE 20 COL 45 REVERSE-VIDEO.
+           05 SS-OPTION PIC 9(002) LINE 20 COL PLUS 1 TO VIEW-OPTION
+               BLANK WHEN ZERO REVERSE-VIDEO AUTO REQUIRED.
+      ******************************************************************
+       01  EMPTY-LIST-SCREEN
+           BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
+           05 VALUE ALL " " PIC X(050) LINE 09 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 10 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 11 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 12 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 13 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 14 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 15 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 16 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 17 COL 35.
+           05 VALUE ALL " " PIC X(050) LINE 18 COL 35.
+           05 VALUE EMPTY-RECORDS      LINE 12 COL 38.
+           05 VALUE EMPTY-RECORDS2     LINE 15 COL 47.
+           05 LINE 01 COL 01 PIC X TO PRESS-KEY AUTO.
+      ******************************************************************
+       01  EMPTY-FIELD-SCREEN BACKGROUND-COLOR 0 FOREGROUND-COLOR 7.
+           05 VALUE EMPTY-FIELD-TEXT LINE 18 COL 35.
+      ******************************************************************
+       01  COMMENTS-SCREEN BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
+           05 VALUE ALL " " PIC X(095) LINE 24 COL 01.
+           05 VALUE ALL " " PIC X(095) LINE 25 COL 01.
+           05 VALUE ALL " " PIC X(095) LINE 26 COL 01.
+           05 COMMENT-TEXT LINE 25 COL 03 PIC X(085)
+              FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
+           05 LINE 01 COL 01 PIC X TO PRESS-KEY AUTO.
+      ******************************************************************
+       01  LIST-FRAME.
+           05 VALUE ALL " " PIC X(064) LINE 07 COL 54
+              BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(064) LINE 22 COL 54
+              BACKGROUND-COLOR 7.
+           05 TEXT0 PIC X(038)  LINE 08 COL 58 FOREGROUND-COLOR 5.
+           05 VALUE ALL "Ä" PIC X(064) LINE 09 COL 54.
+           05 VALUE ALL "Ä" PIC X(064) LINE 20 COL 54.
+           05 TEXT1 PIC X(020)    LINE 21 COL 58  FOREGROUND-COLOR 5.
+           05 TEXT2 PIC X(019)    LINE 21 COL 97 FOREGROUND-COLOR 5.
+           05 VALUE "  " LINE 07 COL 54  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 08 COL 54  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 09 COL 54  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 54  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 54  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 54  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 54  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 54  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 54  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 54  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 54  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 54  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 54  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 54  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 54  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 07 COL 118 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 08 COL 118 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 09 COL 118 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 118 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 118 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 118 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 118 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 118 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 118 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 118 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 118 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 118 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 118 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 118 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 118 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 22 COL 118 BACKGROUND-COLOR 7.
+
+      ******************************************************************
+
+       01  CALENDAR-LIST LINE ILIN COL ICOL.
+           05 LIST-BEGIN-DAY   PIC X(002) FROM AGG-BEGIN-DAY (IND-AGG).
+           05 VALUE "/".
+           05 LIST-BEGIN-MONTH PIC X(002)
+              FROM AGG-BEGIN-MONTH (IND-AGG).
+           05 VALUE "/".
+           05 LIST-BEGIN-YEAR PIC X(004)  FROM AGG-BEGIN-YEAR (IND-AGG).
+           05 VALUE " - ".
+           05 LIST-BEGIN-HOUR PIC X(002)  FROM AGG-BEGIN-HOUR (IND-AGG).
+           05 VALUE ":".
+           05 LIST-BEGIN-MIN PIC X(002)   FROM AGG-BEGIN-MIN (IND-AGG).
+           05 VALUE UNTIL-LIST.
+           05 LIST-END-DAY   PIC X(002)   FROM AGG-END-DAY (IND-AGG).
+           05 VALUE "/".
+           05 LIST-END-MONTH PIC X(002)   FROM AGG-END-MONTH (IND-AGG).
+           05 VALUE "/".
+           05 LIST-END-YEAR PIC X(004)    FROM AGG-END-YEAR (IND-AGG).
+           05 VALUE " - ".
+           05 LIST-END-HOUR PIC X(002)    FROM AGG-END-HOUR (IND-AGG).
+           05 VALUE ":".
+           05 LIST-END-MIN PIC X(002)     FROM AGG-END-MIN (IND-AGG).
+
+      ******************************************************************
+
+       01  CLEAR-LIST.
+           05 VALUE ALL " " PIC X(060) LINE 10 COL 56.
+           05 VALUE ALL " " PIC X(060) LINE 11 COL 56.
+           05 VALUE ALL " " PIC X(060) LINE 12 COL 56.
+           05 VALUE ALL " " PIC X(060) LINE 13 COL 56.
+           05 VALUE ALL " " PIC X(060) LINE 14 COL 56.
+           05 VALUE ALL " " PIC X(060) LINE 15 COL 56.
+           05 VALUE ALL " " PIC X(060) LINE 16 COL 56.
+           05 VALUE ALL " " PIC X(060) LINE 17 COL 56.
+           05 VALUE ALL " " PIC X(060) LINE 18 COL 56.
+           05 VALUE ALL " " PIC X(060) LINE 19 COL 56.
+
+      ******************************************************************
+
+       PROCEDURE DIVISION.
+       VIEW-DOWNTIME-MENU SECTION.
+           PERFORM FILL-TABLES.
+           PERFORM SORT-ASCENDING
+           PERFORM AGG-TABLE
+      *     PERFORM SHOW-TABLE
+      *     PERFORM SHOW-AGG
+           PERFORM WITH TEST AFTER UNTIL VIEW-OPTION = 3
+              DISPLAY CLEAR-SCREEN
+              MOVE ZEROS TO SS-OPTION
+              DISPLAY MAIN-SCREEN
+              ACCEPT VIEW-MENU-SCREEN
+              IF KEYSTATUS = 1003 THEN
+                 EXIT PROGRAM
+              END-IF
+              IF NOT VALID-VIEW-OPTION
+                 MOVE OPTION-ERROR TO COMMENT-TEXT
+                 ACCEPT COMMENTS-SCREEN
+                 IF KEYSTATUS = 1003 THEN
+                    EXIT PROGRAM
+                 END-IF
+              END-IF
+
+              EVALUATE VIEW-OPTION
+                 WHEN 1
+                   PERFORM LIST-CALENDAR
+                 WHEN 2
+                   PERFORM CREATE-REPORT
+              END-EVALUATE
+           END-PERFORM
+           EXIT PROGRAM.
+
+      ******************************************************************
+
+       FILL-TABLES SECTION.
+           OPEN INPUT CALENDAR
+           SET IND-CAL TO 0
+           PERFORM UNTIL EOF-DOWNTIME-ID
+               READ CALENDAR
+                   AT END
+                       SET EOF-DOWNTIME-ID TO TRUE
+                       MOVE IND-CAL TO MAX-CAL1
+                   NOT AT END
+                       SET IND-CAL UP BY 1
+                       PERFORM LOAD-TABLE
+               END-READ
+           END-PERFORM
+           CLOSE CALENDAR
+       EXIT SECTION.
+
+************************************************************************
+
+       LOAD-TABLE SECTION.
+           STRING FD-START-DOWNTIME FD-START-TIME INTO
+           TAB-BEGIN (IND-CAL)
+           IF FD-END-DOWNTIME = ZERO THEN
+               MOVE "999999999999" TO TAB-END (IND-CAL)
+           ELSE
+               STRING FD-END-DOWNTIME FD-END-TIME INTO
+               TAB-END (IND-CAL)
+           END-IF
+       EXIT SECTION.
+
+      ******************************************************************
+
+       SORT-ASCENDING SECTION.
+           SORT TAB-CAL
+           ON ASCENDING TAB-BEGIN
+           ON ASCENDING TAB-END
+           DUPLICATES
+       EXIT SECTION.
+
+      ******************************************************************
+
+       AGG-TABLE SECTION.
+           MOVE TAB-CAL (1) TO TAB-AGG (1)
+           SET IND-CAL TO 2
+           SET IND-AGG TO 1
+           PERFORM WITH TEST AFTER UNTIL IND-CAL > MAX-CAL1
+               IF TAB-BEGIN (IND-CAL) <= AGG-END (IND-AGG) THEN
+                   IF TAB-END (IND-CAL) > AGG-END (IND-AGG) THEN
+                       MOVE TAB-END (IND-CAL) TO AGG-END (IND-AGG)
+                   END-IF
+               ELSE
+                   SET IND-AGG UP BY 1
+                   MOVE TAB-BEGIN (IND-CAL) TO AGG-BEGIN (IND-AGG)
+                   MOVE TAB-END (IND-CAL) TO AGG-END (IND-AGG)
+               END-IF
+               SET IND-CAL UP BY 1
+           END-PERFORM
+           MOVE IND-AGG TO MAX-AGG
+       EXIT SECTION.
+
+      ******************************************************************
+
+       LIST-CALENDAR SECTION.
+           DISPLAY CLEAR-SCREEN
+           DISPLAY MAIN-SCREEN
+           MOVE LIST-AGG-FRAME2 TO TEXT0
+           DISPLAY LIST-FRAME
+           SET IND-AGG TO 0
+           MOVE 10 TO ILIN
+           MOVE 58 TO ICOL
+           MOVE 1 TO COUNTPAGE
+           MOVE 10 TO MAXPERPAGE
+           PERFORM WITH TEST AFTER UNTIL IND-AGG >= MAX-AGG
+              SET IND-AGG UP BY 1
+              DISPLAY CALENDAR-LIST
+              ADD 1 TO ILIN
+              ADD 1 TO MAXPERPAGE
+              IF ILIN = 20 THEN
+                 MOVE NEXT-PAGE1 TO TEXT2
+                 DISPLAY LIST-FRAME
+                 ACCEPT OMITTED
+                 IF KEYSTATUS = F3 THEN
+                    EXIT SECTION
+                 END-IF
+                 IF KEYSTATUS = F1 AND COUNTPAGE > 1
+                    MOVE SPACES TO TEXT2
+                    DISPLAY LIST-FRAME
+                    DISPLAY CLEAR-LIST
+                    DISPLAY CALENDAR-LIST
+                    MOVE 10 TO ILIN
+                    SET IND-AGG DOWN BY MAXPERPAGE
+                    SUBTRACT 1 FROM COUNTPAGE
+                    MOVE 10 TO MAXPERPAGE
+                    IF COUNTPAGE = 1 THEN
+                       MOVE SPACES TO TEXT1
+                       DISPLAY LIST-FRAME
+                    END-IF
+                 ELSE
+                    IF KEYSTATUS = F2 THEN
+                       MOVE PREVIOUS-PAGE TO TEXT1
+                       MOVE NEXT-PAGE1 TO TEXT2
+                       DISPLAY LIST-FRAME
+                       DISPLAY CLEAR-LIST
+                       DISPLAY CALENDAR-LIST
+                       MOVE 10 TO ILIN
+                       ADD 1 TO COUNTPAGE
+                       MOVE 10 TO MAXPERPAGE
+                    ELSE
+                       EXIT SECTION
+                    END-IF
+                 END-IF
+              END-IF
+              IF IND-AGG >= MAX-AGG
+                 MOVE LAST-PAGE1 TO TEXT2
+                 DISPLAY LIST-FRAME
+                 ACCEPT OMITTED
+                 IF KEYSTATUS = F3 THEN
+                    EXIT SECTION
+                 END-IF
+                 IF KEYSTATUS = F1 AND COUNTPAGE > 1
+                    DISPLAY CLEAR-LIST
+                    DISPLAY CALENDAR-LIST
+                    MOVE 10 TO ILIN
+                    SET IND-AGG DOWN BY MAXPERPAGE
+                    SUBTRACT 1 FROM COUNTPAGE
+                    MOVE 10 TO MAXPERPAGE
+                 END-IF
+              END-IF
+           END-PERFORM
+           MOVE SPACES TO TEXT0
+           EXIT SECTION.
+
+      ******************************************************************
+
+       CREATE-REPORT SECTION.
+
+       EXIT SECTION.
+
+      ******************************************************************
+
+       END PROGRAM CAMSEARCH.
