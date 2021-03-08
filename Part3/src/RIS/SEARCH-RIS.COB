@@ -101,7 +101,7 @@
        77 TRUE-YES                     PIC X(001).
        77 COUNTPAGE                    PIC 9(002).
 
-       01 MAXPERPAGE                   PIC 9(003).
+       01 MAXPERPAGE                       PIC 9(003).
        78 MAX-ING                      VALUE 999.
        01 TABLE-INGREDS OCCURS 1 TO MAX-ING TIMES
            DEPENDING ON NUMBER-ING
