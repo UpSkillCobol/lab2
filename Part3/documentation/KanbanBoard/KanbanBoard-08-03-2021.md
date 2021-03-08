@@ -30,7 +30,12 @@
 |  RIS  |               |                     |   **X**   |        Assigned to BL       |
 | RIS01 |               |                     |   **X**   |       Activity Diagram      |
 | RIS02 |               |                     |   **X**   |     Variables Definition    |
-| RIS03 |               |        **X**        |           |         Source Code         |
+| RIS03 |               |                     |   **X**   |    Source Code Record       |
+| RIS04 |               |                     |   **X**   |    Source Code Report       |
+| RIS05 |               |                     |   **X**   |    Source Code Main         |
+| RIS06 |               |        **X**        |           |    Source Code Search       |
+| RIS06 |               |                     |   **X**   |         Constants EN        |
+| RIS07 |               |                     |   **X**   |         Constants PT        |
 |       |               |                     |           |                             |
 |  ICI  |               |                     |   **X**   |        Assigned to FB       |
 | ICI01 |               |                     |   **X**   |       Activity Diagram      |
