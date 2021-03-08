@@ -3,7 +3,7 @@
       ******************************************************************
       *    BREADWICH | REGISTRATION OF SANDWICH ORDERS
       ******************************************************************
-      *    MAIN PROGRAM | V0.1 | IN UPDATE | 04.03.2021
+      *    MAIN PROGRAM | V0.2 | IN UPDATE | 08.03.2021
       ******************************************************************
 
        IDENTIFICATION DIVISION.
@@ -18,7 +18,7 @@
        FILE SECTION.
 
        WORKING-STORAGE SECTION.
-       COPY RSOCONTANTS.
+       COPY RSOCONSTANTS.
        COPY RSOWSVAR.
 
        SCREEN SECTION.
@@ -80,7 +80,7 @@
 
               EVALUATE MAIN-OPTION
                  WHEN 1     CALL "RSOREGISTER"
-      *>            WHEN 2     CALL "RSOSEARCH"
+                 WHEN 2     CALL "RSOSEARCH"
       *>            WHEN 3     CALL "RSOREPORT"
               END-EVALUATE
 
