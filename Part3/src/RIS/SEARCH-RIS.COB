@@ -68,10 +68,11 @@
        COPY WSSupplierFX.
 
       *> UTILITY VARIBLES
-        01  SAVE-OPTION                         PIC X(001).
-           88 SAVE-VALID-OPTION                VALUE "Y" "y" "N" "n".
+        01  SAVE-OPTION                        PIC X(001).
+           88 SAVE-VALID-OPTION                VALUE "Y" "y" "N" "n",
+                                                "s", "S".
            88 SAVE-OPTION-NO                   VALUE "N" "n".
-           88 SAVE-VALID-YES                   VALUE "Y","y".
+           88 SAVE-VALID-YES                   VALUE "Y","y","S","s".
        77  DUMMY                               PIC X(001).
        77  INGRED-STATUS                       PIC 9(002).
        77  KEYSTATUS                           PIC 9(004).
@@ -145,22 +146,29 @@
       *>       05 TABLESUPPLIER-IS-ACTIVE                   PIC 9(001).
        01 NUMBER-SUPP               PIC 9(003) VALUE 999.
 
+      *> TABLE RIS FILE
+       78  MAX-RIS                                VALUE 999.
+       01 TABLE-RIS OCCURS 1 TO MAX-RIS TIMES
+           DEPENDING ON NUMBER-RIS
+           INDEXED BY RIS-INDEX.
+
+               05  TABLE-RIS-ID.
+                   10 TABLE-RIS-ID-ING               PIC 9(003).
+                   10 TABLE-RIS-ID-SUPP              PIC 9(003).
+               05 TABLE-RIS-PRICE                    PIC 9(003).
+               05 TABLE-RIS-DATE-VAL.
+                   10 TABLE-RIS-YEAR                 PIC 9(004).
+                   10 TABLE-RIS-MONTH                PIC 9(002).
+                   10 TABLE-RIS-DAY                  PIC 9(002).
+
+       01  NUMBER-RIS                             PIC 9(003) VALUE 999.
+
+
       *> DATE VERIFY VARIABLES
             01  WS-DATA.
                05  WS-DIA                PIC 9(002) VALUE ZEROS.
-                   88 DIA30              VALUE 01 THRU 30.
-                   88 DIA-FEV            VALUE 01 THRU 28.
-                   88 FEV-BISSEXTO       VALUE 01 THRU 29.
-                   88 DIA-VALIDO         VALUE 01 THRU 31.
                05  WS-MES                PIC 9(002) VALUE ZEROS.
-                   88 MES-VALIDO         VALUE 01 THRU 12.
-                   88 MES30              VALUE 4 6 9 11.
-                   88 MES-FEV            VALUE 2.
                05  WS-ANO                PIC 9(004) VALUE ZEROS.
-                   88 ANO-VALIDO         VALUE 2021 THRU 2100.
-               05  WS-DIA-SEMANA         PIC X(007) VALUE SPACES.
-               05  WS-SIGLA-UNIDADE      PIC X(005) VALUE SPACES.
-               05  WS-SIGLA-PROF         PIC X(004) VALUE SPACES.
 
        01  BISSEXTO                      PIC X(004).
            88 BISSEXTO-YES               VALUE "S".
@@ -377,6 +385,8 @@
        MAIN-PROCEDURE.
            PERFORM CHECK-FILES-OK
            PERFORM FILL-TABLES
+           PERFORM SHOW-TABLE
+
            MOVE SPACES TO VIEW-NAME-SUPP, VIEW-NAME-ING
            MOVE ZEROS TO GET-SUPPLIER-ID, GET-INGREDIENT-ID, GET-PRICE
            GET-EXPIRATION-DATE
@@ -396,10 +406,6 @@
                    EXIT PROGRAM
                 END-IF
            PERFORM GET-DATE
-           IF KEYSTATUS = F3 THEN
-                   EXIT PROGRAM
-                END-IF
-           PERFORM SAVE-RECORD
            IF KEYSTATUS = F3 THEN
                    EXIT PROGRAM
                 END-IF
@@ -433,7 +439,25 @@
                 END-READ
             END-PERFORM
             CLOSE FXINGRED
-       EXIT SECTION.
+
+
+               SET RIS-INDEX TO 0
+           OPEN INPUT FXRISUPPLY
+           PERFORM UNTIL EOF-RIS
+               READ FXRISUPPLY NEXT RECORD
+                   AT END
+                       SET EOF-RIS TO TRUE
+                       MOVE RIS-INDEX TO NUMBER-RIS
+                   NOT AT END
+                       SET RIS-INDEX UP BY 1
+                       PERFORM LOAD-RIS-TABLE
+                END-READ
+           END-PERFORM
+           CLOSE FXRISUPPLY
+
+           EXIT SECTION.
+
+
 
        LOAD-INGRED-TABLE SECTION.
            MOVE INGREDS-DETAILS TO TABLE-INGREDS (ING-INDEX)
@@ -443,6 +467,18 @@
            MOVE SUPPLIER-DETAILS TO TABLE-SUPP (SUPP-INDEX)
        EXIT SECTION.
 
+       LOAD-RIS-TABLE SECTION.
+           MOVE RIS-DETAILS TO TABLE-RIS (RIS-INDEX)
+
+           EXIT SECTION.
+
+          SHOW-TABLE SECTION.
+           SET RIS-INDEX TO 1
+           PERFORM UNTIL RIS-INDEX >= NUMBER-RIS
+               DISPLAY TABLE-RIS (RIS-INDEX) ACCEPT OMITTED
+               SET RIS-INDEX UP BY 1
+           END-PERFORM
+       EXIT SECTION.
 
        GET-INGREDIENT SECTION.
            DISPLAY LIST-FRAME
@@ -752,77 +788,11 @@
                    EXIT SECTION
                END-IF
 
-           PERFORM VALID-DATE
+
            MOVE WS-DIA TO WS-RIS-DAY
            MOVE WS-MES TO WS-RIS-MONTH
            MOVE WS-ANO TO WS-RIS-YEAR
 
 
            END-PERFORM
-           EXIT SECTION.
-
-      *> DATE VERIFY SECTION
-       VALID-DATE SECTION.
-
-           IF ANO-VALIDO AND DIA-VALIDO AND MES-VALIDO THEN
-                   IF NOT MES-FEV AND NOT MES30 THEN
-                       MOVE "S" TO DATAVAL
-                   ELSE
-                       IF MES30 AND DIA30 THEN
-                           MOVE "S" TO DATAVAL
-                       END-IF
-                       IF MES-FEV THEN
-                           PERFORM IS-BISSEXTO
-                           IF BISSEXTO-YES AND FEV-BISSEXTO THEN
-                               MOVE "S" TO DATAVAL
-                           ELSE
-                               IF NOT BISSEXTO-YES AND DIA-FEV THEN
-                                   MOVE "S" TO DATAVAL
-                               END-IF
-                           END-IF
-                       END-IF
-                   END-IF
-               END-IF
-
-           IF DATAVAL NOT = "S" THEN
-               MOVE INVALID-DATE TO ERROR-TEXT
-               ACCEPT ERROR-ZONE
-           END-IF
-           EXIT SECTION.
-          *> VERIFICACAO DE ANO BISSEXTO
-       IS-BISSEXTO SECTION.
-
-           MOVE SPACE TO BISSEXTO
-           IF FUNCTION MOD (WS-ANO,4) = 0 THEN
-               IF FUNCTION MOD (WS-ANO,100) <> 0 THEN
-                   MOVE "S" TO BISSEXTO
-               ELSE
-                   IF FUNCTION MOD (WS-ANO,400) = 0 THEN
-                       MOVE "S" TO BISSEXTO
-                   END-IF
-               END-IF
-           END-IF
-           EXIT SECTION.
-
-       SAVE-RECORD SECTION.
-           PERFORM WITH TEST AFTER UNTIL SAVE-VALID-OPTION
-               DISPLAY WANT-TO-SAVE
-               ACCEPT  WANT-TO-SAVE1
-               IF KEYSTATUS = F3 THEN
-                   EXIT SECTION
-               END-IF
-               IF NOT SAVE-VALID-OPTION THEN
-                   MOVE ERROR-SAVE TO ERROR-TEXT
-                       ACCEPT ERROR-ZONE
-                       IF KEYSTATUS = F3 THEN
-                           EXIT SECTION
-                       END-IF
-                END-IF
-           END-PERFORM
-           IF SAVE-VALID-YES THEN
-
-               OPEN I-O FXRISUPPLY
-                   WRITE RIS-DETAILS FROM WS-RIS-DETAILS
-                   END-WRITE
-               CLOSE   FXRISUPPLY
            EXIT SECTION.

@@ -68,10 +68,11 @@
        COPY WSSupplierFX.
 
       *> UTILITY VARIBLES
-        01  SAVE-OPTION                         PIC X(001).
-           88 SAVE-VALID-OPTION                VALUE "Y" "y" "N" "n".
+       01  SAVE-OPTION                         PIC X(001).
+           88 SAVE-VALID-OPTION                VALUE "Y" "y" "N" "n",
+                                               "s", "S".
            88 SAVE-OPTION-NO                   VALUE "N" "n".
-           88 SAVE-VALID-YES                   VALUE "Y","y".
+           88 SAVE-VALID-YES                   VALUE "Y","y","S","s".
        77  DUMMY                               PIC X(001).
        77  INGRED-STATUS                       PIC 9(002).
        77  KEYSTATUS                           PIC 9(004).
@@ -158,9 +159,6 @@
                    88 MES-FEV            VALUE 2.
                05  WS-ANO                PIC 9(004) VALUE ZEROS.
                    88 ANO-VALIDO         VALUE 2021 THRU 2100.
-               05  WS-DIA-SEMANA         PIC X(007) VALUE SPACES.
-               05  WS-SIGLA-UNIDADE      PIC X(005) VALUE SPACES.
-               05  WS-SIGLA-PROF         PIC X(004) VALUE SPACES.
 
        01  BISSEXTO                      PIC X(004).
            88 BISSEXTO-YES               VALUE "S".
