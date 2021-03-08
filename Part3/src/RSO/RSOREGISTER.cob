@@ -3,7 +3,7 @@
       ******************************************************************
       *    BREADWICH | REGISTRATION OF SANDWICH ORDERS
       ******************************************************************
-      *    REGISTER ORDERS | V0.3 | IN UPDATE | 07.03.2021
+      *    REGISTER ORDERS | V0.4 | IN UPDATE | 08.03.2021
       ******************************************************************
 
        IDENTIFICATION DIVISION.
@@ -34,7 +34,7 @@
        FD  SCHOOLS.
        COPY CB-SCHOOLS.
 
-       FD SANDWICHES.
+       FD  SANDWICHES.
        COPY CB-FD-SR.
 
        WORKING-STORAGE SECTION.
@@ -42,7 +42,7 @@
        COPY RSOWSVAR.
        COPY RSOTABLES.
        COPY VAR-VALIDDATE.
-       COPY RSOCONTANTS.
+       COPY RSOCONSTANTS.
 
       ******************************************************************
 
@@ -144,15 +144,103 @@
 
       ******************************************************************
 
+       01  SHOW-REGISTER-SCREEN BACKGROUND-COLOR 0 FOREGROUND-COLOR 7.
+           05 VALUE ALL "_" PIC X(088) LINE 10 COL 03.
+           05 VALUE ALL " " PIC X(090) LINE 07 COL 03
+              BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(090) LINE 22 COL 03
+              BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 08 COL 03 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 09 COL 03 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 03 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 03 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 03 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 03 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 03 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 03 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 03 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 03 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 03 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 03 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 03 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 03 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 08 COL 91 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 09 COL 91 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 91 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 91 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 91 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 91 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 91 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 91 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 91 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 91 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 91 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 91 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 91 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 91 BACKGROUND-COLOR 7.
+           05 VALUE REGISTER-TEXT               LINE 09 COL 33.
+           05 VALUE REGISTER-TEXT-ID            LINE 13 COL 05.
+           05 VALUE REGISTER-TEXT-DELIVERY-DATE LINE 15 COL 05.
+           05 VALUE REGISTER-TEXT-SCHOOL        LINE 16 COL 05.
+           05 VALUE REGISTER-TEXT-SANDWICH      LINE 17 COL 05.
+           05 VALUE REGISTER-TEXT-QUANTITY      LINE 18 COL 05.
+           05 VALUE REGISTER-TEXT-ORDER-DATE    LINE 19 COL 05.
+           05 REG-ID2 PIC 9(005) LINE 13 COL 26 USING WS-ORDERS-ID.
+           05 REG-REC2.
+              10 REG-DELIVERY-DATE2.
+                 15 REG-DELIVERY-DAY2 PIC X(002) LINE 15 COL 26 FROM
+                    WS-DELIVERY-DAY.
+                 15 LINE 15 COL 28 VALUE "/".
+                 15 REG-DELIVERY-MONTH2 PIC X(002) LINE 15 COL 29 FROM
+                    WS-DELIVERY-MONTH.
+                 15 LINE 15 COL 31 VALUE "/".
+                 15 REG-DELIVERY-YEAR2 PIC X(004) LINE 15 COL 32 FROM
+                    WS-DELIVERY-YEAR.
+              10 REG-DELIVERY-TIME2.
+                 15 LINE 15 COL 37 VALUE "|".
+                 15 REG-DELIVERY-HOUR2 PIC X(002) LINE 15 COL 39 FROM
+                    WS-DELIVERY-HOUR.
+                 15 LINE 15 COL 41 VALUE ":".
+                 15 REG-DELIVERY-MINUTE2 PIC X(002) LINE 15 COL 42 FROM
+                    WS-DELIVERY-MINUTE.
+              10 REG-SCHOOL2 PIC 9(003) LINE 16 COL 26
+                 FROM WS-ORDERS-SCHOOL-INTERNAL-ID.
+              10 VALUE "|" LINE 16 COL 30.
+              10 SHOW-SCHOOL-NAME2 PIC X(050) LINE 16 COL 32
+                 FROM TAB-SCHOOL-DESIGNATION (IND-SCHOOL).
+              10 REG-SANDWICH2 PIC 9(003) LINE 17 COL 26
+                 FROM WS-ORDERS-SANDWICH-INTERNAL-ID.
+              10 VALUE "|" LINE 17 COL 30.
+              10 SHOW-SANDWICH-NAME2 PIC X(025) LINE 17 COL 32
+                 FROM TAB-SR-S-DESCRIPTION (IND-SANDWICH).
+              10 REG-QUANTITY2 PIC 9(003) LINE 18 COL 26
+                 FROM WS-ORDERS-QUANTITY.
+              10 VALUE "|" LINE 18 COL 30.
+              10 VALUE PRICE LINE 18 COL 32.
+              10 REG-PRICE2 PIC Z(005) LINE 18 COL 45
+                 FROM PRICEQUANTITY.
+              10 VALUE EUROS LINE 18 COL 51.
+              10 REG-ORDERS-DATE2.
+                 15 REG-ORDERS-DAY2 PIC 9(002) LINE 19 COL 26 FROM
+                    WS-ORDERS-DAY.
+                 15 LINE 19 COL 28 VALUE "/".
+                 15 REG-ORDERS-MONTH2 PIC 9(002) LINE 19 COL 29 FROM
+                    WS-ORDERS-MONTH.
+                 15 LINE 19 COL 31 VALUE "/".
+                 15 REG-ORDERS-YEAR2 PIC 9(004) LINE 19 COL 32 FROM
+                    WS-ORDERS-YEAR.
+
+      ******************************************************************
+
        01  LIST-FRAME.
            05 VALUE ALL " " PIC X(064) LINE 07 COL 54
               BACKGROUND-COLOR 7.
            05 VALUE ALL " " PIC X(064) LINE 22 COL 54
               BACKGROUND-COLOR 7.
-           05 TEXT0 PIC X(038)  LINE 08 COL 58 FOREGROUND-COLOR 5.
+           05 TEXT0 PIC X(057)    LINE 08 COL 58 FOREGROUND-COLOR 5.
            05 VALUE ALL "Ä" PIC X(064) LINE 09 COL 54.
            05 VALUE ALL "Ä" PIC X(064) LINE 20 COL 54.
-           05 TEXT1 PIC X(020)    LINE 21 COL 58  FOREGROUND-COLOR 5.
+           05 TEXT1 PIC X(020)    LINE 21 COL 58 FOREGROUND-COLOR 5.
            05 TEXT2 PIC X(019)    LINE 21 COL 97 FOREGROUND-COLOR 5.
            05 VALUE "  " LINE 07 COL 54  BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 08 COL 54  BACKGROUND-COLOR 7.
@@ -199,7 +287,7 @@
            05 LIST-BEGIN-HOUR PIC X(002)  FROM AGG-BEGIN-HOUR (IND-AGG).
            05 VALUE ":".
            05 LIST-BEGIN-MIN PIC X(002)   FROM AGG-BEGIN-MIN (IND-AGG).
-           05 VALUE "        UNTIL        ".
+           05 VALUE UNTIL-LIST.
            05 LIST-END-DAY   PIC X(002)   FROM AGG-END-DAY (IND-AGG).
            05 VALUE "/".
            05 LIST-END-MONTH PIC X(002)   FROM AGG-END-MONTH (IND-AGG).
@@ -224,9 +312,13 @@
        01  SANDWICH-LIST.
            05 LIST-SANDWICH-ID PIC 9(003)   LINE ILIN COL ICOL
               FROM TAB-SR-IID (IND-SANDWICH).
-           05 VALUE "|"                   LINE ILIN COL PLUS 2.
+           05 VALUE "|"                     LINE ILIN COL PLUS 2.
            05 LIST-SANDWICH-NAME PIC X(025) LINE ILIN COL PLUS 2
               FROM TAB-SR-S-DESCRIPTION (IND-SANDWICH).
+           05 VALUE "                 " LINE ILIN COL PLUS 2.
+           05 LIST-SANDWICH-PRICE PIC 99 LINE ILIN COL PLUS 2
+              FROM TAB-SR-PRICE (IND-SANDWICH).
+           05 VALUE EUROS LINE ILIN COL PLUS 2.
 
       ******************************************************************
 
@@ -278,10 +370,10 @@
        PROCEDURE DIVISION.
        MAIN SECTION.
            MOVE SPACES TO FLAG-TRUE, CALENDAR-EXISTS
-      *>      PERFORM CHECK-SCHOOL-SANDIWICH-FILE
-      *>      IF FLAG-TRUE = "N" THEN
-      *>         EXIT PROGRAM
-      *>      END-IF
+           PERFORM CHECK-SCHOOL-SANDWICH-FILE
+           IF FLAG-TRUE = "N" THEN
+              EXIT PROGRAM
+           END-IF
 
            PERFORM CREATE-FILE
 
@@ -343,6 +435,10 @@
               END-IF
 
            PERFORM WITH TEST AFTER UNTIL SAVE-VALID
+              MOVE SPACES TO SS-SAVE
+              DISPLAY CLEAR-SCREEN
+              DISPLAY MAIN-SCREEN
+              DISPLAY SHOW-REGISTER-SCREEN
               ACCEPT SAVE-SCREEN
               IF KEYSTATUS = F3 THEN
                  CLOSE ORDERSKEYS
@@ -362,7 +458,7 @@
               END-IF
            END-PERFORM
 
-           IF SAVE = "Y" OR "y"
+           IF SAVE-YES THEN
               REWRITE FDORDERSKEYS
               END-REWRITE
               CLOSE ORDERSKEYS
@@ -378,7 +474,7 @@
                  EXIT SECTION
               END-IF
            ELSE
-              IF SAVE = "N" OR "n"
+              IF SAVE-NO THEN
                  CLOSE ORDERSKEYS
                  CLOSE ORDERS
                  MOVE MESSAGE-WRITE-NO TO COMMENT-TEXT
@@ -562,6 +658,10 @@
            PERFORM WITH TEST AFTER UNTIL WS-ORDERS-QUANTITY
            NOT EQUALS ALL ZEROS
 
+              DISPLAY CLEAR-SCREEN
+              DISPLAY MAIN-SCREEN
+              DISPLAY REGISTER-SCREEN
+
               MOVE ZEROS TO REG-QUANTITY
               DISPLAY REG-QUANTITY
 
@@ -580,12 +680,16 @@
                     EXIT SECTION
                  END-IF
               END-IF
+
+              COMPUTE PRICEQUANTITY =
+              TAB-SR-PRICE (IND-SANDWICH) * WS-ORDERS-QUANTITY
+
            END-PERFORM
            EXIT SECTION.
 
       ******************************************************************
 
-       CHECK-SCHOOL-SANDIWICH-FILE SECTION.
+       CHECK-SCHOOL-SANDWICH-FILE SECTION.
            OPEN INPUT SCHOOLS
            IF SCHOOL-FS = 35 THEN
               MOVE SCHOOLS-INEXISTENT TO COMMENT-TEXT
@@ -669,7 +773,7 @@
 
            PERFORM FILL-TABLE-SCHOOL
 
-      *>      PERFORM FILL-TABLE-SANDWICH
+           PERFORM FILL-TABLE-SANDWICH
            EXIT SECTION.
 
       ******************************************************************
@@ -780,6 +884,7 @@
        LOAD-TABLE-SANDWICH SECTION.
            MOVE SR-IID TO TAB-SR-IID (IND-SANDWICH)
            MOVE SR-S-DESCRIPTION TO TAB-SR-S-DESCRIPTION (IND-SANDWICH)
+           MOVE SR-PRICE TO TAB-SR-PRICE (IND-SANDWICH)
            EXIT SECTION.
 
       ******************************************************************
@@ -787,16 +892,16 @@
        LIST-CALENDAR SECTION.
            MOVE LIST-FRAME2 TO TEXT0
            DISPLAY LIST-FRAME
-           SET IND-AGG TO 1
+           SET IND-AGG TO 0
            MOVE 10 TO ILIN
            MOVE 58 TO ICOL
            MOVE 1 TO COUNTPAGE
            MOVE 10 TO MAXPERPAGE
-           PERFORM UNTIL IND-AGG >= MAX-AGG
+           PERFORM WITH TEST AFTER UNTIL IND-AGG >= MAX-AGG
+              SET IND-AGG UP BY 1
               DISPLAY CALENDAR-LIST
               ADD 1 TO ILIN
               ADD 1 TO MAXPERPAGE
-              SET IND-AGG UP BY 1
               IF ILIN = 20 THEN
                  MOVE NEXT-PAGE TO TEXT2
                  DISPLAY LIST-FRAME
@@ -959,16 +1064,16 @@
            DISPLAY CLEAR-LIST
            MOVE LIST-FRAME1 TO TEXT0
            DISPLAY LIST-FRAME
-           SET IND-SCHOOL TO 1
+           SET IND-SCHOOL TO 0
            MOVE 10 TO ILIN
            MOVE 58 TO ICOL
            MOVE 1 TO COUNTPAGE
            MOVE 10 TO MAXPERPAGE
-           PERFORM UNTIL IND-SCHOOL >= MAX-SCHOOL
+           PERFORM WITH TEST AFTER UNTIL IND-SCHOOL >= MAX-SCHOOL
+              SET IND-SCHOOL UP BY 1
               DISPLAY SCHOOL-LIST
               ADD 1 TO ILIN
               ADD 1 TO MAXPERPAGE
-              SET IND-SCHOOL UP BY 1
               IF ILIN = 20 THEN
                  MOVE NEXT-PAGE TO TEXT2
                  DISPLAY LIST-FRAME
@@ -1004,7 +1109,7 @@
                     END-IF
                  END-IF
               END-IF
-              IF IND-SCHOOL >= MAX-SCHOOL
+              IF IND-SCHOOL >= MAX-SCHOOL THEN
                  MOVE LAST-PAGE TO TEXT2
                  DISPLAY LIST-FRAME
                  ACCEPT REG-SCHOOL
@@ -1044,18 +1149,18 @@
 
        LIST-SANDWICHS SECTION.
            DISPLAY CLEAR-LIST
-           MOVE LIST-FRAME1 TO TEXT0
+           MOVE LIST-FRAME3 TO TEXT0
            DISPLAY LIST-FRAME
-           SET IND-SANDWICH TO 1
+           SET IND-SANDWICH TO 0
            MOVE 10 TO ILIN
            MOVE 58 TO ICOL
            MOVE 1 TO COUNTPAGE
            MOVE 10 TO MAXPERPAGE
-           PERFORM UNTIL IND-SANDWICH >= MAX-SANDWICH
+           PERFORM WITH TEST AFTER UNTIL IND-SANDWICH >= MAX-SANDWICH
+              SET IND-SANDWICH UP BY 1
               DISPLAY SANDWICH-LIST
               ADD 1 TO ILIN
               ADD 1 TO MAXPERPAGE
-              SET IND-SANDWICH UP BY 1
               IF ILIN = 20 THEN
                  MOVE NEXT-PAGE TO TEXT2
                  DISPLAY LIST-FRAME
