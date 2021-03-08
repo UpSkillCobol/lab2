@@ -20,7 +20,7 @@
            COPY "FD-FS-SR".
        WORKING-STORAGE SECTION.
        COPY "CB-WS-SR".
-       COPY "SR-CONST".
+       COPY "SR-CONST-PT".
 
        01  SR-TABLE OCCURS 1 TO MAX-SR TIMES
            DEPENDING ON NUMBER-SR
@@ -364,6 +364,10 @@
               BACKGROUND-COLOR 7.
            05 VALUE LIST-FRAME1 LINE 08 COL 72 FOREGROUND-COLOR 5.
            05 VALUE LIST-FRAME2 LINE 08 COL PLUS 3 FOREGROUND-COLOR 5.
+           05 VALUE ALL "Ä" PIC X(042) LINE 09 COL 70.
+           05 VALUE ALL "Ä" PIC X(042) LINE 20 COL 70.
+           05 TEXT1 PIC X(020) LINE 21 COL 70 FOREGROUND-COLOR 5.
+           05 TEXT2 PIC X(019) LINE 21 COL 90 FOREGROUND-COLOR 5.
            05 VALUE "  " LINE 07 COL 68 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 08 COL 68 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 09 COL 68 BACKGROUND-COLOR 7.
@@ -729,53 +733,60 @@
            MOVE ZEROES TO NEW-INGREDID
            MOVE SPACES TO TRUE-YES
            SET ING-INDEX TO 1
-           MOVE 09 TO ILIN
+           MOVE 10 TO ILIN
            MOVE 72 TO ICOL
            MOVE 1 TO COUNTPAGE
-           MOVE 12 TO PAGINA
+           MOVE 10 TO MAXPERPAGE
            PERFORM UNTIL ING-INDEX >= NUMBER-ING
            DISPLAY REGISTER-ING-SCREEN
                DISPLAY INGREDIENT-LIST1
                ADD 1 TO ILIN
-               ADD 1 TO PAGINA
+               ADD 1 TO MAXPERPAGE
                SET ING-INDEX UP BY 1
-               IF ILIN = 21 THEN
+               IF ILIN = 20 THEN
+                   MOVE NEXT-PAGE TO TEXT2
+                   DISPLAY LIST-FRAME
                    MOVE ING-INSTR TO INSTRUCTION-MESSAGE
                    DISPLAY INSTRUCTION-MESSAGE
-                   MOVE F1-F2 TO PREVIOUS-NEXT-MESSAGE
-                   DISPLAY PREVIOUS-NEXT-TEXT
                    ACCEPT ING-ACCEPT
                    IF KEY-STATUS = F3 THEN
                        EXIT SECTION
                    END-IF
                    IF KEY-STATUS = F1 AND COUNTPAGE > 1
+                       MOVE SPACE TO TEXT2
                        DISPLAY CLEAR-SCREEN
                        DISPLAY REGISTER-ING-SCREEN
                        DISPLAY MAIN-SCREEN
                        DISPLAY LIST-FRAME
-                       MOVE 09 TO ILIN
-                       SET ING-INDEX DOWN BY PAGINA
+                       MOVE 10 TO ILIN
+                       SET ING-INDEX DOWN BY MAXPERPAGE
                        SUBTRACT 1 FROM COUNTPAGE
-                       MOVE 12 TO PAGINA
+                       MOVE 10 TO MAXPERPAGE
+                           IF COUNTPAGE = 1 THEN
+                               MOVE SPACES TO TEXT1
+                               DISPLAY LIST-FRAME
+                           END-IF
                    ELSE
                        IF KEY-STATUS = F2 THEN
+                           MOVE PREVIOUS-PAGE TO TEXT1
+                           MOVE NEXT-PAGE TO TEXT2
                            DISPLAY CLEAR-SCREEN
                            DISPLAY REGISTER-ING-SCREEN
                            DISPLAY MAIN-SCREEN
                            DISPLAY LIST-FRAME
-                           MOVE 09 TO ILIN
+                           MOVE 10 TO ILIN
                            ADD 1 TO COUNTPAGE
-                           MOVE 12 TO PAGINA
+                           MOVE 10 TO MAXPERPAGE
                        ELSE
                            EXIT SECTION
                        END-IF
                    END-IF
                END-IF
                IF ING-INDEX >= NUMBER-ING
+                   MOVE LAST-PAGE TO TEXT2
+                   DISPLAY LIST-FRAME
                    MOVE ING-INSTR TO INSTRUCTION-MESSAGE
                    DISPLAY INSTRUCTION-MESSAGE
-                   MOVE F1-F2 TO PREVIOUS-NEXT-MESSAGE
-                   DISPLAY PREVIOUS-NEXT-TEXT
                    ACCEPT ING-ACCEPT
                    IF KEY-STATUS = F3 THEN
                        EXIT SECTION
@@ -785,10 +796,10 @@
                        DISPLAY REGISTER-ING-SCREEN
                        DISPLAY MAIN-SCREEN
                        DISPLAY LIST-FRAME
-                       MOVE 09 TO ILIN
-                       SET ING-INDEX DOWN BY PAGINA
+                       MOVE 10 TO ILIN
+                       SET ING-INDEX DOWN BY MAXPERPAGE
                        SUBTRACT 1 FROM COUNTPAGE
-                       MOVE 12 TO PAGINA
+                       MOVE 10 TO MAXPERPAGE
                    END-IF
                END-IF
            END-PERFORM
@@ -803,53 +814,60 @@
            DISPLAY LIST-FRAME
            DISPLAY REGISTER-CAT-SCREEN
            SET CAT-INDEX TO 1
-           MOVE 09 TO ILIN
+           MOVE 10 TO ILIN
            MOVE 72 TO ICOL
            MOVE 1 TO COUNTPAGE
-           MOVE 12 TO PAGINA
+           MOVE 10 TO MAXPERPAGE
            PERFORM UNTIL CAT-INDEX >= NUMBER-CAT
                DISPLAY REGISTER-CAT-SCREEN
                DISPLAY CATEGORY-LIST1
                ADD 1 TO ILIN
-               ADD 1 TO PAGINA
+               ADD 1 TO MAXPERPAGE
                SET CAT-INDEX UP BY 1
                IF ILIN = 21 THEN
+                   MOVE NEXT-PAGE TO TEXT2
+                   DISPLAY LIST-FRAME
                    MOVE CAT-INSTR TO INSTRUCTION-MESSAGE
                    DISPLAY INSTRUCTION-MESSAGE
-                   MOVE F1-F2 TO PREVIOUS-NEXT-MESSAGE
-                   DISPLAY PREVIOUS-NEXT-TEXT
                    ACCEPT CAT-ACCEPT
                    IF KEY-STATUS = F3 THEN
                        EXIT SECTION
                    END-IF
                    IF KEY-STATUS = F1 AND COUNTPAGE > 1
+                       MOVE SPACE TO TEXT2
                        DISPLAY CLEAR-SCREEN
                        DISPLAY REGISTER-CAT-SCREEN
                        DISPLAY MAIN-SCREEN
                        DISPLAY LIST-FRAME
-                       MOVE 09 TO ILIN
-                       SET ING-INDEX DOWN BY PAGINA
+                       MOVE 10 TO ILIN
+                       SET ING-INDEX DOWN BY MAXPERPAGE
                        SUBTRACT 1 FROM COUNTPAGE
-                       MOVE 12 TO PAGINA
+                       MOVE 10 TO MAXPERPAGE
+                           IF COUNTPAGE = 1 THEN
+                               MOVE SPACES TO TEXT1
+                               DISPLAY LIST-FRAME
+                           END-IF
                    ELSE
                        IF KEY-STATUS = F2 THEN
+                           MOVE PREVIOUS-PAGE TO TEXT1
+                           MOVE NEXT-PAGE TO TEXT2
                            DISPLAY CLEAR-SCREEN
                            DISPLAY REGISTER-CAT-SCREEN
                            DISPLAY MAIN-SCREEN
                            DISPLAY LIST-FRAME
-                           MOVE 09 TO ILIN
+                           MOVE 10 TO ILIN
                            ADD 1 TO COUNTPAGE
-                           MOVE 12 TO PAGINA
+                           MOVE 10 TO MAXPERPAGE
                        ELSE
                            EXIT SECTION
                        END-IF
                    END-IF
                END-IF
                IF CAT-INDEX >= NUMBER-CAT
+                   MOVE LAST-PAGE TO TEXT2
+                   DISPLAY LIST-FRAME
                    MOVE CAT-INSTR TO INSTRUCTION-MESSAGE
                    DISPLAY INSTRUCTION-MESSAGE
-                   MOVE F1-F2 TO PREVIOUS-NEXT-MESSAGE
-                   DISPLAY PREVIOUS-NEXT-TEXT
                    ACCEPT CAT-ACCEPT
                    IF KEY-STATUS = F3 THEN
                        EXIT SECTION
@@ -860,9 +878,9 @@
                        DISPLAY MAIN-SCREEN
                        DISPLAY LIST-FRAME
                        MOVE 09 TO ILIN
-                       SET ING-INDEX DOWN BY PAGINA
+                       SET ING-INDEX DOWN BY MAXPERPAGE
                        SUBTRACT 1 FROM COUNTPAGE
-                       MOVE 12 TO PAGINA
+                       MOVE 12 TO MAXPERPAGE
                    END-IF
                END-IF
            END-PERFORM.
