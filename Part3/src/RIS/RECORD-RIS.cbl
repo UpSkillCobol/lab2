@@ -371,11 +371,11 @@
        PROCEDURE DIVISION.
 
        MAIN-PROCEDURE.
-      *>      PERFORM UNTIL TRUE-YES = "N"
-
            PERFORM CHECK-FILES-OK
            PERFORM FILL-TABLES
            MOVE SPACES TO VIEW-NAME-SUPP, VIEW-NAME-ING
+           MOVE ZEROS TO GET-SUPPLIER-ID, GET-INGREDIENT-ID, GET-PRICE
+           GET-EXPIRATION-DATE
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY REGISTER-SCREEN
@@ -384,28 +384,23 @@
                    EXIT PROGRAM
                 END-IF
            PERFORM GET-INGREDIENT
+           IF KEYSTATUS = F3 THEN
+                   EXIT PROGRAM
+                END-IF
            PERFORM CHECK-PRICE
+           IF KEYSTATUS = F3 THEN
+                   EXIT PROGRAM
+                END-IF
            PERFORM GET-DATE
+           IF KEYSTATUS = F3 THEN
+                   EXIT PROGRAM
+                END-IF
            PERFORM SAVE-RECORD
-
-      *>      DISPLAY ANOTHER-RECORD
-      *>      ACCEPT ANOTHER
-
-      *>      END-PERFORM
+           IF KEYSTATUS = F3 THEN
+                   EXIT PROGRAM
+                END-IF
 
            EXIT PROGRAM.
-      *     PERFORM SHOW-TABLE
-      *>          PERFORM SUPPLIER-LIST
-      *>              IF TRUE-YES = "Y" OR KEYSTATUS = 1003 THEN
-      *>                  MOVE SPACE TO INGREDEXIST
-      *>                  EXIT PROGRAM
-      *>              END-IF
-      *>          IF KEYSTATUS = 1003 THEN
-      *>              MOVE SPACE TO INGREDEXIST
-      *>              EXIT PROGRAM
-      *>          END-IF.
-
-      *> PRECISO DE COLOCAR VERIFICACAO DE FICHEIROS VAZIOS!
        FILL-TABLES SECTION.
 
            SET SUPP-INDEX TO 0
@@ -443,8 +438,6 @@
        EXIT SECTION.
        LOAD-SUPP-TABLE SECTION.
            MOVE SUPPLIER-DETAILS TO TABLE-SUPP (SUPP-INDEX)
-           DISPLAY TABLE-SUPP (SUPP-INDEX) AT 0101
-           ACCEPT OMITTED
        EXIT SECTION.
 
 
@@ -465,11 +458,11 @@
            PERFORM WITH TEST AFTER UNTIL INGREDEXIST-YES
                PERFORM INGREDIENT-LIST
                IF KEYSTATUS = F3 THEN
-                   EXIT PROGRAM
+                   EXIT SECTION
                END-IF
                PERFORM CHECK-INGRED
                 IF KEYSTATUS = F3 THEN
-                   EXIT PROGRAM
+                   EXIT SECTION
                END-IF
 
 
@@ -650,7 +643,7 @@
                    MOVE FILE-STATUS-INGREDIENTS TO ERROR-TEXT
                    DISPLAY MAIN-SCREEN
                    ACCEPT ERROR-ZONE
-                   EXIT PROGRAM
+                   EXIT SECTION
                 ELSE
                    CLOSE FXINGRED
                 END-IF
@@ -660,7 +653,7 @@
                    MOVE FILE-STATUS-SUPPLIER TO ERROR-TEXT
                    DISPLAY MAIN-SCREEN
                    ACCEPT ERROR-ZONE
-                   EXIT PROGRAM
+                   EXIT SECTION
                 ELSE
                    CLOSE FXSUPPLY
                 END-IF
@@ -683,7 +676,7 @@
                MOVE ERROR-SUPPID-NO TO ERROR-TEXT
                ACCEPT ERROR-ZONE
                IF KEYSTATUS = F3 THEN
-                   EXIT PROGRAM
+                   EXIT SECTION
                END-IF
            END-IF
        EXIT SECTION.
@@ -704,7 +697,7 @@
                MOVE ERROR-INGREDID-NO TO ERROR-TEXT
                ACCEPT ERROR-ZONE
                IF KEYSTATUS = F3 THEN
-                   EXIT PROGRAM
+                   EXIT SECTION
                END-IF
            END-IF
 
@@ -732,15 +725,15 @@
            MOVE ZEROS TO GET-DAY, GET-MONTH, GET-YEAR
            ACCEPT GET-DAY
                IF KEYSTATUS = F3 THEN
-                   EXIT PROGRAM
+                   EXIT SECTION
                END-IF
            ACCEPT GET-MONTH
                IF KEYSTATUS = F3 THEN
-                   EXIT PROGRAM
+                   EXIT SECTION
                END-IF
            ACCEPT GET-YEAR
                IF KEYSTATUS = F3 THEN
-                   EXIT PROGRAM
+                   EXIT SECTION
                END-IF
 
            PERFORM VALID-DATE
@@ -800,13 +793,13 @@
                DISPLAY WANT-TO-SAVE
                ACCEPT  WANT-TO-SAVE1
                IF KEYSTATUS = F3 THEN
-                   EXIT PROGRAM
+                   EXIT SECTION
                END-IF
                IF NOT SAVE-VALID-OPTION THEN
                    MOVE ERROR-SAVE TO ERROR-TEXT
                        ACCEPT ERROR-ZONE
                        IF KEYSTATUS = F3 THEN
-                           EXIT PROGRAM
+                           EXIT SECTION
                        END-IF
                 END-IF
            END-PERFORM
