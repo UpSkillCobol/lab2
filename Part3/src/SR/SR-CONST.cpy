@@ -33,10 +33,6 @@
       -    "TEGORIE | LEAVE AS '000' WHEN NO CATEGORIE".
        78  ING-ERROR           VALUE "INGREDIENT DOESNT EXIST".
        78  CAT-ERROR           VALUE "CATEGORIE DOESNT EXIST".
-       78  F1-PREV             VALUE "F1 - PREVIOUS PAGE".
-       78  F2-NEXT             VALUE "F2 - NEXT PAGE".
-       78  F1-F2               VALUE " F1 - PREVIOUS PAGE | F2 - NEXT PA
-      -    "GE".
        78  ING-ZERO            VALUE "AT LEAST ONE INGREDIENT IS REQUIRE
       -    "D".
        78  FILE-NOT-EXISTENT   VALUE "35".
@@ -61,3 +57,6 @@
        78  RECORD-NOT-SAVED    VALUE "RECORD NOT SAVED!".
        78  NO-SANDWICHES       VALUE "THERE ARE NO SANDWICHES REGISTERED
       -    "! PRESS ANY KEY TO EXIT THE PROGRAM!".
+       78  PREVIOUS-PAGE       VALUE " F1 - PREVIOUS PAGE".
+       78  NEXT-PAGE           VALUE "     F2 - NEXT PAGE".
+       78  LAST-PAGE           VALUE "          LAST PAGE".

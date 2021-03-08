@@ -62,7 +62,7 @@
        77  ILIN                            PIC 9(002).
        77  ICOL                            PIC 9(002).
        77  COUNTPAGE                       PIC 9.
-       77  PAGINA                          PIC 999.
+       77  MAXPERPAGE                      PIC 999.
        78  MAX-SR                          VALUE 999.
        77  NUMBER-SR                       PIC 9(003) VALUE 999.
        77  WS-CATEGORIE1                   PIC 9(003).
