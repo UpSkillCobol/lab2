@@ -5,6 +5,7 @@
            05  WS-SR-L-DESCRIPTION.
                10  WS-SR-L-DESCRIPTION1    PIC X(025).
                10  WS-SR-L-DESCRIPTION2    PIC X(025).
+           05 WS-SR-PRICE                  PIC 99.
        01  WS-SR-ING-REC.
            05  WS-SR-SAND-ING-ID.
                10  WS-SR-SANDWICH-ID       PIC 9(003).
@@ -109,10 +110,17 @@
        77  SANDWICH-EMPTY                  PIC 9(001).
        77  WS-CATEGORIES-STRING1           PIC X(060).
        77  WS-CATEGORIES-STRING2           PIC X(060).
+       77  TEMP-INGERDIENTS-STRING         PIC X(060).
        77  WS-INGREDIENTS-STRING1          PIC X(072).
        77  WS-INGREDIENTS-STRING2          PIC X(072).
        77  WS-INGREDIENTS-STRING3          PIC X(072).
+       77  TEMP-INGREDENTS-STRING          PIC X(072).
        77  WS-REG                          PIC X(001).
            88 REG-OPTION-VLD               VALUE "Y","y","N","n",
                                                "s","S".
-       77  WS-TEMP-ID                      PIC X(003).
+       77  WS-TEMP-ID                      PIC 9(003).
+       77  WS-SEARCH-ID                    PIC 9(003).
+       77  WS-NUMBER-OF-CATEGORIES-FOUND   PIC 9(001).
+       77  WS-NUMBER-OF-INGERDIENTS-FOUND  PIC 9(001).
+       77  NUMBER-SHOW                     PIC 9(003) VALUE 999.
+       77  WS-PRICE                        PIC 99v99.

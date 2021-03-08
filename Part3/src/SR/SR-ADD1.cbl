@@ -1,11 +1,11 @@
-      ******************************************************************
+******************************************************************
       * Author:
       * Date:
       * Purpose:
       * Tectonics: cobc
       ******************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. SR-ADD IS INITIAL.
+       PROGRAM-ID. SR-ADD.
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
        SPECIAL-NAMES.
@@ -21,7 +21,6 @@
        WORKING-STORAGE SECTION.
        COPY "CB-WS-SR".
        COPY "SR-CONST-PT".
-
        01  SR-TABLE OCCURS 1 TO MAX-SR TIMES
            DEPENDING ON NUMBER-SR
            INDEXED BY SR-INDEX.
@@ -31,7 +30,6 @@
            05 TABLE-SR-L-DESC.
            10 TABLE-SR-L-DESC1                 PIC X(025).
            10 TABLE-SR-L-DESC2                 PIC X(025).
-           05 TABLE-SR-PRICE                   PIC 99v99.
        01  ING-TABLE OCCURS 1 TO MAX-ING TIMES
            DEPENDING ON NUMBER-ING
            INDEXED BY ING-INDEX.
@@ -325,10 +323,6 @@
            05 VALUE CONFIRM-TEXT3 LINE 13 COL 10.
            05 VALUE CONFIRM-TEXT4 LINE 15 COL 10.
            05 VALUE CONFIRM-TEXT5 LINE 18 COL 10.
-       01  PRICE-SCREEN.
-           05 VALUE CONFIRM-TEXT6 LINE 09 COL 50.
-           05 CONFIRM-PRICE PIC 99 LINE 09 COL PLUS 2 TO WS-SR-PRICE.
-           05 VALUE "EUROS" LINE 09 COL PLUS 2.
       ******************************************************************
        01  INSTRUCTIONS-SCREEN.
            05 VALUE ALL " " PIC X(095) LINE 24 COL 01
@@ -410,6 +404,8 @@
            05 VALUE ALL " " PIC X(095) LINE 24 COL 01.
            05 VALUE ALL " " PIC X(095) LINE 25 COL 01.
            05 VALUE ALL " " PIC X(095) LINE 26 COL 01.
+      *     05 VALUE MESSAGE-GET-INGREDID LINE 25 COL 15
+      *         FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
            05 NEW-INGREDID LINE 25 COL PLUS 1 PIC 9(003)
                FOREGROUND-COLOR 4 BACKGROUND-COLOR 7 TO GET-VALID-ID
                BLANK WHEN ZERO.
@@ -417,7 +413,7 @@
       ******************************************************************
        01  INGREDIENT-LIST1.
            05 LIST-INGRED-ID1 PIC 9(003) LINE ILIN COL ICOL
-               FROM TABLE-ING-ID (ING-INDEX).
+               FROM ING-TABLE (ING-INDEX).
            05 VALUE "|" LINE ILIN COL PLUS 1.
            05 LIST-INGRED-NAME1 PIC X(030) LINE ILIN COL PLUS 1
                FROM TABLE-ING-NAME (ING-INDEX).
@@ -452,28 +448,30 @@
                MOVE NO-INGREDIENTS TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
                EXIT PROGRAM
            END-IF.
-        010-OBTAIN-TABLES SECTION.
-           SET SR-INDEX TO 1
+       050-OBTAIN-TABLES SECTION.
+           SET SR-INDEX TO 0
            OPEN INPUT SANDWICHES
-           MOVE 001 TO SR-IID
-           START SANDWICHES KEY IS GREATER OR EQUAL SR-IID
-               INVALID KEY
-               MOVE 1 TO SANDWICH-EMPTY
-               CLOSE SANDWICHES
-               MOVE NO-SANDWICHES TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
-               EXIT PROGRAM
-           END-START
+           DISPLAY "001"
            PERFORM UNTIL SR-EOF
+               DISPLAY "002"
                READ SANDWICHES NEXT RECORD
                    AT END
+                       DISPLAY "003"
                        SET SR-EOF TO TRUE
+                       DISPLAY "01"
+                       IF SR-INDEX = 0 THEN
+                           MOVE 1 TO SR-INDEX
+                       END-IF
                        MOVE SR-INDEX TO NUMBER-SR
                    NOT AT END
-                       PERFORM 020-LOAD-SR-TABLE
+                       DISPLAY "NAO DEVIAS ESTAR AQUI"
+                       SET SR-INDEX UP BY 1
+                       PERFORM 080-LOAD-SR-TABLE
                END-READ
            END-PERFORM
            CLOSE SANDWICHES
-           SET ING-INDEX TO 1
+           DISPLAY "INGREDIENTS"
+           SET ING-INDEX TO 0
            OPEN INPUT INGREDIENTS
            MOVE 001 TO INGREDS-ID
            START INGREDIENTS KEY IS GREATER OR EQUAL INGREDS-ID
@@ -489,11 +487,13 @@
                        SET EOFINGREDS TO TRUE
                        MOVE ING-INDEX TO NUMBER-ING
                    NOT AT END
-                       PERFORM 030-LOAD-ING-TABLE
+                       SET ING-INDEX UP BY 1
+                       PERFORM 060-LOAD-ING-TABLE
                END-READ
            END-PERFORM
            CLOSE INGREDIENTS
-           SET CAT-INDEX TO 1
+           DISPLAY "CATEGORIAS"
+           SET CAT-INDEX TO 0
            OPEN INPUT CATEGORIES
            MOVE ZEROS TO INGREDIENT-EMPTY
            MOVE 001 TO CATEGORY-ID
@@ -501,6 +501,7 @@
                INVALID KEY
                MOVE 1 TO CATEGORY-EMPTY
                CLOSE CATEGORIES
+      *    ADICIONAR MENSAGEM DE ERRO
                EXIT PROGRAM
            END-START
            PERFORM UNTIL EOFCATEGORY
@@ -509,25 +510,23 @@
                        SET EOFCATEGORY TO TRUE
                        MOVE CAT-INDEX TO NUMBER-CAT
                    NOT AT END
-                       PERFORM 040-LOAD-CAT-TABLE
+                       SET CAT-INDEX UP BY 1
+                       PERFORM 070-LOAD-CAT-TABLE
                END-READ
            END-PERFORM
            CLOSE CATEGORIES
            EXIT SECTION.
-       020-LOAD-SR-TABLE SECTION.
-           MOVE SR-REC TO SR-TABLE (SR-INDEX)
-           SET SR-INDEX UP BY 1
-           EXIT SECTION.
-       030-LOAD-ING-TABLE SECTION.
+       060-LOAD-ING-TABLE SECTION.
            MOVE INGREDS-DETAILS TO ING-TABLE (ING-INDEX)
-           SET ING-INDEX UP BY 1
            EXIT SECTION.
-       040-LOAD-CAT-TABLE SECTION.
+       070-LOAD-CAT-TABLE SECTION.
            MOVE CATEGORY-DETAILS TO CAT-TABLE (CAT-INDEX)
-           SET CAT-INDEX UP BY 1
+           EXIT SECTION.
+       080-LOAD-SR-TABLE SECTION.
+           MOVE SR-REC TO SR-TABLE (SR-INDEX)
            EXIT SECTION.
        100-MAIN SECTION.
-      *     PERFORM 900-CLEAR-VARIABLES
+           PERFORM 900-CLEAR-VARIABLES
            DISPLAY MAIN-SCREEN
            DISPLAY REGISTER-SCREEN
            PERFORM 110-REGISTER
@@ -553,7 +552,7 @@
                EXIT SECTION
            END-IF
       *    IF FICHEIRO DAS CATEGORIES NAO EXISTEM OU ESTA VAZIO PASSA
-      *    DIRETO PARA OS INGREDIENTS
+      *     DIRETO PARA OS INGREDIENTS
            IF CATEGORY-EMPTY <> 1 THEN
                PERFORM 160-OBTAIN-CATEGORIES
                IF KEY-STATUS = F3 THEN
@@ -747,8 +746,8 @@
            MOVE 1 TO COUNTPAGE
            MOVE 10 TO MAXPERPAGE
            PERFORM UNTIL ING-INDEX >= NUMBER-ING
+           DISPLAY REGISTER-ING-SCREEN
                DISPLAY INGREDIENT-LIST1
-               DISPLAY REGISTER-ING-SCREEN
                ADD 1 TO ILIN
                ADD 1 TO MAXPERPAGE
                SET ING-INDEX UP BY 1
@@ -764,9 +763,9 @@
                    IF KEY-STATUS = F1 AND COUNTPAGE > 1
                        MOVE SPACE TO TEXT2
                        DISPLAY CLEAR-SCREEN
+                       DISPLAY REGISTER-ING-SCREEN
                        DISPLAY MAIN-SCREEN
                        DISPLAY LIST-FRAME
-                       DISPLAY REGISTER-ING-SCREEN
                        MOVE 10 TO ILIN
                        SET ING-INDEX DOWN BY MAXPERPAGE
                        SUBTRACT 1 FROM COUNTPAGE
@@ -780,9 +779,9 @@
                            MOVE PREVIOUS-PAGE TO TEXT1
                            MOVE NEXT-PAGE TO TEXT2
                            DISPLAY CLEAR-SCREEN
+                           DISPLAY REGISTER-ING-SCREEN
                            DISPLAY MAIN-SCREEN
                            DISPLAY LIST-FRAME
-                           DISPLAY REGISTER-ING-SCREEN
                            MOVE 10 TO ILIN
                            ADD 1 TO COUNTPAGE
                            MOVE 10 TO MAXPERPAGE
@@ -802,9 +801,9 @@
                    END-IF
                    IF KEY-STATUS = F1 AND COUNTPAGE > 1
                        DISPLAY CLEAR-SCREEN
+                       DISPLAY REGISTER-ING-SCREEN
                        DISPLAY MAIN-SCREEN
                        DISPLAY LIST-FRAME
-                       DISPLAY REGISTER-ING-SCREEN
                        MOVE 10 TO ILIN
                        SET ING-INDEX DOWN BY MAXPERPAGE
                        SUBTRACT 1 FROM COUNTPAGE
@@ -812,26 +811,28 @@
                    END-IF
                END-IF
            END-PERFORM
+      *>     ACCEPT GET-INGREDID
+      *>     IF KEYSTATUS = 1003 THEN
+      *>         EXIT SECTION
+      *>     END-IF
        EXIT SECTION.
        210-LIST-CAT SECTION.
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY LIST-FRAME
            DISPLAY REGISTER-CAT-SCREEN
-           MOVE ZEROES TO NEW-INGREDID
-           MOVE SPACES TO TRUE-YES
            SET CAT-INDEX TO 1
            MOVE 10 TO ILIN
            MOVE 72 TO ICOL
            MOVE 1 TO COUNTPAGE
            MOVE 10 TO MAXPERPAGE
-           PERFORM WITH TEST AFTER UNTIL CAT-INDEX >= NUMBER-CAT
-               DISPLAY CATEGORY-LIST1
+           PERFORM UNTIL CAT-INDEX >= NUMBER-CAT
                DISPLAY REGISTER-CAT-SCREEN
-               SET CAT-INDEX UP BY 1
+               DISPLAY CATEGORY-LIST1
                ADD 1 TO ILIN
                ADD 1 TO MAXPERPAGE
-               IF ILIN = 20 THEN
+               SET CAT-INDEX UP BY 1
+               IF ILIN = 21 THEN
                    MOVE NEXT-PAGE TO TEXT2
                    DISPLAY LIST-FRAME
                    MOVE CAT-INSTR TO INSTRUCTION-MESSAGE
@@ -884,10 +885,10 @@
                        DISPLAY REGISTER-CAT-SCREEN
                        DISPLAY MAIN-SCREEN
                        DISPLAY LIST-FRAME
-                       MOVE 10 TO ILIN
+                       MOVE 09 TO ILIN
                        SET ING-INDEX DOWN BY MAXPERPAGE
                        SUBTRACT 1 FROM COUNTPAGE
-                       MOVE 10 TO MAXPERPAGE
+                       MOVE 12 TO MAXPERPAGE
                    END-IF
                END-IF
            END-PERFORM.
@@ -1041,9 +1042,6 @@
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY CONFIRM-RECORD-SCREEN
-           PERFORM WITH TEST AFTER UNTIL WS-SR-PRICE > ZEROS
-               ACCEPT PRICE-SCREEN
-           END-PERFORM
            PERFORM WITH TEST AFTER UNTIL REG-OPTION-VLD
                MOVE WANT-TO-SAVE TO CONFIRM-REG-MESSAGE
                ACCEPT CONFIRM-REG-SCREEN
@@ -1303,6 +1301,5 @@
            WS-CAT-ACCEPT-NAME WS-ING-ACCEPT-NAME REG-ING-UNIT1
            REG-ING-UNIT2 REG-ING-UNIT3 REG-ING-UNIT4 REG-ING-UNIT5
            REG-ING-UNIT6
-
            EXIT SECTION.
        END PROGRAM SR-ADD.
