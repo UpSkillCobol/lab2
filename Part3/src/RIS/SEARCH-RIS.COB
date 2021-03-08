@@ -148,19 +148,9 @@
       *> DATE VERIFY VARIABLES
             01  WS-DATA.
                05  WS-DIA                PIC 9(002) VALUE ZEROS.
-                   88 DIA30              VALUE 01 THRU 30.
-                   88 DIA-FEV            VALUE 01 THRU 28.
-                   88 FEV-BISSEXTO       VALUE 01 THRU 29.
-                   88 DIA-VALIDO         VALUE 01 THRU 31.
+
                05  WS-MES                PIC 9(002) VALUE ZEROS.
-                   88 MES-VALIDO         VALUE 01 THRU 12.
-                   88 MES30              VALUE 4 6 9 11.
-                   88 MES-FEV            VALUE 2.
                05  WS-ANO                PIC 9(004) VALUE ZEROS.
-                   88 ANO-VALIDO         VALUE 2021 THRU 2100.
-               05  WS-DIA-SEMANA         PIC X(007) VALUE SPACES.
-               05  WS-SIGLA-UNIDADE      PIC X(005) VALUE SPACES.
-               05  WS-SIGLA-PROF         PIC X(004) VALUE SPACES.
 
        01  BISSEXTO                      PIC X(004).
            88 BISSEXTO-YES               VALUE "S".
@@ -396,10 +386,6 @@
                    EXIT PROGRAM
                 END-IF
            PERFORM GET-DATE
-           IF KEYSTATUS = F3 THEN
-                   EXIT PROGRAM
-                END-IF
-           PERFORM SAVE-RECORD
            IF KEYSTATUS = F3 THEN
                    EXIT PROGRAM
                 END-IF
@@ -752,77 +738,11 @@
                    EXIT SECTION
                END-IF
 
-           PERFORM VALID-DATE
+
            MOVE WS-DIA TO WS-RIS-DAY
            MOVE WS-MES TO WS-RIS-MONTH
            MOVE WS-ANO TO WS-RIS-YEAR
 
 
            END-PERFORM
-           EXIT SECTION.
-
-      *> DATE VERIFY SECTION
-       VALID-DATE SECTION.
-
-           IF ANO-VALIDO AND DIA-VALIDO AND MES-VALIDO THEN
-                   IF NOT MES-FEV AND NOT MES30 THEN
-                       MOVE "S" TO DATAVAL
-                   ELSE
-                       IF MES30 AND DIA30 THEN
-                           MOVE "S" TO DATAVAL
-                       END-IF
-                       IF MES-FEV THEN
-                           PERFORM IS-BISSEXTO
-                           IF BISSEXTO-YES AND FEV-BISSEXTO THEN
-                               MOVE "S" TO DATAVAL
-                           ELSE
-                               IF NOT BISSEXTO-YES AND DIA-FEV THEN
-                                   MOVE "S" TO DATAVAL
-                               END-IF
-                           END-IF
-                       END-IF
-                   END-IF
-               END-IF
-
-           IF DATAVAL NOT = "S" THEN
-               MOVE INVALID-DATE TO ERROR-TEXT
-               ACCEPT ERROR-ZONE
-           END-IF
-           EXIT SECTION.
-          *> VERIFICACAO DE ANO BISSEXTO
-       IS-BISSEXTO SECTION.
-
-           MOVE SPACE TO BISSEXTO
-           IF FUNCTION MOD (WS-ANO,4) = 0 THEN
-               IF FUNCTION MOD (WS-ANO,100) <> 0 THEN
-                   MOVE "S" TO BISSEXTO
-               ELSE
-                   IF FUNCTION MOD (WS-ANO,400) = 0 THEN
-                       MOVE "S" TO BISSEXTO
-                   END-IF
-               END-IF
-           END-IF
-           EXIT SECTION.
-
-       SAVE-RECORD SECTION.
-           PERFORM WITH TEST AFTER UNTIL SAVE-VALID-OPTION
-               DISPLAY WANT-TO-SAVE
-               ACCEPT  WANT-TO-SAVE1
-               IF KEYSTATUS = F3 THEN
-                   EXIT SECTION
-               END-IF
-               IF NOT SAVE-VALID-OPTION THEN
-                   MOVE ERROR-SAVE TO ERROR-TEXT
-                       ACCEPT ERROR-ZONE
-                       IF KEYSTATUS = F3 THEN
-                           EXIT SECTION
-                       END-IF
-                END-IF
-           END-PERFORM
-           IF SAVE-VALID-YES THEN
-
-               OPEN I-O FXRISUPPLY
-                   WRITE RIS-DETAILS FROM WS-RIS-DETAILS
-                   END-WRITE
-               CLOSE   FXRISUPPLY
            EXIT SECTION.
