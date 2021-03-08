@@ -73,7 +73,7 @@
                END-IF
                PERFORM EVALUATE-MAIN-MENU
            END-PERFORM
-           STOP RUN.
+           EXIT PROGRAM.
 
        EVALUATE-MAIN-MENU SECTION.
            EVALUATE WS-OPTION
@@ -83,9 +83,6 @@
                    CALL "SEARCH-RIS"
                WHEN 3
                    CALL "REPORT-RIS"
-               WHEN OTHER
-                  EXIT PROGRAM
-
 
            END-EVALUATE
            EXIT SECTION.

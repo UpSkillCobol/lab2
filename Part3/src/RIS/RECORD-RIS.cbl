@@ -372,14 +372,17 @@
 
        MAIN-PROCEDURE.
       *>      PERFORM UNTIL TRUE-YES = "N"
+
+           PERFORM CHECK-FILES-OK
+           PERFORM FILL-TABLES
+           MOVE SPACES TO VIEW-NAME-SUPP, VIEW-NAME-ING
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY REGISTER-SCREEN
-           PERFORM CHECK-FILES-OK
-           PERFORM FILL-TABLES
-
-
            PERFORM GET-SUPPLIER
+                IF KEYSTATUS = F3 THEN
+                   EXIT PROGRAM
+                END-IF
            PERFORM GET-INGREDIENT
            PERFORM CHECK-PRICE
            PERFORM GET-DATE
@@ -392,15 +395,15 @@
 
            EXIT PROGRAM.
       *     PERFORM SHOW-TABLE
-               PERFORM SUPPLIER-LIST
-                   IF TRUE-YES = "Y" OR KEYSTATUS = 1003 THEN
-                       MOVE SPACE TO INGREDEXIST
-                       EXIT PROGRAM
-                   END-IF
-               IF KEYSTATUS = 1003 THEN
-                   MOVE SPACE TO INGREDEXIST
-                   EXIT PROGRAM
-               END-IF.
+      *>          PERFORM SUPPLIER-LIST
+      *>              IF TRUE-YES = "Y" OR KEYSTATUS = 1003 THEN
+      *>                  MOVE SPACE TO INGREDEXIST
+      *>                  EXIT PROGRAM
+      *>              END-IF
+      *>          IF KEYSTATUS = 1003 THEN
+      *>              MOVE SPACE TO INGREDEXIST
+      *>              EXIT PROGRAM
+      *>          END-IF.
 
       *> PRECISO DE COLOCAR VERIFICACAO DE FICHEIROS VAZIOS!
        FILL-TABLES SECTION.
@@ -440,22 +443,22 @@
        EXIT SECTION.
        LOAD-SUPP-TABLE SECTION.
            MOVE SUPPLIER-DETAILS TO TABLE-SUPP (SUPP-INDEX)
-
+           DISPLAY TABLE-SUPP (SUPP-INDEX) AT 0101
+           ACCEPT OMITTED
        EXIT SECTION.
 
 
-       SHOW-TABLE SECTION.
-           SET ING-INDEX TO 1
-           PERFORM UNTIL ING-INDEX >= NUMBER-ING
-               DISPLAY TABLE-INGREDS (ING-INDEX) ACCEPT OMITTED
-               SET ING-INDEX UP BY 1
-           END-PERFORM
+      *>  SHOW-TABLE SECTION.
+      *>      SET ING-INDEX TO 1
+      *>      PERFORM UNTIL ING-INDEX >= NUMBER-ING
+      *>          DISPLAY TABLE-INGREDS (ING-INDEX) ACCEPT OMITTED
+      *>          SET ING-INDEX UP BY 1
+      *>      END-PERFORM
 
-           EXIT SECTION.
+      *>      EXIT SECTION.
 
        GET-INGREDIENT SECTION.
            DISPLAY LIST-FRAME
-           DISPLAY INGRED-LIST
            DISPLAY MAIN-SCREEN
            DISPLAY REGISTER-SCREEN
 
@@ -475,20 +478,19 @@
            EXIT SECTION.
 
        GET-SUPPLIER SECTION.
-
+           MOVE SPACES TO SUPP-EXIST
            DISPLAY LIST-FRAME
-           DISPLAY SUPP-LIST
            DISPLAY MAIN-SCREEN
            DISPLAY REGISTER-SCREEN
 
            PERFORM WITH TEST AFTER UNTIL SUPP-YES
                PERFORM SUPPLIER-LIST
                IF KEYSTATUS = F3 THEN
-                   EXIT PROGRAM
+                   EXIT SECTION
                END-IF
                PERFORM CHECK-SUPP
                IF KEYSTATUS = F3 THEN
-                   EXIT PROGRAM
+                   EXIT SECTION
                END-IF
                DISPLAY SUPP-NAME-VIEW
            END-PERFORM
@@ -502,16 +504,16 @@
            DISPLAY REGISTER-SCREEN
            MOVE ZEROES TO GET-SUPPLIER-ID
            MOVE SPACES TO TRUE-YES
-           SET SUPP-INDEX TO 1
+           SET SUPP-INDEX TO 0
            MOVE 09 TO ILIN
            MOVE 72 TO ICOL
            MOVE 1 TO COUNTPAGE
            MOVE 12 TO PAGINA
            PERFORM UNTIL SUPP-INDEX >= NUMBER-SUPP
+               SET SUPP-INDEX UP BY 1
                DISPLAY SUPP-LIST
                ADD 1 TO ILIN
                ADD 1 TO PAGINA
-               SET SUPP-INDEX UP BY 1
                IF ILIN = 21 THEN
                     MOVE SUPP-RECORD TO INSTRUCTION-MESSAGE
                     DISPLAY INSTRUCTION-MESSAGE
@@ -811,7 +813,6 @@
            IF SAVE-VALID-YES THEN
 
                OPEN I-O FXRISUPPLY
-
                    WRITE RIS-DETAILS FROM WS-RIS-DETAILS
                    END-WRITE
                CLOSE   FXRISUPPLY
