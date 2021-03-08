@@ -7,6 +7,10 @@
       ******************************************************************
       *     V1 | EM ATUALIZAÇÃO | 04.03.2021
       ******************************************************************
+       01  SAVE-OPTION                         PIC X(001).
+           88 SAVE-VALID-OPTION                VALUE "s", "S", "N", "n".
+           88 SAVE-OPTION-NO                   VALUE "N", "n".
+           88 SAVE-VALID-YES                   VALUE "S","s".
       *MODULE NAME MAIN
        78 MODULE-NAME-MAIN VALUE "REGISTAR FORNECEDOR DE INGREDIENTES".
       *MODULE NAME ADD
