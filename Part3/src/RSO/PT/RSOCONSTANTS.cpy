@@ -3,8 +3,13 @@
       ******************************************************************
       *    BREADWICH | REGISTRATION OF SANDWICH ORDERS
       ******************************************************************
-      *    PORTUGUESE LANGUAGE | V0.3 | IN UPDATE | 07.03.2021
+      *    PORTUGUESE LANGUAGE | V0.4 | IN UPDATE | 08.03.2021
       ******************************************************************
+
+       01  SAVE                                 PIC X(002).
+           88 SAVE-YES                          VALUE "S" "s".
+           88 SAVE-NO                           VALUE "N" "n".
+           88 SAVE-VALID                        VALUE "S" "s" "N" "n".
 
        78  MAIN-TEXT        VALUE "REGISTO ENCOMENDAS DE SANDUICHES".
        78  MAIN-TEXT1       VALUE "F3 - MENU PRINCIPAL".
@@ -42,7 +47,7 @@
            VALUE "A HORA TEM DE SER DEFINIDA ENTRE AS 09:00 E AS 17:59".
 
        78  INSTRUCTIONS-SCHOOL
-           VALUE "PESQUISE ATRAVES DA LISTA O ID DA SUA ESCOLA".
+           VALUE "PESQUISE ATRAVES DA LISTA O ID DA ESCOLA".
 
        78  INSTRUCTIONS-SANDWICH
            VALUE "PESQUISE ATRAVES DA LISTA O ID DA SANDUICHE QUE PRETEN
@@ -93,12 +98,23 @@
 
        78  LIST-FRAME2 VALUE "LISTA DE PERIODOS DE INDISPONIBILIDADE".
 
+       78  LIST-FRAME3
+           VALUE "ID  |  NAME                                         PR
+      -    "ECO".
+
        78  PREVIOUS-PAGE VALUE "F1 - PAGINA ANTERIOR".
 
        78  NEXT-PAGE VALUE "F2 - PROXIMA PAGINA".
 
        78  LAST-PAGE VALUE "      ULTIMA PAGINA".
 
+       78  UNTIL-LIST VALUE "         ATE         ".
+
+       78  EUROS VALUE "EUROS".
+
+       78  PRICE VALUE "PRECO TOTAL:".
+
+       78  ERROR-SEARCH VALUE "NENHUM RESULTADO ENCONTRADO".
 
 
       ******************************************************************
