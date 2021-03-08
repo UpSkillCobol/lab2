@@ -462,11 +462,11 @@
            PERFORM WITH TEST AFTER UNTIL INGREDEXIST-YES
                PERFORM INGREDIENT-LIST
                IF KEYSTATUS = F3 THEN
-                   EXIT SECTION
+                   EXIT PROGRAM
                END-IF
                PERFORM CHECK-INGRED
                 IF KEYSTATUS = F3 THEN
-                   EXIT SECTION
+                   EXIT PROGRAM
                END-IF
 
 
@@ -484,11 +484,11 @@
            PERFORM WITH TEST AFTER UNTIL SUPP-YES
                PERFORM SUPPLIER-LIST
                IF KEYSTATUS = F3 THEN
-                   EXIT SECTION
+                   EXIT PROGRAM
                END-IF
                PERFORM CHECK-SUPP
                IF KEYSTATUS = F3 THEN
-                   EXIT SECTION
+                   EXIT PROGRAM
                END-IF
                DISPLAY SUPP-NAME-VIEW
            END-PERFORM
@@ -681,7 +681,7 @@
                MOVE ERROR-SUPPID-NO TO ERROR-TEXT
                ACCEPT ERROR-ZONE
                IF KEYSTATUS = F3 THEN
-                   EXIT SECTION
+                   EXIT PROGRAM
                END-IF
            END-IF
        EXIT SECTION.
@@ -702,7 +702,7 @@
                MOVE ERROR-INGREDID-NO TO ERROR-TEXT
                ACCEPT ERROR-ZONE
                IF KEYSTATUS = F3 THEN
-                   EXIT SECTION
+                   EXIT PROGRAM
                END-IF
            END-IF
 
@@ -717,7 +717,9 @@
            PERFORM WITH TEST AFTER UNTIL GET-PRICE > 1
 
            ACCEPT GET-PRICE
-
+               IF KEYSTATUS = F3 THEN
+                   EXIT PROGRAM
+               END-IF
            END-PERFORM
            EXIT SECTION.
 
@@ -727,8 +729,17 @@
            PERFORM WITH TEST AFTER UNTIL DATAVAL = "S"
            MOVE ZEROS TO GET-DAY, GET-MONTH, GET-YEAR
            ACCEPT GET-DAY
+               IF KEYSTATUS = F3 THEN
+                   EXIT PROGRAM
+               END-IF
            ACCEPT GET-MONTH
+               IF KEYSTATUS = F3 THEN
+                   EXIT PROGRAM
+               END-IF
            ACCEPT GET-YEAR
+               IF KEYSTATUS = F3 THEN
+                   EXIT PROGRAM
+               END-IF
 
            PERFORM VALID-DATE
            MOVE WS-DIA TO WS-RIS-DAY
