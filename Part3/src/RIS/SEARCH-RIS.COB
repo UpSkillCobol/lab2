@@ -147,22 +147,22 @@
        01 NUMBER-SUPP               PIC 9(003) VALUE 999.
 
       *> TABLE RIS FILE
-       01 TABLE-DETAILS OCCURS 1 TO MAX-RIS TIMES
+       78  MAX-RIS                                VALUE 999.
+       01 TABLE-RIS OCCURS 1 TO MAX-RIS TIMES
            DEPENDING ON NUMBER-RIS
            INDEXED BY RIS-INDEX.
 
-            01 TABLE-DETAILS.
-               05  TABLERIS-ID.
-                   10 TABLERIS-ID-ING               PIC 9(003).
-                   10 TABLERIS-ID-SUPP              PIC 9(003).
-               05 TABLERIS-PRICE                    PIC 9(003).
-               05 TABLERIS-DATE-VAL.
-                   10 TABLERIS-YEAR                 PIC 9(004).
-                   10 TABLERIS-MONTH                PIC 9(002).
-                   10 TABLERIS-DAY                  PIC 9(002).
+               05  TABLE-RIS-ID.
+                   10 TABLE-RIS-ID-ING               PIC 9(003).
+                   10 TABLE-RIS-ID-SUPP              PIC 9(003).
+               05 TABLE-RIS-PRICE                    PIC 9(003).
+               05 TABLE-RIS-DATE-VAL.
+                   10 TABLE-RIS-YEAR                 PIC 9(004).
+                   10 TABLE-RIS-MONTH                PIC 9(002).
+                   10 TABLE-RIS-DAY                  PIC 9(002).
 
        01  NUMBER-RIS                             PIC 9(003) VALUE 999.
-       78  MAX-RIS                                VALUE 999.
+
 
       *> DATE VERIFY VARIABLES
             01  WS-DATA.
@@ -385,6 +385,8 @@
        MAIN-PROCEDURE.
            PERFORM CHECK-FILES-OK
            PERFORM FILL-TABLES
+           PERFORM SHOW-TABLE
+
            MOVE SPACES TO VIEW-NAME-SUPP, VIEW-NAME-ING
            MOVE ZEROS TO GET-SUPPLIER-ID, GET-INGREDIENT-ID, GET-PRICE
            GET-EXPIRATION-DATE
@@ -437,7 +439,25 @@
                 END-READ
             END-PERFORM
             CLOSE FXINGRED
-       EXIT SECTION.
+
+
+               SET RIS-INDEX TO 0
+           OPEN INPUT FXRISUPPLY
+           PERFORM UNTIL EOF-RIS
+               READ FXRISUPPLY NEXT RECORD
+                   AT END
+                       SET EOF-RIS TO TRUE
+                       MOVE RIS-INDEX TO NUMBER-RIS
+                   NOT AT END
+                       SET RIS-INDEX UP BY 1
+                       PERFORM LOAD-RIS-TABLE
+                END-READ
+           END-PERFORM
+           CLOSE FXRISUPPLY
+
+           EXIT SECTION.
+
+
 
        LOAD-INGRED-TABLE SECTION.
            MOVE INGREDS-DETAILS TO TABLE-INGREDS (ING-INDEX)
@@ -447,6 +467,18 @@
            MOVE SUPPLIER-DETAILS TO TABLE-SUPP (SUPP-INDEX)
        EXIT SECTION.
 
+       LOAD-RIS-TABLE SECTION.
+           MOVE RIS-DETAILS TO TABLE-RIS (RIS-INDEX)
+
+           EXIT SECTION.
+
+          SHOW-TABLE SECTION.
+           SET RIS-INDEX TO 1
+           PERFORM UNTIL RIS-INDEX >= NUMBER-RIS
+               DISPLAY TABLE-RIS (RIS-INDEX) ACCEPT OMITTED
+               SET RIS-INDEX UP BY 1
+           END-PERFORM
+       EXIT SECTION.
 
        GET-INGREDIENT SECTION.
            DISPLAY LIST-FRAME
