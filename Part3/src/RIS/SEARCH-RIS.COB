@@ -68,10 +68,11 @@
        COPY WSSupplierFX.
 
       *> UTILITY VARIBLES
-        01  SAVE-OPTION                         PIC X(001).
-           88 SAVE-VALID-OPTION                VALUE "Y" "y" "N" "n".
+        01  SAVE-OPTION                        PIC X(001).
+           88 SAVE-VALID-OPTION                VALUE "Y" "y" "N" "n",
+                                                "s", "S".
            88 SAVE-OPTION-NO                   VALUE "N" "n".
-           88 SAVE-VALID-YES                   VALUE "Y","y".
+           88 SAVE-VALID-YES                   VALUE "Y","y","S","s".
        77  DUMMY                               PIC X(001).
        77  INGRED-STATUS                       PIC 9(002).
        77  KEYSTATUS                           PIC 9(004).
@@ -145,10 +146,27 @@
       *>       05 TABLESUPPLIER-IS-ACTIVE                   PIC 9(001).
        01 NUMBER-SUPP               PIC 9(003) VALUE 999.
 
+      *> TABLE RIS FILE
+       01 TABLE-DETAILS OCCURS 1 TO MAX-RIS TIMES
+           DEPENDING ON NUMBER-RIS
+           INDEXED BY RIS-INDEX.
+
+            01 TABLE-DETAILS.
+               05  TABLERIS-ID.
+                   10 TABLERIS-ID-ING               PIC 9(003).
+                   10 TABLERIS-ID-SUPP              PIC 9(003).
+               05 TABLERIS-PRICE                    PIC 9(003).
+               05 TABLERIS-DATE-VAL.
+                   10 TABLERIS-YEAR                 PIC 9(004).
+                   10 TABLERIS-MONTH                PIC 9(002).
+                   10 TABLERIS-DAY                  PIC 9(002).
+
+       01  NUMBER-RIS                             PIC 9(003) VALUE 999.
+       78  MAX-RIS                                VALUE 999.
+
       *> DATE VERIFY VARIABLES
             01  WS-DATA.
                05  WS-DIA                PIC 9(002) VALUE ZEROS.
-
                05  WS-MES                PIC 9(002) VALUE ZEROS.
                05  WS-ANO                PIC 9(004) VALUE ZEROS.
 

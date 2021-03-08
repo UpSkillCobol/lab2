@@ -68,10 +68,11 @@
        COPY WSSupplierFX.
 
       *> UTILITY VARIBLES
-        01  SAVE-OPTION                         PIC X(001).
-           88 SAVE-VALID-OPTION                VALUE "Y" "y" "N" "n".
+       01  SAVE-OPTION                         PIC X(001).
+           88 SAVE-VALID-OPTION                VALUE "Y" "y" "N" "n",
+                                               "s", "S".
            88 SAVE-OPTION-NO                   VALUE "N" "n".
-           88 SAVE-VALID-YES                   VALUE "Y","y".
+           88 SAVE-VALID-YES                   VALUE "Y","y","S","s".
        77  DUMMY                               PIC X(001).
        77  INGRED-STATUS                       PIC 9(002).
        77  KEYSTATUS                           PIC 9(004).
