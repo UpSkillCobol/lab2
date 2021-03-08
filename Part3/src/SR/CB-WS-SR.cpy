@@ -9,6 +9,7 @@
            05  WS-SR-SAND-ING-ID.
                10  WS-SR-SANDWICH-ID       PIC 9(003).
                10  WS-SR-INGREDIENT-ID     PIC 9(003).
+               10  WS-SR-INGREDIENT-QTD    PIC 9(003).
        01  WS-SR-CAT-REC.
            05  WS-SR-SAND-CAT-ID.
                10  WS-SR-SANDWICH-ID       PIC 9(003).
@@ -52,6 +53,10 @@
        77  NUMBER-ING                      PIC 9(003) VALUE 999.
        78  MAX-CAT                         VALUE 999.
        77  NUMBER-CAT                      PIC 9(003) VALUE 999.
+       78  MAX-SI                          VALUE 999.
+       77  NUMBER-SI                       PIC 9(003) VALUE 999.
+       78  MAX-SC                          VALUE 999.
+       77  NUMBER-SC                       PIC 9(003) VALUE 999.
        77  GET-VALID-ID                    PIC 9(003).
        77  TRUE-YES                        PIC X(001).
        77  ILIN                            PIC 9(002).
@@ -67,11 +72,23 @@
        77  WS-CAT-NAME2                    PIC X(030).
        77  WS-CAT-NAME3                    PIC X(030).
        77  WS-INGREDIENT1                  PIC 9(003).
+       77  WS-INGREDIENT-QTD1              PIC 9(003).
+       77  WS-INGREDIENT-UNIT1             PIC X(003).
        77  WS-INGREDIENT2                  PIC 9(003).
+       77  WS-INGREDIENT-QTD2              PIC 9(003).
+       77  WS-INGREDIENT-UNIT2             PIC X(003).
        77  WS-INGREDIENT3                  PIC 9(003).
+       77  WS-INGREDIENT-QTD3              PIC 9(003).
+       77  WS-INGREDIENT-UNIT3             PIC X(003).
        77  WS-INGREDIENT4                  PIC 9(003).
+       77  WS-INGREDIENT-QTD4              PIC 9(003).
+       77  WS-INGREDIENT-UNIT4             PIC X(003).
        77  WS-INGREDIENT5                  PIC 9(003).
+       77  WS-INGREDIENT-QTD5              PIC 9(003).
+       77  WS-INGREDIENT-UNIT5             PIC X(003).
        77  WS-INGREDIENT6                  PIC 9(003).
+       77  WS-INGREDIENT-QTD6              PIC 9(003).
+       77  WS-INGREDIENT-UNIT6             PIC X(003).
        77  WS-ING-NAME1                    PIC X(030).
        77  WS-ING-NAME2                    PIC X(030).
        77  WS-ING-NAME3                    PIC X(030).
@@ -84,15 +101,18 @@
        77  WS-CAT-EXISTS                   PIC 9(001).
        77  WS-ING-DUPLICATE                PIC 9(001).
        77  WS-ING-ACCEPT-NAME              PIC X(030).
+       77  WS-ING-UNIT                     PIC X(003).
        77  WS-CAT-DUPLICATE                PIC 9(001).
        77  WS-CAT-ACCEPT-NAME              PIC X(030).
        77  INGREDIENT-EMPTY                PIC 9(001).
        77  CATEGORY-EMPTY                  PIC 9(001).
+       77  SANDWICH-EMPTY                  PIC 9(001).
        77  WS-CATEGORIES-STRING1           PIC X(060).
        77  WS-CATEGORIES-STRING2           PIC X(060).
-       77  WS-INGREDIENTS-STRING1          PIC X(060).
-       77  WS-INGREDIENTS-STRING2          PIC X(060).
-       77  WS-INGREDIENTS-STRING3          PIC X(060).
+       77  WS-INGREDIENTS-STRING1          PIC X(072).
+       77  WS-INGREDIENTS-STRING2          PIC X(072).
+       77  WS-INGREDIENTS-STRING3          PIC X(072).
        77  WS-REG                          PIC X(001).
            88 REG-OPTION-VLD               VALUE "Y","y","N","n",
                                                "s","S".
+       77  WS-TEMP-ID                      PIC X(003).

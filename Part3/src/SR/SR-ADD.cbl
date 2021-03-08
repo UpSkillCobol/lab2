@@ -213,30 +213,54 @@
            05 VALUE "  " LINE 21 COL 62 BACKGROUND-COLOR 7.
            05 ING-ACCEPT PIC 9(003) LINE 12 COL 27 TO WS-ING-ACCEPT.
            05 REG-ING-REC.
-               10 REG-ING1 PIC 9(003) LINE 13 COL 18
+               10 REG-ING1 PIC 9(003) LINE 13 COL 15
                FROM WS-INGREDIENT1 BLANK WHEN ZERO.
-               10 REG-ING-NAME1 PIC X(030) LINE 13 COL 23
+               10 REG-ING-NAME1 PIC X(030) LINE 13 COL 20
                FROM WS-ING-NAME1.
-               10 REG-ING2 PIC 9(003) LINE 14 COL 18
+               10 REG-ING-QTD1 PIC 9(003) LINE 13 COL 51
+               TO WS-INGREDIENT-QTD1.
+               10 REG-ING-UNIT1 PIC X(003) LINE 13 COL 55
+               FROM WS-INGREDIENT-UNIT1.
+               10 REG-ING2 PIC 9(003) LINE 14 COL 15
                FROM WS-INGREDIENT2 BLANK WHEN ZERO.
-               10 REG-ING-NAME2 PIC X(030) LINE 14 COL 23
+               10 REG-ING-NAME2 PIC X(030) LINE 14 COL 20
                FROM WS-ING-NAME2.
-               10 REG-ING3 PIC 9(003) LINE 15 COL 18
+               10 REG-ING-QTD2 PIC 9(003) LINE 14 COL 51
+               TO WS-INGREDIENT-QTD2.
+               10 REG-ING-UNIT2 PIC X(003) LINE 14 COL 55
+               FROM WS-INGREDIENT-UNIT2.
+               10 REG-ING3 PIC 9(003) LINE 15 COL 15
                FROM WS-INGREDIENT3 BLANK WHEN ZERO.
-               10 REG-ING-NAME3 PIC X(030) LINE 15 COL 23
+               10 REG-ING-NAME3 PIC X(030) LINE 15 COL 20
                FROM WS-ING-NAME3.
-               10 REG-ING4 PIC 9(003) LINE 16 COL 18
+               10 REG-ING-QTD3 PIC 9(003) LINE 15 COL 51
+               TO WS-INGREDIENT-QTD3.
+               10 REG-ING-UNIT3 PIC X(003) LINE 15 COL 55
+               FROM WS-INGREDIENT-UNIT3.
+               10 REG-ING4 PIC 9(003) LINE 16 COL 15
                FROM WS-INGREDIENT4 BLANK WHEN ZERO.
-               10 REG-ING-NAME4 PIC X(030) LINE 16 COL 23
+               10 REG-ING-NAME4 PIC X(030) LINE 16 COL 20
                FROM WS-ING-NAME4.
-               10 REG-ING5 PIC 9(003) LINE 17 COL 18
+               10 REG-ING-QTD4 PIC 9(003) LINE 16 COL 51
+               TO WS-INGREDIENT-QTD4.
+               10 REG-ING-UNIT4 PIC X(003) LINE 16 COL 55
+               FROM WS-INGREDIENT-UNIT4.
+               10 REG-ING5 PIC 9(003) LINE 17 COL 15
                FROM WS-INGREDIENT5 BLANK WHEN ZERO.
-               10 REG-ING-NAME5 PIC X(030) LINE 17 COL 23
+               10 REG-ING-NAME5 PIC X(030) LINE 17 COL 20
                FROM WS-ING-NAME5.
-               10 REG-ING6 PIC 9(003) LINE 18 COL 18
+               10 REG-ING-QTD5 PIC 9(003) LINE 17 COL 51
+               TO WS-INGREDIENT-QTD5.
+               10 REG-ING-UNIT5 PIC X(003) LINE 17 COL 55
+               FROM WS-INGREDIENT-UNIT5.
+               10 REG-ING6 PIC 9(003) LINE 18 COL 15
                FROM WS-INGREDIENT6 BLANK WHEN ZERO.
-               10 REG-ING-NAME6 PIC X(030) LINE 18 COL 23
+               10 REG-ING-NAME6 PIC X(030) LINE 18 COL 20
                FROM WS-ING-NAME6.
+               10 REG-ING-QTD6 PIC 9(003) LINE 18 COL 51
+               TO WS-INGREDIENT-QTD6.
+               10 REG-ING-UNIT6 PIC X(003) LINE 18 COL 55
+               FROM WS-INGREDIENT-UNIT6.
       ******************************************************************
        01  CONFIRM-RECORD-SCREEN.
            05 VALUE ALL " " PIC X(107) LINE 7 col 05
@@ -415,13 +439,14 @@
            FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
       ******************************************************************
        PROCEDURE DIVISION.
-           PERFORM 800-FILE-CHECK.
+           DISPLAY CLEAR-SCREEN
+           PERFORM 800-FILE-CHECK
            IF INGREDIENT-EMPTY = 1 THEN
                MOVE NO-INGREDIENTS TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
                EXIT PROGRAM
            END-IF.
        050-OBTAIN-TABLES SECTION.
-           SET SR-INDEX TO 1
+           SET SR-INDEX TO 0
            OPEN INPUT SANDWICHES
            PERFORM UNTIL SR-EOF
                READ SANDWICHES NEXT RECORD
@@ -429,11 +454,13 @@
                        SET SR-EOF TO TRUE
                        MOVE SR-INDEX TO NUMBER-SR
                    NOT AT END
+                       SET SR-INDEX UP BY 1
                        PERFORM 080-LOAD-SR-TABLE
                END-READ
            END-PERFORM
            CLOSE SANDWICHES
-           SET ING-INDEX TO 1
+
+           SET ING-INDEX TO 0
            OPEN INPUT INGREDIENTS
            MOVE 001 TO INGREDS-ID
            START INGREDIENTS KEY IS GREATER OR EQUAL INGREDS-ID
@@ -449,11 +476,12 @@
                        SET EOFINGREDS TO TRUE
                        MOVE ING-INDEX TO NUMBER-ING
                    NOT AT END
+                       SET ING-INDEX UP BY 1
                        PERFORM 060-LOAD-ING-TABLE
                END-READ
            END-PERFORM
            CLOSE INGREDIENTS.
-           SET CAT-INDEX TO 1
+           SET CAT-INDEX TO 0
            OPEN INPUT CATEGORIES
            MOVE ZEROS TO INGREDIENT-EMPTY
            MOVE 001 TO CATEGORY-ID
@@ -470,6 +498,7 @@
                        SET EOFCATEGORY TO TRUE
                        MOVE CAT-INDEX TO NUMBER-CAT
                    NOT AT END
+                       SET CAT-INDEX UP BY 1
                        PERFORM 070-LOAD-CAT-TABLE
                END-READ
            END-PERFORM
@@ -477,20 +506,17 @@
            EXIT SECTION.
        060-LOAD-ING-TABLE SECTION.
            MOVE INGREDS-DETAILS TO ING-TABLE (ING-INDEX)
-           SET ING-INDEX UP BY 1
            EXIT SECTION.
        070-LOAD-CAT-TABLE SECTION.
            MOVE CATEGORY-DETAILS TO CAT-TABLE (CAT-INDEX)
-           SET CAT-INDEX UP BY 1
            EXIT SECTION.
        080-LOAD-SR-TABLE SECTION.
            MOVE SR-REC TO SR-TABLE (SR-INDEX)
-           SET SR-INDEX UP BY 1
            EXIT SECTION.
        100-MAIN SECTION.
+           PERFORM 900-CLEAR-VARIABLES
            DISPLAY MAIN-SCREEN
            DISPLAY REGISTER-SCREEN
-           PERFORM 900-CLEAR-VARIABLES
            PERFORM 110-REGISTER
                IF KEY-STATUS = F3 THEN
                    EXIT PROGRAM
@@ -533,7 +559,7 @@
            END-IF
            EXIT SECTION.
        120-OBTAIN-IID SECTION.
-           MOVE SR-TABLE (NUMBER-SR) TO WS-SR-IID
+           MOVE NUMBER-SR TO WS-SR-IID
            IF WS-SR-IID NOT NUMERIC
                MOVE ZEROS TO WS-SR-IID
            END-IF
@@ -628,6 +654,9 @@
       *    FIRST INGREDIENT MUST BE FILLED, SO IT CANT BE ZEROS
            PERFORM 230-OBTAIN-ING-1
            MOVE WS-ING-ACCEPT-NAME TO WS-ING-NAME1
+           MOVE WS-ING-UNIT TO WS-INGREDIENT-UNIT1
+           DISPLAY REGISTER-ING-SCREEN
+           ACCEPT REG-ING-QTD1
       *    OBTAIN THE OTHER INGREDIENTS, IT CAN BE NULL.
       *    SO IF IT IS ZEROS IT JUST LEAVES THIS SECTION.
            PERFORM 240-OBTAIN-ING-2-6
@@ -636,30 +665,45 @@
            END-IF
            MOVE WS-ING-ACCEPT TO WS-INGREDIENT2
            MOVE WS-ING-ACCEPT-NAME TO WS-ING-NAME2
+           MOVE WS-ING-UNIT TO WS-INGREDIENT-UNIT2
+           DISPLAY REGISTER-ING-SCREEN
+           ACCEPT REG-ING-QTD2
            PERFORM 240-OBTAIN-ING-2-6
            IF WS-ING-ACCEPT = ZEROS THEN
                EXIT SECTION
            END-IF
            MOVE WS-ING-ACCEPT TO WS-INGREDIENT3
            MOVE WS-ING-ACCEPT-NAME TO WS-ING-NAME3
+           MOVE WS-ING-UNIT TO WS-INGREDIENT-UNIT3
+           DISPLAY REGISTER-ING-SCREEN
+           ACCEPT REG-ING-QTD3
            PERFORM 240-OBTAIN-ING-2-6
            IF WS-ING-ACCEPT = ZEROS THEN
                EXIT SECTION
            END-IF
            MOVE WS-ING-ACCEPT TO WS-INGREDIENT4
            MOVE WS-ING-ACCEPT-NAME TO WS-ING-NAME4
+           MOVE WS-ING-UNIT TO WS-INGREDIENT-UNIT4
+           DISPLAY REGISTER-ING-SCREEN
+           ACCEPT REG-ING-QTD4
            PERFORM 240-OBTAIN-ING-2-6
            IF WS-ING-ACCEPT = ZEROS THEN
                EXIT SECTION
            END-IF
            MOVE WS-ING-ACCEPT TO WS-INGREDIENT5
            MOVE WS-ING-ACCEPT-NAME TO WS-ING-NAME5
+           MOVE WS-ING-UNIT TO WS-INGREDIENT-UNIT5
+           DISPLAY REGISTER-ING-SCREEN
+           ACCEPT REG-ING-QTD5
            PERFORM 240-OBTAIN-ING-2-6
            IF WS-ING-ACCEPT = ZEROS THEN
                EXIT SECTION
            END-IF
            MOVE WS-ING-ACCEPT TO WS-INGREDIENT6
            MOVE WS-ING-ACCEPT-NAME TO WS-ING-NAME6
+           MOVE WS-ING-UNIT TO WS-INGREDIENT-UNIT6
+           DISPLAY REGISTER-ING-SCREEN
+           ACCEPT REG-ING-QTD6
            EXIT SECTION.
        190-EID-EXISTS SECTION.
            MOVE WS-SR-EID TO SR-EID
@@ -824,12 +868,14 @@
            END-PERFORM.
        220-ING-EXISTS SECTION.
            MOVE 0 TO WS-ING-EXISTS
-           MOVE SPACES TO WS-ING-ACCEPT-NAME
+           MOVE SPACES TO WS-ING-ACCEPT-NAME WS-ING-UNIT
            SET ING-INDEX TO 1
            PERFORM UNTIL ING-INDEX >= NUMBER-ING
                IF WS-ING-ACCEPT = TABLE-ING-ID (ING-INDEX) THEN
                    MOVE 1 TO WS-ING-EXISTS
                    MOVE TABLE-ING-NAME (ING-INDEX) TO WS-ING-ACCEPT-NAME
+                   MOVE TABLE-ING-UNIT-SANDWICH (ING-INDEX)
+                   TO WS-ING-UNIT
                    EXIT SECTION
                ELSE
                    SET ING-INDEX UP BY 1
@@ -951,13 +997,21 @@
                TRIM(WS-CAT-NAME3),
            INTO WS-CATEGORIES-STRING2
            STRING
-               TRIM(WS-ING-NAME1), " | ", TRIM(WS-ING-NAME2),
+               TRIM(WS-ING-NAME1) " , " WS-INGREDIENT-QTD1 " "
+               TRIM(WS-INGREDIENT-UNIT1)" | ", TRIM(WS-ING-NAME2)
+                " , " WS-INGREDIENT-QTD2 " "
+               TRIM(WS-INGREDIENT-UNIT2)
            INTO WS-INGREDIENTS-STRING1
            STRING
-               TRIM(WS-ING-NAME3), " | ", TRIM(WS-ING-NAME4),
+               TRIM(WS-ING-NAME3) " , " WS-INGREDIENT-QTD3 " "
+               TRIM(WS-INGREDIENT-UNIT3)" | " TRIM(WS-ING-NAME4)
+               " , " WS-INGREDIENT-QTD4 " " TRIM(WS-INGREDIENT-UNIT4)
            INTO WS-INGREDIENTS-STRING2
            STRING
-               TRIM(WS-ING-NAME5), " | ", TRIM(WS-ING-NAME6),
+               TRIM(WS-ING-NAME5) " , " WS-INGREDIENT-QTD5 " "
+               TRIM(WS-INGREDIENT-UNIT5) " | " TRIM(WS-ING-NAME6)
+               " , " WS-INGREDIENT-QTD6 " "
+               TRIM(WS-INGREDIENT-UNIT6)
            INTO WS-INGREDIENTS-STRING3
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
@@ -995,32 +1049,38 @@
                    CLOSE SR-CAT
                    OPEN I-O SR-ING
                        IF WS-INGREDIENT1 <> ZEROS THEN
-                           STRING WS-SR-IID, WS-INGREDIENT1
+                           STRING WS-SR-IID, WS-INGREDIENT1,
+                           WS-INGREDIENT-QTD1
                            INTO WS-SR-SAND-ING-ID
                            WRITE SR-ING-REC FROM WS-SR-SAND-ING-ID
                        END-IF
                        IF WS-INGREDIENT2 <> ZEROS THEN
-                           STRING WS-SR-IID, WS-INGREDIENT2
+                           STRING WS-SR-IID, WS-INGREDIENT2,
+                           WS-INGREDIENT-QTD2
                            INTO WS-SR-SAND-ING-ID
                            WRITE SR-ING-REC FROM WS-SR-SAND-ING-ID
                        END-IF
                        IF WS-INGREDIENT3 <> ZEROS THEN
-                           STRING WS-SR-IID, WS-INGREDIENT3
+                           STRING WS-SR-IID, WS-INGREDIENT3,
+                           WS-INGREDIENT-QTD3
                            INTO WS-SR-SAND-ING-ID
                            WRITE SR-ING-REC FROM WS-SR-SAND-ING-ID
                        END-IF
                        IF WS-INGREDIENT4 <> ZEROS THEN
-                           STRING WS-SR-IID, WS-INGREDIENT4
+                           STRING WS-SR-IID, WS-INGREDIENT4,
+                           WS-INGREDIENT-QTD4
                            INTO WS-SR-SAND-ING-ID
                            WRITE SR-ING-REC FROM WS-SR-SAND-ING-ID
                        END-IF
                        IF WS-INGREDIENT5 <> ZEROS THEN
-                           STRING WS-SR-IID, WS-INGREDIENT5
+                           STRING WS-SR-IID, WS-INGREDIENT5,
+                           WS-INGREDIENT-QTD5
                            INTO WS-SR-SAND-ING-ID
                            WRITE SR-ING-REC FROM WS-SR-SAND-ING-ID
                        END-IF
                        IF WS-INGREDIENT6 <> ZEROS THEN
-                           STRING WS-SR-IID, WS-INGREDIENT6
+                           STRING WS-SR-IID, WS-INGREDIENT6,
+                           WS-INGREDIENT-QTD6
                            INTO WS-SR-SAND-ING-ID
                            WRITE SR-ING-REC FROM WS-SR-SAND-ING-ID
                        END-IF
@@ -1201,6 +1261,8 @@
            REG-CAT1 REG-CAT2 REG-CAT3 REG-ING1 REG-ING2 REG-ING3
            REG-ING4 REG-ING5 REG-ING6 WS-ING-ACCEPT WS-ING-EXISTS
            WS-CAT-ACCEPT WS-CAT-EXISTS WS-ING-DUPLICATE WS-CAT-DUPLICATE
+           REG-ING-QTD1 REG-ING-QTD2 REG-ING-QTD3 REG-ING-QTD4
+           REG-ING-QTD5 REG-ING-QTD6 KEY-STATUS
            MOVE SPACES TO WS-SR-EID WS-SR-S-DESCRIPTION
            WS-SR-L-DESCRIPTION REG-EID REG-S-DESCRIPTION
            REG-L-DESCRIPTION REG-ING-NAME1 REG-ING-NAME2 REG-ING-NAME3
@@ -1210,6 +1272,9 @@
            WS-CAT-NAME1 WS-CAT-NAME2 WS-CAT-NAME3 WS-CATEGORIES-STRING1
            WS-CATEGORIES-STRING2 WS-INGREDIENTS-STRING1
            WS-INGREDIENTS-STRING2 WS-INGREDIENTS-STRING3 WS-REG
-           WS-CAT-ACCEPT-NAME WS-ING-ACCEPT-NAME
+           WS-CAT-ACCEPT-NAME WS-ING-ACCEPT-NAME REG-ING-UNIT1
+           REG-ING-UNIT2 REG-ING-UNIT3 REG-ING-UNIT4 REG-ING-UNIT5
+           REG-ING-UNIT6
+
            EXIT SECTION.
        END PROGRAM SR-ADD.
