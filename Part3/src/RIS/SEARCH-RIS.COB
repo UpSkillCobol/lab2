@@ -73,6 +73,10 @@
       *>                                           "s", "S".
       *>      88 SAVE-OPTION-NO                   VALUE "N" "n".
       *>      88 SAVE-VALID-YES                   VALUE "Y","y","S","s".
+       01  GET-INGREDIENT-VALID                PIC 9(003).
+       01  COUNTER                             PIC 9(003).
+       01  WS-OPTION                           PIC 9(002).
+           88 VALID-OPTION                     VALUE 1 THRU 3.
        77  DUMMY                               PIC X(001).
        77  INGRED-STATUS                       PIC 9(002).
        77  KEYSTATUS                           PIC 9(004).
@@ -206,7 +210,7 @@
            05 VALUE ALL " " PIC X(120) LINE 02 COL 01.
            05 VALUE ALL " " PIC X(120) LINE 03 COL 01.
            05 VALUE ALL " " PIC X(120) LINE 04 COL 01.
-           05 VALUE MODULE-NAME-MAIN   LINE 03 COL 43.
+           05 VALUE MODULE-NAME-VIEW   LINE 03 COL 43.
            05 VALUE ALL " " PIC X(95)  LINE 24 COL 01.
            05 VALUE ALL " " PIC X(95)  LINE 25 COL 01.
            05 VALUE ALL " " PIC X(95)  LINE 26 COL 01.
@@ -215,8 +219,25 @@
            05 VALUE ALL " " PIC X(22)  LINE 26 COL 98.
            05 VALUE BACK-EXIT LINE 25  COL 100 FOREGROUND-COLOR 5.
       ******************************************************************
+       01  SEARCH-MENU-SCREEN
+           BACKGROUND-COLOR 7, FOREGROUND-COLOR 0, AUTO, REQUIRED.
+           03 VALUE ALL " " PIC X(50) LINE 09 COL 35.
+           03 VALUE ALL " " PIC X(50) LINE 10 COL 35.
+           03 VALUE ALL " " PIC X(50) LINE 11 COL 35.
+           03 VALUE ALL " " PIC X(50) LINE 12 COL 35.
+           03 VALUE ALL " " PIC X(50) LINE 13 COL 35.
+           03 VALUE ALL " " PIC X(50) LINE 14 COL 35.
+           03 VALUE ALL " " PIC X(50) LINE 15 COL 35.
+           03 VALUE ALL " " PIC X(50) LINE 16 COL 35.
+           03 VALUE ALL " " PIC X(50) LINE 17 COL 35.
+           03 VALUE SEARCH-MENU-OPTION1 LINE 11 COL 42.
+           03 VALUE SEARCH-MENU-OPTION2 LINE 13 COL 42.
+            03 VALUE MAIN-MENU-OPTION5 LINE  15 COL 42.
+           03 VALUE MAIN-MENU-CHOICE LINE 20 COL 45 REVERSE-VIDEO.
+           03 SC-OPTION PIC 9(002) LINE 20 COL 62 TO WS-OPTION
+               BLANK WHEN ZERO REVERSE-VIDEO.
 
-       01  SEARCH-SCREEN
+       01  GET-SEARCH-SCREEN
            BACKGROUND-COLOR 0, FOREGROUND-COLOR 7.
            05 VALUE ADD-MENU-TEXT  LINE 09 COL 13.
            05 VALUE ADD-SUPP-NAME  LINE 11 COL 13.
@@ -232,8 +253,7 @@
                FROM SEARCH-RIS-ID-SUPP (SEARCH-INDEX).
             05 SUPP-NAME-VIEW PIC X(30) LINE 11 COL 18
                    FROM SEARCH-SUPP-NAME (SEARCH-INDEX).
-           05 GET-INGREDIENT-ID PIC 9(003) LINE 13 COL 28
-               FROM SEARCH-RIS-ID-ING (SEARCH-INDEX).
+
             05 INGRED-NAME-VIEW PIC X(30) LINE 15 COL 18
                    FROM SEARCH-INGRED-NAME (SEARCH-INDEX).
            05 GET-PRICE PIC 9(003) LINE 17 COL 19
@@ -244,7 +264,7 @@
                10 GET-MONTH PIC 9(002) LINE 17 COL 44
                    FROM SEARCH-RIS-MONTH (SEARCH-INDEX).
                10 GET-YEAR PIC 9(004) LINE 17 COL 47
-                   FROM SEARCH-RIS-DAY (SEARCH-INDEX).
+                   FROM SEARCH-RIS-YEAR (SEARCH-INDEX).
            05 VALUE PRICE-EURO LINE 17 COL 23.
            05 VALUE "/"  LINE 17 COL 43.
            05 VALUE "/"  LINE 17 COL 46.
@@ -277,9 +297,12 @@
            05 VALUE "  " LINE 19 COL 62 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 20 COL 62 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 21 COL 62 BACKGROUND-COLOR 7.
-
+           05 PIC X(01) TO DUMMY.
       ******************************************************************
+       01  GET-SEARCH-INGREDIENT.
 
+       05 GET-INGREDIENT-ID PIC 9(003) LINE 13 COL 28
+               TO GET-INGREDIENT-VALID.
 
        01  LIST-FRAME.
            05 VALUE ALL " " PIC X(042) LINE 7 COL 68
@@ -397,45 +420,123 @@
                FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
            05 WANT-TO-SAVE1 PIC X LINE 25 COL 67
                FOREGROUND-COLOR 4 BACKGROUND-COLOR 7 TO SAVE-OPTION.
-
-       01  ANOTHER-RECORD
-           BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
-           05 VALUE "ANOTHER RECORD?" LINE 25 COL 15
-           FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
-           05 ANOTHER PIC X(001) LINE 25 COL 67 TO TRUE-YES.
       ******************************************************************
-
        PROCEDURE DIVISION.
 
-       MAIN-PROCEDURE.
            PERFORM CHECK-FILES-OK
            PERFORM FILL-TABLES
-      *>      PERFORM SHOW-TABLE
+           PERFORM WITH TEST AFTER UNTIL WS-OPTION = 3
+               MOVE ZERO TO WS-OPTION
+               DISPLAY CLEAR-SCREEN
+               DISPLAY MAIN-SCREEN
+               DISPLAY SEARCH-MENU-SCREEN
+               ACCEPT SC-OPTION
+               IF NOT VALID-OPTION
+                   MOVE MAIN-MENU-ERROR TO ERROR-TEXT
+                   ACCEPT ERROR-ZONE
+               END-IF
+               PERFORM SEARCH-EVALUATE
+           END-PERFORM
+           EXIT PROGRAM.
 
-           MOVE SPACES TO VIEW-NAME-SUPP, VIEW-NAME-ING
-           MOVE ZEROS TO GET-SUPPLIER-ID, GET-INGREDIENT-ID, GET-PRICE
-           GET-EXPIRATION-DATE
+       SEARCH-EVALUATE SECTION.
+           ACCEPT SC-OPTION
+
+               EVALUATE WS-OPTION
+                   WHEN  1
+                       PERFORM SEARCH-VALID-PRICE
+                   WHEN 2
+                       PERFORM SEARCH-BY-INGREDIENT
+               END-EVALUATE
+
+           EXIT SECTION.
+
+       SEARCH-VALID-PRICE SECTION.
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
-           DISPLAY REGISTER-SCREEN
-           PERFORM GET-SUPPLIER
-                IF KEYSTATUS = F3 THEN
-                   EXIT PROGRAM
-                END-IF
-           PERFORM GET-INGREDIENT
-           IF KEYSTATUS = F3 THEN
-                   EXIT PROGRAM
-                END-IF
-           PERFORM CHECK-PRICE
-           IF KEYSTATUS = F3 THEN
-                   EXIT PROGRAM
-                END-IF
-           PERFORM GET-DATE
-           IF KEYSTATUS = F3 THEN
-                   EXIT PROGRAM
-                END-IF
+           MOVE ZEROS TO COUNTER
+           SET SEARCH-INDEX TO 0
+           PERFORM UNTIL SEARCH-INDEX >= NUMBER-SEARCH
+               SET SEARCH-INDEX UP BY 1
+                   IF CURRENT-DATE (1:8)
+                          > SEARCH-RIS-DATE-VAL (SEARCH-INDEX)
+                       ADD 1 TO COUNTER
+                       ACCEPT GET-SEARCH-SCREEN
+                   END-IF
 
-           EXIT PROGRAM.
+           END-PERFORM
+           IF COUNTER = 0 THEN
+              MOVE ERROR-SEARCH TO ERROR-TEXT
+              ACCEPT ERROR-ZONE
+              IF KEYSTATUS = F3 THEN
+                 EXIT SECTION
+              END-IF
+           ELSE
+              MOVE NO-MORE-MATCHES TO ERROR-TEXT
+              ACCEPT ERROR-ZONE
+              IF KEYSTATUS = F3 THEN
+                 EXIT SECTION
+              END-IF
+           END-IF
+           EXIT SECTION.
+
+       SEARCH-BY-INGREDIENT SECTION.
+
+           PERFORM GET-INGREDIENT
+           MOVE ZEROS TO COUNTER
+           SET SEARCH-INDEX TO 0
+               PERFORM UNTIL SEARCH-INDEX >= NUMBER-SEARCH
+                   SET SEARCH-INDEX UP BY 1
+                       IF GET-INGREDIENT-VALID = SEARCH-RIS-ID-ING
+                           (SEARCH-INDEX)
+                           ADD 1 TO COUNTER
+                         ACCEPT GET-SEARCH-SCREEN
+                       END-IF
+            END-PERFORM
+           IF COUNTER = 0 THEN
+              MOVE ERROR-SEARCH TO ERROR-TEXT
+              ACCEPT ERROR-ZONE
+              IF KEYSTATUS = F3 THEN
+                 EXIT SECTION
+              END-IF
+           ELSE
+              MOVE NO-MORE-MATCHES TO ERROR-TEXT
+              ACCEPT ERROR-ZONE
+              IF KEYSTATUS = F3 THEN
+                 EXIT SECTION
+              END-IF
+           END-IF
+           EXIT SECTION.
+
+
+      *>      PERFORM CHECK-FILES-OK
+      *>      PERFORM FILL-TABLES
+      *>      PERFORM SHOW-TABLE
+
+      *>      MOVE SPACES TO VIEW-NAME-SUPP, VIEW-NAME-ING
+      *>      MOVE ZEROS TO GET-SUPPLIER-ID, GET-INGREDIENT-ID, GET-PRICE
+      *>      GET-EXPIRATION-DATE
+      *>      DISPLAY CLEAR-SCREEN
+      *>      DISPLAY MAIN-SCREEN
+      *> *>      DISPLAY REGISTER-SCREEN
+      *> *>      PERFORM GET-SUPPLIER
+      *>           IF KEYSTATUS = F3 THEN
+      *>              EXIT PROGRAM
+      *>           END-IF
+      *>      PERFORM GET-INGREDIENT
+      *>      IF KEYSTATUS = F3 THEN
+      *>              EXIT PROGRAM
+      *>           END-IF
+      *>      PERFORM CHECK-PRICE
+      *>      IF KEYSTATUS = F3 THEN
+      *>              EXIT PROGRAM
+      *>           END-IF
+      *>      PERFORM GET-DATE
+      *>      IF KEYSTATUS = F3 THEN
+      *>              EXIT PROGRAM
+      *>           END-IF
+
+      *>      EXIT PROGRAM.
        FILL-TABLES SECTION.
 
            SET SUPP-INDEX TO 0
@@ -547,7 +648,7 @@
        GET-INGREDIENT SECTION.
            DISPLAY LIST-FRAME
            DISPLAY MAIN-SCREEN
-           DISPLAY REGISTER-SCREEN
+      *>      DISPLAY REGISTER-SCREEN
 
            PERFORM WITH TEST AFTER UNTIL INGREDEXIST-YES
                PERFORM INGREDIENT-LIST
@@ -568,7 +669,7 @@
            MOVE SPACES TO SUPP-EXIST
            DISPLAY LIST-FRAME
            DISPLAY MAIN-SCREEN
-           DISPLAY REGISTER-SCREEN
+      *>      DISPLAY REGISTER-SCREEN
 
            PERFORM WITH TEST AFTER UNTIL SUPP-YES
                PERFORM SUPPLIER-LIST
@@ -588,7 +689,7 @@
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY LIST-FRAME
-           DISPLAY REGISTER-SCREEN
+      *>      DISPLAY REGISTER-SCREEN
            MOVE ZEROES TO GET-SUPPLIER-ID
            MOVE SPACES TO TRUE-YES
            SET SUPP-INDEX TO 0
@@ -670,7 +771,7 @@
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY LIST-FRAME
-           DISPLAY REGISTER-SCREEN
+      *>      DISPLAY REGISTER-SCREEN
            SET ING-INDEX TO 0
            MOVE 10 TO ILIN
            MOVE 72 TO ICOL
@@ -686,7 +787,7 @@
                     DISPLAY LIST-FRAME
                     MOVE INGRED-RECORD TO INSTRUCTION-MESSAGE
                     DISPLAY INSTRUCTION-MESSAGE
-                   ACCEPT GET-INGREDIENT-ID
+                   ACCEPT GET-SEARCH-INGREDIENT
                    IF KEYSTATUS = F3 THEN
                        EXIT SECTION
                    END-IF
@@ -725,7 +826,7 @@
                    DISPLAY LIST-FRAME
                    MOVE INGRED-RECORD TO INSTRUCTION-MESSAGE
                    DISPLAY INSTRUCTION-MESSAGE
-                   ACCEPT GET-INGREDIENT-ID
+                   ACCEPT GET-SEARCH-INGREDIENT
                    IF KEYSTATUS = F3 THEN
                        EXIT SECTION
                    END-IF
@@ -801,10 +902,8 @@
            MOVE SPACES TO INGREDEXIST
            SET ING-INDEX TO 1
            PERFORM UNTIL ING-INDEX > NUMBER-ING
-               IF WS-RIS-ID-ING = TABLEINGREDS-ID (ING-INDEX)
+               IF GET-INGREDIENT-VALID = TABLEINGREDS-ID (ING-INDEX)
                    MOVE "Y" TO INGREDEXIST
-                   MOVE TABLEINGREDS-NAME (ING-INDEX)
-                       TO VIEW-NAME-ING
                    MOVE NUMBER-ING TO ING-INDEX
                END-IF
                SET ING-INDEX UP BY 1
@@ -822,7 +921,7 @@
        CHECK-PRICE SECTION.
            DISPLAY LIST-FRAME
            DISPLAY MAIN-SCREEN
-           DISPLAY REGISTER-SCREEN
+      *>      DISPLAY REGISTER-SCREEN
            MOVE ZEROS TO GET-PRICE
 
            PERFORM WITH TEST AFTER UNTIL GET-PRICE > 1
