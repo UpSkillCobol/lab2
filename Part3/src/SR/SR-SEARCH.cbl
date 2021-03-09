@@ -140,11 +140,13 @@
            03 VALUE ALL " " PIC X(50) LINE 15 COL 35.
            03 VALUE ALL " " PIC X(50) LINE 16 COL 35.
            03 VALUE ALL " " PIC X(50) LINE 17 COL 35.
+           03 VALUE ALL " " PIC X(50) LINE 18 COL 35.
            03 VALUE MAIN-SEARCH-OPTION1 LINE 11 COL 40.
            03 VALUE MAIN-SEARCH-OPTION2 LINE 12 COL 40.
            03 VALUE MAIN-SEARCH-OPTION3 LINE 13 COL 40.
            03 VALUE MAIN-SEARCH-OPTION4 LINE 14 COL 40.
            03 VALUE MAIN-SEARCH-OPTION5 LINE 15 COL 40.
+           03 VALUE MAIN-SEARCH-OPTION6 LINE 16 COL 40.
            03 VALUE MAIN-SEARCH-CHOICE LINE 20 COL 45
            REVERSE-VIDEO.
            03 MP-OPTION PIC 9(02) LINE 20 COL 73 TO WS-OPTION
@@ -194,12 +196,6 @@
                FROM WS-INGREDIENT2 BLANK WHEN ZERO.
                10 REG-ING3 PIC 9(003) LINE 15 COL 15
                FROM WS-INGREDIENT3 BLANK WHEN ZERO.
-               10 REG-ING4 PIC 9(003) LINE 16 COL 15
-               FROM WS-INGREDIENT4 BLANK WHEN ZERO.
-               10 REG-ING5 PIC 9(003) LINE 17 COL 15
-               FROM WS-INGREDIENT5 BLANK WHEN ZERO.
-               10 REG-ING6 PIC 9(003) LINE 18 COL 15
-               FROM WS-INGREDIENT6 BLANK WHEN ZERO.
       ******************************************************************
        01  CONFIRM-RECORD-SCREEN.
            05 VALUE ALL " " PIC X(107) LINE 6 col 05
@@ -308,7 +304,7 @@
            05 VALUE CONFIRM-TEXT3 LINE 12 COL 10.
            05 VALUE CONFIRM-TEXT4 LINE 13 COL 10.
            05 VALUE CONFIRM-TEXT5 LINE 16 COL 10.
-           05 CONFIRM-DUMMY PIC X(001) TO DUMMY AUTO.
+           05 CONFIRM-DUMMY PIC X(001) LINE 26 COL 01 TO DUMMY.
       ******************************************************************
        01  LIST-FRAME.
            05 VALUE ALL " " PIC X(042) LINE 7 COL 68
@@ -738,22 +734,64 @@
            END-PERFORM
            EXIT SECTION.
        210-MAIN SECTION.
-           DISPLAY CLEAR-SCREEN
-           DISPLAY MAIN-SCREEN
-           ACCEPT MAIN-SEARCH-SCREEN
-           MOVE ZEROS TO COUNT-ING
-      *    INTRODUZIR MENU PARA ESCOLHER ENTRE PESQUISAR POR INGREDIENTES
-      *>      OU POR CATEGORIAS
-           PERFORM WITH TEST AFTER UNTIL WS-ACCEPT-OPTION = ZEROS
-               PERFORM 220-SEARCH-BY-ING
+           PERFORM WITH TEST AFTER UNTIL WS-OPTION = 6
+               MOVE ZEROS TO MP-OPTION
+               DISPLAY CLEAR-SCREEN
+               DISPLAY MAIN-SCREEN
+               ACCEPT MAIN-SEARCH-SCREEN
+                   EVALUATE WS-OPTION
+                       WHEN 1
+                           PERFORM 220-SEARCH-BY-ING
+                       WHEN 2
+                       WHEN 3
+                       WHEN 4
+                       WHEN 5
+                   END-EVALUATE
            END-PERFORM
            EXIT PROGRAM.
        220-SEARCH-BY-ING SECTION.
-           PERFORM 700-LIST-ING
+           MOVE 0 TO WS-CONTROL
+           MOVE 0 TO COUNT-ING
+           PERFORM UNTIL WS-CONTROL = 1
+               PERFORM 700-LIST-ING
+               IF WS-ING-ACCEPT <> ZEROS THEN
+                   ADD 1 TO COUNT-ING
+                   MOVE WS-ING-ACCEPT TO WS-INGREDIENT1
+                   DISPLAY REGISTER-ING-SCREEN
+                   PERFORM 700-LIST-ING
+                   IF WS-ING-ACCEPT <> ZEROS THEN
+                       ADD 1 TO COUNT-ING
+                       MOVE WS-ING-ACCEPT TO WS-INGREDIENT2
+                       DISPLAY REGISTER-ING-SCREEN
+                       PERFORM 700-LIST-ING
+                       IF WS-ING-ACCEPT <> ZEROS
+                           ADD 1 TO COUNT-ING
+                           MOVE WS-ING-ACCEPT TO WS-INGREDIENT3
+                           DISPLAY REGISTER-ING-SCREEN
+                       END-IF
+                       MOVE 1 TO WS-CONTROL
+                   ELSE
+                       MOVE 1 TO WS-CONTROL
+               ELSE
+                   EXIT SECTION
+               END-IF
+           END-PERFORM
+           EVALUATE COUNT-ING
+               WHEN 1
+                   PERFORM 230-SEARCH-1-ING
+               WHEN 2
+                   PERFORM 240-SEARCH-2-ING
+               WHEN 3
+                   PERFORM 250-SEARCH-3-ING
+           END-EVALUATE
+           EXIT SECTION.
+       230-SEARCH-1-ING SECTION.
+           DISPLAY "1 ING" AT 0101
            SET SHOW-INDEX TO 0
+           MOVE ZEROS TO WS-CONTROL
            PERFORM WITH TEST AFTER UNTIL SHOW-INDEX >= NUMBER-SHOW
                SET SHOW-INDEX UP BY 1
-               IF WS-ING-ACCEPT = SHOW-INGREDIENT1(SHOW-INDEX) OR
+               IF WS-INGREDIENT1 = SHOW-INGREDIENT1(SHOW-INDEX) OR
                    SHOW-INGREDIENT2 (SHOW-INDEX) OR
                    SHOW-INGREDIENT3 (SHOW-INDEX) OR
                    SHOW-INGREDIENT4 (SHOW-INDEX) OR
@@ -762,11 +800,75 @@
                        DISPLAY CLEAR-SCREEN
                        DISPLAY MAIN-SCREEN
                        ACCEPT CONFIRM-RECORD-SCREEN
+               ELSE
+                   ADD 1 TO WS-CONTROL
                END-IF
            END-PERFORM
+           IF WS-CONTROL <> 0
+               MOVE NO-MATCH TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
+           END-IF
            EXIT SECTION.
-       230-SEARCH-BY-MULTIPLE-INGS SECTION.
-
+       240-SEARCH-2-ING SECTION.
+           DISPLAY "2 ING" AT 0101
+           SET SHOW-INDEX TO 0
+           PERFORM WITH TEST AFTER UNTIL SHOW-INDEX >= NUMBER-SHOW
+               SET SHOW-INDEX UP BY 1
+               IF (WS-INGREDIENT1 = SHOW-INGREDIENT1(SHOW-INDEX) OR
+                   SHOW-INGREDIENT2 (SHOW-INDEX) OR
+                   SHOW-INGREDIENT3 (SHOW-INDEX) OR
+                   SHOW-INGREDIENT4 (SHOW-INDEX) OR
+                   SHOW-INGREDIENT5 (SHOW-INDEX) OR
+                   SHOW-INGREDIENT6 (SHOW-INDEX) )AND
+                   (WS-INGREDIENT2 = SHOW-INGREDIENT1(SHOW-INDEX) OR
+                   SHOW-INGREDIENT2 (SHOW-INDEX) OR
+                   SHOW-INGREDIENT3 (SHOW-INDEX) OR
+                   SHOW-INGREDIENT4 (SHOW-INDEX) OR
+                   SHOW-INGREDIENT5 (SHOW-INDEX) OR
+                   SHOW-INGREDIENT6 (SHOW-INDEX)) THEN
+                       DISPLAY CLEAR-SCREEN
+                       DISPLAY MAIN-SCREEN
+                       ACCEPT CONFIRM-RECORD-SCREEN
+               ELSE
+                   ADD 1 TO WS-CONTROL
+               END-IF
+           END-PERFORM
+           IF WS-CONTROL <> 0
+               MOVE NO-MATCH TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
+           END-IF
+           EXIT SECTION.
+       250-SEARCH-3-ING SECTION.
+           DISPLAY "03 ING" AT 0101
+           SET SHOW-INDEX TO 0
+           PERFORM WITH TEST AFTER UNTIL SHOW-INDEX >= NUMBER-SHOW
+               SET SHOW-INDEX UP BY 1
+               IF (WS-INGREDIENT1 = SHOW-INGREDIENT1(SHOW-INDEX) OR
+                   SHOW-INGREDIENT2 (SHOW-INDEX) OR
+                   SHOW-INGREDIENT3 (SHOW-INDEX) OR
+                   SHOW-INGREDIENT4 (SHOW-INDEX) OR
+                   SHOW-INGREDIENT5 (SHOW-INDEX) OR
+                   SHOW-INGREDIENT6 (SHOW-INDEX) )AND
+                   (WS-INGREDIENT2 = SHOW-INGREDIENT1(SHOW-INDEX) OR
+                   SHOW-INGREDIENT2 (SHOW-INDEX) OR
+                   SHOW-INGREDIENT3 (SHOW-INDEX) OR
+                   SHOW-INGREDIENT4 (SHOW-INDEX) OR
+                   SHOW-INGREDIENT5 (SHOW-INDEX) OR
+                   SHOW-INGREDIENT6 (SHOW-INDEX)) AND
+                   (WS-INGREDIENT3 = SHOW-INGREDIENT1(SHOW-INDEX) OR
+                   SHOW-INGREDIENT2 (SHOW-INDEX) OR
+                   SHOW-INGREDIENT3 (SHOW-INDEX) OR
+                   SHOW-INGREDIENT4 (SHOW-INDEX) OR
+                   SHOW-INGREDIENT5 (SHOW-INDEX) OR
+                   SHOW-INGREDIENT6 (SHOW-INDEX)) THEN
+                       DISPLAY CLEAR-SCREEN
+                       DISPLAY MAIN-SCREEN
+                       ACCEPT CONFIRM-RECORD-SCREEN
+               ELSE
+                   ADD 1 TO WS-CONTROL
+               END-IF
+           END-PERFORM
+           IF WS-CONTROL <> 0
+               MOVE NO-MATCH TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
+           END-IF
            EXIT SECTION.
        600-LIST-CAT SECTION.
            DISPLAY CLEAR-SCREEN
@@ -851,8 +953,7 @@
            DISPLAY MAIN-SCREEN
            DISPLAY LIST-FRAME
            DISPLAY REGISTER-ING-SCREEN
-           MOVE ZEROES TO NEW-INGREDID
-           MOVE SPACES TO TRUE-YES
+           MOVE ZEROES TO ING-ACCEPT WS-ING-ACCEPT
            SET ING-INDEX TO 1
            MOVE 10 TO ILIN
            MOVE 72 TO ICOL

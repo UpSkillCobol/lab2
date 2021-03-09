@@ -129,3 +129,4 @@
        77  WS-PRICE                        PIC 99.
        77  COUNT-ING                       PIC 9(001).
        77  WS-ALPHABETIC                   PIC 9(001).
+       77  WS-CONTROL                      PIC 9(001).
