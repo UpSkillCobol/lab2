@@ -1,3 +1,7 @@
+       01  WS-REG                          PIC X(001).
+           88 REG-YES                      VALUE "Y","y".
+           88 REG-NO                       VALUE "N","n".
+           88 REG-OPTION-VLD               VALUE "Y","y","N","n".
        78  MODULE-NAME         VALUE "SANDWICH REGISTRATION".
        78  MAIN-MENU-OPTION1   VALUE "1 - REGISTER SANDWICHES".
        78  MAIN-MENU-OPTION2   VALUE "2 - VIEW SANDWICHES".
@@ -45,13 +49,14 @@
       -    "SSIBLE TO ASSIGN CATEGORIES".
        78  NO-INGREDIENTS      VALUE "NO INGREDIENTS RECORDS FOUND | RET
       -    "URNING TO MAIN MENU".
-       78  CONFIRM-TEXT        VALUE "         SANDWICH:".
+       78  CONFIRM-TEXT        VALUE "          SANDWICH".
        78  CONFIRM-TEXT1       VALUE "      EXTERNAL-ID:".
        78  CONFIRM-TEXT2       VALUE "SHORT DESCRIPTION:".
        78  CONFIRM-TEXT3       VALUE " LONG DESCRIPTION:".
        78  CONFIRM-TEXT4       VALUE "       CATEGORIES:".
        78  CONFIRM-TEXT5       VALUE "      INGREDIENTS:".
        78  CONFIRM-TEXT6       VALUE "PRICE:".
+       78  CONFIRM-TEXT7       VALUE "EUROS".
        78  WANT-TO-SAVE        VALUE "DO YOU WANT TO SAVE THIS RECORD? (
       -    "Y)ES/(N)O".
        78  RECORD-SAVED        VALUE "RECORD SAVED SUCCESSFULLY!".

@@ -115,12 +115,10 @@
        77  WS-INGREDIENTS-STRING2          PIC X(072).
        77  WS-INGREDIENTS-STRING3          PIC X(072).
        77  TEMP-INGREDENTS-STRING          PIC X(072).
-       77  WS-REG                          PIC X(001).
-           88 REG-OPTION-VLD               VALUE "Y","y","N","n",
-                                               "s","S".
        77  WS-TEMP-ID                      PIC 9(003).
        77  WS-SEARCH-ID                    PIC 9(003).
        77  WS-NUMBER-OF-CATEGORIES-FOUND   PIC 9(001).
        77  WS-NUMBER-OF-INGERDIENTS-FOUND  PIC 9(001).
        77  NUMBER-SHOW                     PIC 9(003) VALUE 999.
-       77  WS-PRICE                        PIC 99v99.
+       77  WS-PRICE                        PIC 99.
+       77  COUNT-ING                        PIC 9(001).

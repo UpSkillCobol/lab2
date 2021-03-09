@@ -1,3 +1,7 @@
+       01  WS-REG                          PIC X(001).
+           88 REG-YES                      VALUE "S","s".
+           88 REG-NO                       VALUE "N","n".
+           88 REG-OPTION-VLD               VALUE "N","n","s","S".
        78  MODULE-NAME     VALUE "REGISTO DE SANDUICHES".
        78  MAIN-MENU-OPTION1   VALUE "1 - REGISTAR SANDUICHES".
        78  MAIN-MENU-OPTION2   VALUE "2 - CONSULTAR SANDUICHES".
@@ -47,13 +51,14 @@
       -    " | IMPOSSIVEL ATRIBUIR CATEGORIAS".
        78  NO-INGREDIENTS      VALUE "NAO EXISTEM INGREDIENTES REGISTADO
       -    "S | O PROGRAMA IRA VOLTAR AO MENU PRINCIPAL".
-       78  CONFIRM-TEXT        VALUE "        SANDUICHE:".
+       78  CONFIRM-TEXT        VALUE "         SANDUICHE".
        78  CONFIRM-TEXT1       VALUE "       ID EXTERNO:".
        78  CONFIRM-TEXT2       VALUE "  DESCRICAO CURTA:".
        78  CONFIRM-TEXT3       VALUE "  DESCRICAO LONGA:".
        78  CONFIRM-TEXT4       VALUE "       CATEGORIAS:".
        78  CONFIRM-TEXT5       VALUE "     INGREDIENTES:".
        78  CONFIRM-TEXT6       VALUE "PRECO:".
+       78  CONFIRM-TEXT7       VALUE "EUROS".
        78  WANT-TO-SAVE        VALUE "PRETENDE GUARDAR ESTE REGISTO? (S)
       -    "IM/(N)AO".
        78  RECORD-SAVED        VALUE "REGISTO GUARDADO COM SUCESSO!".

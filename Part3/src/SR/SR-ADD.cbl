@@ -455,14 +455,14 @@
         010-OBTAIN-TABLES SECTION.
            SET SR-INDEX TO 1
            OPEN INPUT SANDWICHES
-           MOVE 001 TO SR-IID
-           START SANDWICHES KEY IS GREATER OR EQUAL SR-IID
-               INVALID KEY
-               MOVE 1 TO SANDWICH-EMPTY
-               CLOSE SANDWICHES
-               MOVE NO-SANDWICHES TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
-               EXIT PROGRAM
-           END-START
+      *     MOVE 001 TO SR-IID
+      *     START SANDWICHES KEY IS GREATER OR EQUAL SR-IID
+      *         INVALID KEY
+      *         MOVE 1 TO SANDWICH-EMPTY
+      *         CLOSE SANDWICHES
+      *         MOVE NO-SANDWICHES TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
+      *         EXIT PROGRAM
+      *     END-START
            PERFORM UNTIL SR-EOF
                READ SANDWICHES NEXT RECORD
                    AT END
@@ -1052,20 +1052,19 @@
                END-IF
            END-PERFORM
            MOVE UPPER-CASE(WS-REG) TO WS-REG
-           EVALUATE WS-REG
-               WHEN "Y"
+           IF REG-YES THEN
                    OPEN I-O SANDWICHES
                        MOVE WS-SR-REC TO SR-REC
                        WRITE SR-REC
                    CLOSE SANDWICHES
                    OPEN I-O SR-CAT
                        IF WS-CATEGORIE1 <> ZEROS THEN
-                           STRING WS-SR-IID, WS-CATEGORIE1
+                           STRING WS-SR-IID, WS-CATEGORIE1,
                            INTO WS-SR-SAND-CAT-ID
                            WRITE SR-CAT-REC FROM WS-SR-CAT-REC
                        END-IF
                        IF WS-CATEGORIE2 <> ZEROS THEN
-                           STRING WS-SR-IID, WS-CATEGORIE2
+                           STRING WS-SR-IID, WS-CATEGORIE2,
                            INTO WS-SR-SAND-CAT-ID
                            WRITE SR-CAT-REC FROM WS-SR-CAT-REC
                        END-IF
@@ -1079,8 +1078,8 @@
                        IF WS-INGREDIENT1 <> ZEROS THEN
                            STRING WS-SR-IID, WS-INGREDIENT1,
                            WS-INGREDIENT-QTD1
-                           INTO WS-SR-SAND-ING-ID
-                           WRITE SR-ING-REC FROM WS-SR-SAND-ING-ID
+                           INTO WS-SR-ING-REC
+                           WRITE SR-ING-REC FROM WS-SR-ING-REC
                        END-IF
                        IF WS-INGREDIENT2 <> ZEROS THEN
                            STRING WS-SR-IID, WS-INGREDIENT2,
@@ -1118,80 +1117,15 @@
                    IF KEY-STATUS = F3 THEN
                        EXIT SECTION
                    END-IF
-               WHEN "S"
-                   OPEN I-O SANDWICHES
-                       MOVE WS-SR-REC TO SR-REC
-                       WRITE SR-REC
-                   CLOSE SANDWICHES
-                   OPEN I-O SR-CAT
-                       IF WS-CATEGORIE1 <> ZEROS THEN
-                           STRING WS-SR-IID, WS-CATEGORIE1
-                           INTO WS-SR-SAND-CAT-ID
-                           MOVE WS-SR-SAND-CAT-ID TO SR-SAND-CAT-ID
-                           WRITE SR-CAT-REC
-                       END-IF
-                       IF WS-CATEGORIE2 <> ZEROS THEN
-                           STRING WS-SR-IID, WS-CATEGORIE2
-                           INTO WS-SR-SAND-CAT-ID
-                           MOVE WS-SR-SAND-CAT-ID TO SR-SAND-CAT-ID
-                           WRITE SR-CAT-REC
-                       END-IF
-                       IF WS-CATEGORIE3 <> ZEROS THEN
-                           STRING WS-SR-IID, WS-CATEGORIE3
-                           INTO WS-SR-SAND-CAT-ID
-                           MOVE WS-SR-SAND-CAT-ID TO SR-SAND-CAT-ID
-                           WRITE SR-CAT-REC
-                       END-IF
-                   CLOSE SR-CAT
-                   OPEN I-O SR-ING
-                       IF WS-INGREDIENT1 <> ZEROS THEN
-                           STRING WS-SR-IID, WS-INGREDIENT1
-                           INTO WS-SR-SAND-ING-ID
-                           MOVE WS-SR-SAND-ING-ID TO SR-SAND-ING-ID
-                           WRITE SR-ING-REC
-                       END-IF
-                       IF WS-INGREDIENT2 <> ZEROS THEN
-                           STRING WS-SR-IID, WS-INGREDIENT2
-                           INTO WS-SR-SAND-ING-ID
-                           MOVE WS-SR-SAND-ING-ID TO SR-SAND-ING-ID
-                           WRITE SR-ING-REC
-                       END-IF
-                       IF WS-INGREDIENT3 <> ZEROS THEN
-                           STRING WS-SR-IID, WS-INGREDIENT3
-                           INTO WS-SR-SAND-ING-ID
-                           MOVE WS-SR-SAND-ING-ID TO SR-SAND-ING-ID
-                           WRITE SR-ING-REC
-                       END-IF
-                       IF WS-INGREDIENT4 <> ZEROS THEN
-                           STRING WS-SR-IID, WS-INGREDIENT4
-                           INTO WS-SR-SAND-ING-ID
-                           MOVE WS-SR-SAND-ING-ID TO SR-SAND-ING-ID
-                           WRITE SR-ING-REC
-                       END-IF
-                       IF WS-INGREDIENT5 <> ZEROS THEN
-                           STRING WS-SR-IID, WS-INGREDIENT5
-                           INTO WS-SR-SAND-ING-ID
-                           MOVE WS-SR-SAND-ING-ID TO SR-SAND-ING-ID
-                           WRITE SR-ING-REC
-                       END-IF
-                       IF WS-INGREDIENT6 <> ZEROS THEN
-                           STRING WS-SR-IID, WS-INGREDIENT6
-                           INTO WS-SR-SAND-ING-ID
-                           MOVE WS-SR-SAND-ING-ID TO SR-SAND-ING-ID
-                           WRITE SR-ING-REC
-                       END-IF
-                   CLOSE SR-ING
-                   MOVE RECORD-SAVED TO CONFIRM-MESSAGE
-                   ACCEPT CONFIRM-SCREEN
-                   IF KEY-STATUS = F3 THEN
-                       EXIT SECTION
-                   END-IF
-               WHEN "N"
+           ELSE
+               IF REG-NO THEN
                    MOVE RECORD-NOT-SAVED TO CONFIRM-MESSAGE
                    ACCEPT CONFIRM-SCREEN
                    IF KEY-STATUS = F3 THEN
                        EXIT SECTION
                    END-IF
+               END-IF
+           END-IF
            EXIT SECTION.
        700-SPACE-CHECK SECTION.
       *    SPACE-CHECK SECTION TO REMOVE ALL EXTRA SPACES

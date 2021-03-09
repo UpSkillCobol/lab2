@@ -26,76 +26,91 @@
        01  SR-TABLE OCCURS 1 TO MAX-SR TIMES
            DEPENDING ON NUMBER-SR
            INDEXED BY SR-INDEX.
-           05 TABLE-SR-IID                         PIC 9(003).
+           05 TABLE-SR-IID                         PIC X(003).
            05 TABLE-SR-EID                         PIC X(005).
            05 TABLE-SR-S-DESC                      PIC X(025).
            05 TABLE-SR-L-DESC.
            10 TABLE-SR-L-DESC1                     PIC X(025).
            10 TABLE-SR-L-DESC2                     PIC X(025).
-           05 TABLE-SR-PRICE                       PIC 9(002),9(002).
+           05 TABLE-SR-PRICE                       PIC X(002).
        01  ING-TABLE OCCURS 1 TO MAX-ING TIMES
            DEPENDING ON NUMBER-ING
            INDEXED BY ING-INDEX.
-           05 TABLE-ING-ID                         PIC 9(003).
+           05 TABLE-ING-ID                         PIC X(003).
            05 TABLE-ING-NAME                       PIC X(030).
            05 TABLE-ING-DESCRIPTION                PIC X(050).
            05 TABLE-ING-UNIT-SUPPLIER              PIC X(003).
            05 TABLE-ING-UNIT-SANDWICH              PIC X(003).
-           05 TABLE-TRESHOLD                       PIC 9(003).
-           05 TABLE-ING-IS-ACTIVE                  PIC 9(001).
+           05 TABLE-TRESHOLD                       PIC X(003).
+           05 TABLE-ING-IS-ACTIVE                  PIC X(001).
        01  CAT-TABLE OCCURS 1 TO MAX-CAT TIMES
            DEPENDING ON NUMBER-CAT
            INDEXED BY CAT-INDEX.
-           05 TABLE-CAT-ID                         PIC 9(003).
+           05 TABLE-CAT-ID                         PIC X(003).
            05 TABLE-CAT-NAME                       PIC X(030).
            05 TABLE-CAT-DESCRIPTION.
                10 TABLE-CAT-DESCRIPTION1           PIC X(050).
-           05 TABLE-CAT-IS-ACTIVE                  PIC 9(001).
+           05 TABLE-CAT-IS-ACTIVE                  PIC X(001).
       *    SI (SANDWICH-INGREDIENT)
        01  SI-TABLE OCCURS 1 TO MAX-SI TIMES
            DEPENDING ON NUMBER-SI
            INDEXED BY SI-INDEX.
            05 TABLE-SI-ID.
-               10 TABLE-SI-SAND-ID                 PIC 9(003).
-               10 TABLE-SI-ING-ID                  PIC 9(003).
-               10 TABLE-SI-ING-QTD                 PIC 9(003).
+               10 TABLE-SI-SAND-ID                 PIC X(003).
+               10 TABLE-SI-ING-ID                  PIC X(003).
+               10 TABLE-SI-ING-QTD                 PIC X(003).
       *    SC (SANDWICH CATEGORIE)
        01  SC-TABLE OCCURS 1 TO MAX-SC TIMES
            DEPENDING ON NUMBER-SC
            INDEXED BY SC-INDEX.
            05 TABLE-SC-ID.
-               10 TABLE-SC-SAND-ID                 PIC 9(003).
-               10 TABLE-SC-CAT-ID                  PIC 9(003).
+               10 TABLE-SC-SAND-ID                 PIC X(003).
+               10 TABLE-SC-CAT-ID                  PIC X(003).
        01  SHOW-TABLE OCCURS 1 TO MAX-SC TIMES
            DEPENDING ON NUMBER-SHOW
            INDEXED BY SHOW-INDEX.
-           05 SHOW-SR-IID                         PIC 9(003).
-           05 SHOW-SR-EID                         PIC X(005).
-           05 SHOW-SR-S-DESC                      PIC X(025).
-           05 SHOW-SR-L-DESC.
-           10 SHOW-SR-L-DESC1                     PIC X(025).
-           10 SHOW-SR-L-DESC2                     PIC X(025).
-           05 SHOW-INGREDIENT1                    PIC X(030).
-           05 SHOW-INGREDIENT1-QTD                PIC 9(003).
-           05 SHOW-INGREDIENT1-UNIT               PIC X(003).
-           05 SHOW-INGREDIENT2                    PIC X(030).
-           05 SHOW-INGREDIENT2-QTD                PIC 9(003).
-           05 SHOW-INGREDIENT2-UNIT               PIC X(003).
-           05 SHOW-INGREDIENT3                    PIC X(030).
-           05 SHOW-INGREDIENT3-QTD                PIC 9(003).
-           05 SHOW-INGREDIENT3-UNIT               PIC X(003).
-           05 SHOW-INGREDIENT4                    PIC X(030).
-           05 SHOW-INGREDIENT4-QTD                PIC 9(003).
-           05 SHOW-INGREDIENT4-UNIT               PIC X(003).
-           05 SHOW-INGREDIENT5                    PIC X(030).
-           05 SHOW-INGREDIENT5-QTD                PIC 9(003).
-           05 SHOW-INGREDIENT5-UNIT               PIC X(003).
-           05 SHOW-INGREDIENT6                    PIC X(030).
-           05 SHOW-INGREDIENT6-QTD                PIC 9(003).
-           05 SHOW-INGREDIENT6-UNIT               PIC X(003).
-           05 SHOW-CATEGORIE1                     PIC X(030).
-           05 SHOW-CATEGORIE2                     PIC X(030).
-           05 SHOW-CATEGORIE3                     PIC X(030).
+           05 SHOW-SANDWICH.
+               10 SHOW-SR-IID                         PIC X(003).
+               10 SHOW-SR-EID                         PIC X(005).
+               10 SHOW-SR-S-DESC                      PIC X(025).
+               10 SHOW-SR-L-DESC.
+                   15 SHOW-SR-L-DESC1                     PIC X(025).
+                   15 SHOW-SR-L-DESC2                     PIC X(025).
+               10 SHOW-SR-PRICE                       PIC X(002).
+           05 SHOW-INGREDIENTS.
+               10 SHOW-INGREDIENT1                    PIC X(003).
+               10 SHOW-INGREDIENT1-QTD                PIC X(003).
+               10 SHOW-INGREDIENT2                    PIC X(003).
+               10 SHOW-INGREDIENT2-QTD                PIC X(003).
+               10 SHOW-INGREDIENT3                    PIC X(003).
+               10 SHOW-INGREDIENT3-QTD                PIC X(003).
+               10 SHOW-INGREDIENT4                    PIC X(003).
+               10 SHOW-INGREDIENT4-QTD                PIC X(003).
+               10 SHOW-INGREDIENT5                    PIC X(003).
+               10 SHOW-INGREDIENT5-QTD                PIC X(003).
+               10 SHOW-INGREDIENT6                    PIC X(003).
+               10 SHOW-INGREDIENT6-QTD                PIC X(003).
+           05 SHOW-CATEGORIES.
+               10 SHOW-CATEGORIE1                     PIC X(003).
+               10 SHOW-CATEGORIE2                     PIC X(003).
+               10 SHOW-CATEGORIE3                     PIC X(003).
+           05 SHOW-INGREDIENTS1.
+               10 SHOW-ING-NAME1                       PIC X(030).
+               10 SHOW-ING-UNIT-SANDWICH1              PIC X(003).
+               10 SHOW-ING-NAME2                       PIC X(030).
+               10 SHOW-ING-UNIT-SANDWICH2              PIC X(003).
+               10 SHOW-ING-NAME3                       PIC X(030).
+               10 SHOW-ING-UNIT-SANDWICH3              PIC X(003).
+               10 SHOW-ING-NAME4                       PIC X(030).
+               10 SHOW-ING-UNIT-SANDWICH4              PIC X(003).
+               10 SHOW-ING-NAME5                       PIC X(030).
+               10 SHOW-ING-UNIT-SANDWICH5              PIC X(003).
+               10 SHOW-ING-NAME6                       PIC X(030).
+               10 SHOW-ING-UNIT-SANDWICH6              PIC X(003).
+           05 SHOW-CAREGORIES1.
+               10 SHOW-CATEGORIE-NAME1                 PIC X(030).
+               10 SHOW-CATEGORIE-NAME2                 PIC X(030).
+               10 SHOW-CATEGORIE-NAME3                 PIC X(030).
        SCREEN SECTION.
        01  CLEAR-SCREEN BACKGROUND-COLOR 0.
            05 VALUE " " BLANK SCREEN LINE 01 COL 01.
@@ -115,10 +130,11 @@
            05 VALUE BACK-EXIT LINE 25 COL 99 FOREGROUND-COLOR 5.
       ******************************************************************
        01  CONFIRM-RECORD-SCREEN.
-           05 VALUE ALL " " PIC X(107) LINE 7 col 05
+           05 VALUE ALL " " PIC X(107) LINE 6 col 05
                BACKGROUND-COLOR 7.
            05 VALUE ALL " " PIC X(107) LINE 22 col 05
                BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 7 col 05 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 8 col 05 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 9 col 05 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 10 col 05 BACKGROUND-COLOR 7.
@@ -133,6 +149,7 @@
            05 VALUE "  " LINE 19 col 05 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 20 col 05 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 21 col 05 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 7 col 110 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 8 col 110 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 9 col 110 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 10 col 110 BACKGROUND-COLOR 7.
@@ -149,30 +166,77 @@
            05 VALUE "  " LINE 21 col 110 BACKGROUND-COLOR 7.
            05 CONFIRM-REC.
                10 CONFIRM-SANDWICH-REC.
-                   15 CONFIRM-EED PIC X(005) LINE 11 COL 29.
-                   15 CONFIRM-S-DESCRIPTION PIC X(025) LINE 12 COL 29.
+                   15 CONFIRM-EED PIC X(005) LINE 10 COL 29
+                   FROM SHOW-SR-EID (SHOW-INDEX).
+                   15 VALUE CONFIRM-TEXT6 LINE 10 COL PLUS 10.
+                   15 CONFIRM-PRICE PIC 9(002) LINE 10 COL PLUS 2
+                   FROM SHOW-SR-PRICE(SHOW-INDEX).
+                   15 VALUE CONFIRM-TEXT7 LINE 10 COL PLUS 2.
+                   15 CONFIRM-S-DESCRIPTION PIC X(025) LINE 11 COL 29
+                   FROM SHOW-SR-S-DESC (SHOW-INDEX).
                    15 CONFIRM-L-DESCRIPTION.
                        20 CONFIRM-L-DESCRIPTION1 PIC X(025)
-                       LINE 13 COL 29.
+                       LINE 12 COL 29 FROM SHOW-SR-L-DESC1 (SHOW-INDEX).
                        20 CONFIRM-L-DESCRIPTION2 PIC X(025)
-                       LINE 14 COL 29.
+                       LINE 12 COL PLUS 1
+                       FROM SHOW-SR-L-DESC2 (SHOW-INDEX).
                10 CONFIRM-CATEGORIES-REC.
-                   15 CONFIRM-CATEGORIE1 PIC X(030) LINE 15 COL 29.
-                   15 CONFIRM-CATEGORIE2 PIC X(030) LINE 16 COL 29.
-                   15 CONFIRM-CATEGORIE3 PIC X(030) LINE 17 COL 29.
+                   15 CONFIRM-CATEGORIE1 PIC X(030) LINE 13 COL 29
+                   FROM SHOW-CATEGORIE-NAME1 (SHOW-INDEX).
+                   15 CONFIRM-CATEGORIE2 PIC X(030) LINE 14 COL 29
+                   FROM SHOW-CATEGORIE-NAME2 (SHOW-INDEX).
+                   15 CONFIRM-CATEGORIE3 PIC X(030) LINE 15 COL 29
+                   FROM SHOW-CATEGORIE-NAME3 (SHOW-INDEX).
                10 CONFIRM-INGREDIENTS-REC.
-                   15 CONFIRM-INGREDIENT1 PIC X(040) LINE 20 COL 29.
-                   15 CONFIRM-INGREDIENT2 PIC X(040) LINE 21 COL 29.
-                   15 CONFIRM-INGREDIENT3 PIC X(040) LINE 22 COL 29.
-                   15 CONFIRM-INGREDIENT4 PIC X(040) LINE 20 COL 70.
-                   15 CONFIRM-INGREDIENT5 PIC X(040) LINE 20 COL 70.
-                   15 CONFIRM-INGREDIENT6 PIC X(040) LINE 20 COL 70.
-           05 VALUE CONFIRM-TEXT LINE 09 COL 10.
-           05 VALUE CONFIRM-TEXT1 LINE 11 COL 10.
-           05 VALUE CONFIRM-TEXT2 LINE 12 COL 10.
-           05 VALUE CONFIRM-TEXT3 LINE 13 COL 10.
-           05 VALUE CONFIRM-TEXT4 LINE 15 COL 10.
-           05 VALUE CONFIRM-TEXT5 LINE 19 COL 10.
+                   15 CONFIRM-INGREDIENT1 PIC X(030) LINE 16 COL 29
+                   FROM SHOW-ING-NAME1(SHOW-INDEX).
+                   15 CONFIRM-QTD1 PIC 9(003) LINE 16 COL PLUS 2
+                   FROM SHOW-INGREDIENT1-QTD (SHOW-INDEX)
+                   BLANK WHEN ZERO.
+                   15 CONFIRM-UNIT1 PIC X(003) LINE 16 COL PLUS 1
+                   FROM SHOW-ING-UNIT-SANDWICH1 (SHOW-INDEX).
+                   15 CONFIRM-INGREDIENT2 PIC X(030) LINE 16 COL PLUS 5
+                   FROM SHOW-ING-NAME2(SHOW-INDEX).
+                   15 CONFIRM-QTD2 PIC 9(003) LINE 16 COL PLUS 2
+                   FROM SHOW-INGREDIENT2-QTD (SHOW-INDEX)
+                   BLANK WHEN ZERO.
+                   15 CONFIRM-UNIT2 PIC X(003) LINE 16 COL PLUS 1
+                   FROM SHOW-ING-UNIT-SANDWICH2 (SHOW-INDEX).
+                   15 CONFIRM-INGREDIENT3 PIC X(030) LINE 17 COL 29
+                   FROM SHOW-ING-NAME3(SHOW-INDEX).
+                   15 CONFIRM-QTD3 PIC 9(003) LINE 17 COL PLUS 2
+                   FROM SHOW-INGREDIENT3-QTD (SHOW-INDEX)
+                   BLANK WHEN ZERO.
+                   15 CONFIRM-UNIT3 PIC X(003) LINE 17 COL PLUS 1
+                   FROM SHOW-ING-UNIT-SANDWICH3 (SHOW-INDEX).
+                   15 CONFIRM-INGREDIENT4 PIC X(030) LINE 17 COL PLUS 5
+                   FROM SHOW-ING-NAME4(SHOW-INDEX).
+                   15 CONFIRM-QTD4 PIC 9(003) LINE 17 COL PLUS 2
+                   FROM SHOW-INGREDIENT4-QTD (SHOW-INDEX)
+                   BLANK WHEN ZERO.
+                   15 CONFIRM-UNIT4 PIC X(003) LINE 17 COL PLUS 1
+                   FROM SHOW-ING-UNIT-SANDWICH4 (SHOW-INDEX).
+                   15 CONFIRM-INGREDIENT5 PIC X(030) LINE 18 COL 29
+                   FROM SHOW-ING-NAME5(SHOW-INDEX).
+                   15 CONFIRM-QTD5 PIC 9(003) LINE 18 COL PLUS 2
+                   FROM SHOW-INGREDIENT5-QTD (SHOW-INDEX)
+                   BLANK WHEN ZERO.
+                   15 CONFIRM-UNIT5 PIC X(003) LINE 18 COL PLUS 1
+                   FROM SHOW-ING-UNIT-SANDWICH5 (SHOW-INDEX).
+                   15 CONFIRM-INGREDIENT6 PIC X(030) LINE 18 COL PLUS 5
+                   FROM SHOW-ING-NAME6(SHOW-INDEX).
+                   15 CONFIRM-QTD6 PIC 9(003) LINE 18 COL PLUS 2
+                   FROM SHOW-INGREDIENT6-QTD (SHOW-INDEX)
+                   BLANK WHEN ZERO.
+                   15 CONFIRM-UNIT6 PIC X(003) LINE 18 COL PLUS 1
+                   FROM SHOW-ING-UNIT-SANDWICH6 (SHOW-INDEX).
+           05 VALUE CONFIRM-TEXT LINE 08 COL 10 FOREGROUND-COLOR 5.
+           05 VALUE CONFIRM-TEXT1 LINE 10 COL 10.
+           05 VALUE CONFIRM-TEXT2 LINE 11 COL 10.
+           05 VALUE CONFIRM-TEXT3 LINE 12 COL 10.
+           05 VALUE CONFIRM-TEXT4 LINE 13 COL 10.
+           05 VALUE CONFIRM-TEXT5 LINE 16 COL 10.
+           05 CONFIRM-DUMMY PIC X(001) TO DUMMY AUTO.
       ******************************************************************
        01  LIST-FRAME.
            05 VALUE ALL " " PIC X(042) LINE 7 COL 68
@@ -392,49 +456,232 @@
            MOVE SR-CAT-REC TO SC-TABLE (SC-INDEX)
            SET SC-INDEX UP BY 1
            EXIT SECTION.
+       070-OBTAIN-SHOW-SANDIWCH SECTION.
+           SET SR-INDEX TO 0
+           SET SHOW-INDEX TO 0
+           PERFORM WITH TEST AFTER UNTIL SR-INDEX >= NUMBER-SR
+               SET SHOW-INDEX UP BY 1
+               SET SR-INDEX UP BY 1
+               MOVE SR-TABLE(SR-INDEX) TO SHOW-SANDWICH (SHOW-INDEX)
+               PERFORM OBTAIN-SHOW-INGREDIENTS
+               PERFORM OBTAIN-SHOW-CATEGORIES
+           END-PERFORM
+           EXIT SECTION.
+       OBTAIN-SHOW-CATEGORIES SECTION.
+           SET SC-INDEX TO 0
+           MOVE ZERO TO COUNT-ING
+           PERFORM WITH TEST AFTER UNTIL SC-INDEX >= NUMBER-SC
+               OR COUNT-ING >= 3
+               ADD 1 TO SC-INDEX
+                   IF SHOW-SR-IID (SHOW-INDEX) =
+                       TABLE-SC-SAND-ID (SC-INDEX) THEN
+                       ADD 1 TO COUNT-ING
+                       PERFORM EVALUATE-COUNT-CAT
+           END-PERFORM
+           EXIT SECTION.
+       EVALUATE-COUNT-CAT SECTION.
+           EVALUATE COUNT-ING
+               WHEN 1
+                   MOVE TABLE-SC-CAT-ID (SC-INDEX) TO
+                           SHOW-CATEGORIE1 (SHOW-INDEX)
+                   PERFORM OBTAIN-CATEGORIES1-1
+               WHEN 2
+                   MOVE TABLE-SC-CAT-ID (SC-INDEX) TO
+                           SHOW-CATEGORIE2 (SHOW-INDEX)
+                   PERFORM OBTAIN-CATEGORIES1-2
+               WHEN 3
+                   MOVE TABLE-SC-CAT-ID (SC-INDEX) TO
+                           SHOW-CATEGORIE3 (SHOW-INDEX)
+                   PERFORM OBTAIN-CATEGORIES1-3
+           END-EVALUATE
+           EXIT SECTION.
+       OBTAIN-CATEGORIES1-1 SECTION.
+           SET CAT-INDEX TO 0
+           PERFORM WITH TEST AFTER UNTIL CAT-INDEX >= NUMBER-CAT
+               ADD 1 TO CAT-INDEX
+               IF SHOW-CATEGORIE1 (SHOW-INDEX) =
+                   TABLE-CAT-ID (CAT-INDEX) THEN
+                   MOVE TABLE-CAT-NAME(CAT-INDEX) TO
+                   SHOW-CATEGORIE-NAME1 (SHOW-INDEX)
+               END-IF
+           END-PERFORM
+           EXIT SECTION.
+       OBTAIN-CATEGORIES1-2 SECTION.
+           SET CAT-INDEX TO 0
+           PERFORM WITH TEST AFTER UNTIL CAT-INDEX >= NUMBER-CAT
+               ADD 1 TO CAT-INDEX
+               IF SHOW-CATEGORIE2 (SHOW-INDEX) =
+                   TABLE-CAT-ID (CAT-INDEX) THEN
+                   MOVE TABLE-CAT-NAME(CAT-INDEX) TO
+                   SHOW-CATEGORIE-NAME2 (SHOW-INDEX)
+               END-IF
+           END-PERFORM
+           EXIT SECTION.
+       OBTAIN-CATEGORIES1-3 SECTION.
+           SET CAT-INDEX TO 0
+           PERFORM WITH TEST AFTER UNTIL CAT-INDEX >= NUMBER-CAT
+               ADD 1 TO CAT-INDEX
+               IF SHOW-CATEGORIE3 (SHOW-INDEX) =
+                   TABLE-CAT-ID (CAT-INDEX) THEN
+                   MOVE TABLE-CAT-NAME(CAT-INDEX) TO
+                   SHOW-CATEGORIE-NAME3 (SHOW-INDEX)
+               END-IF
+           END-PERFORM
+           EXIT SECTION.
+       OBTAIN-SHOW-INGREDIENTS SECTION.
+           SET SI-INDEX TO 0
+           MOVE ZERO TO COUNT-ING
+           PERFORM WITH TEST AFTER UNTIL SI-INDEX >= NUMBER-SI
+               OR COUNT-ING >= 6
+               ADD 1 TO SI-INDEX
+               IF SHOW-SR-IID (SHOW-INDEX) = TABLE-SI-SAND-ID (SI-INDEX)
+                   THEN
+                   ADD 1 TO COUNT-ING
+                   PERFORM EVALUATE-COUNT-ING
+           END-PERFORM
+           EXIT SECTION.
+       EVALUATE-COUNT-ING SECTION.
+           EVALUATE COUNT-ING
+               WHEN 1
+                   MOVE TABLE-SI-ING-ID (SI-INDEX) TO
+                   SHOW-INGREDIENT1 (SHOW-INDEX)
+                   MOVE TABLE-SI-ING-QTD (SI-INDEX)
+                   TO SHOW-INGREDIENT1-QTD (SHOW-INDEX)
+                   PERFORM OBTAIN-INGREDIENTS1-1
+               WHEN 2
+                   MOVE TABLE-SI-ING-ID (SI-INDEX) TO
+                   SHOW-INGREDIENT2 (SHOW-INDEX)
+                   MOVE TABLE-SI-ING-QTD (SI-INDEX)
+                   TO SHOW-INGREDIENT2-QTD (SHOW-INDEX)
+                   PERFORM OBTAIN-INGREDIENTS1-2
+               WHEN 3
+                   MOVE TABLE-SI-ING-ID (SI-INDEX) TO
+                   SHOW-INGREDIENT3 (SHOW-INDEX)
+                   MOVE TABLE-SI-ING-QTD (SI-INDEX)
+                   TO SHOW-INGREDIENT3-QTD (SHOW-INDEX)
+                   PERFORM OBTAIN-INGREDIENTS1-3
+               WHEN 4
+                   MOVE TABLE-SI-ING-ID (SI-INDEX) TO
+                   SHOW-INGREDIENT4 (SHOW-INDEX)
+                   MOVE TABLE-SI-ING-QTD (SI-INDEX)
+                   TO SHOW-INGREDIENT4-QTD (SHOW-INDEX)
+                   PERFORM OBTAIN-INGREDIENTS1-4
+               WHEN 5
+                   MOVE TABLE-SI-ING-ID (SI-INDEX) TO
+                   SHOW-INGREDIENT5 (SHOW-INDEX)
+                   MOVE TABLE-SI-ING-QTD (SI-INDEX)
+                   TO SHOW-INGREDIENT5-QTD (SHOW-INDEX)
+                   PERFORM OBTAIN-INGREDIENTS1-5
+               WHEN 6
+                   MOVE TABLE-SI-ING-ID (SI-INDEX) TO
+                   SHOW-INGREDIENT6 (SHOW-INDEX)
+                   MOVE TABLE-SI-ING-QTD (SI-INDEX)
+                   TO SHOW-INGREDIENT6-QTD (SHOW-INDEX)
+                   PERFORM OBTAIN-INGREDIENTS1-6
+           END-EVALUATE
+           EXIT SECTION.
+       OBTAIN-INGREDIENTS1-1 SECTION.
+           SET ING-INDEX TO 0
+           PERFORM WITH TEST AFTER UNTIL ING-INDEX >= NUMBER-ING
+               ADD 1 TO ING-INDEX
+               IF SHOW-INGREDIENT1 (SHOW-INDEX) =
+                   TABLE-ING-ID (ING-INDEX) THEN
+                   MOVE TABLE-ING-NAME(ING-INDEX) TO
+                   SHOW-ING-NAME1 (SHOW-INDEX)
+                   MOVE TABLE-ING-UNIT-SANDWICH(ING-INDEX) TO
+                   SHOW-ING-UNIT-SANDWICH1(SHOW-INDEX)
+               END-IF
+           END-PERFORM
+           EXIT SECTION.
+       OBTAIN-INGREDIENTS1-2 SECTION.
+           SET ING-INDEX TO 0
+           PERFORM WITH TEST AFTER UNTIL ING-INDEX >= NUMBER-ING
+               ADD 1 TO ING-INDEX
+               IF SHOW-INGREDIENT2 (SHOW-INDEX) =
+                   TABLE-ING-ID (ING-INDEX) THEN
+                   MOVE TABLE-ING-NAME(ING-INDEX) TO
+                   SHOW-ING-NAME2 (SHOW-INDEX)
+                   MOVE TABLE-ING-UNIT-SANDWICH(ING-INDEX) TO
+                   SHOW-ING-UNIT-SANDWICH2(SHOW-INDEX)
+               END-IF
+           END-PERFORM
+           EXIT SECTION.
+       OBTAIN-INGREDIENTS1-3 SECTION.
+           SET ING-INDEX TO 0
+           PERFORM WITH TEST AFTER UNTIL ING-INDEX >= NUMBER-ING
+               ADD 1 TO ING-INDEX
+               IF SHOW-INGREDIENT3 (SHOW-INDEX) =
+                   TABLE-ING-ID (ING-INDEX) THEN
+                   MOVE TABLE-ING-NAME(ING-INDEX) TO
+                   SHOW-ING-NAME3 (SHOW-INDEX)
+                   MOVE TABLE-ING-UNIT-SANDWICH(ING-INDEX) TO
+                   SHOW-ING-UNIT-SANDWICH3(SHOW-INDEX)
+               END-IF
+           END-PERFORM
+           EXIT SECTION.
+       OBTAIN-INGREDIENTS1-4 SECTION.
+           SET ING-INDEX TO 0
+           PERFORM WITH TEST AFTER UNTIL ING-INDEX >= NUMBER-ING
+               ADD 1 TO ING-INDEX
+               IF SHOW-INGREDIENT4 (SHOW-INDEX) =
+                   TABLE-ING-ID (ING-INDEX) THEN
+                   MOVE TABLE-ING-NAME(ING-INDEX) TO
+                   SHOW-ING-NAME4 (SHOW-INDEX)
+                   MOVE TABLE-ING-UNIT-SANDWICH(ING-INDEX) TO
+                   SHOW-ING-UNIT-SANDWICH4(SHOW-INDEX)
+               END-IF
+           END-PERFORM
+           EXIT SECTION.
+       OBTAIN-INGREDIENTS1-5 SECTION.
+           SET ING-INDEX TO 0
+           PERFORM WITH TEST AFTER UNTIL ING-INDEX >= NUMBER-ING
+               ADD 1 TO ING-INDEX
+               IF SHOW-INGREDIENT5 (SHOW-INDEX) =
+                   TABLE-ING-ID (ING-INDEX) THEN
+                   MOVE TABLE-ING-NAME(ING-INDEX) TO
+                   SHOW-ING-NAME5 (SHOW-INDEX)
+                   MOVE TABLE-ING-UNIT-SANDWICH(ING-INDEX) TO
+                   SHOW-ING-UNIT-SANDWICH5(SHOW-INDEX)
+               END-IF
+           END-PERFORM
+           EXIT SECTION.
+       OBTAIN-INGREDIENTS1-6 SECTION.
+           SET ING-INDEX TO 0
+           PERFORM WITH TEST AFTER UNTIL ING-INDEX >= NUMBER-ING
+               ADD 1 TO ING-INDEX
+               IF SHOW-INGREDIENT6 (SHOW-INDEX) =
+                   TABLE-ING-ID (ING-INDEX) THEN
+                   MOVE TABLE-ING-NAME(ING-INDEX) TO
+                   SHOW-ING-NAME6 (SHOW-INDEX)
+                   MOVE TABLE-ING-UNIT-SANDWICH(ING-INDEX) TO
+                   SHOW-ING-UNIT-SANDWICH6(SHOW-INDEX)
+               END-IF
+           END-PERFORM
+           EXIT SECTION.
        100-MAIN SECTION.
-           PERFORM TEST-TABLE
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
+      *    INTRODUZIR MENU PARA ESCOLHER ENTRE PESQUISAR POR INGREDIENTES
+      *>      OU POR CATEGORIAS
            PERFORM WITH TEST AFTER UNTIL WS-ACCEPT-OPTION = ZEROS
                PERFORM SEARCH1
            END-PERFORM
            EXIT PROGRAM.
-       TEST-TABLE SECTION.
-           SET ING-INDEX TO 0
-           PERFORM WITH TEST AFTER UNTIL ING-INDEX >= NUMBER-ING
-               SET ING-INDEX UP BY 1
-               DISPLAY ING-TABLE (ING-INDEX) AT 0101
-               ACCEPT OMITTED
-           END-PERFORM
-           EXIT SECTION.
        SEARCH1 SECTION.
            PERFORM LIST-ING
-           SET SI-INDEX TO 1
-           PERFORM UNTIL SI-INDEX >= NUMBER-SI
-               IF TABLE-SI-ING-ID (SI-INDEX) = WS-ACCEPT-OPTION THEN
-                   MOVE TABLE-SI-SAND-ID (SI-INDEX) TO WS-TEMP-ID
-                   PERFORM FILL-RECORD
+           SET SHOW-INDEX TO 0
+           PERFORM WITH TEST AFTER UNTIL SHOW-INDEX >= NUMBER-SHOW
+               SET SHOW-INDEX UP BY 1
+               IF WS-ACCEPT-OPTION = SHOW-INGREDIENT1(SHOW-INDEX) OR
+                   SHOW-INGREDIENT2 (SHOW-INDEX) OR
+                   SHOW-INGREDIENT3 (SHOW-INDEX) OR
+                   SHOW-INGREDIENT4 (SHOW-INDEX) OR
+                   SHOW-INGREDIENT5 (SHOW-INDEX) OR
+                   SHOW-INGREDIENT6 (SHOW-INDEX) THEN
+                       DISPLAY CLEAR-SCREEN
+                       DISPLAY MAIN-SCREEN
+                       ACCEPT CONFIRM-RECORD-SCREEN
                END-IF
-               SET SI-INDEX UP BY 1
-           END-PERFORM
-           EXIT SECTION.
-       FILL-RECORD SECTION.
-           SET SR-INDEX TO 1
-           PERFORM UNTIL SR-INDEX >= NUMBER-SR
-               IF TABLE-SR-IID (SR-INDEX) = WS-TEMP-ID THEN
-                   PERFORM OBTAIN-SANDWICH-INFO
-                   PERFORM OBTAIN-INGREDIENTS-INFO
-                   PERFORM OBTAIN-CATEGORIES-INFO
-                   DISPLAY CLEAR-SCREEN
-                   DISPLAY MAIN-SCREEN
-                   DISPLAY CONFIRM-RECORD-SCREEN
-                   ACCEPT OMITTED
-               ELSE
-                   DISPLAY CLEAR-SCREEN
-                   DISPLAY MAIN-SCREEN
-               END-IF
-               SET SR-INDEX UP BY 1
            END-PERFORM
            EXIT SECTION.
        LIST-ING SECTION.
@@ -511,48 +758,6 @@
                END-IF
            END-PERFORM
        EXIT SECTION.
-       OBTAIN-SANDWICH-INFO SECTION.
-           MOVE TABLE-SR-IID (SR-INDEX) TO WS-SEARCH-ID
-           MOVE TABLE-SR-EID (SR-INDEX) TO CONFIRM-EED
-           MOVE TABLE-SR-S-DESC (SR-INDEX) TO CONFIRM-S-DESCRIPTION
-           MOVE TABLE-SR-L-DESC1 (SR-INDEX) TO CONFIRM-L-DESCRIPTION1
-           MOVE TABLE-SR-L-DESC2 (SR-INDEX) TO CONFIRM-L-DESCRIPTION2
-           EXIT SECTION.
-       OBTAIN-INGREDIENTS-INFO SECTION.
-           SET SI-INDEX TO 1
-           PERFORM WITH TEST AFTER UNTIL SI-INDEX >= NUMBER-SI
-               IF TABLE-SI-SAND-ID (SI-INDEX) = WS-SEARCH-ID THEN
-                   MOVE TABLE-SI-ING-ID (SI-INDEX) TO WS-INGREDIENT1
-                   MOVE TABLE-SI-ING-QTD (SI-INDEX)
-                   TO WS-INGREDIENT-QTD1
-                   SET ING-INDEX TO 1
-                   PERFORM WITH TEST AFTER UNTIL
-                   TABLE-ING-ID (ING-INDEX) = WS-INGREDIENT1
-                       IF TABLE-ING-ID (ING-INDEX) = WS-INGREDIENT1 THEN
-                           MOVE TABLE-ING-NAME (ING-INDEX) TO
-                           WS-ING-NAME1
-                       END-IF
-                   END-PERFORM
-               END-IF
-               SET SI-INDEX UP BY 1
-           END-PERFORM
-           EXIT SECTION.
-       OBTAIN-CATEGORIES-INFO SECTION.
-           SET SC-INDEX TO 1
-           PERFORM WITH TEST AFTER UNTIL SC-INDEX >= NUMBER-SC
-               IF TABLE-SC-SAND-ID (SC-INDEX) = WS-SEARCH-ID THEN
-                   MOVE TABLE-SC-CAT-ID (SC-INDEX) TO WS-CATEGORIE1
-                   SET CAT-INDEX TO 1
-                   PERFORM WITH TEST AFTER UNTIL
-                   TABLE-CAT-ID (CAT-INDEX) = WS-CATEGORIE1
-                       MOVE TABLE-CAT-NAME (CAT-INDEX) TO WS-CAT-NAME1
-                       SET CAT-INDEX UP BY 1
-                   END-PERFORM
-
-               END-IF
-               SET SC-INDEX UP BY 1
-           END-PERFORM
-           EXIT SECTION.
       ******************************************************************
        800-FILE-CHECK SECTION.
            MOVE ZEROS TO FILE-STATUS
