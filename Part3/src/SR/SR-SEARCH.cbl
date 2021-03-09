@@ -129,6 +129,78 @@
            05 VALUE ALL " " PIC X(023) LINE 26 COL 98.
            05 VALUE BACK-EXIT LINE 25 COL 99 FOREGROUND-COLOR 5.
       ******************************************************************
+       01  MAIN-SEARCH-SCREEN
+           BACKGROUND-COLOR 7, FOREGROUND-COLOR 0, AUTO, REQUIRED.
+           03 VALUE ALL " " PIC X(50) LINE 09 COL 35.
+           03 VALUE ALL " " PIC X(50) LINE 10 COL 35.
+           03 VALUE ALL " " PIC X(50) LINE 11 COL 35.
+           03 VALUE ALL " " PIC X(50) LINE 12 COL 35.
+           03 VALUE ALL " " PIC X(50) LINE 13 COL 35.
+           03 VALUE ALL " " PIC X(50) LINE 14 COL 35.
+           03 VALUE ALL " " PIC X(50) LINE 15 COL 35.
+           03 VALUE ALL " " PIC X(50) LINE 16 COL 35.
+           03 VALUE ALL " " PIC X(50) LINE 17 COL 35.
+      *     03 VALUE MAIN-SEARCH-OPTION1 LINE 11 COL 50.
+      *     03 VALUE MAIN-SEARCH-OPTION2 LINE 12 COL 50.
+      *     03 VALUE MAIN-SEARCH-OPTION3 LINE 13 COL 50.
+      *     03 VALUE MAIN-SEARCH-OPTION4 LINE 14 COL 50.
+      *     03 VALUE MAIN-SEARCH-OPTION5 LINE 15 COL 50.
+      *     03 VALUE MAIN-SEARCH-CHOICE LINE 20 COL 45
+      *     REVERSE-VIDEO.
+           03 MP-OPTION PIC 9(02) LINE 20 COL 73 TO WS-OPTION
+               BLANK WHEN ZERO REVERSE-VIDEO.
+      ******************************************************************
+       01  REGISTER-ING-SCREEN
+           BACKGROUND-COLOR 0, FOREGROUND-COLOR 7.
+           05 VALUE ADD-ING-MENU-TEXT LINE 9 COL 17.
+           05 VALUE ADD-ING-MENU-TEXT1 LINE 12 COL 08.
+           05 VALUE ALL " " PIC X(055) LINE 7 COL 09
+               BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(055) LINE 22 COL 09
+               BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 8 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 9 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 8 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 9 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 62 BACKGROUND-COLOR 7.
+           05 ING-ACCEPT PIC 9(003) LINE 12 COL 27 TO WS-ING-ACCEPT.
+           05 REG-ING-REC.
+               10 REG-ING1 PIC 9(003) LINE 13 COL 15
+               FROM WS-INGREDIENT1 BLANK WHEN ZERO.
+               10 REG-ING2 PIC 9(003) LINE 14 COL 15
+               FROM WS-INGREDIENT2 BLANK WHEN ZERO.
+               10 REG-ING3 PIC 9(003) LINE 15 COL 15
+               FROM WS-INGREDIENT3 BLANK WHEN ZERO.
+               10 REG-ING4 PIC 9(003) LINE 16 COL 15
+               FROM WS-INGREDIENT4 BLANK WHEN ZERO.
+               10 REG-ING5 PIC 9(003) LINE 17 COL 15
+               FROM WS-INGREDIENT5 BLANK WHEN ZERO.
+               10 REG-ING6 PIC 9(003) LINE 18 COL 15
+               FROM WS-INGREDIENT6 BLANK WHEN ZERO.
+      ******************************************************************
        01  CONFIRM-RECORD-SCREEN.
            05 VALUE ALL " " PIC X(107) LINE 6 col 05
                BACKGROUND-COLOR 7.
@@ -463,11 +535,11 @@
                SET SHOW-INDEX UP BY 1
                SET SR-INDEX UP BY 1
                MOVE SR-TABLE(SR-INDEX) TO SHOW-SANDWICH (SHOW-INDEX)
-               PERFORM OBTAIN-SHOW-INGREDIENTS
-               PERFORM OBTAIN-SHOW-CATEGORIES
+               PERFORM 130-OBTAIN-SHOW-INGREDIENTS
+               PERFORM 080-OBTAIN-SHOW-CATEGORIES
            END-PERFORM
            EXIT SECTION.
-       OBTAIN-SHOW-CATEGORIES SECTION.
+       080-OBTAIN-SHOW-CATEGORIES SECTION.
            SET SC-INDEX TO 0
            MOVE ZERO TO COUNT-ING
            PERFORM WITH TEST AFTER UNTIL SC-INDEX >= NUMBER-SC
@@ -476,26 +548,26 @@
                    IF SHOW-SR-IID (SHOW-INDEX) =
                        TABLE-SC-SAND-ID (SC-INDEX) THEN
                        ADD 1 TO COUNT-ING
-                       PERFORM EVALUATE-COUNT-CAT
+                       PERFORM 090-EVALUATE-COUNT-CAT
            END-PERFORM
            EXIT SECTION.
-       EVALUATE-COUNT-CAT SECTION.
+       090-EVALUATE-COUNT-CAT SECTION.
            EVALUATE COUNT-ING
                WHEN 1
                    MOVE TABLE-SC-CAT-ID (SC-INDEX) TO
                            SHOW-CATEGORIE1 (SHOW-INDEX)
-                   PERFORM OBTAIN-CATEGORIES1-1
+                   PERFORM 100-OBTAIN-CATEGORIES1-1
                WHEN 2
                    MOVE TABLE-SC-CAT-ID (SC-INDEX) TO
                            SHOW-CATEGORIE2 (SHOW-INDEX)
-                   PERFORM OBTAIN-CATEGORIES1-2
+                   PERFORM 110-OBTAIN-CATEGORIES1-2
                WHEN 3
                    MOVE TABLE-SC-CAT-ID (SC-INDEX) TO
                            SHOW-CATEGORIE3 (SHOW-INDEX)
-                   PERFORM OBTAIN-CATEGORIES1-3
+                   PERFORM 120-OBTAIN-CATEGORIES1-3
            END-EVALUATE
            EXIT SECTION.
-       OBTAIN-CATEGORIES1-1 SECTION.
+       100-OBTAIN-CATEGORIES1-1 SECTION.
            SET CAT-INDEX TO 0
            PERFORM WITH TEST AFTER UNTIL CAT-INDEX >= NUMBER-CAT
                ADD 1 TO CAT-INDEX
@@ -506,7 +578,7 @@
                END-IF
            END-PERFORM
            EXIT SECTION.
-       OBTAIN-CATEGORIES1-2 SECTION.
+       110-OBTAIN-CATEGORIES1-2 SECTION.
            SET CAT-INDEX TO 0
            PERFORM WITH TEST AFTER UNTIL CAT-INDEX >= NUMBER-CAT
                ADD 1 TO CAT-INDEX
@@ -517,7 +589,7 @@
                END-IF
            END-PERFORM
            EXIT SECTION.
-       OBTAIN-CATEGORIES1-3 SECTION.
+       120-OBTAIN-CATEGORIES1-3 SECTION.
            SET CAT-INDEX TO 0
            PERFORM WITH TEST AFTER UNTIL CAT-INDEX >= NUMBER-CAT
                ADD 1 TO CAT-INDEX
@@ -528,7 +600,7 @@
                END-IF
            END-PERFORM
            EXIT SECTION.
-       OBTAIN-SHOW-INGREDIENTS SECTION.
+       130-OBTAIN-SHOW-INGREDIENTS SECTION.
            SET SI-INDEX TO 0
            MOVE ZERO TO COUNT-ING
            PERFORM WITH TEST AFTER UNTIL SI-INDEX >= NUMBER-SI
@@ -537,50 +609,50 @@
                IF SHOW-SR-IID (SHOW-INDEX) = TABLE-SI-SAND-ID (SI-INDEX)
                    THEN
                    ADD 1 TO COUNT-ING
-                   PERFORM EVALUATE-COUNT-ING
+                   PERFORM 140-EVALUATE-COUNT-ING
            END-PERFORM
            EXIT SECTION.
-       EVALUATE-COUNT-ING SECTION.
+       140-EVALUATE-COUNT-ING SECTION.
            EVALUATE COUNT-ING
                WHEN 1
                    MOVE TABLE-SI-ING-ID (SI-INDEX) TO
                    SHOW-INGREDIENT1 (SHOW-INDEX)
                    MOVE TABLE-SI-ING-QTD (SI-INDEX)
                    TO SHOW-INGREDIENT1-QTD (SHOW-INDEX)
-                   PERFORM OBTAIN-INGREDIENTS1-1
+                   PERFORM 150-OBTAIN-INGREDIENTS1-1
                WHEN 2
                    MOVE TABLE-SI-ING-ID (SI-INDEX) TO
                    SHOW-INGREDIENT2 (SHOW-INDEX)
                    MOVE TABLE-SI-ING-QTD (SI-INDEX)
                    TO SHOW-INGREDIENT2-QTD (SHOW-INDEX)
-                   PERFORM OBTAIN-INGREDIENTS1-2
+                   PERFORM 160-OBTAIN-INGREDIENTS1-2
                WHEN 3
                    MOVE TABLE-SI-ING-ID (SI-INDEX) TO
                    SHOW-INGREDIENT3 (SHOW-INDEX)
                    MOVE TABLE-SI-ING-QTD (SI-INDEX)
                    TO SHOW-INGREDIENT3-QTD (SHOW-INDEX)
-                   PERFORM OBTAIN-INGREDIENTS1-3
+                   PERFORM 170-OBTAIN-INGREDIENTS1-3
                WHEN 4
                    MOVE TABLE-SI-ING-ID (SI-INDEX) TO
                    SHOW-INGREDIENT4 (SHOW-INDEX)
                    MOVE TABLE-SI-ING-QTD (SI-INDEX)
                    TO SHOW-INGREDIENT4-QTD (SHOW-INDEX)
-                   PERFORM OBTAIN-INGREDIENTS1-4
+                   PERFORM 180-OBTAIN-INGREDIENTS1-4
                WHEN 5
                    MOVE TABLE-SI-ING-ID (SI-INDEX) TO
                    SHOW-INGREDIENT5 (SHOW-INDEX)
                    MOVE TABLE-SI-ING-QTD (SI-INDEX)
                    TO SHOW-INGREDIENT5-QTD (SHOW-INDEX)
-                   PERFORM OBTAIN-INGREDIENTS1-5
+                   PERFORM 190-OBTAIN-INGREDIENTS1-5
                WHEN 6
                    MOVE TABLE-SI-ING-ID (SI-INDEX) TO
                    SHOW-INGREDIENT6 (SHOW-INDEX)
                    MOVE TABLE-SI-ING-QTD (SI-INDEX)
                    TO SHOW-INGREDIENT6-QTD (SHOW-INDEX)
-                   PERFORM OBTAIN-INGREDIENTS1-6
+                   PERFORM 200-OBTAIN-INGREDIENTS1-6
            END-EVALUATE
            EXIT SECTION.
-       OBTAIN-INGREDIENTS1-1 SECTION.
+       150-OBTAIN-INGREDIENTS1-1 SECTION.
            SET ING-INDEX TO 0
            PERFORM WITH TEST AFTER UNTIL ING-INDEX >= NUMBER-ING
                ADD 1 TO ING-INDEX
@@ -593,7 +665,7 @@
                END-IF
            END-PERFORM
            EXIT SECTION.
-       OBTAIN-INGREDIENTS1-2 SECTION.
+       160-OBTAIN-INGREDIENTS1-2 SECTION.
            SET ING-INDEX TO 0
            PERFORM WITH TEST AFTER UNTIL ING-INDEX >= NUMBER-ING
                ADD 1 TO ING-INDEX
@@ -606,7 +678,7 @@
                END-IF
            END-PERFORM
            EXIT SECTION.
-       OBTAIN-INGREDIENTS1-3 SECTION.
+       170-OBTAIN-INGREDIENTS1-3 SECTION.
            SET ING-INDEX TO 0
            PERFORM WITH TEST AFTER UNTIL ING-INDEX >= NUMBER-ING
                ADD 1 TO ING-INDEX
@@ -619,7 +691,7 @@
                END-IF
            END-PERFORM
            EXIT SECTION.
-       OBTAIN-INGREDIENTS1-4 SECTION.
+       180-OBTAIN-INGREDIENTS1-4 SECTION.
            SET ING-INDEX TO 0
            PERFORM WITH TEST AFTER UNTIL ING-INDEX >= NUMBER-ING
                ADD 1 TO ING-INDEX
@@ -632,7 +704,7 @@
                END-IF
            END-PERFORM
            EXIT SECTION.
-       OBTAIN-INGREDIENTS1-5 SECTION.
+       190-OBTAIN-INGREDIENTS1-5 SECTION.
            SET ING-INDEX TO 0
            PERFORM WITH TEST AFTER UNTIL ING-INDEX >= NUMBER-ING
                ADD 1 TO ING-INDEX
@@ -645,7 +717,7 @@
                END-IF
            END-PERFORM
            EXIT SECTION.
-       OBTAIN-INGREDIENTS1-6 SECTION.
+       200-OBTAIN-INGREDIENTS1-6 SECTION.
            SET ING-INDEX TO 0
            PERFORM WITH TEST AFTER UNTIL ING-INDEX >= NUMBER-ING
                ADD 1 TO ING-INDEX
@@ -658,21 +730,22 @@
                END-IF
            END-PERFORM
            EXIT SECTION.
-       100-MAIN SECTION.
+       210-MAIN SECTION.
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
+           MOVE ZEROS TO COUNT-ING
       *    INTRODUZIR MENU PARA ESCOLHER ENTRE PESQUISAR POR INGREDIENTES
       *>      OU POR CATEGORIAS
            PERFORM WITH TEST AFTER UNTIL WS-ACCEPT-OPTION = ZEROS
-               PERFORM SEARCH1
+               PERFORM 220-SEARCH-BY-ING
            END-PERFORM
            EXIT PROGRAM.
-       SEARCH1 SECTION.
-           PERFORM LIST-ING
+       220-SEARCH-BY-ING SECTION.
+           PERFORM 700-LIST-ING
            SET SHOW-INDEX TO 0
            PERFORM WITH TEST AFTER UNTIL SHOW-INDEX >= NUMBER-SHOW
                SET SHOW-INDEX UP BY 1
-               IF WS-ACCEPT-OPTION = SHOW-INGREDIENT1(SHOW-INDEX) OR
+               IF WS-ING-ACCEPT = SHOW-INGREDIENT1(SHOW-INDEX) OR
                    SHOW-INGREDIENT2 (SHOW-INDEX) OR
                    SHOW-INGREDIENT3 (SHOW-INDEX) OR
                    SHOW-INGREDIENT4 (SHOW-INDEX) OR
@@ -684,34 +757,37 @@
                END-IF
            END-PERFORM
            EXIT SECTION.
-       LIST-ING SECTION.
+       600-LIST-CAT SECTION.
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY LIST-FRAME
+      *     DISPLAY REGISTER-CAT-SCREEN
            MOVE ZEROES TO NEW-INGREDID
            MOVE SPACES TO TRUE-YES
-           SET ING-INDEX TO 1
+           SET CAT-INDEX TO 1
            MOVE 10 TO ILIN
            MOVE 72 TO ICOL
            MOVE 1 TO COUNTPAGE
            MOVE 10 TO MAXPERPAGE
-           PERFORM UNTIL ING-INDEX >= NUMBER-ING
-               DISPLAY INGREDIENT-LIST1
+           PERFORM WITH TEST AFTER UNTIL CAT-INDEX >= NUMBER-CAT
+               DISPLAY CATEGORY-LIST1
+      *         DISPLAY REGISTER-CAT-SCREEN
+               SET CAT-INDEX UP BY 1
                ADD 1 TO ILIN
                ADD 1 TO MAXPERPAGE
-               SET ING-INDEX UP BY 1
                IF ILIN = 20 THEN
                    MOVE NEXT-PAGE TO TEXT2
                    DISPLAY LIST-FRAME
-                   MOVE ING-INSTR TO INSTRUCTION-MESSAGE
+                   MOVE CAT-INSTR TO INSTRUCTION-MESSAGE
                    DISPLAY INSTRUCTION-MESSAGE
-                   ACCEPT WS-ACCEPT-OPTION
+      *             ACCEPT CAT-ACCEPT
                    IF KEY-STATUS = F3 THEN
                        EXIT SECTION
                    END-IF
                    IF KEY-STATUS = F1 AND COUNTPAGE > 1
                        MOVE SPACE TO TEXT2
                        DISPLAY CLEAR-SCREEN
+      *                 DISPLAY REGISTER-CAT-SCREEN
                        DISPLAY MAIN-SCREEN
                        DISPLAY LIST-FRAME
                        MOVE 10 TO ILIN
@@ -727,6 +803,85 @@
                            MOVE PREVIOUS-PAGE TO TEXT1
                            MOVE NEXT-PAGE TO TEXT2
                            DISPLAY CLEAR-SCREEN
+      *                     DISPLAY REGISTER-CAT-SCREEN
+                           DISPLAY MAIN-SCREEN
+                           DISPLAY LIST-FRAME
+                           MOVE 10 TO ILIN
+                           ADD 1 TO COUNTPAGE
+                           MOVE 10 TO MAXPERPAGE
+                       ELSE
+                           EXIT SECTION
+                       END-IF
+                   END-IF
+               END-IF
+               IF CAT-INDEX >= NUMBER-CAT
+                   MOVE LAST-PAGE TO TEXT2
+                   DISPLAY LIST-FRAME
+                   MOVE CAT-INSTR TO INSTRUCTION-MESSAGE
+                   DISPLAY INSTRUCTION-MESSAGE
+      *             ACCEPT CAT-ACCEPT
+                   IF KEY-STATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
+                   IF KEY-STATUS = F1 AND COUNTPAGE > 1
+                       DISPLAY CLEAR-SCREEN
+      *                 DISPLAY REGISTER-CAT-SCREEN
+                       DISPLAY MAIN-SCREEN
+                       DISPLAY LIST-FRAME
+                       MOVE 10 TO ILIN
+                       SET ING-INDEX DOWN BY MAXPERPAGE
+                       SUBTRACT 1 FROM COUNTPAGE
+                       MOVE 10 TO MAXPERPAGE
+                   END-IF
+               END-IF
+           END-PERFORM.
+       700-LIST-ING SECTION.
+           DISPLAY CLEAR-SCREEN
+           DISPLAY MAIN-SCREEN
+           DISPLAY LIST-FRAME
+           DISPLAY REGISTER-ING-SCREEN
+           MOVE ZEROES TO NEW-INGREDID
+           MOVE SPACES TO TRUE-YES
+           SET ING-INDEX TO 1
+           MOVE 10 TO ILIN
+           MOVE 72 TO ICOL
+           MOVE 1 TO COUNTPAGE
+           MOVE 10 TO MAXPERPAGE
+           PERFORM UNTIL ING-INDEX >= NUMBER-ING
+               DISPLAY INGREDIENT-LIST1
+               DISPLAY REGISTER-ING-SCREEN
+               ADD 1 TO ILIN
+               ADD 1 TO MAXPERPAGE
+               SET ING-INDEX UP BY 1
+               IF ILIN = 20 THEN
+                   MOVE NEXT-PAGE TO TEXT2
+                   DISPLAY LIST-FRAME
+                   MOVE ING-INSTR TO INSTRUCTION-MESSAGE
+                   DISPLAY INSTRUCTION-MESSAGE
+                   ACCEPT ING-ACCEPT
+                   IF KEY-STATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
+                   IF KEY-STATUS = F1 AND COUNTPAGE > 1
+                       MOVE SPACE TO TEXT2
+                       DISPLAY CLEAR-SCREEN
+                       DISPLAY REGISTER-ING-SCREEN
+                       DISPLAY MAIN-SCREEN
+                       DISPLAY LIST-FRAME
+                       MOVE 10 TO ILIN
+                       SET ING-INDEX DOWN BY MAXPERPAGE
+                       SUBTRACT 1 FROM COUNTPAGE
+                       MOVE 10 TO MAXPERPAGE
+                           IF COUNTPAGE = 1 THEN
+                               MOVE SPACES TO TEXT1
+                               DISPLAY LIST-FRAME
+                           END-IF
+                   ELSE
+                       IF KEY-STATUS = F2 THEN
+                           MOVE PREVIOUS-PAGE TO TEXT1
+                           MOVE NEXT-PAGE TO TEXT2
+                           DISPLAY CLEAR-SCREEN
+                           DISPLAY REGISTER-ING-SCREEN
                            DISPLAY MAIN-SCREEN
                            DISPLAY LIST-FRAME
                            MOVE 10 TO ILIN
@@ -742,12 +897,13 @@
                    DISPLAY LIST-FRAME
                    MOVE ING-INSTR TO INSTRUCTION-MESSAGE
                    DISPLAY INSTRUCTION-MESSAGE
-                   ACCEPT WS-ACCEPT-OPTION
+                   ACCEPT ING-ACCEPT
                    IF KEY-STATUS = F3 THEN
                        EXIT SECTION
                    END-IF
                    IF KEY-STATUS = F1 AND COUNTPAGE > 1
                        DISPLAY CLEAR-SCREEN
+                       DISPLAY REGISTER-ING-SCREEN
                        DISPLAY MAIN-SCREEN
                        DISPLAY LIST-FRAME
                        MOVE 10 TO ILIN
