@@ -1,5 +1,6 @@
        01  FD-INVENTORY.
            88 EOFINVENTORY                         VALUE HIGH-VALUES.
+           05 WS-QTD-TOTAL                         PIC 9(003).
            05 MOVE-DETAILS.
                10 MOVE-IN-ID                       PIC X(002).
                10 MOVE-OUT-ID                      PIC X(002).
