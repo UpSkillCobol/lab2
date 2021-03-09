@@ -79,10 +79,10 @@
            EVALUATE WS-OPTION
                WHEN 1
                    CALL "RECORD-RIS"
-               WHEN 2
-                   CALL "SEARCH-RIS"
-               WHEN 3
-                   CALL "REPORT-RIS"
+      *>          WHEN 2
+      *>              CALL "SEARCH-RIS"
+      *>          WHEN 3
+      *>              CALL "REPORT-RIS"
 
            END-EVALUATE
            EXIT SECTION.
