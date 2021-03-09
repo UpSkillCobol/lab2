@@ -120,7 +120,7 @@
            05 VALUE ALL " " PIC X(120) LINE 02 COL 01.
            05 VALUE ALL " " PIC X(120) LINE 03 COL 01.
            05 VALUE ALL " " PIC X(120) LINE 04 COL 01.
-           05 VALUE MODULE-NAME LINE 03 COL 50.
+           05 VALUE SEARCH-NAME LINE 03 COL 50.
            05 VALUE ALL " " PIC X(095) LINE 24 COL 01.
            05 VALUE ALL " " PIC X(095) LINE 25 COL 01.
            05 VALUE ALL " " PIC X(095) LINE 26 COL 01.
@@ -154,7 +154,7 @@
       ******************************************************************
        01  REGISTER-ING-SCREEN
            BACKGROUND-COLOR 0, FOREGROUND-COLOR 7.
-           05 VALUE ADD-ING-MENU-TEXT LINE 9 COL 17.
+           05 VALUE SRCH-ING-MENU-TEXT LINE 9 COL 17.
            05 VALUE ADD-ING-MENU-TEXT1 LINE 12 COL 08.
            05 VALUE ALL " " PIC X(055) LINE 7 COL 09
                BACKGROUND-COLOR 7.
@@ -192,10 +192,63 @@
            05 REG-ING-REC.
                10 REG-ING1 PIC 9(003) LINE 13 COL 15
                FROM WS-INGREDIENT1 BLANK WHEN ZERO.
+               10 REG-ING-NAME1 PIC X(030) LINE 13 COL PLUS 3
+               FROM WS-ING-NAME1.
                10 REG-ING2 PIC 9(003) LINE 14 COL 15
                FROM WS-INGREDIENT2 BLANK WHEN ZERO.
+               10 REG-ING-NAME2 PIC X(030) LINE 14 COL PLUS 3
+               FROM WS-ING-NAME2.
                10 REG-ING3 PIC 9(003) LINE 15 COL 15
                FROM WS-INGREDIENT3 BLANK WHEN ZERO.
+               10 REG-ING-NAME3 PIC X(030) LINE 15 COL PLUS 3
+               FROM WS-ING-NAME3.
+      ******************************************************************
+       01  REGISTER-CAT-SCREEN
+           BACKGROUND-COLOR 0, FOREGROUND-COLOR 7.
+           05 VALUE ADD-CAT-MENU-TEXT LINE 9 COL 17.
+           05 VALUE ADD-CAT-MENU-TEXT1 LINE 12 COL 13.
+           05 VALUE ALL " " PIC X(055) LINE 7 COL 09
+               BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(055) LINE 22 COL 09
+               BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 8 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 9 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 8 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 9 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 62 BACKGROUND-COLOR 7.
+           05 CAT-ACCEPT PIC 9(003) LINE 12 COL 32 TO WS-CAT-ACCEPT.
+           05 REG-CAT-REC.
+               10 REG-CAT1 PIC 9(003) LINE 13 COL 18 FROM WS-CATEGORIE1
+               BLANK WHEN ZERO.
+               10 REG-CAT-NAME1 PIC X(030) LINE 13 COL 23
+               FROM WS-CAT-NAME1.
+               10 REG-CAT2 PIC 9(003) LINE 14 COL 18 FROM WS-CATEGORIE2
+               BLANK WHEN ZERO.
+               10 REG-CAT-NAME2 PIC X(030) LINE 14 COL 23
+               FROM WS-CAT-NAME2.
       ******************************************************************
        01  CONFIRM-RECORD-SCREEN.
            05 VALUE ALL " " PIC X(107) LINE 6 col 05
@@ -750,31 +803,47 @@
            END-PERFORM
            EXIT PROGRAM.
        220-SEARCH-BY-ING SECTION.
-           MOVE 0 TO WS-CONTROL
-           MOVE 0 TO COUNT-ING
+           MOVE SPACES TO REG-ING-NAME1 REG-ING-NAME2 REG-ING-NAME3
+           MOVE 0 TO WS-CONTROL COUNT-ING REG-ING1 REG-ING2 REG-ING3
            PERFORM UNTIL WS-CONTROL = 1
-               PERFORM 700-LIST-ING
-               IF WS-ING-ACCEPT <> ZEROS THEN
-                   ADD 1 TO COUNT-ING
-                   MOVE WS-ING-ACCEPT TO WS-INGREDIENT1
-                   DISPLAY REGISTER-ING-SCREEN
+               PERFORM WITH TEST AFTER UNTIL WS-ING-EXISTS = 1
+               OR WS-ING-ACCEPT = ZEROS
                    PERFORM 700-LIST-ING
+                   PERFORM 290-ING-EXISTS
+               END-PERFORM
                    IF WS-ING-ACCEPT <> ZEROS THEN
                        ADD 1 TO COUNT-ING
-                       MOVE WS-ING-ACCEPT TO WS-INGREDIENT2
+                       MOVE WS-ING-ACCEPT TO WS-INGREDIENT1
+                       MOVE WS-ING-ACCEPT-NAME TO WS-ING-NAME1
                        DISPLAY REGISTER-ING-SCREEN
-                       PERFORM 700-LIST-ING
-                       IF WS-ING-ACCEPT <> ZEROS
+                       PERFORM WITH TEST AFTER UNTIL WS-ING-EXISTS = 1
+                           OR WS-ING-ACCEPT = ZEROS
+                           PERFORM 700-LIST-ING
+                           PERFORM 290-ING-EXISTS
+                       END-PERFORM
+                       IF WS-ING-ACCEPT <> ZEROS THEN
                            ADD 1 TO COUNT-ING
-                           MOVE WS-ING-ACCEPT TO WS-INGREDIENT3
+                           MOVE WS-ING-ACCEPT TO WS-INGREDIENT2
+                           MOVE WS-ING-ACCEPT-NAME TO WS-ING-NAME2
                            DISPLAY REGISTER-ING-SCREEN
-                       END-IF
-                       MOVE 1 TO WS-CONTROL
+                           PERFORM WITH TEST AFTER UNTIL
+                               WS-ING-EXISTS = 1 OR
+                               WS-ING-ACCEPT = ZEROS
+                               PERFORM 700-LIST-ING
+                               PERFORM 290-ING-EXISTS
+                           END-PERFORM
+                           IF WS-ING-ACCEPT <> ZEROS
+                               ADD 1 TO COUNT-ING
+                               MOVE WS-ING-ACCEPT TO WS-INGREDIENT3
+                               MOVE WS-ING-ACCEPT-NAME TO WS-ING-NAME3
+                               DISPLAY REGISTER-ING-SCREEN
+                           END-IF
+                           MOVE 1 TO WS-CONTROL
+                       ELSE
+                           MOVE 1 TO WS-CONTROL
                    ELSE
-                       MOVE 1 TO WS-CONTROL
-               ELSE
-                   EXIT SECTION
-               END-IF
+                       EXIT SECTION
+                   END-IF
            END-PERFORM
            EVALUATE COUNT-ING
                WHEN 1
@@ -786,7 +855,6 @@
            END-EVALUATE
            EXIT SECTION.
        230-SEARCH-1-ING SECTION.
-           DISPLAY "1 ING" AT 0101
            SET SHOW-INDEX TO 0
            MOVE ZEROS TO WS-CONTROL
            PERFORM WITH TEST AFTER UNTIL SHOW-INDEX >= NUMBER-SHOW
@@ -809,7 +877,7 @@
            END-IF
            EXIT SECTION.
        240-SEARCH-2-ING SECTION.
-           DISPLAY "2 ING" AT 0101
+           MOVE ZEROS TO WS-CONTROL
            SET SHOW-INDEX TO 0
            PERFORM WITH TEST AFTER UNTIL SHOW-INDEX >= NUMBER-SHOW
                SET SHOW-INDEX UP BY 1
@@ -837,7 +905,7 @@
            END-IF
            EXIT SECTION.
        250-SEARCH-3-ING SECTION.
-           DISPLAY "03 ING" AT 0101
+           MOVE ZEROS TO WS-CONTROL
            SET SHOW-INDEX TO 0
            PERFORM WITH TEST AFTER UNTIL SHOW-INDEX >= NUMBER-SHOW
                SET SHOW-INDEX UP BY 1
@@ -870,11 +938,50 @@
                MOVE NO-MATCH TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
            END-IF
            EXIT SECTION.
+       260-SEARCH-BY-CAT SECTION.
+           MOVE ZEROS TO REG-CAT1 REG-CAT2 WS-CONTROL COUNT-ING
+           MOVE SPACES TO REG-CAT-NAME1 REG-CAT-NAME2
+           EXIT SECTION.
+       270-SEARCH-BY-1-CAT SECTION.
+       280-SEARCH-BY-2-CAT SECTION.
+       290-ING-EXISTS SECTION.
+           MOVE 0 TO WS-ING-EXISTS
+           MOVE SPACES TO WS-ING-ACCEPT-NAME WS-ING-UNIT
+           SET ING-INDEX TO 1
+           PERFORM UNTIL ING-INDEX >= NUMBER-ING
+               IF WS-ING-ACCEPT = TABLE-ING-ID (ING-INDEX) THEN
+                   MOVE 1 TO WS-ING-EXISTS
+                   MOVE TABLE-ING-NAME (ING-INDEX) TO WS-ING-ACCEPT-NAME
+                   MOVE TABLE-ING-UNIT-SANDWICH (ING-INDEX)
+                   TO WS-ING-UNIT
+                   EXIT SECTION
+               ELSE
+                   SET ING-INDEX UP BY 1
+               END-IF
+           END-PERFORM
+           IF WS-ING-EXISTS = 0 THEN
+               MOVE WRONG-ING TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
+           END-IF
+           EXIT SECTION.
+       300-CHECK-CAT-EXISTS SECTION.
+           MOVE 0 TO WS-CAT-EXISTS
+           MOVE SPACES TO WS-CAT-ACCEPT-NAME
+           SET CAT-INDEX TO 1
+           PERFORM UNTIL CAT-INDEX >= NUMBER-CAT
+               IF WS-CAT-ACCEPT = TABLE-CAT-ID (CAT-INDEX) THEN
+                   MOVE 1 TO WS-CAT-EXISTS
+                   MOVE TABLE-CAT-NAME (CAT-INDEX) TO WS-CAT-ACCEPT-NAME
+                   EXIT SECTION
+               ELSE
+                   SET CAT-INDEX UP BY 1
+               END-IF
+           END-PERFORM
+           EXIT SECTION.
        600-LIST-CAT SECTION.
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY LIST-FRAME
-      *     DISPLAY REGISTER-CAT-SCREEN
+           DISPLAY REGISTER-CAT-SCREEN
            MOVE ZEROES TO NEW-INGREDID
            MOVE SPACES TO TRUE-YES
            SET CAT-INDEX TO 1
@@ -884,7 +991,7 @@
            MOVE 10 TO MAXPERPAGE
            PERFORM WITH TEST AFTER UNTIL CAT-INDEX >= NUMBER-CAT
                DISPLAY CATEGORY-LIST1
-      *         DISPLAY REGISTER-CAT-SCREEN
+               DISPLAY REGISTER-CAT-SCREEN
                SET CAT-INDEX UP BY 1
                ADD 1 TO ILIN
                ADD 1 TO MAXPERPAGE
@@ -893,14 +1000,14 @@
                    DISPLAY LIST-FRAME
                    MOVE CAT-INSTR TO INSTRUCTION-MESSAGE
                    DISPLAY INSTRUCTION-MESSAGE
-      *             ACCEPT CAT-ACCEPT
+                   ACCEPT CAT-ACCEPT
                    IF KEY-STATUS = F3 THEN
                        EXIT SECTION
                    END-IF
                    IF KEY-STATUS = F1 AND COUNTPAGE > 1
                        MOVE SPACE TO TEXT2
                        DISPLAY CLEAR-SCREEN
-      *                 DISPLAY REGISTER-CAT-SCREEN
+                       DISPLAY REGISTER-CAT-SCREEN
                        DISPLAY MAIN-SCREEN
                        DISPLAY LIST-FRAME
                        MOVE 10 TO ILIN
@@ -916,7 +1023,7 @@
                            MOVE PREVIOUS-PAGE TO TEXT1
                            MOVE NEXT-PAGE TO TEXT2
                            DISPLAY CLEAR-SCREEN
-      *                     DISPLAY REGISTER-CAT-SCREEN
+                           DISPLAY REGISTER-CAT-SCREEN
                            DISPLAY MAIN-SCREEN
                            DISPLAY LIST-FRAME
                            MOVE 10 TO ILIN
@@ -932,13 +1039,13 @@
                    DISPLAY LIST-FRAME
                    MOVE CAT-INSTR TO INSTRUCTION-MESSAGE
                    DISPLAY INSTRUCTION-MESSAGE
-      *             ACCEPT CAT-ACCEPT
+                   ACCEPT CAT-ACCEPT
                    IF KEY-STATUS = F3 THEN
                        EXIT SECTION
                    END-IF
                    IF KEY-STATUS = F1 AND COUNTPAGE > 1
                        DISPLAY CLEAR-SCREEN
-      *                 DISPLAY REGISTER-CAT-SCREEN
+                       DISPLAY REGISTER-CAT-SCREEN
                        DISPLAY MAIN-SCREEN
                        DISPLAY LIST-FRAME
                        MOVE 10 TO ILIN
