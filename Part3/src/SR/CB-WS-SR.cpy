@@ -134,3 +134,4 @@
        77  WS-SR-EXISTS                    PIC 9(001).
        77  WS-PRICE-MIN                    PIC 9(002).
        77  WS-PRICE-MAX                    PIC 9(002).
+       77  WS-RECORDS-SHOWN                PIC 9(003).

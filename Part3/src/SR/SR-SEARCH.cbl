@@ -140,11 +140,13 @@
            03 VALUE ALL " " PIC X(50) LINE 15 COL 35.
            03 VALUE ALL " " PIC X(50) LINE 16 COL 35.
            03 VALUE ALL " " PIC X(50) LINE 17 COL 35.
+           03 VALUE ALL " " PIC X(50) LINE 18 COL 35.
            03 VALUE MAIN-SEARCH-OPTION1 LINE 11 COL 40.
            03 VALUE MAIN-SEARCH-OPTION2 LINE 12 COL 40.
            03 VALUE MAIN-SEARCH-OPTION3 LINE 13 COL 40.
            03 VALUE MAIN-SEARCH-OPTION4 LINE 14 COL 40.
            03 VALUE MAIN-SEARCH-OPTION5 LINE 15 COL 40.
+           03 VALUE MAIN-SEARCH-OPTION6 LINE 16 COL 40.
            03 VALUE MAIN-SEARCH-CHOICE LINE 20 COL 45
            REVERSE-VIDEO.
            03 MP-OPTION PIC 9(02) LINE 20 COL 73 TO WS-OPTION
@@ -868,16 +870,37 @@
                DISPLAY CLEAR-SCREEN
                DISPLAY MAIN-SCREEN
                ACCEPT MAIN-SEARCH-SCREEN
+                   IF KEY-STATUS = F3 THEN
+                       EXIT PROGRAM
+                   END-IF
                    EVALUATE WS-OPTION
                        WHEN 1
                            PERFORM 220-SEARCH-BY-ING
+                           IF KEY-STATUS = F3 THEN
+                               EXIT PROGRAM
+                           END-IF
                        WHEN 2
                            PERFORM 260-SEARCH-BY-CAT
+                           IF KEY-STATUS = F3 THEN
+                               EXIT PROGRAM
+                           END-IF
                        WHEN 3
                            PERFORM 310-SEARCH-BY-SANDWICH
+                           IF KEY-STATUS = F3 THEN
+                               EXIT PROGRAM
+                           END-IF
                        WHEN 4
                            PERFORM 320-SEARCH-BY-PRICE
+                           IF KEY-STATUS = F3 THEN
+                               EXIT PROGRAM
+                           END-IF
                        WHEN 5
+                           CALL "SR-RPT"
+                           MOVE RPT-DONE TO INSTRUCTION-MESSAGE
+                           ACCEPT INSTRUCTIONS-SCREEN
+                           IF KEY-STATUS = F3 THEN
+                               EXIT PROGRAM
+                           END-IF
                    END-EVALUATE
            END-PERFORM
            EXIT PROGRAM.
@@ -937,7 +960,7 @@
            EXIT SECTION.
        230-SEARCH-1-ING SECTION.
            SET SHOW-INDEX TO 0
-           MOVE ZEROS TO WS-CONTROL
+           MOVE ZEROS TO WS-CONTROL WS-RECORDS-SHOWN
            PERFORM WITH TEST AFTER UNTIL SHOW-INDEX >= NUMBER-SHOW
                SET SHOW-INDEX UP BY 1
                IF WS-INGREDIENT1 = SHOW-INGREDIENT1(SHOW-INDEX) OR
@@ -946,19 +969,31 @@
                    SHOW-INGREDIENT4 (SHOW-INDEX) OR
                    SHOW-INGREDIENT5 (SHOW-INDEX) OR
                    SHOW-INGREDIENT6 (SHOW-INDEX) THEN
+                       ADD 1 TO WS-RECORDS-SHOWN
                        DISPLAY CLEAR-SCREEN
                        DISPLAY MAIN-SCREEN
                        ACCEPT CONFIRM-RECORD-SCREEN
-               ELSE
-                   ADD 1 TO WS-CONTROL
+                       IF KEY-STATUS = F3 THEN
+                           EXIT SECTION
+                       END-IF
                END-IF
            END-PERFORM
-           IF WS-CONTROL <> 0
-               MOVE NO-MATCH TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
+           IF WS-RECORDS-SHOWN = 0 THEN
+               MOVE NO-RECORDS TO CONFIRM-MESSAGE
+               ACCEPT CONFIRM-SCREEN
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
+           ELSE
+               MOVE NO-MATCH TO CONFIRM-MESSAGE
+               ACCEPT CONFIRM-SCREEN
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
            END-IF
            EXIT SECTION.
        240-SEARCH-2-ING SECTION.
-           MOVE ZEROS TO WS-CONTROL
+           MOVE ZEROS TO WS-CONTROL WS-RECORDS-SHOWN
            SET SHOW-INDEX TO 0
            PERFORM WITH TEST AFTER UNTIL SHOW-INDEX >= NUMBER-SHOW
                SET SHOW-INDEX UP BY 1
@@ -974,19 +1009,31 @@
                    SHOW-INGREDIENT4 (SHOW-INDEX) OR
                    SHOW-INGREDIENT5 (SHOW-INDEX) OR
                    SHOW-INGREDIENT6 (SHOW-INDEX)) THEN
+                       ADD 1 TO WS-RECORDS-SHOWN
                        DISPLAY CLEAR-SCREEN
                        DISPLAY MAIN-SCREEN
                        ACCEPT CONFIRM-RECORD-SCREEN
-               ELSE
-                   ADD 1 TO WS-CONTROL
+                       IF KEY-STATUS = F3 THEN
+                           EXIT SECTION
+                       END-IF
                END-IF
            END-PERFORM
-           IF WS-CONTROL <> 0
-               MOVE NO-MATCH TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
+           IF WS-RECORDS-SHOWN = 0 THEN
+               MOVE NO-RECORDS TO CONFIRM-MESSAGE
+               ACCEPT CONFIRM-SCREEN
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
+           ELSE
+               MOVE NO-MATCH TO CONFIRM-MESSAGE
+               ACCEPT CONFIRM-SCREEN
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
            END-IF
            EXIT SECTION.
        250-SEARCH-3-ING SECTION.
-           MOVE ZEROS TO WS-CONTROL
+           MOVE ZEROS TO WS-CONTROL WS-RECORDS-SHOWN
            SET SHOW-INDEX TO 0
            PERFORM WITH TEST AFTER UNTIL SHOW-INDEX >= NUMBER-SHOW
                SET SHOW-INDEX UP BY 1
@@ -1008,15 +1055,27 @@
                    SHOW-INGREDIENT4 (SHOW-INDEX) OR
                    SHOW-INGREDIENT5 (SHOW-INDEX) OR
                    SHOW-INGREDIENT6 (SHOW-INDEX)) THEN
+                       ADD 1 TO WS-RECORDS-SHOWN
                        DISPLAY CLEAR-SCREEN
                        DISPLAY MAIN-SCREEN
                        ACCEPT CONFIRM-RECORD-SCREEN
-               ELSE
-                   ADD 1 TO WS-CONTROL
+                       IF KEY-STATUS = F3 THEN
+                           EXIT SECTION
+                       END-IF
                END-IF
            END-PERFORM
-           IF WS-CONTROL <> 0
-               MOVE NO-MATCH TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
+           IF WS-RECORDS-SHOWN = 0 THEN
+               MOVE NO-RECORDS TO CONFIRM-MESSAGE
+               ACCEPT CONFIRM-SCREEN
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
+           ELSE
+               MOVE NO-MATCH TO CONFIRM-MESSAGE
+               ACCEPT CONFIRM-SCREEN
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
            END-IF
            EXIT SECTION.
        260-SEARCH-BY-CAT SECTION.
@@ -1074,26 +1133,40 @@
            EXIT SECTION.
        270-SEARCH-1-CAT SECTION.
            SET SHOW-INDEX TO 0
-           MOVE ZEROS TO WS-CONTROL
+           MOVE ZEROS TO WS-CONTROL WS-RECORDS-SHOWN
            PERFORM WITH TEST AFTER UNTIL SHOW-INDEX >= NUMBER-SHOW
                SET SHOW-INDEX UP BY 1
                IF WS-CATEGORIE1 = SHOW-CATEGORIE1(SHOW-INDEX) OR
                    SHOW-CATEGORIE2 (SHOW-INDEX) OR
                    SHOW-CATEGORIE3 (SHOW-INDEX) THEN
+                       ADD 1 TO WS-RECORDS-SHOWN
                        DISPLAY CLEAR-SCREEN
                        DISPLAY MAIN-SCREEN
                        ACCEPT CONFIRM-RECORD-SCREEN
+                       IF KEY-STATUS = F3 THEN
+                           EXIT SECTION
+                       END-IF
                ELSE
                    ADD 1 TO WS-CONTROL
                END-IF
            END-PERFORM
-           IF WS-CONTROL <> 0
-               MOVE NO-MATCH TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
+           IF WS-RECORDS-SHOWN = 0 THEN
+               MOVE NO-RECORDS TO CONFIRM-MESSAGE
+               ACCEPT CONFIRM-SCREEN
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
+           ELSE
+               MOVE NO-MATCH TO CONFIRM-MESSAGE
+               ACCEPT CONFIRM-SCREEN
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
            END-IF
            EXIT SECTION.
        280-SEARCH-2-CAT SECTION.
            SET SHOW-INDEX TO 0
-           MOVE ZEROS TO WS-CONTROL
+           MOVE ZEROS TO WS-CONTROL WS-RECORDS-SHOWN
            PERFORM WITH TEST AFTER UNTIL SHOW-INDEX >= NUMBER-SHOW
                SET SHOW-INDEX UP BY 1
                IF (WS-CATEGORIE1 = SHOW-CATEGORIE1(SHOW-INDEX) OR
@@ -1102,15 +1175,27 @@
                    (WS-CATEGORIE2 = SHOW-CATEGORIE1(SHOW-INDEX) OR
                    SHOW-CATEGORIE2 (SHOW-INDEX) OR
                    SHOW-CATEGORIE3 (SHOW-INDEX))THEN
+                       ADD 1 TO WS-RECORDS-SHOWN
                        DISPLAY CLEAR-SCREEN
                        DISPLAY MAIN-SCREEN
                        ACCEPT CONFIRM-RECORD-SCREEN
-               ELSE
-                   ADD 1 TO WS-CONTROL
+                       IF KEY-STATUS = F3 THEN
+                           EXIT SECTION
+                       END-IF
                END-IF
            END-PERFORM
-           IF WS-CONTROL <> 0
-               MOVE NO-MATCH TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
+           IF WS-RECORDS-SHOWN = 0 THEN
+               MOVE NO-RECORDS TO CONFIRM-MESSAGE
+               ACCEPT CONFIRM-SCREEN
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
+           ELSE
+               MOVE NO-MATCH TO CONFIRM-MESSAGE
+               ACCEPT CONFIRM-SCREEN
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
            END-IF
            EXIT SECTION.
        290-ING-EXISTS SECTION.
@@ -1134,6 +1219,9 @@
            END-PERFORM
            IF WS-ING-EXISTS = 0 THEN
                MOVE WRONG-ING TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
            END-IF
            EXIT SECTION.
        300-CAT-EXISTS SECTION.
@@ -1161,21 +1249,38 @@
                PERFORM 320-SANDWICH-EXISTS
            END-PERFORM
            IF WS-SR-ACCEPT <> ZEROS THEN
-               MOVE ZEROS TO WS-CONTROL
+               MOVE ZEROS TO WS-CONTROL WS-RECORDS-SHOWN
                SET SHOW-INDEX TO 0
                PERFORM WITH TEST AFTER UNTIL SHOW-INDEX >= NUMBER-SHOW
                    OR WS-CONTROL = 1
                    SET SHOW-INDEX UP BY 1
                    IF WS-SR-ACCEPT = SHOW-SR-EID (SHOW-INDEX) THEN
+                       ADD 1 TO WS-RECORDS-SHOWN
                        DISPLAY CLEAR-SCREEN
                        DISPLAY MAIN-SCREEN
                        ACCEPT CONFIRM-RECORD-SCREEN
+                       IF KEY-STATUS = F3 THEN
+                           EXIT SECTION
+                       END-IF
                        MOVE 1 TO WS-CONTROL
                    END-IF
                END-PERFORM
            ELSE
                EXIT SECTION
            END-IF
+           IF WS-RECORDS-SHOWN = 0 THEN
+               MOVE NO-RECORDS TO CONFIRM-MESSAGE
+               ACCEPT CONFIRM-SCREEN
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
+           ELSE
+               MOVE NO-MATCH TO CONFIRM-MESSAGE
+               ACCEPT CONFIRM-SCREEN
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
+           END-IF.
            EXIT SECTION.
        320-SANDWICH-EXISTS SECTION.
            IF WS-SR-ACCEPT = ZEROS THEN
@@ -1194,7 +1299,57 @@
            END-PERFORM
            EXIT SECTION.
        320-SEARCH-BY-PRICE SECTION.
-           ACCEPT REGISTER-PRICE-SCREEN
+           MOVE ZEROS TO WS-PRICE-MIN WS-PRICE-MAX PRICE-MIN PRICE-MAX
+           DISPLAY CLEAR-SCREEN
+           DISPLAY MAIN-SCREEN
+           MOVE PRICE-INSTR TO INSTRUCTION-MESSAGE
+           DISPLAY INSTRUCTIONS-SCREEN
+           DISPLAY REGISTER-PRICE-SCREEN
+           ACCEPT PRICE-MIN
+           IF KEY-STATUS = F3 OR WS-PRICE-MIN IS ZEROS THEN
+               EXIT SECTION
+           END-IF
+           ACCEPT PRICE-MAX
+           IF KEY-STATUS = F3 OR WS-PRICE-MAX IS ZEROS THEN
+               EXIT SECTION
+           END-IF
+           IF WS-PRICE-MAX < WS-PRICE-MIN THEN
+               MOVE PRICE-ERROR TO CONFIRM-MESSAGE
+               ACCEPT CONFIRM-SCREEN
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
+               EXIT SECTION
+           END-IF
+           MOVE ZEROS TO WS-RECORDS-SHOWN
+           SET SHOW-INDEX TO 0
+           PERFORM WITH TEST AFTER UNTIL SHOW-INDEX >= NUMBER-SHOW
+               SET SHOW-INDEX UP BY 1
+               IF SHOW-SR-PRICE (SHOW-INDEX) >= WS-PRICE-MIN AND
+                   SHOW-SR-PRICE (SHOW-INDEX) <= WS-PRICE-MAX THEN
+                   ADD 1 TO WS-RECORDS-SHOWN
+                   DISPLAY CLEAR-SCREEN
+                   DISPLAY MAIN-SCREEN
+                   ACCEPT CONFIRM-RECORD-SCREEN
+                   IF KEY-STATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
+               END-IF
+           END-PERFORM
+           IF WS-RECORDS-SHOWN = 0 THEN
+               MOVE NO-RECORDS TO CONFIRM-MESSAGE
+               ACCEPT CONFIRM-SCREEN
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
+           ELSE
+               MOVE NO-MATCH TO CONFIRM-MESSAGE
+               ACCEPT CONFIRM-SCREEN
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
+           END-IF.
+           EXIT SECTION.
        500-LIST-SANDWICH SECTION.
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
