@@ -3,13 +3,13 @@
       ******************************************************************
       *    BREADWICH | INGREDIENTS SUPPLIERS MANAGEMENT
       ******************************************************************
-      *    RIS MODULE - REGISTRATION INGREDIENTS SUPPLIERS
+      *    RIS MODULE - SEARCH INGREDIENTS SUPPLIERS
       ******************************************************************
       *     V1 | EM ATUALIZAÇÃO | 04.03.2021
       ******************************************************************
 
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. RECORD-RIS.
+       PROGRAM-ID. SEARCH-RIS.
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
        SPECIAL-NAMES.
@@ -68,11 +68,11 @@
        COPY WSSupplierFX.
 
       *> UTILITY VARIBLES
-        01  SAVE-OPTION                        PIC X(001).
-           88 SAVE-VALID-OPTION                VALUE "Y" "y" "N" "n",
-                                                "s", "S".
-           88 SAVE-OPTION-NO                   VALUE "N" "n".
-           88 SAVE-VALID-YES                   VALUE "Y","y","S","s".
+      *>   01  SAVE-OPTION                        PIC X(001).
+      *>      88 SAVE-VALID-OPTION                VALUE "Y" "y" "N" "n",
+      *>                                           "s", "S".
+      *>      88 SAVE-OPTION-NO                   VALUE "N" "n".
+      *>      88 SAVE-VALID-YES                   VALUE "Y","y","S","s".
        77  DUMMY                               PIC X(001).
        77  INGRED-STATUS                       PIC 9(002).
        77  KEYSTATUS                           PIC 9(004).
@@ -109,11 +109,11 @@
            INDEXED BY ING-INDEX.
            05 TABLEINGREDS-ID                  PIC 9(003).
            05 TABLEINGREDS-NAME                PIC X(030).
-      *>      05 TABLEINGREDS-DESCRIPTION         PIC X(050).
-      *>      05 TABLEINGREDS-UNIT-SUPPLIER       PIC X(003).
-      *>      05 TABLEINGREDS-UNIT-SANDWICH       PIC X(003).
-      *>      05 TABLETRESHOLD                    PIC 9(003).
-      *>      05 TABLEINGREDS-IS-ACTIVE           PIC 9(001).
+           05 TABLEINGREDS-DESCRIPTION         PIC X(050).
+           05 TABLEINGREDS-UNIT-SUPPLIER       PIC X(003).
+           05 TABLEINGREDS-UNIT-SANDWICH       PIC X(003).
+           05 TABLETRESHOLD                    PIC 9(003).
+           05 TABLEINGREDS-IS-ACTIVE           PIC 9(001).
        77 NUMBER-ING                           PIC 9(003) VALUE 999.
        01 FLAGTABLE                PIC 9(001).
 
@@ -173,6 +173,27 @@
        01  BISSEXTO                      PIC X(004).
            88 BISSEXTO-YES               VALUE "S".
        01  DATAVAL                         PIC X(01).
+
+       *> TABLE SEARCH
+       78  MAX-SEARCH                      VALUE 999.
+       77  NUMBER-SEARCH                   PIC 9(003) VALUE 999.
+       01  TABLE-SEARCH OCCURS 1 TO MAX-SEARCH TIMES
+           DEPENDING ON NUMBER-SEARCH
+           INDEXED BY SEARCH-INDEX.
+           05  TABLE-MAIN.
+               10  SEARCH-RIS-ID.
+                    15 SEARCH-RIS-ID-ING               PIC X(003).
+                    15 SEARCH-RIS-ID-SUPP              PIC X(003).
+               10 SEARCH-RIS-PRICE                     PIC X(003).
+               10 SEARCH-RIS-DATE-VAL.
+                    15 SEARCH-RIS-YEAR                 PIC X(004).
+                    15 SEARCH-RIS-MONTH                PIC X(002).
+                    15 SEARCH-RIS-DAY                  PIC X(002).
+           05  TABLE-SEARCH-INGRED.
+               10 SEARCH-INGRED-NAME                   PIC X(030).
+               10 SEARCH-UNIT-SUPPLIER                 PIC X(003).
+           05 SEARCH-SUPP-NAME                         PIC X(030).
+
        SCREEN SECTION.
       ******************************************************************
        01  CLEAR-SCREEN.
@@ -256,6 +277,8 @@
            05 VALUE "  " LINE 21 COL 62 BACKGROUND-COLOR 7.
 
       ******************************************************************
+
+
        01  LIST-FRAME.
            05 VALUE ALL " " PIC X(042) LINE 7 COL 68
               BACKGROUND-COLOR 7.
@@ -746,7 +769,7 @@
                SET ING-INDEX UP BY 1
            END-PERFORM
            IF INGREDEXIST <> "Y" THEN
-               MOVE ERROR-INGREDID-NO TO ERROR-TEXT
+               MOVE ERROR-INGRED-NO TO ERROR-TEXT
                ACCEPT ERROR-ZONE
                IF KEYSTATUS = F3 THEN
                    EXIT SECTION

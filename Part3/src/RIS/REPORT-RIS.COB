@@ -31,7 +31,7 @@
       *>        10  DATE-YEAR                 PIC 9(004).
       *>        10  DATE-MONTH                PIC 9(002).
       *>        10  DATE-DAY                  PIC 9(02).
-           05 DATE-REPORT                     PIC 9(008).
+      *>      05 DATE-REPORT                     PIC 9(008).
         FD PrintFile
            REPORT IS SupplierReport.
 
@@ -87,7 +87,8 @@
        01 TYPE IS REPORT HEADING.
            02 LINE 1.
            03 COLUMN 02 VALUE REPORTTITLECONST.
-           02 LINE PLUS 1.
+            02 LINE PLUS 1.
+           03 COL 02 VALUE "TESTE DA LINHA".
 
       *TYPE IS PAGE DEFINES THE HEADER STRUCTURE OF EVERY PAGE
        01 TYPE IS PAGE HEADING.
@@ -113,7 +114,7 @@
 
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
-           ACCEPT DATE-REPORT FROM DATE
+      *>      ACCEPT DATE-REPORT FROM DATE
            OPEN INPUT RIS-FILE.
            SET IND TO 1
            PERFORM UNTIL EndOfFile
