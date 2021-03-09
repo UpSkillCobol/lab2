@@ -3,16 +3,13 @@
       ******************************************************************
       *    BREADWICH | REGISTRATION OF SANDWICH ORDERS
       ******************************************************************
-      *    REGULAR VARIABLES | V0.3 | IN UPDATE | 07.03.2021
+      *    REGULAR VARIABLES | V0.5 | IN UPDATE | 09.03.2021
       ******************************************************************
 
        01  MAIN-OPTION                          PIC 9(002).
            88  VALID-MAIN-OPTION                VALUE 1 THRU 4.
-      *>  01  SAVE                                 PIC X(002).
-      *>      88 SAVE-YES                          VALUE "Y" "y" "S" "s".
-      *>      88 SAVE-NO                           VALUE "N" "n".
-      *>      88 SAVE-VALID                        VALUE "Y" "y" "S" "s"
-      *>                                                 "N" "n".
+       01  SEARCH-OPTION                        PIC 9(002).
+           88  VALID-SEARCH-OPTION              VALUE 1 THRU 6.
        77  KEYSTATUS                            PIC 9(004).
        78  F1                                   VALUE 1001.
        78  F2                                   VALUE 1002.
@@ -37,3 +34,14 @@
        77  MAXPERPAGE                           PIC 9(003).
        77  PRICEQUANTITY                        PIC 9(005).
        77  COUNTER                              PIC 9(003).
+       01  SEARCH-DATES.
+           05  SEARCH-DATE1.
+               10  SEARCH-YEAR1                 PIC 9(004).
+               10  SEARCH-MONTH1                PIC 9(002).
+               10  SEARCH-DAY1                  PIC 9(002).
+           05  SEARCH-DATE2.
+               10  SEARCH-YEAR2                 PIC 9(004).
+               10  SEARCH-MONTH2                PIC 9(002).
+               10  SEARCH-DAY2                  PIC 9(002).
+       01  SEARCH-SCHOOL-INTERNAL-ID            PIC 9(003).
+       01  SEARCH-SANDWICH-INTERNAL-ID          PIC 9(003).
