@@ -7,6 +7,11 @@
       ******************************************************************
       *     V1 | EM ATUALIZAÇÃO | 04.03.2021
       ******************************************************************
+
+       01  SAVE-OPTION                         PIC X(001).
+           88 SAVE-VALID-OPTION                VALUE "Y" "y" "N" "n".
+           88 SAVE-OPTION-NO                   VALUE "N" "n".
+           88 SAVE-VALID-YES                   VALUE "Y" "y".
       *MODULE NAME MAIN
        78 MODULE-NAME-MAIN VALUE "REGISTRATION INGREDIENTS SUIPPLIERS".
       *MODULE NAME ADD
@@ -82,13 +87,11 @@
        78 ERROR-SUPPID-NO VALUE "THAT SUPPLIER ID DOESN'T EXIST. PLEASE
       -    "INSERT A VALID INGREDIENT ID".
 
-       78 LIST-NEXT-PAGE VALUE "PRESS ANY KEY TO SHOW THE NEXT RECORDS".
+
 
        78 VIEW-NEXT-RECORD VALUE "PRESS ANY KEY TO SHOW THE NEXT INGREDI
       -    "ENT".
 
-
-       78 NEXT-PAGE VALUE "F2 - NEXT PAGE".
 
        78 VIEW-ALL-INGREDS-NEXT-ONE VALUE "PRESS ANY KEY TO SHOW THE NEX
       -    "T INGREDIENT".
@@ -133,3 +136,11 @@
        78 SUPP-RECORD VALUE "INSERT SUPPLIER".
 
        78 INGRED-RECORD VALUE "INSERT INGREDIENT".
+
+       78  PREVIOUS-PAGE VALUE "F1 - PREVIOUS PAGE".
+
+       78  NEXT-PAGE VALUE "     F2 - NEXT PAGE".
+
+       78  LAST-PAGE VALUE "          LAST PAGE".
+
+       78  LIST-AGG-FRAME VALUE "ID  |  NAME".

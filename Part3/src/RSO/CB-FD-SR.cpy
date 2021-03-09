@@ -6,3 +6,4 @@
            05  SR-L-DESCRIPTION.
                10  SR-L-DESCRIPTION1   PIC X(025).
                10  SR-L-DESCRIPTION2   PIC X(025).
+           05  SR-PRICE                PIC 99.

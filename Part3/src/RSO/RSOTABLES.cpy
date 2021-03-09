@@ -3,7 +3,7 @@
       ******************************************************************
       *    BREADWICH | REGISTRATION OF SANDWICH ORDERS
       ******************************************************************
-      *    TABLES VARIABLES | V0.2 | IN UPDATE | 07.03.2021
+      *    TABLES VARIABLES | V0.3 | IN UPDATE | 08.03.2021
       ******************************************************************
 
        78  MAX-TABLES                     VALUE 999.
@@ -48,3 +48,26 @@
            DEPENDING ON MAX-SANDWICH INDEXED BY IND-SANDWICH.
            05 TAB-SR-IID                  PIC 9(003).
            05 TAB-SR-S-DESCRIPTION        PIC X(025).
+           05 TAB-SR-PRICE                PIC 99.
+
+
+       77  MAX-ORDERS                     PIC 999 VALUE 999.
+
+       01  TAB-ORDERS OCCURS 1 TO MAX-TABLES TIMES
+           DEPENDING ON MAX-ORDERS INDEXED BY IND-ORDERS.
+           05  TAB-ORDERS-ID                         PIC 9(005).
+           05  TAB-DELIVERY-DATE-TIME.
+               10  TAB-DELIVERY-DATE.
+                   15  TAB-DELIVERY-YEAR             PIC 9(004).
+                   15  TAB-DELIVERY-MONTH            PIC 9(002).
+                   15  TAB-DELIVERY-DAY              PIC 9(002).
+               10  TAB-DELIVERY-TIME.
+                   15  TAB-DELIVERY-HOUR             PIC 9(002).
+                   15  TAB-DELIVERY-MINUTE           PIC 9(002).
+           05  TAB-ORDERS-SCHOOL-INTERNAL-ID         PIC 9(003).
+           05  TAB-ORDERS-SANDWICH-INTERNAL-ID       PIC 9(003).
+           05  TAB-ORDERS-QUANTITY                   PIC 9(003).
+           05  TAB-ORDERS-DATE.
+               10  TAB-ORDERS-YEAR                   PIC 9(004).
+               10  TAB-ORDERS-MONTH                  PIC 9(002).
+               10  TAB-ORDERS-DAY                    PIC 9(002).

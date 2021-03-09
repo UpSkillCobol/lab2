@@ -68,11 +68,11 @@
        COPY WSSupplierFX.
 
       *> UTILITY VARIBLES
-       01  SAVE-OPTION                         PIC X(001).
-           88 SAVE-VALID-OPTION                VALUE "Y" "y" "N" "n",
-                                               "s", "S".
-           88 SAVE-OPTION-NO                   VALUE "N" "n".
-           88 SAVE-VALID-YES                   VALUE "Y","y","S","s".
+      *>  01  SAVE-OPTION                         PIC X(001).
+      *>      88 SAVE-VALID-OPTION                VALUE "Y" "y" "N" "n",
+      *>                                          "s", "S".
+      *>      88 SAVE-OPTION-NO                   VALUE "N" "n".
+      *>      88 SAVE-VALID-YES                   VALUE "Y","y","S","s".
        77  DUMMY                               PIC X(001).
        77  INGRED-STATUS                       PIC 9(002).
        77  KEYSTATUS                           PIC 9(004).
@@ -708,7 +708,7 @@
                SET ING-INDEX UP BY 1
            END-PERFORM
            IF INGREDEXIST <> "Y" THEN
-               MOVE ERROR-INGREDID-NO TO ERROR-TEXT
+               MOVE  ERROR-INGRED-NO  TO ERROR-TEXT
                ACCEPT ERROR-ZONE
                IF KEYSTATUS = F3 THEN
                    EXIT SECTION
@@ -723,7 +723,7 @@
            DISPLAY REGISTER-SCREEN
            MOVE ZEROS TO GET-PRICE
 
-           PERFORM WITH TEST AFTER UNTIL GET-PRICE > 1
+           PERFORM WITH TEST AFTER UNTIL GET-PRICE >= 1
 
            ACCEPT GET-PRICE
                IF KEYSTATUS = F3 THEN
@@ -804,6 +804,7 @@
 
        SAVE-RECORD SECTION.
            PERFORM WITH TEST AFTER UNTIL SAVE-VALID-OPTION
+           MOVE SPACES TO SAVE-OPTION
                DISPLAY WANT-TO-SAVE
                ACCEPT  WANT-TO-SAVE1
                IF KEYSTATUS = F3 THEN
@@ -823,4 +824,15 @@
                    WRITE RIS-DETAILS FROM WS-RIS-DETAILS
                    END-WRITE
                CLOSE   FXRISUPPLY
+                   MOVE MESSAGE-WRITE-YES TO ERROR-TEXT
+                       ACCEPT ERROR-ZONE
+           ELSE
+               IF SAVE-OPTION-NO THEN
+               MOVE MESSAGE-WRITE-NO TO ERROR-TEXT
+                   ACCEPT ERROR-ZONE
+                       IF KEYSTATUS = F3 THEN
+                           EXIT SECTION
+                       END-IF
+                 END-IF
+            END-IF
            EXIT SECTION.

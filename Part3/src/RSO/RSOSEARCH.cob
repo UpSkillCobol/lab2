@@ -3,11 +3,11 @@
       ******************************************************************
       *    BREADWICH | REGISTRATION OF SANDWICH ORDERS
       ******************************************************************
-      *    REGISTER ORDERS | V0.4 | IN UPDATE | 08.03.2021
+      *    SEARCH ORDERS | V0.1 | IN UPDATE | 08.03.2021
       ******************************************************************
 
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. RSOREGISTER.
+       PROGRAM-ID. RSOSEARCH.
 
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
@@ -41,7 +41,6 @@
        COPY RSOWS.
        COPY RSOWSVAR.
        COPY RSOTABLES.
-       COPY VAR-VALIDDATE.
        COPY RSOCONSTANTS.
 
       ******************************************************************
@@ -67,48 +66,7 @@
 
       ******************************************************************
 
-       01  REGISTER-SCREEN BACKGROUND-COLOR 0 FOREGROUND-COLOR 7.
-           05 VALUE ALL "_" PIC X(046) LINE 10 COL 03.
-           05 VALUE ALL " " PIC X(048) LINE 07 COL 03
-              BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(048) LINE 22 COL 03
-              BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 08 COL 03 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 09 COL 03 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 10 COL 03 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 11 COL 03 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 12 COL 03 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 13 COL 03 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 14 COL 03 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 15 COL 03 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 16 COL 03 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 17 COL 03 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 18 COL 03 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 19 COL 03 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 20 COL 03 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 21 COL 03 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 08 COL 49 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 09 COL 49 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 10 COL 49 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 11 COL 49 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 12 COL 49 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 13 COL 49 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 14 COL 49 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 15 COL 49 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 16 COL 49 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 17 COL 49 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 18 COL 49 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 19 COL 49 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 20 COL 49 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 21 COL 49 BACKGROUND-COLOR 7.
-           05 VALUE REGISTER-TEXT               LINE 09 COL 12.
-           05 VALUE REGISTER-TEXT-ID            LINE 13 COL 05.
-           05 VALUE REGISTER-TEXT-DELIVERY-DATE LINE 15 COL 05.
-           05 VALUE REGISTER-TEXT-SCHOOL        LINE 16 COL 05.
-           05 VALUE REGISTER-TEXT-SANDWICH      LINE 17 COL 05.
-           05 VALUE REGISTER-TEXT-QUANTITY      LINE 18 COL 05.
-           05 VALUE REGISTER-TEXT-ORDER-DATE    LINE 19 COL 05.
-           05 REG-ID PIC 9(005) LINE 13 COL 26 USING WS-ORDERS-ID.
+       01  ACCEPT-SCREEN BACKGROUND-COLOR 0 FOREGROUND-COLOR 7.
            05 REG-REC.
               10 REG-DELIVERY-DATE.
                  15 REG-DELIVERY-DAY PIC X(002) LINE 15 COL 26 TO
@@ -119,28 +77,10 @@
                  15 LINE 15 COL 31 VALUE "/".
                  15 REG-DELIVERY-YEAR PIC X(004) LINE 15 COL 32 TO
                     WS-DELIVERY-YEAR AUTO REQUIRED.
-              10 REG-DELIVERY-TIME.
-                 15 LINE 15 COL 37 VALUE "|".
-                 15 REG-DELIVERY-HOUR PIC X(002) LINE 15 COL 39 TO
-                    WS-DELIVERY-HOUR AUTO REQUIRED.
-                 15 LINE 15 COL 41 VALUE ":".
-                 15 REG-DELIVERY-MINUTE PIC X(002) LINE 15 COL 42 TO
-                    WS-DELIVERY-MINUTE AUTO REQUIRED.
               10 REG-SCHOOL PIC 9(003) LINE 16 COL 26
                  TO WS-ORDERS-SCHOOL-INTERNAL-ID AUTO REQUIRED.
               10 REG-SANDWICH PIC 9(003) LINE 17 COL 26
                  TO WS-ORDERS-SANDWICH-INTERNAL-ID AUTO REQUIRED.
-              10 REG-QUANTITY PIC 9(003) LINE 18 COL 26
-                 TO WS-ORDERS-QUANTITY AUTO REQUIRED.
-              10 REG-ORDERS-DATE.
-                 15 REG-ORDERS-DAY PIC 9(002) LINE 19 COL 26 FROM
-                    WS-ORDERS-DAY AUTO REQUIRED.
-                 15 LINE 19 COL 28 VALUE "/".
-                 15 REG-ORDERS-MONTH PIC 9(002) LINE 19 COL 29 FROM
-                    WS-ORDERS-MONTH AUTO REQUIRED.
-                 15 LINE 19 COL 31 VALUE "/".
-                 15 REG-ORDERS-YEAR PIC 9(004) LINE 19 COL 32 FROM
-                    WS-ORDERS-YEAR AUTO REQUIRED.
 
       ******************************************************************
 
@@ -185,50 +125,49 @@
            05 VALUE REGISTER-TEXT-SANDWICH      LINE 17 COL 05.
            05 VALUE REGISTER-TEXT-QUANTITY      LINE 18 COL 05.
            05 VALUE REGISTER-TEXT-ORDER-DATE    LINE 19 COL 05.
-           05 REG-ID2 PIC 9(005) LINE 13 COL 26 USING WS-ORDERS-ID.
+           05 REG-ID2 PIC 9(005) LINE 13 COL 26 FROM
+              TAB-ORDERS-ID (IND-ORDERS).
            05 REG-REC2.
               10 REG-DELIVERY-DATE2.
                  15 REG-DELIVERY-DAY2 PIC X(002) LINE 15 COL 26 FROM
-                    WS-DELIVERY-DAY.
+                    TAB-DELIVERY-DAY (IND-ORDERS).
                  15 LINE 15 COL 28 VALUE "/".
                  15 REG-DELIVERY-MONTH2 PIC X(002) LINE 15 COL 29 FROM
-                    WS-DELIVERY-MONTH.
+                    TAB-DELIVERY-MONTH (IND-ORDERS).
                  15 LINE 15 COL 31 VALUE "/".
                  15 REG-DELIVERY-YEAR2 PIC X(004) LINE 15 COL 32 FROM
-                    WS-DELIVERY-YEAR.
+                    TAB-DELIVERY-YEAR (IND-ORDERS).
               10 REG-DELIVERY-TIME2.
                  15 LINE 15 COL 37 VALUE "|".
                  15 REG-DELIVERY-HOUR2 PIC X(002) LINE 15 COL 39 FROM
-                    WS-DELIVERY-HOUR.
+                    TAB-DELIVERY-HOUR (IND-ORDERS).
                  15 LINE 15 COL 41 VALUE ":".
                  15 REG-DELIVERY-MINUTE2 PIC X(002) LINE 15 COL 42 FROM
-                    WS-DELIVERY-MINUTE.
+                    TAB-DELIVERY-MINUTE (IND-ORDERS).
               10 REG-SCHOOL2 PIC 9(003) LINE 16 COL 26
-                 FROM WS-ORDERS-SCHOOL-INTERNAL-ID.
+                 FROM TAB-ORDERS-SCHOOL-INTERNAL-ID (IND-ORDERS).
               10 VALUE "|" LINE 16 COL 30.
               10 SHOW-SCHOOL-NAME2 PIC X(050) LINE 16 COL 32
                  FROM TAB-SCHOOL-DESIGNATION (IND-SCHOOL).
               10 REG-SANDWICH2 PIC 9(003) LINE 17 COL 26
-                 FROM WS-ORDERS-SANDWICH-INTERNAL-ID.
+                 FROM TAB-ORDERS-SANDWICH-INTERNAL-ID (IND-ORDERS).
               10 VALUE "|" LINE 17 COL 30.
               10 SHOW-SANDWICH-NAME2 PIC X(025) LINE 17 COL 32
                  FROM TAB-SR-S-DESCRIPTION (IND-SANDWICH).
               10 REG-QUANTITY2 PIC 9(003) LINE 18 COL 26
-                 FROM WS-ORDERS-QUANTITY.
-              10 VALUE "|" LINE 18 COL 30.
-              10 VALUE PRICE LINE 18 COL 32.
-              10 REG-PRICE2 PIC Z(005) LINE 18 COL 45
-                 FROM PRICEQUANTITY.
-              10 VALUE EUROS LINE 18 COL 51.
+                 FROM TAB-ORDERS-QUANTITY (IND-ORDERS).
               10 REG-ORDERS-DATE2.
                  15 REG-ORDERS-DAY2 PIC 9(002) LINE 19 COL 26 FROM
-                    WS-ORDERS-DAY.
+                    TAB-ORDERS-DAY (IND-ORDERS).
                  15 LINE 19 COL 28 VALUE "/".
                  15 REG-ORDERS-MONTH2 PIC 9(002) LINE 19 COL 29 FROM
-                    WS-ORDERS-MONTH.
+                    TAB-ORDERS-MONTH (IND-ORDERS).
                  15 LINE 19 COL 31 VALUE "/".
                  15 REG-ORDERS-YEAR2 PIC 9(004) LINE 19 COL 32 FROM
-                    WS-ORDERS-YEAR.
+                    TAB-ORDERS-YEAR (IND-ORDERS).
+           05 VALUE VIEW-ORDERS-ONEBYONE LINE 25 COL 03
+              FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
+           05 LINE 01 COL 01 PIC X TO PRESS-KEY AUTO.
 
       ******************************************************************
 
@@ -315,10 +254,6 @@
            05 VALUE "|"                     LINE ILIN COL PLUS 2.
            05 LIST-SANDWICH-NAME PIC X(025) LINE ILIN COL PLUS 2
               FROM TAB-SR-S-DESCRIPTION (IND-SANDWICH).
-           05 VALUE "                 " LINE ILIN COL PLUS 2.
-           05 LIST-SANDWICH-PRICE PIC 99 LINE ILIN COL PLUS 2
-              FROM TAB-SR-PRICE (IND-SANDWICH).
-           05 VALUE EUROS LINE ILIN COL PLUS 2.
 
       ******************************************************************
 
@@ -379,312 +314,121 @@
 
            PERFORM LOAD-ALL-TABLES
 
-           PERFORM REGISTER-ORDER
-              IF KEYSTATUS = F3 THEN
-                 EXIT PROGRAM
-              END-IF
+      *    FALTA MENU
+           PERFORM SEARCH-SCHOOL
+           PERFORM SEARCH-SANDWICH
+           PERFORM SEARCH-SCHOOL-SANDWICH
            EXIT PROGRAM.
 
       ******************************************************************
 
-       REGISTER-ORDER SECTION.
-           PERFORM GET-ORDER-ID
-
-           ACCEPT WS-ORDERS-DATE FROM DATE YYYYMMDD
-
-           OPEN I-O ORDERS
-           MOVE "DD"   TO REG-DELIVERY-DAY
-           MOVE "MM"   TO REG-DELIVERY-MONTH
-           MOVE "YYYY" TO REG-DELIVERY-YEAR
-           MOVE "HH"   TO REG-DELIVERY-HOUR
-           MOVE "MM"   TO REG-DELIVERY-MINUTE
-           MOVE ZEROS  TO REG-SCHOOL, REG-SANDWICH, REG-QUANTITY
-
-           MOVE FDORDERSKEYS TO WS-ORDERS-ID
-
+       SEARCH-SCHOOL SECTION.
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
-           DISPLAY REGISTER-SCREEN
 
-           PERFORM GET-DELIVERY-DATE
-              IF KEYSTATUS = F3 THEN
-                 CLOSE ORDERSKEYS
-                 CLOSE ORDERS
-                 EXIT SECTION
-              END-IF
+           MOVE ZEROS TO COUNTER
 
-           PERFORM GET-SCHOOL-ID
-              IF KEYSTATUS = F3 THEN
-                 CLOSE ORDERSKEYS
-                 CLOSE ORDERS
-                 EXIT SECTION
-              END-IF
-
-           PERFORM GET-SANDWICH-ID
-              IF KEYSTATUS = F3 THEN
-                 CLOSE ORDERSKEYS
-                 CLOSE ORDERS
-                 EXIT SECTION
-              END-IF
-
-           PERFORM GET-QUANTITY
-              IF KEYSTATUS = F3 THEN
-                 CLOSE ORDERSKEYS
-                 CLOSE ORDERS
-                 EXIT SECTION
-              END-IF
-
-           PERFORM WITH TEST AFTER UNTIL SAVE-VALID
-              MOVE SPACES TO SS-SAVE
-              DISPLAY CLEAR-SCREEN
-              DISPLAY MAIN-SCREEN
-              DISPLAY SHOW-REGISTER-SCREEN
-              ACCEPT SAVE-SCREEN
-              IF KEYSTATUS = F3 THEN
-                 CLOSE ORDERSKEYS
-                 CLOSE ORDERS
-                 EXIT SECTION
-              END-IF
-
-              IF NOT SAVE-VALID THEN
-                 MOVE INVALID-OPTION TO COMMENT-TEXT
-                 ACCEPT COMMENTS-SCREEN
-                 IF KEYSTATUS = F3 THEN
-                    MOVE SPACES TO SS-SAVE
-                    CLOSE ORDERSKEYS
-                    CLOSE ORDERS
-                    EXIT SECTION
-                 END-IF
-              END-IF
+           PERFORM WITH TEST AFTER UNTIL SCHOOL-EXISTS = "Y"
+              PERFORM LIST-SCHOOLS
+              PERFORM CHECK-SCHOOL-EXISTS
            END-PERFORM
 
-           IF SAVE-YES THEN
-              REWRITE FDORDERSKEYS
-              END-REWRITE
-              CLOSE ORDERSKEYS
-              WRITE FD-ORDERS FROM WS-ORDERS
-              END-WRITE
-              CLOSE ORDERS
-              MOVE MESSAGE-WRITE-YES TO COMMENT-TEXT
+           SET IND-ORDERS TO 1
+           PERFORM UNTIL IND-ORDERS > MAX-ORDERS
+              IF REG-SCHOOL = TAB-ORDERS-SCHOOL-INTERNAL-ID (IND-ORDERS)
+              THEN
+                 DISPLAY CLEAR-SCREEN
+                 DISPLAY MAIN-SCREEN
+                 PERFORM GET-SANDWICH-NAME
+                 ACCEPT SHOW-REGISTER-SCREEN
+              END-IF
+              SET IND-ORDERS UP BY 1
+           END-PERFORM
+
+           IF COUNTER = 0 THEN
+              MOVE ERROR-SEARCH TO COMMENT-TEXT
               ACCEPT COMMENTS-SCREEN
               IF KEYSTATUS = F3 THEN
-                 MOVE SPACES TO SS-SAVE
-                 CLOSE ORDERSKEYS
-                 CLOSE ORDERS
                  EXIT SECTION
-              END-IF
-           ELSE
-              IF SAVE-NO THEN
-                 CLOSE ORDERSKEYS
-                 CLOSE ORDERS
-                 MOVE MESSAGE-WRITE-NO TO COMMENT-TEXT
-                 ACCEPT COMMENTS-SCREEN
-                 IF KEYSTATUS = F3 THEN
-                    MOVE SPACES TO SS-SAVE
-                    EXIT SECTION
-                 END-IF
               END-IF
            END-IF
-
-           MOVE SPACES TO SS-SAVE
            EXIT SECTION.
 
       ******************************************************************
 
-       GET-ORDER-ID SECTION.
-           OPEN I-O ORDERSKEYS
-              READ ORDERSKEYS
-                 ADD 1 TO FDORDERSKEYS
-           EXIT SECTION.
+       SEARCH-SANDWICH SECTION.
+           DISPLAY CLEAR-SCREEN
+           DISPLAY MAIN-SCREEN
 
-      ******************************************************************
+           MOVE ZEROS TO COUNTER
 
-       GET-DELIVERY-DATE SECTION.
-           PERFORM WITH TEST AFTER UNTIL DATE-VALID = "Y"
-           AND FLAG-TRUE = "Y" AND FLAG-CALENDAR = "Y"
-
-              MOVE SPACES TO DATE-VALID, FLAG-TRUE, FLAG-CALENDAR
-              MOVE "DD"   TO REG-DELIVERY-DAY
-              MOVE "MM"   TO REG-DELIVERY-MONTH
-              MOVE "YYYY" TO REG-DELIVERY-YEAR
-              MOVE "HH"   TO REG-DELIVERY-HOUR
-              MOVE "MM"   TO REG-DELIVERY-MINUTE
-              DISPLAY REG-DELIVERY-DATE, REG-DELIVERY-TIME
-
-              MOVE INSTRUCTIONS-DATE TO INSTRUCTIONS-TEXT
-              DISPLAY INSTRUCTIONS-SCREEN
-
-              PERFORM LIST-CALENDAR
-              IF KEYSTATUS = F3 THEN
-                 EXIT SECTION
-              END-IF
-
-              MOVE WS-DELIVERY-DATE TO WS-VALID-DATE
-              PERFORM CHECK-DATE
-              IF KEYSTATUS = F3 THEN
-                 EXIT SECTION
-              END-IF
-              MOVE WS-VALID-DATE TO WS-DELIVERY-DATE
-
-              IF DATE-VALID = "Y" THEN
-                 PERFORM CHECK-BEFORE-3DAYS
-                 IF KEYSTATUS = F3 THEN
-                    EXIT SECTION
-                 END-IF
-              END-IF
-
-              IF DATE-VALID = "Y" AND FLAG-TRUE = "Y" THEN
-                 PERFORM GET-DELIVERY-TIME
-                 IF KEYSTATUS = F3 THEN
-                    EXIT SECTION
-                 END-IF
-              END-IF
-
-              IF CALENDAR-EXISTS NOT = "N" AND DATE-VALID = "Y"
-              AND FLAG-TRUE = "Y" THEN
-                 PERFORM CHECK-UNAVAILABILITY
-                 IF KEYSTATUS = F3 THEN
-                    EXIT SECTION
-                 END-IF
-              END-IF
-
-              IF CALENDAR-EXISTS = "N" THEN
-                 MOVE "Y" TO FLAG-CALENDAR
-              END-IF
-
-           END-PERFORM
-           EXIT SECTION.
-
-      ******************************************************************
-
-       GET-DELIVERY-TIME SECTION.
-           PERFORM WITH TEST AFTER UNTIL VALID-DELIVERY-HOUR
-           AND VALID-DELIVERY-MINUTE
-           AND REG-DELIVERY-HOUR IS NOT EQUALS "HH"
-           AND REG-DELIVERY-MINUTE IS NOT EQUALS "MM"
-
-              MOVE "HH"   TO REG-DELIVERY-HOUR
-              MOVE "MM"   TO REG-DELIVERY-MINUTE
-              DISPLAY REG-DELIVERY-TIME
-
-              MOVE INSTRUCTIONS-TIME TO INSTRUCTIONS-TEXT
-              DISPLAY INSTRUCTIONS-SCREEN
-
-              ACCEPT REG-DELIVERY-HOUR
-              IF KEYSTATUS = F3 THEN
-                 EXIT SECTION
-              END-IF
-
-              ACCEPT REG-DELIVERY-MINUTE
-              IF KEYSTATUS = F3 THEN
-                 EXIT SECTION
-              END-IF
-
-              IF NOT VALID-DELIVERY-HOUR OR NOT VALID-DELIVERY-MINUTE
-              OR REG-DELIVERY-HOUR = "HH"
-              OR REG-DELIVERY-MINUTE = "MM" THEN
-                 MOVE INVALID-TIME TO COMMENT-TEXT
-                 ACCEPT COMMENTS-SCREEN
-                 IF KEYSTATUS = F3 THEN
-                    EXIT SECTION
-                 END-IF
-              END-IF
-           END-PERFORM
-           EXIT SECTION.
-
-      ******************************************************************
-
-       GET-SCHOOL-ID SECTION.
-           PERFORM WITH TEST AFTER UNTIL WS-ORDERS-SCHOOL-INTERNAL-ID
-           NOT EQUALS ALL ZEROS AND SCHOOL-EXISTS = "Y"
-
-              MOVE ZEROS TO REG-SCHOOL
-              DISPLAY REG-SCHOOL
-
-              MOVE INSTRUCTIONS-SCHOOL TO INSTRUCTIONS-TEXT
-              DISPLAY INSTRUCTIONS-SCREEN
-
-              PERFORM LIST-SCHOOLS
-              IF KEYSTATUS = F3 THEN
-                 EXIT SECTION
-              END-IF
-
-              PERFORM CHECK-SCHOOL-EXISTS
-
-              IF WS-ORDERS-SCHOOL-INTERNAL-ID EQUALS ALL ZEROS
-              OR SCHOOL-EXISTS NOT = "Y" THEN
-                 MOVE INVALID-SCHOOL TO COMMENT-TEXT
-                 ACCEPT COMMENTS-SCREEN
-                 IF KEYSTATUS = F3 THEN
-                    EXIT SECTION
-                 END-IF
-              END-IF
-           END-PERFORM
-           EXIT SECTION.
-
-      ******************************************************************
-
-       GET-SANDWICH-ID SECTION.
-           PERFORM WITH TEST AFTER UNTIL WS-ORDERS-SANDWICH-INTERNAL-ID
-           NOT EQUALS ALL ZEROS AND SANDWICH-EXISTS = "Y"
-
-              MOVE ZEROS TO REG-SANDWICH
-              DISPLAY REG-SANDWICH
-
-              MOVE INSTRUCTIONS-SANDWICH TO INSTRUCTIONS-TEXT
-              DISPLAY INSTRUCTIONS-SCREEN
-
+           PERFORM WITH TEST AFTER UNTIL SANDWICH-EXISTS = "Y"
               PERFORM LIST-SANDWICHS
+              PERFORM CHECK-SANDWICH-EXISTS
+           END-PERFORM
+
+           SET IND-ORDERS TO 1
+           PERFORM UNTIL IND-ORDERS > MAX-ORDERS
+              IF REG-SANDWICH =
+              TAB-ORDERS-SANDWICH-INTERNAL-ID (IND-ORDERS) THEN
+                 ADD 1 TO COUNTER
+                 DISPLAY CLEAR-SCREEN
+                 DISPLAY MAIN-SCREEN
+                 PERFORM GET-SCHOOL-NAME
+                 ACCEPT SHOW-REGISTER-SCREEN
+              END-IF
+              SET IND-ORDERS UP BY 1
+           END-PERFORM
+
+           IF COUNTER = 0 THEN
+              MOVE ERROR-SEARCH TO COMMENT-TEXT
+              ACCEPT COMMENTS-SCREEN
               IF KEYSTATUS = F3 THEN
                  EXIT SECTION
               END-IF
-
-              PERFORM CHECK-SANDWICH-EXISTS
-
-              IF WS-ORDERS-SANDWICH-INTERNAL-ID EQUALS ALL ZEROS
-              OR SANDWICH-EXISTS NOT = "Y" THEN
-                 MOVE INVALID-SANDWICH TO COMMENT-TEXT
-                 ACCEPT COMMENTS-SCREEN
-                 IF KEYSTATUS = F3 THEN
-                    EXIT SECTION
-                 END-IF
-              END-IF
-           END-PERFORM
+           END-IF
            EXIT SECTION.
 
       ******************************************************************
 
-       GET-QUANTITY SECTION.
-           PERFORM WITH TEST AFTER UNTIL WS-ORDERS-QUANTITY
-           NOT EQUALS ALL ZEROS
+       SEARCH-SCHOOL-SANDWICH SECTION.
+           DISPLAY CLEAR-SCREEN
+           DISPLAY MAIN-SCREEN
 
-              DISPLAY CLEAR-SCREEN
-              DISPLAY MAIN-SCREEN
-              DISPLAY REGISTER-SCREEN
+           MOVE ZEROS TO COUNTER
 
-              MOVE ZEROS TO REG-QUANTITY
-              DISPLAY REG-QUANTITY
+           PERFORM WITH TEST AFTER UNTIL SCHOOL-EXISTS = "Y"
+              PERFORM LIST-SCHOOLS
+              PERFORM CHECK-SCHOOL-EXISTS
+           END-PERFORM
 
-              MOVE INSTRUCTIONS-QUANTITY TO INSTRUCTIONS-TEXT
-              DISPLAY INSTRUCTIONS-SCREEN
+           PERFORM WITH TEST AFTER UNTIL SANDWICH-EXISTS = "Y"
+              PERFORM LIST-SANDWICHS
+              PERFORM CHECK-SANDWICH-EXISTS
+           END-PERFORM
 
-              ACCEPT REG-QUANTITY
+           SET IND-ORDERS TO 1
+           PERFORM UNTIL IND-ORDERS > MAX-ORDERS
+              IF REG-SCHOOL = TAB-ORDERS-SCHOOL-INTERNAL-ID (IND-ORDERS)
+              THEN
+                 IF REG-SANDWICH =
+                 TAB-ORDERS-SANDWICH-INTERNAL-ID (IND-ORDERS) THEN
+                    ADD 1 TO COUNTER
+                    DISPLAY CLEAR-SCREEN
+                    DISPLAY MAIN-SCREEN
+                    ACCEPT SHOW-REGISTER-SCREEN
+                 END-IF
+              END-IF
+              SET IND-ORDERS UP BY 1
+           END-PERFORM
+
+           IF COUNTER = 0 THEN
+              MOVE ERROR-SEARCH TO COMMENT-TEXT
+              ACCEPT COMMENTS-SCREEN
               IF KEYSTATUS = F3 THEN
                  EXIT SECTION
               END-IF
-
-              IF WS-ORDERS-QUANTITY EQUALS ALL ZEROS THEN
-                 MOVE INVALID-QUANTITY TO COMMENT-TEXT
-                 ACCEPT COMMENTS-SCREEN
-                 IF KEYSTATUS = F3 THEN
-                    EXIT SECTION
-                 END-IF
-              END-IF
-
-              COMPUTE PRICEQUANTITY =
-              TAB-SR-PRICE (IND-SANDWICH) * WS-ORDERS-QUANTITY
-
-           END-PERFORM
+           END-IF
            EXIT SECTION.
 
       ******************************************************************
@@ -738,6 +482,7 @@
            IF ORDERS-FS = "35"
               OPEN OUTPUT ORDERS
               CLOSE ORDERS
+      *       DAR ERRO A DIZER QUE FICHEIRO ESTA VAZIO + REPETIR CODIGO DO START
            ELSE
               CLOSE ORDERS
            END-IF
@@ -749,6 +494,7 @@
                  WRITE FDORDERSKEYS
                  END-WRITE
               CLOSE ORDERSKEYS
+      *       DAR ERRO A DIZER QUE FICHEIRO ESTA VAZIO + REPETIR CODIGO DO START
            ELSE
               CLOSE ORDERSKEYS
            END-IF
@@ -774,6 +520,8 @@
            PERFORM FILL-TABLE-SCHOOL
 
            PERFORM FILL-TABLE-SANDWICH
+
+           PERFORM FILL-TABLE-ORDERS
            EXIT SECTION.
 
       ******************************************************************
@@ -884,7 +632,28 @@
        LOAD-TABLE-SANDWICH SECTION.
            MOVE SR-IID TO TAB-SR-IID (IND-SANDWICH)
            MOVE SR-S-DESCRIPTION TO TAB-SR-S-DESCRIPTION (IND-SANDWICH)
-           MOVE SR-PRICE TO TAB-SR-PRICE (IND-SANDWICH)
+           EXIT SECTION.
+
+      ******************************************************************
+
+       FILL-TABLE-ORDERS SECTION.
+           OPEN INPUT ORDERS
+           SET IND-ORDERS TO 0
+           PERFORM UNTIL EOFORDERS
+              READ ORDERS
+                 AT END
+                    SET EOFORDERS TO TRUE
+                    MOVE IND-ORDERS TO MAX-ORDERS
+                 NOT AT END
+                    SET IND-ORDERS UP BY 1
+                    PERFORM LOAD-TABLE-ORDERS
+              END-READ
+           END-PERFORM
+           CLOSE ORDERS
+           EXIT SECTION.
+
+       LOAD-TABLE-ORDERS SECTION.
+           MOVE FD-ORDERS TO TAB-ORDERS (IND-ORDERS)
            EXIT SECTION.
 
       ******************************************************************
@@ -955,107 +724,6 @@
               END-IF
            END-PERFORM
            MOVE SPACES TO TEXT0
-           EXIT SECTION.
-
-      ******************************************************************
-
-       CHECK-DATE SECTION.
-           ACCEPT WS-CURRENT-DATE FROM DATE YYYYMMDD
-           IF WS-CURRENT-DATE <= WS-VALID-DATE THEN
-              IF VALID-YEAR AND VALID-MONTH AND VALID-DAY THEN
-                 IF WS-YEAR >= WS-CURRENT-YEAR AND WS-MONTH >=
-                 WS-CURRENT-MONTH THEN
-                    IF NOT MONTH-FEB AND NOT MONTH-30 THEN
-                       MOVE "Y" TO DATE-VALID
-                    ELSE
-                       IF MONTH-30 AND DAY-30 THEN
-                          MOVE "Y" TO DATE-VALID
-                       END-IF
-                       IF MONTH-FEB THEN
-                          PERFORM LEAP-YEAR-CHECK
-                          IF LEAP-YEAR-YES AND FEB-LEAP-YEAR THEN
-                             MOVE "Y" TO DATE-VALID
-                          ELSE
-                             IF NOT LEAP-YEAR-YES AND DAY-FEBRUARY THEN
-                                MOVE "Y" TO DATE-VALID
-                             END-IF
-                          END-IF
-                       END-IF
-                    END-IF
-                 END-IF
-              END-IF
-           END-IF
-
-           IF DATE-VALID NOT = "Y" THEN
-              MOVE INVALID-DATE1 TO COMMENT-TEXT
-              ACCEPT COMMENTS-SCREEN
-              IF KEYSTATUS = F3 THEN
-                 EXIT SECTION
-              END-IF
-           END-IF
-           EXIT SECTION.
-
-      ******************************************************************
-
-       LEAP-YEAR-CHECK SECTION.
-           MOVE SPACE TO LEAP-YEAR
-           IF FUNCTION MOD (WS-YEAR,4) = 0 THEN
-              IF FUNCTION MOD (WS-YEAR,100) <> 0 THEN
-                 MOVE "Y" TO LEAP-YEAR
-              ELSE
-                 IF FUNCTION MOD (WS-YEAR,400) = 0 THEN
-                    MOVE "Y" TO LEAP-YEAR
-                 END-IF
-               END-IF
-           END-IF
-           EXIT SECTION.
-
-      ******************************************************************
-
-       CHECK-BEFORE-3DAYS SECTION.
-           MOVE WS-DELIVERY-DATE TO TEST2
-           MOVE WS-ORDERS-DATE TO TEST3
-
-           SUBTRACT TEST2 FROM TEST3 GIVING TEST1
-
-           IF TEST1 < "00000003" THEN
-              MOVE INVALID-DATE2 TO COMMENT-TEXT
-              ACCEPT COMMENTS-SCREEN
-              IF KEYSTATUS = F3 THEN
-                 EXIT SECTION
-              END-IF
-           ELSE
-              MOVE "Y" TO FLAG-TRUE
-           END-IF
-           EXIT SECTION.
-
-      ******************************************************************
-
-       CHECK-UNAVAILABILITY SECTION.
-           SET IND-AGG TO 1
-
-           PERFORM UNTIL IND-AGG > MAX-AGG
-              IF WS-DELIVERY-DATE-TIME < AGG-BEGIN (IND-AGG) THEN
-                 MOVE "Y" TO FLAG-CALENDAR
-                 MOVE MAX-AGG TO IND-AGG
-              ELSE
-                 IF WS-DELIVERY-DATE-TIME <= AGG-END (IND-AGG)
-                 THEN
-                    MOVE "N" TO FLAG-CALENDAR
-                    MOVE INVALID-DATE3 TO COMMENT-TEXT
-                    ACCEPT COMMENTS-SCREEN
-                    IF KEYSTATUS = F3 THEN
-                       EXIT SECTION
-                    END-IF
-                    MOVE MAX-AGG TO IND-AGG
-                 END-IF
-              END-IF
-              SET IND-AGG UP BY 1
-           END-PERFORM
-
-           IF FLAG-CALENDAR = SPACE THEN
-              MOVE "Y" TO FLAG-CALENDAR
-           END-IF
            EXIT SECTION.
 
       ******************************************************************
@@ -1149,7 +817,7 @@
 
        LIST-SANDWICHS SECTION.
            DISPLAY CLEAR-LIST
-           MOVE LIST-FRAME3 TO TEXT0
+           MOVE LIST-FRAME1 TO TEXT0
            DISPLAY LIST-FRAME
            SET IND-SANDWICH TO 0
            MOVE 10 TO ILIN
@@ -1234,4 +902,32 @@
 
       ******************************************************************
 
-       END PROGRAM RSOREGISTER.
+       GET-SANDWICH-NAME SECTION.
+           SET IND-SANDWICH TO 1
+           PERFORM UNTIL IND-SANDWICH > MAX-SANDWICH
+              IF TAB-ORDERS-SANDWICH-INTERNAL-ID (IND-ORDERS) =
+              TAB-SR-IID (IND-SANDWICH) THEN
+                 EXIT SECTION
+              ELSE
+                 SET IND-SANDWICH UP BY 1
+              END-IF
+           END-PERFORM
+           EXIT SECTION.
+
+      ******************************************************************
+
+       GET-SCHOOL-NAME SECTION.
+           SET IND-SCHOOL TO 1
+           PERFORM UNTIL IND-SCHOOL > MAX-SCHOOL
+              IF TAB-ORDERS-SCHOOL-INTERNAL-ID (IND-ORDERS) =
+              TAB-SCHOOL-INTERNAL-ID (IND-SCHOOL) THEN
+                 EXIT SECTION
+              ELSE
+                 SET IND-SCHOOL UP BY 1
+              END-IF
+           END-PERFORM
+           EXIT SECTION.
+
+      ******************************************************************
+
+       END PROGRAM RSOSEARCH.

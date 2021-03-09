@@ -3,8 +3,13 @@
       ******************************************************************
       *    BREADWICH | REGISTRATION OF SANDWICH ORDERS
       ******************************************************************
-      *    ENGLISH LANGUAGE | V0.3 | IN UPDATE | 07.03.2021
+      *    ENGLISH LANGUAGE | V0.4 | IN UPDATE | 08.03.2021
       ******************************************************************
+
+       01  SAVE                                 PIC X(002).
+           88 SAVE-YES                          VALUE "Y" "y".
+           88 SAVE-NO                           VALUE "N" "n".
+           88 SAVE-VALID                        VALUE "Y" "y" "N" "n".
 
        78  MAIN-TEXT        VALUE "REGISTRATION OF SANDWICH ORDERS".
        78  MAIN-TEXT1       VALUE "F3 - MAIN MENU RSO".
@@ -43,7 +48,7 @@
            VALUE "TIME MUST BE INSERTED BETWEEN 09:00 TO 17:59".
 
        78  INSTRUCTIONS-SCHOOL
-           VALUE "SEARCH THROUGH THE LIST TO FIND YOUR SCHOOL ID".
+           VALUE "SEARCH THROUGH THE LIST TO FIND THE SCHOOL ID".
 
        78  INSTRUCTIONS-SANDWICH
            VALUE "SEARCH THROUGH THE LIST TO FIND THE SANDWICH ID THAT Y
@@ -99,11 +104,27 @@
 
        78  LIST-FRAME2 VALUE "LIST OF PERIODS OF UNAVAILABILITY".
 
+       78  LIST-FRAME3
+           VALUE "ID  |  NAME                                         PR
+      -    "ICE".
+
        78  PREVIOUS-PAGE VALUE "F1 - PREVIOUS PAGE".
 
        78  NEXT-PAGE VALUE "     F2 - NEXT PAGE".
 
        78  LAST-PAGE VALUE "          LAST PAGE".
+
+       78  UNTIL-LIST VALUE "        UNTIL        ".
+
+       78  EUROS VALUE "EUROS".
+
+       78  PRICE VALUE "TOTAL PRICE:".
+
+       78  ERROR-SEARCH
+           VALUE "NO RESULTS FOUND | PRESS ANY KEY TO CONTINUE".
+
+       78  VIEW-ORDERS-ONEBYONE
+           VALUE "PRESS ANY KEY TO NAVIGATE THROUGH THE ORDERS".
 
 
 
@@ -122,8 +143,7 @@
            VALUE "INVALID ID. PLEASE ENTER A VALID ID | PRESS ANY KEY TO
       -    " CONTINUE".
 
-       78  VIEW-RECORDS-ONEBYONE
-           VALUE "PRESS ANY KEY TO NAVIGATE THROUGH DOWNTIME RECORDS".
+
 
        78  END-RECORDS-VIEW
            VALUE "YOU HAVE REACHED THE END OF THE RECORDS | PRESS ANY KE

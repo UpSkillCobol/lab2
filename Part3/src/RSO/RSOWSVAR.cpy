@@ -8,10 +8,11 @@
 
        01  MAIN-OPTION                          PIC 9(002).
            88  VALID-MAIN-OPTION                VALUE 1 THRU 4.
-       01  SAVE                                 PIC X(002).
-           88 SAVE-YES                          VALUE "Y" "y" "S" "s".
-           88 SAVE-NO                           VALUE "N" "n".
-           88 SAVE-VALID                  VALUE "Y" "y" "S" "s" "N" "n".
+      *>  01  SAVE                                 PIC X(002).
+      *>      88 SAVE-YES                          VALUE "Y" "y" "S" "s".
+      *>      88 SAVE-NO                           VALUE "N" "n".
+      *>      88 SAVE-VALID                        VALUE "Y" "y" "S" "s"
+      *>                                                 "N" "n".
        77  KEYSTATUS                            PIC 9(004).
        78  F1                                   VALUE 1001.
        78  F2                                   VALUE 1002.
@@ -34,3 +35,5 @@
        77  ICOL                                 PIC 9(002).
        77  COUNTPAGE                            PIC 9(003).
        77  MAXPERPAGE                           PIC 9(003).
+       77  PRICEQUANTITY                        PIC 9(005).
+       77  COUNTER                              PIC 9(003).
