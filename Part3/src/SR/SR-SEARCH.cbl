@@ -248,6 +248,84 @@
                10 REG-CAT-NAME2 PIC X(030) LINE 14 COL 23
                FROM WS-CAT-NAME2.
       ******************************************************************
+       01  REGISTER-SR-SCREEN
+           BACKGROUND-COLOR 0, FOREGROUND-COLOR 7.
+           05 VALUE SRCH-SR-MENU-TEXT LINE 9 COL 17.
+           05 VALUE SRCH-SR-MENU-TEXT1 LINE 12 COL 13.
+           05 VALUE ALL " " PIC X(055) LINE 7 COL 09
+               BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(055) LINE 22 COL 09
+               BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 8 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 9 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 8 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 9 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 62 BACKGROUND-COLOR 7.
+           05 SR-ACCEPT PIC X(005) LINE 12 COL 32 TO WS-SR-ACCEPT.
+      ******************************************************************
+       01  REGISTER-PRICE-SCREEN
+           BACKGROUND-COLOR 0, FOREGROUND-COLOR 7.
+           05 VALUE SRCH-PRC-MENU-TEXT LINE 9 COL 17.
+           05 VALUE SRCH-PRC-MENU-TEXT1 LINE 12 COL 13.
+           05 VALUE SRCH-PRC-MENU-TEXT1 LINE 13 COL 13.
+           05 VALUE ALL " " PIC X(055) LINE 7 COL 09
+               BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(055) LINE 22 COL 09
+               BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 8 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 9 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 8 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 9 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 62 BACKGROUND-COLOR 7.
+           05 PRICE-MIN PIC 9(002) LINE 12 COL 32 TO WS-PRICE-MIN.
+           05 PRICE-MAX PIC 9(002) LINE 13 COL 32 TO WS-PRICE-MAX.
+      ******************************************************************
        01  CONFIRM-RECORD-SCREEN.
            05 VALUE ALL " " PIC X(107) LINE 6 col 05
                BACKGROUND-COLOR 7.
@@ -427,10 +505,10 @@
                FROM TABLE-CAT-NAME (CAT-INDEX).
       ******************************************************************
        01  SANDWICH-LIST1.
-           05 LIST-SR-ID1 PIC 9(003) LINE ILIN COL ICOL
+           05 LIST-SR-ID1 PIC X(005) LINE ILIN COL ICOL
                FROM TABLE-SR-EID (SR-INDEX).
            05 VALUE "|" LINE ILIN COL PLUS 1.
-           05 LIST-SR-NAME1 PIC X(030) LINE ILIN COL PLUS 1
+           05 LIST-SR-NAME1 PIC X(025) LINE ILIN COL PLUS 1
                FROM TABLE-SR-S-DESC (SR-INDEX).
       ******************************************************************
        01  PREVIOUS-NEXT-TEXT.
@@ -796,7 +874,9 @@
                        WHEN 2
                            PERFORM 260-SEARCH-BY-CAT
                        WHEN 3
+                           PERFORM 310-SEARCH-BY-SANDWICH
                        WHEN 4
+                           PERFORM 320-SEARCH-BY-PRICE
                        WHEN 5
                    END-EVALUATE
            END-PERFORM
@@ -993,7 +1073,46 @@
            EXIT SECTION.
            EXIT SECTION.
        270-SEARCH-1-CAT SECTION.
+           SET SHOW-INDEX TO 0
+           MOVE ZEROS TO WS-CONTROL
+           PERFORM WITH TEST AFTER UNTIL SHOW-INDEX >= NUMBER-SHOW
+               SET SHOW-INDEX UP BY 1
+               IF WS-CATEGORIE1 = SHOW-CATEGORIE1(SHOW-INDEX) OR
+                   SHOW-CATEGORIE2 (SHOW-INDEX) OR
+                   SHOW-CATEGORIE3 (SHOW-INDEX) THEN
+                       DISPLAY CLEAR-SCREEN
+                       DISPLAY MAIN-SCREEN
+                       ACCEPT CONFIRM-RECORD-SCREEN
+               ELSE
+                   ADD 1 TO WS-CONTROL
+               END-IF
+           END-PERFORM
+           IF WS-CONTROL <> 0
+               MOVE NO-MATCH TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
+           END-IF
+           EXIT SECTION.
        280-SEARCH-2-CAT SECTION.
+           SET SHOW-INDEX TO 0
+           MOVE ZEROS TO WS-CONTROL
+           PERFORM WITH TEST AFTER UNTIL SHOW-INDEX >= NUMBER-SHOW
+               SET SHOW-INDEX UP BY 1
+               IF (WS-CATEGORIE1 = SHOW-CATEGORIE1(SHOW-INDEX) OR
+                   SHOW-CATEGORIE2 (SHOW-INDEX) OR
+                   SHOW-CATEGORIE3 (SHOW-INDEX)) AND
+                   (WS-CATEGORIE2 = SHOW-CATEGORIE1(SHOW-INDEX) OR
+                   SHOW-CATEGORIE2 (SHOW-INDEX) OR
+                   SHOW-CATEGORIE3 (SHOW-INDEX))THEN
+                       DISPLAY CLEAR-SCREEN
+                       DISPLAY MAIN-SCREEN
+                       ACCEPT CONFIRM-RECORD-SCREEN
+               ELSE
+                   ADD 1 TO WS-CONTROL
+               END-IF
+           END-PERFORM
+           IF WS-CONTROL <> 0
+               MOVE NO-MATCH TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
+           END-IF
+           EXIT SECTION.
        290-ING-EXISTS SECTION.
            IF WS-ING-ACCEPT = ZEROS THEN
                MOVE 1 TO WS-ING-EXISTS
@@ -1035,13 +1154,130 @@
                END-IF
            END-PERFORM
            EXIT SECTION.
+       310-SEARCH-BY-SANDWICH SECTION.
+           PERFORM WITH TEST AFTER UNTIL WS-SR-EXISTS = 1 OR
+               WS-SR-ACCEPT IS ZEROS
+               PERFORM 500-LIST-SANDWICH
+               PERFORM 320-SANDWICH-EXISTS
+           END-PERFORM
+           IF WS-SR-ACCEPT <> ZEROS THEN
+               MOVE ZEROS TO WS-CONTROL
+               SET SHOW-INDEX TO 0
+               PERFORM WITH TEST AFTER UNTIL SHOW-INDEX >= NUMBER-SHOW
+                   OR WS-CONTROL = 1
+                   SET SHOW-INDEX UP BY 1
+                   IF WS-SR-ACCEPT = SHOW-SR-EID (SHOW-INDEX) THEN
+                       DISPLAY CLEAR-SCREEN
+                       DISPLAY MAIN-SCREEN
+                       ACCEPT CONFIRM-RECORD-SCREEN
+                       MOVE 1 TO WS-CONTROL
+                   END-IF
+               END-PERFORM
+           ELSE
+               EXIT SECTION
+           END-IF
+           EXIT SECTION.
+       320-SANDWICH-EXISTS SECTION.
+           IF WS-SR-ACCEPT = ZEROS THEN
+               MOVE 1 TO WS-SR-EXISTS
+               EXIT SECTION
+           END-IF
+           MOVE 0 TO WS-SR-EXISTS
+           SET SR-INDEX TO 1
+           PERFORM UNTIL SR-INDEX >= NUMBER-SR
+               IF WS-SR-ACCEPT = TABLE-SR-EID (SR-INDEX) THEN
+                   MOVE 1 TO WS-SR-EXISTS
+                   EXIT SECTION
+               ELSE
+                   SET SR-INDEX UP BY 1
+               END-IF
+           END-PERFORM
+           EXIT SECTION.
+       320-SEARCH-BY-PRICE SECTION.
+           ACCEPT REGISTER-PRICE-SCREEN
+       500-LIST-SANDWICH SECTION.
+           DISPLAY CLEAR-SCREEN
+           DISPLAY MAIN-SCREEN
+           DISPLAY LIST-FRAME
+           DISPLAY REGISTER-SR-SCREEN
+           MOVE SPACES TO SR-ACCEPT WS-SR-ACCEPT
+           SET SR-INDEX TO 1
+           MOVE 10 TO ILIN
+           MOVE 72 TO ICOL
+           MOVE 1 TO COUNTPAGE
+           MOVE 10 TO MAXPERPAGE
+           PERFORM WITH TEST AFTER UNTIL SR-INDEX >= NUMBER-SR
+               DISPLAY SANDWICH-LIST1
+               DISPLAY REGISTER-SR-SCREEN
+               SET SR-INDEX UP BY 1
+               ADD 1 TO ILIN
+               ADD 1 TO MAXPERPAGE
+               IF ILIN = 20 THEN
+                   MOVE NEXT-PAGE TO TEXT2
+                   DISPLAY LIST-FRAME
+                   MOVE SR-INSTR TO INSTRUCTION-MESSAGE
+                   DISPLAY INSTRUCTION-MESSAGE
+                   ACCEPT SR-ACCEPT
+                   IF KEY-STATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
+                   IF KEY-STATUS = F1 AND COUNTPAGE > 1
+                       MOVE SPACE TO TEXT2
+                       DISPLAY CLEAR-SCREEN
+                       DISPLAY REGISTER-SR-SCREEN
+                       DISPLAY MAIN-SCREEN
+                       DISPLAY LIST-FRAME
+                       MOVE 10 TO ILIN
+                       SET SR-INDEX DOWN BY MAXPERPAGE
+                       SUBTRACT 1 FROM COUNTPAGE
+                       MOVE 10 TO MAXPERPAGE
+                           IF COUNTPAGE = 1 THEN
+                               MOVE SPACES TO TEXT1
+                               DISPLAY LIST-FRAME
+                           END-IF
+                   ELSE
+                       IF KEY-STATUS = F2 THEN
+                           MOVE PREVIOUS-PAGE TO TEXT1
+                           MOVE NEXT-PAGE TO TEXT2
+                           DISPLAY CLEAR-SCREEN
+                           DISPLAY REGISTER-SR-SCREEN
+                           DISPLAY MAIN-SCREEN
+                           DISPLAY LIST-FRAME
+                           MOVE 10 TO ILIN
+                           ADD 1 TO COUNTPAGE
+                           MOVE 10 TO MAXPERPAGE
+                       ELSE
+                           EXIT SECTION
+                       END-IF
+                   END-IF
+               END-IF
+               IF SR-INDEX >= NUMBER-SR
+                   MOVE LAST-PAGE TO TEXT2
+                   DISPLAY LIST-FRAME
+                   MOVE SR-INSTR TO INSTRUCTION-MESSAGE
+                   DISPLAY INSTRUCTION-MESSAGE
+                   ACCEPT SR-ACCEPT
+                   IF KEY-STATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
+                   IF KEY-STATUS = F1 AND COUNTPAGE > 1
+                       DISPLAY CLEAR-SCREEN
+                       DISPLAY REGISTER-SR-SCREEN
+                       DISPLAY MAIN-SCREEN
+                       DISPLAY LIST-FRAME
+                       MOVE 10 TO ILIN
+                       SET SR-INDEX DOWN BY MAXPERPAGE
+                       SUBTRACT 1 FROM COUNTPAGE
+                       MOVE 10 TO MAXPERPAGE
+                   END-IF
+               END-IF
+           END-PERFORM.
        600-LIST-CAT SECTION.
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY LIST-FRAME
            DISPLAY REGISTER-CAT-SCREEN
-           MOVE ZEROES TO NEW-INGREDID
-           MOVE SPACES TO TRUE-YES
+           MOVE ZEROES TO CAT-ACCEPT WS-CAT-ACCEPT
            SET CAT-INDEX TO 1
            MOVE 10 TO ILIN
            MOVE 72 TO ICOL
@@ -1069,7 +1305,7 @@
                        DISPLAY MAIN-SCREEN
                        DISPLAY LIST-FRAME
                        MOVE 10 TO ILIN
-                       SET ING-INDEX DOWN BY MAXPERPAGE
+                       SET CAT-INDEX DOWN BY MAXPERPAGE
                        SUBTRACT 1 FROM COUNTPAGE
                        MOVE 10 TO MAXPERPAGE
                            IF COUNTPAGE = 1 THEN
@@ -1107,7 +1343,7 @@
                        DISPLAY MAIN-SCREEN
                        DISPLAY LIST-FRAME
                        MOVE 10 TO ILIN
-                       SET ING-INDEX DOWN BY MAXPERPAGE
+                       SET CAT-INDEX DOWN BY MAXPERPAGE
                        SUBTRACT 1 FROM COUNTPAGE
                        MOVE 10 TO MAXPERPAGE
                    END-IF

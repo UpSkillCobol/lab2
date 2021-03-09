@@ -130,3 +130,7 @@
        77  COUNT-ING                       PIC 9(001).
        77  WS-ALPHABETIC                   PIC 9(001).
        77  WS-CONTROL                      PIC 9(001).
+       77  WS-SR-ACCEPT                    PIC X(005).
+       77  WS-SR-EXISTS                    PIC 9(001).
+       77  WS-PRICE-MIN                    PIC 9(002).
+       77  WS-PRICE-MAX                    PIC 9(002).
