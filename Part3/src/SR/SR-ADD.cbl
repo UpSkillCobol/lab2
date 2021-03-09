@@ -175,11 +175,6 @@
            BACKGROUND-COLOR 0, FOREGROUND-COLOR 7.
            05 VALUE ADD-ING-MENU-TEXT LINE 9 COL 17.
            05 VALUE ADD-ING-MENU-TEXT1 LINE 12 COL 08.
-      *     05 VALUE ADD-ING-MENU-TEXT2 LINE 13 COL 13.
-      *     05 VALUE ADD-ING-MENU-TEXT3 LINE 14 COL 13.
-      *     05 VALUE ADD-ING-MENU-TEXT4 LINE 15 COL 13.
-      *     05 VALUE ADD-ING-MENU-TEXT5 LINE 16 COL 13.
-      *     05 VALUE ADD-ING-MENU-TEXT6 LINE 17 COL 13.
            05 VALUE ALL " " PIC X(055) LINE 7 COL 09
                BACKGROUND-COLOR 7.
            05 VALUE ALL " " PIC X(055) LINE 22 COL 09
@@ -455,14 +450,14 @@
         010-OBTAIN-TABLES SECTION.
            SET SR-INDEX TO 1
            OPEN INPUT SANDWICHES
-           MOVE 001 TO SR-IID
-           START SANDWICHES KEY IS GREATER OR EQUAL SR-IID
-               INVALID KEY
-               MOVE 1 TO SANDWICH-EMPTY
-               CLOSE SANDWICHES
-               MOVE NO-SANDWICHES TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
-               EXIT PROGRAM
-           END-START
+      *     MOVE 001 TO SR-IID
+      *     START SANDWICHES KEY IS GREATER OR EQUAL SR-IID
+      *         INVALID KEY
+      *         MOVE 1 TO SANDWICH-EMPTY
+      *         CLOSE SANDWICHES
+      *         MOVE NO-SANDWICHES TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
+      *         EXIT PROGRAM
+      *     END-START
            PERFORM UNTIL SR-EOF
                READ SANDWICHES NEXT RECORD
                    AT END
@@ -579,18 +574,24 @@
            ADD 1 TO WS-SR-IID
            EXIT SECTION.
        130-OBTAIN-EID SECTION.
-           PERFORM WITH TEST AFTER UNTIL REG-UNIQUE = 1
-           MOVE ZERO TO REG-UNIQUE
-           MOVE EID-INSTR TO INSTRUCTION-MESSAGE
-               DISPLAY INSTRUCTIONS-SCREEN
-           ACCEPT REG-EID
-               IF KEY-STATUS = F3 THEN
-                   EXIT SECTION
+           PERFORM WITH TEST AFTER UNTIL REG-UNIQUE = 1 AND EID-VLD
+               AND WS-ALPHABETIC = 0
+               MOVE ZERO TO REG-UNIQUE WS-ALPHABETIC
+               MOVE SPACES TO REG-EID
+               MOVE EID-INSTR TO INSTRUCTION-MESSAGE
+                   DISPLAY INSTRUCTIONS-SCREEN
+               ACCEPT REG-EID
+                   IF KEY-STATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
+               IF WS-SR-EID(1:1) NOT ALPHABETIC THEN
+                   MOVE 1 TO WS-ALPHABETIC
+                   MOVE ALPHA-ERROR TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
                END-IF
-           PERFORM 190-EID-EXISTS
-               IF KEY-STATUS = F3 THEN
-                   EXIT SECTION
-               END-IF
+               PERFORM 190-EID-EXISTS
+                   IF KEY-STATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
            END-PERFORM
            MOVE SPACES TO LINK-TEXT
            MOVE UPPER-CASE(WS-SR-EID) TO WS-SR-EID
@@ -601,12 +602,21 @@
            DISPLAY REGISTER-SCREEN
            EXIT SECTION.
        140-OBTAIN-SHORT-DESCRIPTION SECTION.
-           MOVE S-DESCR-INSTR TO INSTRUCTION-MESSAGE
-               DISPLAY INSTRUCTIONS-SCREEN
-           ACCEPT REG-S-DESCRIPTION
-               IF KEY-STATUS = F3 THEN
-                   EXIT SECTION
+           PERFORM WITH TEST AFTER UNTIL S-DESCRIPTION-VLD
+               AND WS-ALPHABETIC = 0
+               MOVE ZEROS TO WS-ALPHABETIC
+               MOVE SPACES TO REG-S-DESCRIPTION
+               MOVE S-DESCR-INSTR TO INSTRUCTION-MESSAGE
+                   DISPLAY INSTRUCTIONS-SCREEN
+               ACCEPT REG-S-DESCRIPTION
+                   IF KEY-STATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
+               IF WS-SR-S-DESCRIPTION(1:1) NOT ALPHABETIC THEN
+                   MOVE 1 TO WS-ALPHABETIC
+                   MOVE ALPHA-ERROR TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
                END-IF
+           END-PERFORM
            MOVE UPPER-CASE(WS-SR-S-DESCRIPTION) TO WS-SR-S-DESCRIPTION
            MOVE TRIM(WS-SR-S-DESCRIPTION) TO LINK-TEXT
            PERFORM 700-SPACE-CHECK
@@ -615,12 +625,21 @@
            DISPLAY REGISTER-SCREEN
            EXIT SECTION.
        150-OBTAIN-LONG-DESCRIPTION SECTION.
-           MOVE L-DESCR-INSTR TO INSTRUCTION-MESSAGE
-               DISPLAY INSTRUCTIONS-SCREEN
-           ACCEPT REG-L-DESCRIPTION
-               IF KEY-STATUS = F3 THEN
-                   EXIT SECTION
+           PERFORM WITH TEST AFTER UNTIL L-DESCRIPTION-VLD
+               AND WS-ALPHABETIC = 0
+               MOVE ZEROS TO WS-ALPHABETIC
+               MOVE SPACES TO REG-L-DESCRIPTION
+               MOVE L-DESCR-INSTR TO INSTRUCTION-MESSAGE
+                   DISPLAY INSTRUCTIONS-SCREEN
+               ACCEPT REG-L-DESCRIPTION
+                   IF KEY-STATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
+               IF WS-SR-L-DESCRIPTION(1:1) NOT ALPHABETIC THEN
+                   MOVE 1 TO WS-ALPHABETIC
+                   MOVE ALPHA-ERROR TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
                END-IF
+           END-PERFORM
            MOVE UPPER-CASE(WS-SR-L-DESCRIPTION) TO WS-SR-L-DESCRIPTION
            MOVE TRIM(WS-SR-L-DESCRIPTION) TO LINK-TEXT
            PERFORM 700-SPACE-CHECK
@@ -1042,6 +1061,7 @@
            DISPLAY MAIN-SCREEN
            DISPLAY CONFIRM-RECORD-SCREEN
            PERFORM WITH TEST AFTER UNTIL WS-SR-PRICE > ZEROS
+               AND WS-SR-PRICE < 99
                ACCEPT PRICE-SCREEN
            END-PERFORM
            PERFORM WITH TEST AFTER UNTIL REG-OPTION-VLD
@@ -1052,20 +1072,19 @@
                END-IF
            END-PERFORM
            MOVE UPPER-CASE(WS-REG) TO WS-REG
-           EVALUATE WS-REG
-               WHEN "Y"
+           IF REG-YES THEN
                    OPEN I-O SANDWICHES
                        MOVE WS-SR-REC TO SR-REC
                        WRITE SR-REC
                    CLOSE SANDWICHES
                    OPEN I-O SR-CAT
                        IF WS-CATEGORIE1 <> ZEROS THEN
-                           STRING WS-SR-IID, WS-CATEGORIE1
+                           STRING WS-SR-IID, WS-CATEGORIE1,
                            INTO WS-SR-SAND-CAT-ID
                            WRITE SR-CAT-REC FROM WS-SR-CAT-REC
                        END-IF
                        IF WS-CATEGORIE2 <> ZEROS THEN
-                           STRING WS-SR-IID, WS-CATEGORIE2
+                           STRING WS-SR-IID, WS-CATEGORIE2,
                            INTO WS-SR-SAND-CAT-ID
                            WRITE SR-CAT-REC FROM WS-SR-CAT-REC
                        END-IF
@@ -1079,8 +1098,8 @@
                        IF WS-INGREDIENT1 <> ZEROS THEN
                            STRING WS-SR-IID, WS-INGREDIENT1,
                            WS-INGREDIENT-QTD1
-                           INTO WS-SR-SAND-ING-ID
-                           WRITE SR-ING-REC FROM WS-SR-SAND-ING-ID
+                           INTO WS-SR-ING-REC
+                           WRITE SR-ING-REC FROM WS-SR-ING-REC
                        END-IF
                        IF WS-INGREDIENT2 <> ZEROS THEN
                            STRING WS-SR-IID, WS-INGREDIENT2,
@@ -1118,80 +1137,15 @@
                    IF KEY-STATUS = F3 THEN
                        EXIT SECTION
                    END-IF
-               WHEN "S"
-                   OPEN I-O SANDWICHES
-                       MOVE WS-SR-REC TO SR-REC
-                       WRITE SR-REC
-                   CLOSE SANDWICHES
-                   OPEN I-O SR-CAT
-                       IF WS-CATEGORIE1 <> ZEROS THEN
-                           STRING WS-SR-IID, WS-CATEGORIE1
-                           INTO WS-SR-SAND-CAT-ID
-                           MOVE WS-SR-SAND-CAT-ID TO SR-SAND-CAT-ID
-                           WRITE SR-CAT-REC
-                       END-IF
-                       IF WS-CATEGORIE2 <> ZEROS THEN
-                           STRING WS-SR-IID, WS-CATEGORIE2
-                           INTO WS-SR-SAND-CAT-ID
-                           MOVE WS-SR-SAND-CAT-ID TO SR-SAND-CAT-ID
-                           WRITE SR-CAT-REC
-                       END-IF
-                       IF WS-CATEGORIE3 <> ZEROS THEN
-                           STRING WS-SR-IID, WS-CATEGORIE3
-                           INTO WS-SR-SAND-CAT-ID
-                           MOVE WS-SR-SAND-CAT-ID TO SR-SAND-CAT-ID
-                           WRITE SR-CAT-REC
-                       END-IF
-                   CLOSE SR-CAT
-                   OPEN I-O SR-ING
-                       IF WS-INGREDIENT1 <> ZEROS THEN
-                           STRING WS-SR-IID, WS-INGREDIENT1
-                           INTO WS-SR-SAND-ING-ID
-                           MOVE WS-SR-SAND-ING-ID TO SR-SAND-ING-ID
-                           WRITE SR-ING-REC
-                       END-IF
-                       IF WS-INGREDIENT2 <> ZEROS THEN
-                           STRING WS-SR-IID, WS-INGREDIENT2
-                           INTO WS-SR-SAND-ING-ID
-                           MOVE WS-SR-SAND-ING-ID TO SR-SAND-ING-ID
-                           WRITE SR-ING-REC
-                       END-IF
-                       IF WS-INGREDIENT3 <> ZEROS THEN
-                           STRING WS-SR-IID, WS-INGREDIENT3
-                           INTO WS-SR-SAND-ING-ID
-                           MOVE WS-SR-SAND-ING-ID TO SR-SAND-ING-ID
-                           WRITE SR-ING-REC
-                       END-IF
-                       IF WS-INGREDIENT4 <> ZEROS THEN
-                           STRING WS-SR-IID, WS-INGREDIENT4
-                           INTO WS-SR-SAND-ING-ID
-                           MOVE WS-SR-SAND-ING-ID TO SR-SAND-ING-ID
-                           WRITE SR-ING-REC
-                       END-IF
-                       IF WS-INGREDIENT5 <> ZEROS THEN
-                           STRING WS-SR-IID, WS-INGREDIENT5
-                           INTO WS-SR-SAND-ING-ID
-                           MOVE WS-SR-SAND-ING-ID TO SR-SAND-ING-ID
-                           WRITE SR-ING-REC
-                       END-IF
-                       IF WS-INGREDIENT6 <> ZEROS THEN
-                           STRING WS-SR-IID, WS-INGREDIENT6
-                           INTO WS-SR-SAND-ING-ID
-                           MOVE WS-SR-SAND-ING-ID TO SR-SAND-ING-ID
-                           WRITE SR-ING-REC
-                       END-IF
-                   CLOSE SR-ING
-                   MOVE RECORD-SAVED TO CONFIRM-MESSAGE
-                   ACCEPT CONFIRM-SCREEN
-                   IF KEY-STATUS = F3 THEN
-                       EXIT SECTION
-                   END-IF
-               WHEN "N"
+           ELSE
+               IF REG-NO THEN
                    MOVE RECORD-NOT-SAVED TO CONFIRM-MESSAGE
                    ACCEPT CONFIRM-SCREEN
                    IF KEY-STATUS = F3 THEN
                        EXIT SECTION
                    END-IF
+               END-IF
+           END-IF
            EXIT SECTION.
        700-SPACE-CHECK SECTION.
       *    SPACE-CHECK SECTION TO REMOVE ALL EXTRA SPACES

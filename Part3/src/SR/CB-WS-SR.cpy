@@ -1,8 +1,14 @@
        01  WS-SR-REC.
            05  WS-SR-IID                   PIC 9(003).
            05  WS-SR-EID                   PIC X(005).
+               88  EID-VLD                 VALUE "A" THRU "Z", "a" THRU
+                       "z", "0" THRU "9", SPACES.
            05  WS-SR-S-DESCRIPTION         PIC X(025).
+               88 S-DESCRIPTION-VLD        VALUE "A" THRU "Z", "a" THRU
+                       "z", SPACES.
            05  WS-SR-L-DESCRIPTION.
+               88 L-DESCRIPTION-VLD        VALUE "A" THRU "Z", "a" THRU
+                       "z", SPACES.
                10  WS-SR-L-DESCRIPTION1    PIC X(025).
                10  WS-SR-L-DESCRIPTION2    PIC X(025).
            05 WS-SR-PRICE                  PIC 99.
@@ -115,12 +121,11 @@
        77  WS-INGREDIENTS-STRING2          PIC X(072).
        77  WS-INGREDIENTS-STRING3          PIC X(072).
        77  TEMP-INGREDENTS-STRING          PIC X(072).
-       77  WS-REG                          PIC X(001).
-           88 REG-OPTION-VLD               VALUE "Y","y","N","n",
-                                               "s","S".
        77  WS-TEMP-ID                      PIC 9(003).
        77  WS-SEARCH-ID                    PIC 9(003).
        77  WS-NUMBER-OF-CATEGORIES-FOUND   PIC 9(001).
        77  WS-NUMBER-OF-INGERDIENTS-FOUND  PIC 9(001).
        77  NUMBER-SHOW                     PIC 9(003) VALUE 999.
-       77  WS-PRICE                        PIC 99v99.
+       77  WS-PRICE                        PIC 99.
+       77  COUNT-ING                       PIC 9(001).
+       77  WS-ALPHABETIC                   PIC 9(001).
