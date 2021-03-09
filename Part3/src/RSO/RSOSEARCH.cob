@@ -3,7 +3,7 @@
       ******************************************************************
       *    BREADWICH | REGISTRATION OF SANDWICH ORDERS
       ******************************************************************
-      *    SEARCH ORDERS | V0.1 | IN UPDATE | 08.03.2021
+      *    SEARCH ORDERS | V0.2 | IN UPDATE | 09.03.2021
       ******************************************************************
 
        IDENTIFICATION DIVISION.
@@ -41,6 +41,7 @@
        COPY RSOWS.
        COPY RSOWSVAR.
        COPY RSOTABLES.
+       COPY VAR-VALIDDATE.
        COPY RSOCONSTANTS.
 
       ******************************************************************
@@ -66,21 +67,60 @@
 
       ******************************************************************
 
-       01  ACCEPT-SCREEN BACKGROUND-COLOR 0 FOREGROUND-COLOR 7.
-           05 REG-REC.
-              10 REG-DELIVERY-DATE.
-                 15 REG-DELIVERY-DAY PIC X(002) LINE 15 COL 26 TO
-                    WS-DELIVERY-DAY AUTO REQUIRED.
-                 15 LINE 15 COL 28 VALUE "/".
-                 15 REG-DELIVERY-MONTH PIC X(002) LINE 15 COL 29 TO
-                    WS-DELIVERY-MONTH AUTO REQUIRED.
-                 15 LINE 15 COL 31 VALUE "/".
-                 15 REG-DELIVERY-YEAR PIC X(004) LINE 15 COL 32 TO
-                    WS-DELIVERY-YEAR AUTO REQUIRED.
-              10 REG-SCHOOL PIC 9(003) LINE 16 COL 26
-                 TO WS-ORDERS-SCHOOL-INTERNAL-ID AUTO REQUIRED.
-              10 REG-SANDWICH PIC 9(003) LINE 17 COL 26
-                 TO WS-ORDERS-SANDWICH-INTERNAL-ID AUTO REQUIRED.
+       01  SEARCH-MENU-SCREEN
+           BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
+           05 VALUE ALL " " PIC X(068) LINE 09 COL 15.
+           05 VALUE ALL " " PIC X(068) LINE 10 COL 15.
+           05 VALUE ALL " " PIC X(068) LINE 11 COL 15.
+           05 VALUE ALL " " PIC X(068) LINE 12 COL 15.
+           05 VALUE ALL " " PIC X(068) LINE 13 COL 15.
+           05 VALUE ALL " " PIC X(068) LINE 14 COL 15.
+           05 VALUE ALL " " PIC X(068) LINE 15 COL 15.
+           05 VALUE ALL " " PIC X(068) LINE 16 COL 15.
+           05 VALUE ALL " " PIC X(068) LINE 17 COL 15.
+           05 VALUE SEARCH-MENU-OPTION1  LINE 10 COL 17.
+           05 VALUE SEARCH-MENU-OPTION2  LINE 11 COL 17.
+           05 VALUE SEARCH-MENU-OPTION3  LINE 12 COL 17.
+           05 VALUE SEARCH-MENU-OPTION4  LINE 13 COL 17.
+           05 VALUE SEARCH-MENU-OPTION5  LINE 14 COL 17.
+           05 VALUE SEARCH-MENU-OPTION6  LINE 16 COL 17.
+           05 VALUE SEARCH-MENU-ACCEPT   LINE 20 COL 35 REVERSE-VIDEO.
+           05 SS-OPTION PIC 9(002) LINE 20 COL 60 TO SEARCH-OPTION
+              BLANK WHEN ZERO REVERSE-VIDEO AUTO REQUIRED.
+
+      ******************************************************************
+
+       01  ACCEPT-SEARCH-SCREEN BACKGROUND-COLOR 0 FOREGROUND-COLOR 7.
+           05 ACCEPT-SEARCH-PERIOD.
+              10 VALUE PERIOD-SEARCH LINE 09 COL 05.
+              10 SS-SEARCH-DATE1.
+                 15 SS-SEARCH-DAY1 PIC X(002) LINE 09 COL PLUS 2 TO
+                    SEARCH-DAY1 AUTO REQUIRED.
+                 15 LINE 09 COL PLUS 1 VALUE "/".
+                 15 SS-SEARCH-MONTH1 PIC X(002) LINE 09 COL PLUS 1 TO
+                    SEARCH-MONTH1 AUTO REQUIRED.
+                 15 LINE 09 COL PLUS 1 VALUE "/".
+                 15 SS-SEARCH-YEAR1 PIC X(004) LINE 09 COL PLUS 1 TO
+                    SEARCH-YEAR1 AUTO REQUIRED.
+              10 VALUE THROUGH-TEXT LINE 10 COL 38.
+              10 VALUE PERIOD-SEARCH LINE 09 COL 05.
+              10 SS-SEARCH-DATE2.
+                 15 SS-SEARCH-DAY2 PIC X(002) LINE 11 COL PLUS 2 TO
+                    SEARCH-DAY2 AUTO REQUIRED.
+                 15 LINE 11 COL PLUS 1 VALUE "/".
+                 15 SS-SEARCH-MONTH2 PIC X(002) LINE 11 COL PLUS 1 TO
+                    SEARCH-MONTH2 AUTO REQUIRED.
+                 15 LINE 11 COL PLUS 1 VALUE "/".
+                 15 SS-SEARCH-YEAR2 PIC X(004) LINE 11 COL PLUS 1 TO
+                    SEARCH-YEAR2 AUTO REQUIRED.
+           05 ACCEPT-SEARCH-SCHOOL.
+              10 VALUE SCHOOL-SEARCH LINE 14 COL 05.
+              10 SS-SEARCH-SCHOOL PIC 9(003) LINE 14 COL PLUS 2
+                 TO SEARCH-SCHOOL-INTERNAL-ID AUTO REQUIRED.
+           05 ACCEPT-SEARCH-SANDWICH.
+              10 VALUE SANDWICH-SEARCH LINE 17 COL 05.
+              10 SS-SEARCH-SANDWICH PIC 9(003) LINE 17 COL PLUS 2
+                 TO SEARCH-SANDWICH-INTERNAL-ID AUTO REQUIRED.
 
       ******************************************************************
 
@@ -304,21 +344,69 @@
 
        PROCEDURE DIVISION.
        MAIN SECTION.
-           MOVE SPACES TO FLAG-TRUE, CALENDAR-EXISTS
-           PERFORM CHECK-SCHOOL-SANDWICH-FILE
+           MOVE SPACES TO FLAG-TRUE
+           PERFORM CHECK-ORDERS-SCHOOL-SANDWICH-FILE
            IF FLAG-TRUE = "N" THEN
               EXIT PROGRAM
            END-IF
 
-           PERFORM CREATE-FILE
-
            PERFORM LOAD-ALL-TABLES
 
-      *    FALTA MENU
-           PERFORM SEARCH-SCHOOL
-           PERFORM SEARCH-SANDWICH
-           PERFORM SEARCH-SCHOOL-SANDWICH
+           PERFORM SEARCH-MENU
+           IF KEYSTATUS = F3 THEN
+              EXIT PROGRAM
+           END-IF
            EXIT PROGRAM.
+
+      ******************************************************************
+       SEARCH-MENU SECTION.
+           PERFORM WITH TEST AFTER UNTIL SEARCH-OPTION = 6
+              DISPLAY CLEAR-SCREEN
+              DISPLAY MAIN-SCREEN
+              MOVE ZEROS TO SS-OPTION
+
+              ACCEPT SEARCH-MENU-SCREEN
+              IF KEYSTATUS = F3 THEN
+                 EXIT SECTION
+              END-IF
+
+              IF NOT VALID-SEARCH-OPTION
+                 MOVE OPTION-ERROR TO COMMENT-TEXT
+                 ACCEPT COMMENTS-SCREEN
+                 IF KEYSTATUS = F3 THEN
+                    EXIT SECTION
+                 END-IF
+              END-IF
+
+              EVALUATE SEARCH-OPTION
+                 WHEN 1
+                    PERFORM SEARCH-SCHOOL
+                    IF KEYSTATUS = F3 THEN
+                       EXIT SECTION
+                    END-IF
+                 WHEN 2
+                    PERFORM SEARCH-SANDWICH
+                    IF KEYSTATUS = F3 THEN
+                       EXIT SECTION
+                    END-IF
+                 WHEN 3
+                    PERFORM SEARCH-PERIOD-TIME
+                    IF KEYSTATUS = F3 THEN
+                       EXIT SECTION
+                    END-IF
+                 WHEN 4
+                    PERFORM SEARCH-SCHOOL-SANDWICH
+                    IF KEYSTATUS = F3 THEN
+                       EXIT SECTION
+                    END-IF
+                 WHEN 5
+                    PERFORM SEARCH-PERIOD-TIME-SCHOOL
+                    IF KEYSTATUS = F3 THEN
+                       EXIT SECTION
+                    END-IF
+              END-EVALUATE
+           END-PERFORM
+           EXIT SECTION.
 
       ******************************************************************
 
@@ -328,29 +416,31 @@
 
            MOVE ZEROS TO COUNTER
 
-           PERFORM WITH TEST AFTER UNTIL SCHOOL-EXISTS = "Y"
-              PERFORM LIST-SCHOOLS
-              PERFORM CHECK-SCHOOL-EXISTS
-           END-PERFORM
+           PERFORM GET-SCHOOL
+           IF KEYSTATUS = F3 THEN
+              EXIT SECTION
+           END-IF
 
-           SET IND-ORDERS TO 1
+           SET IND-ORDERS TO 0
            PERFORM UNTIL IND-ORDERS > MAX-ORDERS
-              IF REG-SCHOOL = TAB-ORDERS-SCHOOL-INTERNAL-ID (IND-ORDERS)
-              THEN
+              SET IND-ORDERS UP BY 1
+              IF SS-SEARCH-SCHOOL =
+              TAB-ORDERS-SCHOOL-INTERNAL-ID (IND-ORDERS) THEN
+                 ADD 1 TO COUNTER
                  DISPLAY CLEAR-SCREEN
                  DISPLAY MAIN-SCREEN
                  PERFORM GET-SANDWICH-NAME
                  ACCEPT SHOW-REGISTER-SCREEN
+                 IF KEYSTATUS = F3 THEN
+                    EXIT SECTION
+                 END-IF
               END-IF
-              SET IND-ORDERS UP BY 1
+
            END-PERFORM
 
-           IF COUNTER = 0 THEN
-              MOVE ERROR-SEARCH TO COMMENT-TEXT
-              ACCEPT COMMENTS-SCREEN
-              IF KEYSTATUS = F3 THEN
-                 EXIT SECTION
-              END-IF
+           PERFORM CHECK-COUNTER
+           IF KEYSTATUS = F3 THEN
+              EXIT SECTION
            END-IF
            EXIT SECTION.
 
@@ -362,30 +452,65 @@
 
            MOVE ZEROS TO COUNTER
 
-           PERFORM WITH TEST AFTER UNTIL SANDWICH-EXISTS = "Y"
-              PERFORM LIST-SANDWICHS
-              PERFORM CHECK-SANDWICH-EXISTS
-           END-PERFORM
+           PERFORM GET-SANDWICH
+           IF KEYSTATUS = F3 THEN
+              EXIT SECTION
+           END-IF
 
-           SET IND-ORDERS TO 1
+           SET IND-ORDERS TO 0
            PERFORM UNTIL IND-ORDERS > MAX-ORDERS
-              IF REG-SANDWICH =
+              SET IND-ORDERS UP BY 1
+              IF SS-SEARCH-SANDWICH =
               TAB-ORDERS-SANDWICH-INTERNAL-ID (IND-ORDERS) THEN
                  ADD 1 TO COUNTER
                  DISPLAY CLEAR-SCREEN
                  DISPLAY MAIN-SCREEN
                  PERFORM GET-SCHOOL-NAME
                  ACCEPT SHOW-REGISTER-SCREEN
+                 IF KEYSTATUS = F3 THEN
+                    EXIT SECTION
+                 END-IF
               END-IF
-              SET IND-ORDERS UP BY 1
            END-PERFORM
 
-           IF COUNTER = 0 THEN
-              MOVE ERROR-SEARCH TO COMMENT-TEXT
-              ACCEPT COMMENTS-SCREEN
-              IF KEYSTATUS = F3 THEN
-                 EXIT SECTION
+           PERFORM CHECK-COUNTER
+           IF KEYSTATUS = F3 THEN
+              EXIT SECTION
+           END-IF
+           EXIT SECTION.
+
+      ******************************************************************
+
+       SEARCH-PERIOD-TIME SECTION.
+           DISPLAY CLEAR-SCREEN
+           DISPLAY MAIN-SCREEN
+
+           MOVE ZEROS  TO COUNTER
+
+           PERFORM GET-DATES
+           IF KEYSTATUS = F3 THEN
+              EXIT SECTION
+           END-IF
+
+           SET IND-ORDERS TO 0
+           PERFORM UNTIL IND-ORDERS >= MAX-ORDERS
+              SET IND-ORDERS UP BY 1
+              IF SEARCH-DATE1 <= TAB-DELIVERY-DATE (IND-ORDERS) THEN
+                 IF SEARCH-DATE2 >= TAB-DELIVERY-DATE (IND-ORDERS) THEN
+                    ADD 1 TO COUNTER
+                    DISPLAY CLEAR-SCREEN
+                    DISPLAY MAIN-SCREEN
+                    ACCEPT SHOW-REGISTER-SCREEN
+                    IF KEYSTATUS = F3 THEN
+                       EXIT SECTION
+                    END-IF
+                 END-IF
               END-IF
+           END-PERFORM
+
+           PERFORM CHECK-COUNTER
+           IF KEYSTATUS = F3 THEN
+              EXIT SECTION
            END-IF
            EXIT SECTION.
 
@@ -397,33 +522,203 @@
 
            MOVE ZEROS TO COUNTER
 
-           PERFORM WITH TEST AFTER UNTIL SCHOOL-EXISTS = "Y"
-              PERFORM LIST-SCHOOLS
-              PERFORM CHECK-SCHOOL-EXISTS
-           END-PERFORM
+           PERFORM GET-SCHOOL
+           IF KEYSTATUS = F3 THEN
+              EXIT SECTION
+           END-IF
 
-           PERFORM WITH TEST AFTER UNTIL SANDWICH-EXISTS = "Y"
-              PERFORM LIST-SANDWICHS
-              PERFORM CHECK-SANDWICH-EXISTS
-           END-PERFORM
+           PERFORM GET-SANDWICH
+           IF KEYSTATUS = F3 THEN
+              EXIT SECTION
+           END-IF
 
-           SET IND-ORDERS TO 1
+           SET IND-ORDERS TO 0
            PERFORM UNTIL IND-ORDERS > MAX-ORDERS
-              IF REG-SCHOOL = TAB-ORDERS-SCHOOL-INTERNAL-ID (IND-ORDERS)
-              THEN
-                 IF REG-SANDWICH =
+              SET IND-ORDERS UP BY 1
+              IF SS-SEARCH-SCHOOL =
+              TAB-ORDERS-SCHOOL-INTERNAL-ID (IND-ORDERS) THEN
+                 IF SS-SEARCH-SANDWICH =
                  TAB-ORDERS-SANDWICH-INTERNAL-ID (IND-ORDERS) THEN
                     ADD 1 TO COUNTER
                     DISPLAY CLEAR-SCREEN
                     DISPLAY MAIN-SCREEN
                     ACCEPT SHOW-REGISTER-SCREEN
+                    IF KEYSTATUS = F3 THEN
+                       EXIT SECTION
+                    END-IF
                  END-IF
               END-IF
-              SET IND-ORDERS UP BY 1
            END-PERFORM
 
+           PERFORM CHECK-COUNTER
+           IF KEYSTATUS = F3 THEN
+              EXIT SECTION
+           END-IF
+           EXIT SECTION.
+
+      ******************************************************************
+
+       SEARCH-PERIOD-TIME-SCHOOL SECTION.
+           DISPLAY CLEAR-SCREEN
+           DISPLAY MAIN-SCREEN
+
+           MOVE ZEROS  TO COUNTER
+
+           PERFORM GET-DATES
+           IF KEYSTATUS = F3 THEN
+              EXIT SECTION
+           END-IF
+
+           PERFORM GET-SCHOOL
+           IF KEYSTATUS = F3 THEN
+              EXIT SECTION
+           END-IF
+
+           SET IND-ORDERS TO 0
+           PERFORM UNTIL IND-ORDERS >= MAX-ORDERS
+              SET IND-ORDERS UP BY 1
+              IF SEARCH-DATE1 <= TAB-DELIVERY-DATE (IND-ORDERS) THEN
+                 IF SEARCH-DATE2 >= TAB-DELIVERY-DATE (IND-ORDERS) THEN
+                    IF SS-SEARCH-SCHOOL =
+                    TAB-ORDERS-SCHOOL-INTERNAL-ID (IND-ORDERS) THEN
+                       ADD 1 TO COUNTER
+                       DISPLAY CLEAR-SCREEN
+                       DISPLAY MAIN-SCREEN
+                       ACCEPT SHOW-REGISTER-SCREEN
+                       IF KEYSTATUS = F3 THEN
+                          EXIT SECTION
+                       END-IF
+                    END-IF
+                 END-IF
+              END-IF
+           END-PERFORM
+
+           PERFORM CHECK-COUNTER
+           IF KEYSTATUS = F3 THEN
+              EXIT SECTION
+           END-IF
+           EXIT SECTION.
+
+      ******************************************************************
+
+       GET-SCHOOL SECTION.
+           PERFORM WITH TEST AFTER UNTIL SCHOOL-EXISTS = "Y"
+              MOVE ZEROS TO SS-SEARCH-SCHOOL
+              MOVE INSTRUCTIONS-SCHOOL TO INSTRUCTIONS-TEXT
+              DISPLAY INSTRUCTIONS-SCREEN
+
+              PERFORM LIST-SCHOOLS
+              IF KEYSTATUS = F3 THEN
+                 EXIT SECTION
+              END-IF
+              PERFORM CHECK-SCHOOL-EXISTS
+
+              IF SEARCH-SCHOOL-INTERNAL-ID EQUALS ALL ZEROS
+              OR SCHOOL-EXISTS NOT = "Y" THEN
+                 MOVE INVALID-SCHOOL TO COMMENT-TEXT
+                 ACCEPT COMMENTS-SCREEN
+                 IF KEYSTATUS = F3 THEN
+                    EXIT SECTION
+                 END-IF
+              END-IF
+           END-PERFORM
+           EXIT SECTION.
+
+      ******************************************************************
+
+       GET-SANDWICH SECTION.
+           PERFORM WITH TEST AFTER UNTIL SANDWICH-EXISTS = "Y"
+              MOVE ZEROS TO SS-SEARCH-SANDWICH
+              MOVE INSTRUCTIONS-SANDWICH TO INSTRUCTIONS-TEXT
+              DISPLAY INSTRUCTIONS-SCREEN
+
+              PERFORM LIST-SANDWICHS
+              IF KEYSTATUS = F3 THEN
+                 EXIT SECTION
+              END-IF
+              PERFORM CHECK-SANDWICH-EXISTS
+
+              IF SEARCH-SANDWICH-INTERNAL-ID EQUALS ALL ZEROS
+              OR SANDWICH-EXISTS NOT = "Y" THEN
+                 MOVE INVALID-SANDWICH TO COMMENT-TEXT
+                 ACCEPT COMMENTS-SCREEN
+                 IF KEYSTATUS = F3 THEN
+                    EXIT SECTION
+                 END-IF
+              END-IF
+           END-PERFORM
+           EXIT SECTION.
+
+      ******************************************************************
+
+       GET-DATES SECTION.
+           MOVE "DD"   TO SS-SEARCH-DAY1, SS-SEARCH-DAY2
+           MOVE "MM"   TO SS-SEARCH-MONTH1, SS-SEARCH-MONTH2
+           MOVE "YYYY" TO SS-SEARCH-YEAR1, SS-SEARCH-YEAR2
+           DISPLAY ACCEPT-SEARCH-PERIOD
+
+           PERFORM WITH TEST AFTER UNTIL DATE-VALID = "Y"
+              MOVE SPACES TO DATE-VALID
+              MOVE "DD"   TO SS-SEARCH-DAY1
+              MOVE "MM"   TO SS-SEARCH-MONTH1
+              MOVE "YYYY" TO SS-SEARCH-YEAR1
+
+              ACCEPT SS-SEARCH-DATE1
+              IF KEYSTATUS = F3 THEN
+                 EXIT SECTION
+              END-IF
+
+              MOVE SEARCH-DATE1 TO WS-VALID-DATE
+              PERFORM CHECK-DATE
+              IF KEYSTATUS = F3 THEN
+                 EXIT SECTION
+              END-IF
+              MOVE WS-VALID-DATE TO SEARCH-DATE1
+           END-PERFORM
+
+           PERFORM WITH TEST AFTER UNTIL DATE-VALID = "Y"
+           AND SS-SEARCH-DATE2 >= SS-SEARCH-DATE1
+              MOVE ZEROS  TO COUNTER
+              MOVE SPACES TO DATE-VALID
+              MOVE "DD"   TO SS-SEARCH-DAY2
+              MOVE "MM"   TO SS-SEARCH-MONTH2
+              MOVE "YYYY" TO SS-SEARCH-YEAR2
+
+              ACCEPT SS-SEARCH-DATE2
+              IF KEYSTATUS = F3 THEN
+                 EXIT SECTION
+              END-IF
+
+              MOVE SEARCH-DATE2 TO WS-VALID-DATE
+              PERFORM CHECK-DATE
+              IF KEYSTATUS = F3 THEN
+                 EXIT SECTION
+              END-IF
+              MOVE WS-VALID-DATE TO SEARCH-DATE2
+
+              IF SS-SEARCH-DATE2 < SS-SEARCH-DATE1 THEN
+                 MOVE INVALID-DATE1 TO COMMENT-TEXT
+                 ACCEPT COMMENTS-SCREEN
+                 IF KEYSTATUS = F3 THEN
+                    EXIT SECTION
+                 END-IF
+                 MOVE SPACES TO COMMENT-TEXT
+                 DISPLAY COMMENTS-SCREEN
+              END-IF
+           END-PERFORM
+           EXIT SECTION.
+
+      ******************************************************************
+
+       CHECK-COUNTER SECTION.
            IF COUNTER = 0 THEN
               MOVE ERROR-SEARCH TO COMMENT-TEXT
+              ACCEPT COMMENTS-SCREEN
+              IF KEYSTATUS = F3 THEN
+                 EXIT SECTION
+              END-IF
+           ELSE
+              MOVE NO-MORE-MATCHES TO COMMENT-TEXT
               ACCEPT COMMENTS-SCREEN
               IF KEYSTATUS = F3 THEN
                  EXIT SECTION
@@ -433,7 +728,27 @@
 
       ******************************************************************
 
-       CHECK-SCHOOL-SANDWICH-FILE SECTION.
+       CHECK-ORDERS-SCHOOL-SANDWICH-FILE SECTION.
+           OPEN INPUT ORDERS
+           IF ORDERS-FS = 35 THEN
+              MOVE ORDERS-INEXISTENT TO COMMENT-TEXT
+              ACCEPT COMMENTS-SCREEN
+              MOVE "N" TO FLAG-TRUE
+              CLOSE ORDERS
+              EXIT SECTION
+           ELSE
+              MOVE 001 TO FD-ORDERS-ID
+              START ORDERS KEY IS GREATER OR EQUAL FD-ORDERS-ID
+                 INVALID KEY
+                    MOVE ORDERS-INEXISTENT TO COMMENT-TEXT
+                    ACCEPT COMMENTS-SCREEN
+                    MOVE "N" TO FLAG-TRUE
+                    CLOSE ORDERS
+                    EXIT SECTION
+              END-START
+           END-IF
+           CLOSE ORDERS
+
            OPEN INPUT SCHOOLS
            IF SCHOOL-FS = 35 THEN
               MOVE SCHOOLS-INEXISTENT TO COMMENT-TEXT
@@ -477,113 +792,10 @@
 
       ******************************************************************
 
-       CREATE-FILE SECTION.
-           OPEN I-O ORDERS
-           IF ORDERS-FS = "35"
-              OPEN OUTPUT ORDERS
-              CLOSE ORDERS
-      *       DAR ERRO A DIZER QUE FICHEIRO ESTA VAZIO + REPETIR CODIGO DO START
-           ELSE
-              CLOSE ORDERS
-           END-IF
-
-           OPEN I-O ORDERSKEYS
-           IF ORDERSKEYS-FS = "35"
-              OPEN OUTPUT ORDERSKEYS
-                 MOVE 0 TO FDORDERSKEYS
-                 WRITE FDORDERSKEYS
-                 END-WRITE
-              CLOSE ORDERSKEYS
-      *       DAR ERRO A DIZER QUE FICHEIRO ESTA VAZIO + REPETIR CODIGO DO START
-           ELSE
-              CLOSE ORDERSKEYS
-           END-IF
-
-           OPEN INPUT CALENDAR
-           IF CALENDAR-FS = "35"
-              MOVE "N" TO CALENDAR-EXISTS
-           END-IF
-           CLOSE CALENDAR
-           EXIT SECTION.
-
-      ******************************************************************
-
        LOAD-ALL-TABLES SECTION.
-           IF CALENDAR-EXISTS NOT = "N" THEN
-              PERFORM FILL-TABLE-CAL
-              IF CALENDAR-EXISTS NOT = "N" THEN
-                 PERFORM SORT-ASCENDING-CAL
-                 PERFORM AGG-TABLE-CAL
-              END-IF
-           END-IF
-
            PERFORM FILL-TABLE-SCHOOL
-
            PERFORM FILL-TABLE-SANDWICH
-
            PERFORM FILL-TABLE-ORDERS
-           EXIT SECTION.
-
-      ******************************************************************
-
-       FILL-TABLE-CAL SECTION.
-           OPEN INPUT CALENDAR
-           MOVE 001 TO FD-DOWNTIME-ID
-           START CALENDAR KEY IS GREATER OR EQUAL FD-DOWNTIME-ID
-              INVALID KEY
-                 MOVE "N" TO CALENDAR-EXISTS
-                 EXIT SECTION
-           END-START
-
-           SET IND-CAL TO 0
-           PERFORM UNTIL EOF-DOWNTIME-ID
-              READ CALENDAR
-                 AT END
-                    SET EOF-DOWNTIME-ID TO TRUE
-                    MOVE IND-CAL TO MAX-CAL
-                 NOT AT END
-                    SET IND-CAL UP BY 1
-                    PERFORM LOAD-TABLE-CAL
-              END-READ
-           END-PERFORM
-           CLOSE CALENDAR
-           EXIT SECTION.
-
-       LOAD-TABLE-CAL SECTION.
-           STRING FD-START-DOWNTIME FD-START-TIME INTO
-           TAB-BEGIN (IND-CAL)
-           IF FD-END-DOWNTIME = ZERO THEN
-              MOVE "999999999999" TO TAB-END (IND-CAL)
-           ELSE
-              STRING FD-END-DOWNTIME FD-END-TIME INTO
-              TAB-END (IND-CAL)
-           END-IF
-           EXIT SECTION.
-
-       SORT-ASCENDING-CAL SECTION.
-           SORT TAB-CAL
-           ON ASCENDING TAB-BEGIN
-           ON ASCENDING TAB-END
-           DUPLICATES
-           EXIT SECTION.
-
-       AGG-TABLE-CAL SECTION.
-           MOVE TAB-CAL (1) TO TAB-AGG (1)
-           SET IND-CAL TO 2
-           SET IND-AGG TO 1
-           PERFORM WITH TEST AFTER UNTIL IND-CAL > MAX-CAL
-              IF TAB-BEGIN (IND-CAL) <= AGG-END (IND-AGG) THEN
-                 IF TAB-END (IND-CAL) > AGG-END (IND-AGG) THEN
-                    MOVE TAB-END (IND-CAL) TO AGG-END (IND-AGG)
-                 END-IF
-              ELSE
-                 SET IND-AGG UP BY 1
-                 MOVE TAB-BEGIN (IND-CAL) TO AGG-BEGIN (IND-AGG)
-                 MOVE TAB-END (IND-CAL) TO AGG-END (IND-AGG)
-              END-IF
-              SET IND-CAL UP BY 1
-           END-PERFORM
-           MOVE IND-AGG TO MAX-AGG
            EXIT SECTION.
 
       ******************************************************************
@@ -658,76 +870,6 @@
 
       ******************************************************************
 
-       LIST-CALENDAR SECTION.
-           MOVE LIST-FRAME2 TO TEXT0
-           DISPLAY LIST-FRAME
-           SET IND-AGG TO 0
-           MOVE 10 TO ILIN
-           MOVE 58 TO ICOL
-           MOVE 1 TO COUNTPAGE
-           MOVE 10 TO MAXPERPAGE
-           PERFORM WITH TEST AFTER UNTIL IND-AGG >= MAX-AGG
-              SET IND-AGG UP BY 1
-              DISPLAY CALENDAR-LIST
-              ADD 1 TO ILIN
-              ADD 1 TO MAXPERPAGE
-              IF ILIN = 20 THEN
-                 MOVE NEXT-PAGE TO TEXT2
-                 DISPLAY LIST-FRAME
-                 ACCEPT REG-DELIVERY-DATE
-                 IF KEYSTATUS = F3 THEN
-                    EXIT SECTION
-                 END-IF
-                 IF KEYSTATUS = F1 AND COUNTPAGE > 1
-                    MOVE SPACES TO TEXT2
-                    DISPLAY LIST-FRAME
-                    DISPLAY CLEAR-LIST
-                    DISPLAY CALENDAR-LIST
-                    MOVE 10 TO ILIN
-                    SET IND-AGG DOWN BY MAXPERPAGE
-                    SUBTRACT 1 FROM COUNTPAGE
-                    MOVE 10 TO MAXPERPAGE
-                    IF COUNTPAGE = 1 THEN
-                       MOVE SPACES TO TEXT1
-                       DISPLAY LIST-FRAME
-                    END-IF
-                 ELSE
-                    IF KEYSTATUS = F2 THEN
-                       MOVE PREVIOUS-PAGE TO TEXT1
-                       MOVE NEXT-PAGE TO TEXT2
-                       DISPLAY LIST-FRAME
-                       DISPLAY CLEAR-LIST
-                       DISPLAY CALENDAR-LIST
-                       MOVE 10 TO ILIN
-                       ADD 1 TO COUNTPAGE
-                       MOVE 10 TO MAXPERPAGE
-                    ELSE
-                       EXIT SECTION
-                    END-IF
-                 END-IF
-              END-IF
-              IF IND-AGG >= MAX-AGG
-                 MOVE LAST-PAGE TO TEXT2
-                 DISPLAY LIST-FRAME
-                 ACCEPT REG-DELIVERY-DATE
-                 IF KEYSTATUS = F3 THEN
-                    EXIT SECTION
-                 END-IF
-                 IF KEYSTATUS = F1 AND COUNTPAGE > 1
-                    DISPLAY CLEAR-LIST
-                    DISPLAY CALENDAR-LIST
-                    MOVE 10 TO ILIN
-                    SET IND-AGG DOWN BY MAXPERPAGE
-                    SUBTRACT 1 FROM COUNTPAGE
-                    MOVE 10 TO MAXPERPAGE
-                 END-IF
-              END-IF
-           END-PERFORM
-           MOVE SPACES TO TEXT0
-           EXIT SECTION.
-
-      ******************************************************************
-
        LIST-SCHOOLS SECTION.
            DISPLAY CLEAR-LIST
            MOVE LIST-FRAME1 TO TEXT0
@@ -745,7 +887,7 @@
               IF ILIN = 20 THEN
                  MOVE NEXT-PAGE TO TEXT2
                  DISPLAY LIST-FRAME
-                 ACCEPT REG-SCHOOL
+                 ACCEPT ACCEPT-SEARCH-SCHOOL
                  IF KEYSTATUS = F3 THEN
                     EXIT SECTION
                  END-IF
@@ -780,7 +922,7 @@
               IF IND-SCHOOL >= MAX-SCHOOL THEN
                  MOVE LAST-PAGE TO TEXT2
                  DISPLAY LIST-FRAME
-                 ACCEPT REG-SCHOOL
+                 ACCEPT ACCEPT-SEARCH-SCHOOL
                  IF KEYSTATUS = F3 THEN
                     EXIT SECTION
                  END-IF
@@ -803,7 +945,7 @@
            MOVE SPACES TO SCHOOL-EXISTS
            SET IND-SCHOOL TO 1
            PERFORM UNTIL IND-SCHOOL > MAX-SCHOOL
-              IF WS-ORDERS-SCHOOL-INTERNAL-ID =
+              IF SEARCH-SCHOOL-INTERNAL-ID =
               TAB-SCHOOL-INTERNAL-ID (IND-SCHOOL) THEN
                  MOVE "Y" TO SCHOOL-EXISTS
                  EXIT SECTION
@@ -832,7 +974,7 @@
               IF ILIN = 20 THEN
                  MOVE NEXT-PAGE TO TEXT2
                  DISPLAY LIST-FRAME
-                 ACCEPT REG-SANDWICH
+                 ACCEPT ACCEPT-SEARCH-SANDWICH
                  IF KEYSTATUS = F3 THEN
                     EXIT SECTION
                  END-IF
@@ -867,7 +1009,7 @@
               IF IND-SANDWICH >= MAX-SANDWICH
                  MOVE LAST-PAGE TO TEXT2
                  DISPLAY LIST-FRAME
-                 ACCEPT REG-SANDWICH
+                 ACCEPT ACCEPT-SEARCH-SANDWICH
                  IF KEYSTATUS = F3 THEN
                     EXIT SECTION
                  END-IF
@@ -890,7 +1032,7 @@
            MOVE SPACES TO SANDWICH-EXISTS
            SET IND-SANDWICH TO 1
            PERFORM UNTIL IND-SANDWICH > MAX-SANDWICH
-              IF WS-ORDERS-SANDWICH-INTERNAL-ID =
+              IF SEARCH-SANDWICH-INTERNAL-ID =
               TAB-SR-IID (IND-SANDWICH) THEN
                  MOVE "Y" TO SANDWICH-EXISTS
                  EXIT SECTION
@@ -926,6 +1068,61 @@
                  SET IND-SCHOOL UP BY 1
               END-IF
            END-PERFORM
+           EXIT SECTION.
+
+      ******************************************************************
+
+       CHECK-DATE SECTION.
+           ACCEPT WS-CURRENT-DATE FROM DATE YYYYMMDD
+      *>      IF WS-CURRENT-DATE <= WS-VALID-DATE THEN
+              IF VALID-YEAR AND VALID-MONTH AND VALID-DAY THEN
+      *>            IF WS-YEAR >= WS-CURRENT-YEAR AND WS-MONTH >=
+      *>            WS-CURRENT-MONTH THEN
+                    IF NOT MONTH-FEB AND NOT MONTH-30 THEN
+                       MOVE "Y" TO DATE-VALID
+                    ELSE
+                       IF MONTH-30 AND DAY-30 THEN
+                          MOVE "Y" TO DATE-VALID
+                       END-IF
+                       IF MONTH-FEB THEN
+                          PERFORM LEAP-YEAR-CHECK
+                          IF LEAP-YEAR-YES AND FEB-LEAP-YEAR THEN
+                             MOVE "Y" TO DATE-VALID
+                          ELSE
+                             IF NOT LEAP-YEAR-YES AND DAY-FEBRUARY THEN
+                                MOVE "Y" TO DATE-VALID
+                             END-IF
+                          END-IF
+                       END-IF
+                    END-IF
+      *>            END-IF
+              END-IF
+      *>      END-IF
+
+           IF DATE-VALID NOT = "Y" THEN
+              MOVE INVALID-DATE1 TO COMMENT-TEXT
+              ACCEPT COMMENTS-SCREEN
+              IF KEYSTATUS = F3 THEN
+                 EXIT SECTION
+              END-IF
+              MOVE SPACES TO COMMENT-TEXT
+              DISPLAY COMMENTS-SCREEN
+           END-IF
+           EXIT SECTION.
+
+      ******************************************************************
+
+       LEAP-YEAR-CHECK SECTION.
+           MOVE SPACE TO LEAP-YEAR
+           IF FUNCTION MOD (WS-YEAR,4) = 0 THEN
+              IF FUNCTION MOD (WS-YEAR,100) <> 0 THEN
+                 MOVE "Y" TO LEAP-YEAR
+              ELSE
+                 IF FUNCTION MOD (WS-YEAR,400) = 0 THEN
+                    MOVE "Y" TO LEAP-YEAR
+                 END-IF
+               END-IF
+           END-IF
            EXIT SECTION.
 
       ******************************************************************
