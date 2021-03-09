@@ -102,20 +102,6 @@
        77 TRUE-YES                     PIC X(001).
        77 COUNTPAGE                    PIC 9(002).
 
-       01 MAXPERPAGE                       PIC 9(003).
-       78 MAX-ING                      VALUE 999.
-       01 TABLE-INGREDS OCCURS 1 TO MAX-ING TIMES
-           DEPENDING ON NUMBER-ING
-           INDEXED BY ING-INDEX.
-           05 TABLEINGREDS-ID                  PIC 9(003).
-           05 TABLEINGREDS-NAME                PIC X(030).
-           05 TABLEINGREDS-DESCRIPTION         PIC X(050).
-           05 TABLEINGREDS-UNIT-SUPPLIER       PIC X(003).
-           05 TABLEINGREDS-UNIT-SANDWICH       PIC X(003).
-           05 TABLETRESHOLD                    PIC 9(003).
-           05 TABLEINGREDS-IS-ACTIVE           PIC 9(001).
-       77 NUMBER-ING                           PIC 9(003) VALUE 999.
-       01 FLAGTABLE                PIC 9(001).
 
        78 MAX-SUPP                  VALUE 999.
        01 TABLE-SUPP OCCURS 1 TO MAX-SUPP TIMES
@@ -146,22 +132,22 @@
       *>       05 TABLESUPPLIER-IS-ACTIVE                   PIC 9(001).
        01 NUMBER-SUPP               PIC 9(003) VALUE 999.
 
-      *> TABLE RIS FILE
-       78  MAX-RIS                                VALUE 999.
-       01 TABLE-RIS OCCURS 1 TO MAX-RIS TIMES
-           DEPENDING ON NUMBER-RIS
-           INDEXED BY RIS-INDEX.
+      *> *> TABLE RIS FILE
+      *>  78  MAX-RIS                                VALUE 999.
+      *>  01 TABLE-RIS OCCURS 1 TO MAX-RIS TIMES
+      *>      DEPENDING ON NUMBER-RIS
+      *>      INDEXED BY RIS-INDEX.
 
-               05  TABLE-RIS-ID.
-                   10 TABLE-RIS-ID-ING               PIC 9(003).
-                   10 TABLE-RIS-ID-SUPP              PIC 9(003).
-               05 TABLE-RIS-PRICE                    PIC 9(003).
-               05 TABLE-RIS-DATE-VAL.
-                   10 TABLE-RIS-YEAR                 PIC 9(004).
-                   10 TABLE-RIS-MONTH                PIC 9(002).
-                   10 TABLE-RIS-DAY                  PIC 9(002).
+      *>          05  TABLE-RIS-ID.
+      *>              10 TABLE-RIS-ID-ING               PIC 9(003).
+      *>              10 TABLE-RIS-ID-SUPP              PIC 9(003).
+      *>          05 TABLE-RIS-PRICE                    PIC 9(003).
+      *>          05 TABLE-RIS-DATE-VAL.
+      *>              10 TABLE-RIS-YEAR                 PIC 9(004).
+      *>              10 TABLE-RIS-MONTH                PIC 9(002).
+      *>              10 TABLE-RIS-DAY                  PIC 9(002).
 
-       01  NUMBER-RIS                             PIC 9(003) VALUE 999.
+      *>  01  NUMBER-RIS                             PIC 9(003) VALUE 999.
 
 
       *> DATE VERIFY VARIABLES
@@ -194,6 +180,22 @@
                10 SEARCH-UNIT-SUPPLIER                 PIC X(003).
            05 SEARCH-SUPP-NAME                         PIC X(030).
 
+       01 MAXPERPAGE                       PIC 9(003).
+       78 MAX-ING                      VALUE 999.
+       01 TABLE-INGREDS OCCURS 1 TO MAX-ING TIMES
+           DEPENDING ON NUMBER-ING
+           INDEXED BY ING-INDEX.
+           05 TABLEINGREDS-ID                  PIC 9(003).
+           05 TABLEINGREDS-NAME                PIC X(030).
+           05 TABLEINGREDS-DESCRIPTION         PIC X(050).
+           05 TABLEINGREDS-UNIT-SUPPLIER       PIC X(003).
+           05 TABLEINGREDS-UNIT-SANDWICH       PIC X(003).
+           05 TABLETRESHOLD                    PIC 9(003).
+           05 TABLEINGREDS-IS-ACTIVE           PIC 9(001).
+       77 NUMBER-ING                           PIC 9(003) VALUE 999.
+       01 FLAGTABLE                PIC 9(001).
+
+
        SCREEN SECTION.
       ******************************************************************
        01  CLEAR-SCREEN.
@@ -214,7 +216,7 @@
            05 VALUE BACK-EXIT LINE 25  COL 100 FOREGROUND-COLOR 5.
       ******************************************************************
 
-       01  REGISTER-SCREEN
+       01  SEARCH-SCREEN
            BACKGROUND-COLOR 0, FOREGROUND-COLOR 7.
            05 VALUE ADD-MENU-TEXT  LINE 09 COL 13.
            05 VALUE ADD-SUPP-NAME  LINE 11 COL 13.
@@ -227,22 +229,22 @@
            05 VALUE ALL " " PIC X(055) LINE 22 COL 09
                BACKGROUND-COLOR 7.
            05 GET-SUPPLIER-ID PIC 9(003) LINE 09 COL 27
-               TO WS-RIS-ID-SUPP.
+               FROM SEARCH-RIS-ID-SUPP (SEARCH-INDEX).
             05 SUPP-NAME-VIEW PIC X(30) LINE 11 COL 18
-                   FROM VIEW-NAME-SUPP.
+                   FROM SEARCH-SUPP-NAME (SEARCH-INDEX).
            05 GET-INGREDIENT-ID PIC 9(003) LINE 13 COL 28
-               TO WS-RIS-ID-ING.
+               FROM SEARCH-RIS-ID-ING (SEARCH-INDEX).
             05 INGRED-NAME-VIEW PIC X(30) LINE 15 COL 18
-                   FROM VIEW-NAME-ING.
+                   FROM SEARCH-INGRED-NAME (SEARCH-INDEX).
            05 GET-PRICE PIC 9(003) LINE 17 COL 19
-               TO WS-RIS-PRICE.
+               FROM SEARCH-RIS-PRICE (SEARCH-INDEX).
            05 GET-EXPIRATION-DATE.
                10 GET-DAY PIC 9(002) LINE 17 COL 41
-                   TO WS-DIA.
+                   FROM SEARCH-RIS-DAY (SEARCH-INDEX).
                10 GET-MONTH PIC 9(002) LINE 17 COL 44
-                   TO WS-MES.
+                   FROM SEARCH-RIS-MONTH (SEARCH-INDEX).
                10 GET-YEAR PIC 9(004) LINE 17 COL 47
-                   TO WS-ANO.
+                   FROM SEARCH-RIS-DAY (SEARCH-INDEX).
            05 VALUE PRICE-EURO LINE 17 COL 23.
            05 VALUE "/"  LINE 17 COL 43.
            05 VALUE "/"  LINE 17 COL 46.
@@ -408,7 +410,7 @@
        MAIN-PROCEDURE.
            PERFORM CHECK-FILES-OK
            PERFORM FILL-TABLES
-           PERFORM SHOW-TABLE
+      *>      PERFORM SHOW-TABLE
 
            MOVE SPACES TO VIEW-NAME-SUPP, VIEW-NAME-ING
            MOVE ZEROS TO GET-SUPPLIER-ID, GET-INGREDIENT-ID, GET-PRICE
@@ -464,24 +466,64 @@
             CLOSE FXINGRED
 
 
-               SET RIS-INDEX TO 0
+      *>          SET RIS-INDEX TO 0
+               SET SEARCH-INDEX TO 0
            OPEN INPUT FXRISUPPLY
            PERFORM UNTIL EOF-RIS
                READ FXRISUPPLY NEXT RECORD
                    AT END
                        SET EOF-RIS TO TRUE
-                       MOVE RIS-INDEX TO NUMBER-RIS
+      *>                  MOVE RIS-INDEX TO NUMBER-RIS
+                       MOVE SEARCH-INDEX TO NUMBER-SEARCH
                    NOT AT END
-                       SET RIS-INDEX UP BY 1
-                       PERFORM LOAD-RIS-TABLE
+                       SET SEARCH-INDEX UP BY 1
+      *>                  SET RIS-INDEX UP BY 1
+      *>                  PERFORM LOAD-RIS-TABLE
+                       PERFORM LOAD-SEARCH-TABLE
+                       DISPLAY TABLE-SEARCH (SEARCH-INDEX) AT 0101
+                       ACCEPT OMITTED
                 END-READ
            END-PERFORM
            CLOSE FXRISUPPLY
 
            EXIT SECTION.
 
+       LOAD-SEARCH-TABLE SECTION.
+            MOVE RIS-DETAILS TO TABLE-MAIN (SEARCH-INDEX)
+            PERFORM GET-SEARCH-INGRED
+            PERFORM GET-SEARCH-SUPP
 
 
+           EXIT SECTION.
+
+       GET-SEARCH-INGRED SECTION.
+           SET ING-INDEX TO 0
+           PERFORM UNTIL ING-INDEX >= NUMBER-ING
+               SET ING-INDEX UP BY 1
+               IF SEARCH-RIS-ID-ING (SEARCH-INDEX) =
+                   TABLEINGREDS-ID (ING-INDEX)
+                   MOVE TABLEINGREDS-NAME (ING-INDEX)
+                       TO SEARCH-INGRED-NAME (SEARCH-INDEX)
+                   MOVE TABLEINGREDS-UNIT-SUPPLIER (ING-INDEX)
+                       TO SEARCH-UNIT-SUPPLIER (SEARCH-INDEX)
+                   MOVE NUMBER-ING TO ING-INDEX
+               END-IF
+           END-PERFORM
+
+           EXIT SECTION.
+
+       GET-SEARCH-SUPP SECTION.
+           SET SUPP-INDEX TO 0
+           PERFORM UNTIL SUPP-INDEX >= NUMBER-SUPP
+               SET SUPP-INDEX UP BY 1
+               IF SEARCH-RIS-ID-SUPP (SEARCH-INDEX) =
+                       TABLESUPPLIER-ID (SUPP-INDEX)
+                       MOVE TABLESUPPLIER-NAME (SUPP-INDEX)
+                           TO SEARCH-SUPP-NAME (SEARCH-INDEX)
+                        MOVE NUMBER-SUPP TO SUPP-INDEX
+               END-IF
+           END-PERFORM
+           EXIT SECTION.
        LOAD-INGRED-TABLE SECTION.
            MOVE INGREDS-DETAILS TO TABLE-INGREDS (ING-INDEX)
 
@@ -490,18 +532,17 @@
            MOVE SUPPLIER-DETAILS TO TABLE-SUPP (SUPP-INDEX)
        EXIT SECTION.
 
-       LOAD-RIS-TABLE SECTION.
-           MOVE RIS-DETAILS TO TABLE-RIS (RIS-INDEX)
+      *>  LOAD-RIS-TABLE SECTION.
+      *>      MOVE RIS-DETAILS TO TABLE-RIS (RIS-INDEX)
+      *>      EXIT SECTION.
 
-           EXIT SECTION.
-
-          SHOW-TABLE SECTION.
-           SET RIS-INDEX TO 1
-           PERFORM UNTIL RIS-INDEX >= NUMBER-RIS
-               DISPLAY TABLE-RIS (RIS-INDEX) ACCEPT OMITTED
-               SET RIS-INDEX UP BY 1
-           END-PERFORM
-       EXIT SECTION.
+      *>     SHOW-TABLE SECTION.
+      *>      SET RIS-INDEX TO 1
+      *>      PERFORM UNTIL RIS-INDEX >= NUMBER-RIS
+      *>          DISPLAY TABLE-RIS (RIS-INDEX) ACCEPT OMITTED
+      *>          SET RIS-INDEX UP BY 1
+      *>      END-PERFORM
+      *>  EXIT SECTION.
 
        GET-INGREDIENT SECTION.
            DISPLAY LIST-FRAME
