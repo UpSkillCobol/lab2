@@ -140,13 +140,13 @@
            03 VALUE ALL " " PIC X(50) LINE 15 COL 35.
            03 VALUE ALL " " PIC X(50) LINE 16 COL 35.
            03 VALUE ALL " " PIC X(50) LINE 17 COL 35.
-      *     03 VALUE MAIN-SEARCH-OPTION1 LINE 11 COL 50.
-      *     03 VALUE MAIN-SEARCH-OPTION2 LINE 12 COL 50.
-      *     03 VALUE MAIN-SEARCH-OPTION3 LINE 13 COL 50.
-      *     03 VALUE MAIN-SEARCH-OPTION4 LINE 14 COL 50.
-      *     03 VALUE MAIN-SEARCH-OPTION5 LINE 15 COL 50.
-      *     03 VALUE MAIN-SEARCH-CHOICE LINE 20 COL 45
-      *     REVERSE-VIDEO.
+           03 VALUE MAIN-SEARCH-OPTION1 LINE 11 COL 40.
+           03 VALUE MAIN-SEARCH-OPTION2 LINE 12 COL 40.
+           03 VALUE MAIN-SEARCH-OPTION3 LINE 13 COL 40.
+           03 VALUE MAIN-SEARCH-OPTION4 LINE 14 COL 40.
+           03 VALUE MAIN-SEARCH-OPTION5 LINE 15 COL 40.
+           03 VALUE MAIN-SEARCH-CHOICE LINE 20 COL 45
+           REVERSE-VIDEO.
            03 MP-OPTION PIC 9(02) LINE 20 COL 73 TO WS-OPTION
                BLANK WHEN ZERO REVERSE-VIDEO.
       ******************************************************************
@@ -378,6 +378,13 @@
            05 VALUE "|" LINE ILIN COL PLUS 1.
            05 LIST-CAT-NAME1 PIC X(030) LINE ILIN COL PLUS 1
                FROM TABLE-CAT-NAME (CAT-INDEX).
+      ******************************************************************
+       01  SANDWICH-LIST1.
+           05 LIST-SR-ID1 PIC 9(003) LINE ILIN COL ICOL
+               FROM TABLE-SR-EID (SR-INDEX).
+           05 VALUE "|" LINE ILIN COL PLUS 1.
+           05 LIST-SR-NAME1 PIC X(030) LINE ILIN COL PLUS 1
+               FROM TABLE-SR-S-DESC (SR-INDEX).
       ******************************************************************
        01  PREVIOUS-NEXT-TEXT.
            05 PREVIOUS-NEXT-MESSAGE PIC X(70) LINE 26 COL 10
@@ -733,6 +740,7 @@
        210-MAIN SECTION.
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
+           ACCEPT MAIN-SEARCH-SCREEN
            MOVE ZEROS TO COUNT-ING
       *    INTRODUZIR MENU PARA ESCOLHER ENTRE PESQUISAR POR INGREDIENTES
       *>      OU POR CATEGORIAS
@@ -756,6 +764,9 @@
                        ACCEPT CONFIRM-RECORD-SCREEN
                END-IF
            END-PERFORM
+           EXIT SECTION.
+       230-SEARCH-BY-MULTIPLE-INGS SECTION.
+
            EXIT SECTION.
        600-LIST-CAT SECTION.
            DISPLAY CLEAR-SCREEN

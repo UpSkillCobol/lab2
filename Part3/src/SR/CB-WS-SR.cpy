@@ -1,8 +1,14 @@
        01  WS-SR-REC.
            05  WS-SR-IID                   PIC 9(003).
            05  WS-SR-EID                   PIC X(005).
+               88  EID-VLD                 VALUE "A" THRU "Z", "a" THRU
+                       "z", "0" THRU "9", SPACES.
            05  WS-SR-S-DESCRIPTION         PIC X(025).
+               88 S-DESCRIPTION-VLD        VALUE "A" THRU "Z", "a" THRU
+                       "z", SPACES.
            05  WS-SR-L-DESCRIPTION.
+               88 L-DESCRIPTION-VLD        VALUE "A" THRU "Z", "a" THRU
+                       "z", SPACES.
                10  WS-SR-L-DESCRIPTION1    PIC X(025).
                10  WS-SR-L-DESCRIPTION2    PIC X(025).
            05 WS-SR-PRICE                  PIC 99.
@@ -121,4 +127,5 @@
        77  WS-NUMBER-OF-INGERDIENTS-FOUND  PIC 9(001).
        77  NUMBER-SHOW                     PIC 9(003) VALUE 999.
        77  WS-PRICE                        PIC 99.
-       77  COUNT-ING                        PIC 9(001).
+       77  COUNT-ING                       PIC 9(001).
+       77  WS-ALPHABETIC                   PIC 9(001).
