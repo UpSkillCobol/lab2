@@ -140,13 +140,11 @@
            03 VALUE ALL " " PIC X(50) LINE 15 COL 35.
            03 VALUE ALL " " PIC X(50) LINE 16 COL 35.
            03 VALUE ALL " " PIC X(50) LINE 17 COL 35.
-           03 VALUE ALL " " PIC X(50) LINE 18 COL 35.
            03 VALUE MAIN-SEARCH-OPTION1 LINE 11 COL 40.
            03 VALUE MAIN-SEARCH-OPTION2 LINE 12 COL 40.
            03 VALUE MAIN-SEARCH-OPTION3 LINE 13 COL 40.
            03 VALUE MAIN-SEARCH-OPTION4 LINE 14 COL 40.
            03 VALUE MAIN-SEARCH-OPTION5 LINE 15 COL 40.
-           03 VALUE MAIN-SEARCH-OPTION6 LINE 16 COL 40.
            03 VALUE MAIN-SEARCH-CHOICE LINE 20 COL 45
            REVERSE-VIDEO.
            03 MP-OPTION PIC 9(02) LINE 20 COL 73 TO WS-OPTION
@@ -205,7 +203,7 @@
       ******************************************************************
        01  REGISTER-CAT-SCREEN
            BACKGROUND-COLOR 0, FOREGROUND-COLOR 7.
-           05 VALUE ADD-CAT-MENU-TEXT LINE 9 COL 17.
+           05 VALUE SRCH-CAT-MENU-TEXT LINE 9 COL 17.
            05 VALUE ADD-CAT-MENU-TEXT1 LINE 12 COL 13.
            05 VALUE ALL " " PIC X(055) LINE 7 COL 09
                BACKGROUND-COLOR 7.
@@ -796,6 +794,7 @@
                        WHEN 1
                            PERFORM 220-SEARCH-BY-ING
                        WHEN 2
+                           PERFORM 260-SEARCH-BY-CAT
                        WHEN 3
                        WHEN 4
                        WHEN 5
@@ -804,7 +803,9 @@
            EXIT PROGRAM.
        220-SEARCH-BY-ING SECTION.
            MOVE SPACES TO REG-ING-NAME1 REG-ING-NAME2 REG-ING-NAME3
-           MOVE 0 TO WS-CONTROL COUNT-ING REG-ING1 REG-ING2 REG-ING3
+               WS-ING-NAME1 WS-ING-NAME2 WS-ING-NAME3
+           MOVE ZEROS TO WS-CONTROL COUNT-ING REG-ING1 REG-ING2 REG-ING3
+               WS-INGREDIENT1 WS-INGREDIENT2 WS-INGREDIENT3
            PERFORM UNTIL WS-CONTROL = 1
                PERFORM WITH TEST AFTER UNTIL WS-ING-EXISTS = 1
                OR WS-ING-ACCEPT = ZEROS
@@ -940,11 +941,64 @@
            EXIT SECTION.
        260-SEARCH-BY-CAT SECTION.
            MOVE ZEROS TO REG-CAT1 REG-CAT2 WS-CONTROL COUNT-ING
+               WS-CATEGORIE1 WS-CATEGORIE2 WS-CATEGORIE3
            MOVE SPACES TO REG-CAT-NAME1 REG-CAT-NAME2
+               WS-CAT-NAME1 WS-CAT-NAME2 WS-CAT-NAME3
+           PERFORM UNTIL WS-CONTROL = 1
+               PERFORM WITH TEST AFTER UNTIL WS-CAT-EXISTS = 1
+               OR WS-CAT-ACCEPT = ZEROS
+                   PERFORM 600-LIST-CAT
+                   PERFORM 300-CAT-EXISTS
+               END-PERFORM
+                   IF WS-CAT-ACCEPT <> ZEROS THEN
+                       ADD 1 TO COUNT-ING
+                       MOVE WS-CAT-ACCEPT TO WS-CATEGORIE1
+                       MOVE WS-CAT-ACCEPT-NAME TO WS-CAT-NAME1
+                       DISPLAY REGISTER-CAT-SCREEN
+                       PERFORM WITH TEST AFTER UNTIL WS-CAT-EXISTS = 1
+                       OR WS-CAT-ACCEPT = ZEROS
+                           PERFORM 600-LIST-CAT
+                           PERFORM 300-CAT-EXISTS
+                       END-PERFORM
+                       IF WS-ING-ACCEPT <> ZEROS THEN
+                           ADD 1 TO COUNT-ING
+                           MOVE WS-CAT-ACCEPT TO WS-CATEGORIE2
+                           MOVE WS-CAT-ACCEPT-NAME TO WS-CAT-NAME2
+                           DISPLAY REGISTER-CAT-SCREEN
+                           PERFORM WITH TEST AFTER UNTIL
+                           WS-CAT-EXISTS = 1
+                           OR WS-CAT-ACCEPT = ZEROS
+                               PERFORM 600-LIST-CAT
+                               PERFORM 300-CAT-EXISTS
+                           END-PERFORM
+                           IF WS-CAT-ACCEPT <> ZEROS
+                               ADD 1 TO COUNT-ING
+                               MOVE WS-CAT-ACCEPT TO WS-CATEGORIE3
+                               MOVE WS-CAT-ACCEPT-NAME TO WS-CAT-NAME3
+                               DISPLAY REGISTER-CAT-SCREEN
+                           END-IF
+                           MOVE 1 TO WS-CONTROL
+                       ELSE
+                           MOVE 1 TO WS-CONTROL
+                   ELSE
+                       EXIT SECTION
+                   END-IF
+           END-PERFORM
+           EVALUATE COUNT-ING
+               WHEN 1
+                   PERFORM 270-SEARCH-1-CAT
+               WHEN 2
+                   PERFORM 280-SEARCH-2-CAT
+           END-EVALUATE
            EXIT SECTION.
-       270-SEARCH-BY-1-CAT SECTION.
-       280-SEARCH-BY-2-CAT SECTION.
+           EXIT SECTION.
+       270-SEARCH-1-CAT SECTION.
+       280-SEARCH-2-CAT SECTION.
        290-ING-EXISTS SECTION.
+           IF WS-ING-ACCEPT = ZEROS THEN
+               MOVE 1 TO WS-ING-EXISTS
+               EXIT SECTION
+           END-IF
            MOVE 0 TO WS-ING-EXISTS
            MOVE SPACES TO WS-ING-ACCEPT-NAME WS-ING-UNIT
            SET ING-INDEX TO 1
@@ -963,7 +1017,11 @@
                MOVE WRONG-ING TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
            END-IF
            EXIT SECTION.
-       300-CHECK-CAT-EXISTS SECTION.
+       300-CAT-EXISTS SECTION.
+           IF WS-CAT-ACCEPT = ZEROS THEN
+               MOVE 1 TO WS-CAT-EXISTS
+               EXIT SECTION
+           END-IF
            MOVE 0 TO WS-CAT-EXISTS
            MOVE SPACES TO WS-CAT-ACCEPT-NAME
            SET CAT-INDEX TO 1
