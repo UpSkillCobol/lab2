@@ -3,7 +3,7 @@
       ******************************************************************
       *    BREADWICH | INGREDIENTS SUPPLIERS MANAGEMENT
       ******************************************************************
-      *    ALL CONSTANTS
+      *    ALL CONSTANTS - ENG
       ******************************************************************
       *     V1 | EM ATUALIZAÇÃO | 04.03.2021
       ******************************************************************
@@ -13,21 +13,29 @@
            88 SAVE-OPTION-NO                   VALUE "N" "n".
            88 SAVE-VALID-YES                   VALUE "Y" "y".
       *MODULE NAME MAIN
-       78 MODULE-NAME-MAIN VALUE "REGISTRATION INGREDIENTS SUIPPLIERS".
+       78 MODULE-NAME-MAIN VALUE "REGISTRATION INGREDIENTS SUPPLIERS".
       *MODULE NAME ADD
        78 MODULE-NAME-ADD     VALUE "REGISTRATION ".
-      *MODULE NAME ADD MODIFY
+      *MODULE NAME SEARCH
+       78 MODULE-NAME-VIEW  VALUE "SEARCH INGREDIENTS SUPPLIERS".
        78 MODULE-NAME-SEARCH  VALUE "SEARCH ".
       *MODULE NAME REMOVE
-       78 MODULE-NAME-REPORT  VALUE "REPORT ".
+       78 MODULE-NAME-REPORT  VALUE " CREATE REPORT ".
       *BACK
+
+       *>SEARCH-MENU
+       78 SEARCH-MENU-OPTION1 VALUE "1 - SEARCH FOR PRICES WITH INVALID
+      -     "DATES".
+
+       78 SEARCH-MENU-OPTION2 VALUE "2 - SEARCH SUPPLIER BY INGREDIENT".
+
        78 BACK-EXIT            VALUE "F3 - MAIN MENU".
       * MAIN MENU OPTION 1
        78 MAIN-MENU-OPTION1    VALUE "1 - REGISTRATION".
       * MAIN MENU OPTION 2
        78 MAIN-MENU-OPTION2    VALUE "2 - SEARCH".
       * MAIN MENU OPTION 3
-       78 MAIN-MENU-OPTION3    VALUE "3 - REPORT".
+       78 MAIN-MENU-OPTION3    VALUE "3 - CREATE REPORT".
       * MAIN MENU OPTION 4
        78 MAIN-MENU-OPTION5    VALUE "5 - EXIT".
       *MAIN MENU OPTION CHOICE
@@ -144,3 +152,28 @@
        78  LAST-PAGE VALUE "          LAST PAGE".
 
        78  LIST-AGG-FRAME VALUE "ID  |  NAME".
+
+       78  ERROR-SEARCH
+           VALUE "NO RESULTS FOUND | PRESS ANY KEY TO CONTINUE".
+
+       78  NO-MORE-MATCHES VALUE "NO MORE RESULTS HAVE BEEN FOUND | PRES
+      -    "S ANY KEY TO CONTINUE".
+
+       78  REPORT-DONE VALUE "REPORT CREATED SUCESSFULLY | PRESS ANY KEY
+      -    " TO CONTINUE".
+
+       78  REP-DATE VALUE "DATE:".
+
+       78  REP-TIME VALUE "TIME:".
+
+       78  INVALID-SUPP-INGRED VALUE "KEY RECORD ALREADY EXIST".
+
+       78 SUP-ID      VALUE "SUPPLIER ID".
+       78 ING-ID      VALUE "INGREDIENT ID".
+       78 PRICE       VALUE "PRICE/UNIT".
+       78 DATECONST   VALUE "PRICE VALIDITY".
+       78 FATE-REPORT VALUE "DATE-REPORT".
+       78 PAGECONST   VALUE "PAGE".
+       78 REPORTTITLECONST
+           VALUE "B R E A D W I C H  I N G R E D I E N T  S U P P L I E
+      -    "R S   R E P O R T".
