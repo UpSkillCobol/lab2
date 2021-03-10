@@ -73,6 +73,7 @@
       *>                                          "s", "S".
       *>      88 SAVE-OPTION-NO                   VALUE "N" "n".
       *>      88 SAVE-VALID-YES                   VALUE "Y","y","S","s".
+       01  CHECK-SUPP-ING                      PIC X(001).
        77  DUMMY                               PIC X(001).
        77  INGRED-STATUS                       PIC 9(002).
        77  KEYSTATUS                           PIC 9(004).
@@ -145,6 +146,24 @@
       *>           10 TABLESUPPLIER-TELEPHONE3              PIC 9(009).
       *>       05 TABLESUPPLIER-IS-ACTIVE                   PIC 9(001).
        01 NUMBER-SUPP               PIC 9(003) VALUE 999.
+
+       *> *> TABLE RIS FILE
+       78  MAX-RIS                                VALUE 999.
+       01 TABLE-RIS OCCURS 1 TO MAX-RIS TIMES
+           DEPENDING ON NUMBER-RIS
+           INDEXED BY RIS-INDEX.
+
+               05  TABLE-RIS-ID.
+                   10 TABLE-RIS-ID-ING               PIC 9(003).
+                   10 TABLE-RIS-ID-SUPP              PIC 9(003).
+               05 TABLE-RIS-PRICE                    PIC 9(003).
+               05 TABLE-RIS-DATE-VAL.
+                   10 TABLE-RIS-YEAR                 PIC 9(004).
+                   10 TABLE-RIS-MONTH                PIC 9(002).
+                   10 TABLE-RIS-DAY                  PIC 9(002).
+
+       01  NUMBER-RIS                             PIC 9(003) VALUE 999.
+
 
       *> DATE VERIFY VARIABLES
             01  WS-DATA.
@@ -381,6 +400,8 @@
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY REGISTER-SCREEN
+
+           PERFORM WITH TEST AFTER UNTIL CHECK-SUPP-ING = "Y"
            PERFORM GET-SUPPLIER
                 IF KEYSTATUS = F3 THEN
                    EXIT PROGRAM
@@ -389,6 +410,13 @@
            IF KEYSTATUS = F3 THEN
                    EXIT PROGRAM
                 END-IF
+                PERFORM CHECK-ID
+                IF CHECK-SUPP-ING NOT EQUAL "Y" THEN
+                       MOVE INVALID-SUPP-INGRED TO ERROR-TEXT
+                           ACCEPT ERROR-ZONE
+                 END-IF
+
+           END-PERFORM
            PERFORM CHECK-PRICE
            IF KEYSTATUS = F3 THEN
                    EXIT PROGRAM
@@ -403,6 +431,19 @@
                 END-IF
 
            EXIT PROGRAM.
+
+       CHECK-ID SECTION.
+       MOVE "Y" TO CHECK-SUPP-ING
+           SET RIS-INDEX TO 0
+               PERFORM UNTIL RIS-INDEX >= NUMBER-RIS
+                   SET RIS-INDEX UP BY 1
+                       IF WS-RIS-ID = TABLE-RIS-ID (RIS-INDEX) THEN
+                           MOVE SPACES TO CHECK-SUPP-ING
+                           MOVE NUMBER-RIS TO RIS-INDEX
+                       END-IF
+                END-PERFORM
+
+           EXIT SECTION.
        FILL-TABLES SECTION.
 
            SET SUPP-INDEX TO 0
@@ -431,6 +472,26 @@
                 END-READ
             END-PERFORM
             CLOSE FXINGRED
+
+            SET RIS-INDEX TO 0
+           OPEN INPUT FXRISUPPLY
+           PERFORM UNTIL EOF-RIS
+               READ FXRISUPPLY NEXT RECORD
+                   AT END
+                       SET EOF-RIS TO TRUE
+                       MOVE RIS-INDEX TO NUMBER-RIS
+
+                   NOT AT END
+
+                    SET RIS-INDEX UP BY 1
+                  PERFORM LOAD-RIS-TABLE
+
+
+                END-READ
+           END-PERFORM
+           CLOSE FXRISUPPLY
+
+
        EXIT SECTION.
 
        LOAD-INGRED-TABLE SECTION.
@@ -441,6 +502,9 @@
            MOVE SUPPLIER-DETAILS TO TABLE-SUPP (SUPP-INDEX)
        EXIT SECTION.
 
+         LOAD-RIS-TABLE SECTION.
+            MOVE RIS-DETAILS TO TABLE-RIS (RIS-INDEX)
+            EXIT SECTION.
 
        GET-INGREDIENT SECTION.
            DISPLAY LIST-FRAME
@@ -716,6 +780,9 @@
            END-IF
 
        EXIT SECTION.
+
+
+
 
        CHECK-PRICE SECTION.
            DISPLAY LIST-FRAME

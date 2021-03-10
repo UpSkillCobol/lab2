@@ -31,6 +31,16 @@
              10  DATE-YEAR                 PIC 9(004).
              10  DATE-MONTH                PIC 9(002).
              10  DATE-DAY                  PIC 9(02).
+
+
+        FD RIS-FILE-REPORT
+           REPORT IS RIS-REPORT.
+
+       WORKING-STORAGE SECTION.
+
+      *> CONSTANTS SCREEN SECTION
+       COPY CONSTANTS-RIS.
+
        01 CURRENT-DATE-REPORT.
            05 DATE-REPORT.
                10 DATE-REPORT-YEAR         PIC 9(004).
@@ -40,14 +50,6 @@
                10 HOUR-REPORT              PIC 9(002).
                10 MIN-REPORT               PIC 9(002).
                10 SEC-REPORT               PIC 9(002).
-
-        FD RIS-FILE-REPORT
-           REPORT IS RIS-REPORT.
-
-       WORKING-STORAGE SECTION.
-
-      *> CONSTANTS SCREEN SECTION
-       COPY CONSTANTS-RIS.
 
        *> OPTION VARIABLES
 
@@ -133,14 +135,14 @@
            02 LINE IS 49.
              03 COLUMN 60 PIC X(006) VALUE PAGECONST.
              03 COLUMN PLUS 1 PIC Z9 SOURCE PAGE-COUNTER.
-             03 COLUMN 02 VALUE "DATE:".
-             03 COLUMN 07 PIC 9(002) SOURCE DATE-REPORT-DAY.
+             03 COLUMN 03 VALUE REP-DATE.
+             03 COLUMN PLUS 2 PIC 9(002) SOURCE DATE-REPORT-DAY.
              03 COLUMN PLUS 1 VALUE "/".
              03 COLUMN PLUS 1 PIC 9(002) SOURCE DATE-REPORT-MONTH.
              03 COLUMN PLUS 1 VALUE "/".
              03 COLUMN PLUS 1 PIC 9(004) SOURCE DATE-REPORT-YEAR.
-             03 COLUMN 20 VALUE "TIME:".
-             03 COLUMN PLUS 1 PIC 9(002) SOURCE HOUR-REPORT.
+             03 COLUMN PLUS 7 VALUE REP-TIME.
+             03 COLUMN PLUS 2 PIC 9(002) SOURCE HOUR-REPORT.
              03 COLUMN PLUS 1 VALUE ":".
              03 COLUMN PLUS 1 PIC 9(002) SOURCE MIN-REPORT.
              03 COLUMN PLUS 1 VALUE ":".

@@ -136,22 +136,6 @@
       *>       05 TABLESUPPLIER-IS-ACTIVE                   PIC 9(001).
        01 NUMBER-SUPP               PIC 9(003) VALUE 999.
 
-      *> *> TABLE RIS FILE
-      *>  78  MAX-RIS                                VALUE 999.
-      *>  01 TABLE-RIS OCCURS 1 TO MAX-RIS TIMES
-      *>      DEPENDING ON NUMBER-RIS
-      *>      INDEXED BY RIS-INDEX.
-
-      *>          05  TABLE-RIS-ID.
-      *>              10 TABLE-RIS-ID-ING               PIC 9(003).
-      *>              10 TABLE-RIS-ID-SUPP              PIC 9(003).
-      *>          05 TABLE-RIS-PRICE                    PIC 9(003).
-      *>          05 TABLE-RIS-DATE-VAL.
-      *>              10 TABLE-RIS-YEAR                 PIC 9(004).
-      *>              10 TABLE-RIS-MONTH                PIC 9(002).
-      *>              10 TABLE-RIS-DAY                  PIC 9(002).
-
-      *>  01  NUMBER-RIS                             PIC 9(003) VALUE 999.
 
 
       *> DATE VERIFY VARIABLES
