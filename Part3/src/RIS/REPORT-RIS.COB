@@ -72,15 +72,7 @@
 
        01 MAX-PAGE1 PIC 999 VALUE 999.
 
-       78 SUP-ID      VALUE "SUPPLIER ID".
-       78 ING-ID      VALUE "INGREDIENT ID".
-       78 PRICE       VALUE "PRICE".
-       78 DATECONST   VALUE "PRICE VALIDITY".
-       78 FATE-REPORT VALUE "DATE-REPORT".
-       78 PAGECONST   VALUE "PAGE".
-       78 REPORTTITLECONST
-           VALUE "B R E A D W I C H  I N G R E D I E N T  S U P P L I E
-      -    "R S   R E P O R T".
+
 
 
 
