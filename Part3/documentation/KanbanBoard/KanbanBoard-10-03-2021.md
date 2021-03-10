@@ -5,50 +5,59 @@
 |  SR   |               |                     |   **X**   |        Assigned to CC       |
 | SR001 |               |                     |   **X**   |       Activity Diagram      |
 | SR002 |               |                     |   **X**   |     Variables Definition    |
-| SRO03 |               |        **X**        |           |    English Constants .cpy   |
-| SRO04 |               |        **X**        |           |  Portuguese Constants .cpy  |
-| SRO05 |               |                     |   **X**   |   Source Code - Main Menu   |
-| SRO06 |               |                     |   **X**   |    Source Code - Register   |
-| SRO07 |               |        **X**        |           |     Source Code - Search    |
-| SRO08 |               |        **X**        |           |     Source Code - Report    |
-| SRO09 |     **X**     |                     |           |       Intensive Testing     |
-| SRO10 |               |        **X**        |           |          Bug Fixing         |
+| SR003 |               |                     |   **X**   |    English Constants .cpy   |
+| SR004 |               |                     |   **X**   |  Portuguese Constants .cpy  |
+| SR005 |               |                     |   **X**   |   Source Code - Main Menu   |
+| SR006 |               |                     |   **X**   |    Source Code - Register   |
+| SR007 |               |                     |   **X**   |     Source Code - Search    |
+| SR008 |               |                     |   **X**   |     Source Code - Report    |
+| SR009 |               |                     |   **X**   |      Test Case Creation     
+| SR010 |               |                     |   **X**   |       Intensive Testing     |
+| SR011 |               |                     |   **X**   |          Bug Fixing         |
 |       |               |                     |           |                             |
 |  RSO  |               |                     |   **X**   |        Assigned to DL       |
 | RSO01 |               |                     |   **X**   |       Activity Diagram      |
 | RSO02 |               |                     |   **X**   |     Variables Definition    |
-| RSO03 |               |        **X**        |           |    English Constants .cpy   |
-| RSO04 |               |        **X**        |           |  Portuguese Constants .cpy  |
+| RSO03 |               |                     |   **X**   |    English Constants .cpy   |
+| RSO04 |               |                     |   **X**   |  Portuguese Constants .cpy  |
 | RSO05 |               |                     |   **X**   |   Source Code - Main Menu   |
 | RSO06 |               |                     |   **X**   |    Source Code - Register   |
-| RSO07 |               |        **X**        |           |     Source Code - Search    |
-| RSO08 |               |        **X**        |           |     Source Code - Report    |
-| RSO09 |               |        **X**        |           |      Test Case Creation     |
-| RSO10 |               |        **X**        |           |       Intensive Testing     |
-| RSO11 |               |        **X**        |           |          Bug Fixing         |
+| RSO07 |               |                     |   **X**   |     Source Code - Search    |
+| RSO08 |               |                     |   **X**   |     Source Code - Report    |
+| RSO09 |               |                     |   **X**   |      Test Case Creation     |
+| RSO10 |               |                     |   **X**   |       Intensive Testing     |
+| RSO11 |               |                     |   **X**   |          Bug Fixing         |
 |       |               |                     |           |                             |
 |  RIS  |               |                     |   **X**   |        Assigned to BL       |
 | RIS01 |               |                     |   **X**   |       Activity Diagram      |
 | RIS02 |               |                     |   **X**   |     Variables Definition    |
-| RIS03 |               |        **X**        |           |         Source Code         |
+| RIS03 |               |                     |   **X**   |    Source Code Record       |
+| RIS04 |               |                     |   **X**   |    Source Code Report       |
+| RIS05 |               |                     |   **X**   |    Source Code Main         |
+| RIS06 |               |                     |   **X**   |    Source Code Search       |
+| RIS06 |               |                     |   **X**   |         Constants EN        |
+| RIS07 |               |                     |   **X**   |         Constants PT        |
+| RIS08 |               |                     |   **X**   |      Test Case Creation     |
+| RIS09 |               |                     |   **X**   |       Intensive Testing     |
+| RIS10 |               |                     |   **X**   |          Bug Fixing         |
 |       |               |                     |           |                             |
 |  ICI  |               |                     |   **X**   |        Assigned to FB       |
 | ICI01 |               |                     |   **X**   |       Activity Diagram      |
 | ICI02 |               |                     |   **X**   |  Variables Definition Ing   |
-| ICI03 |               |        **X**        |           |    English Constants .cpy   |
-| ICI04 |               |        **X**        |           |  Portuguese Constants .cpy  |
+| ICI03 |               |                     |   **X**   |    English Constants .cpy   |
+| ICI04 |               |                     |   **X**   |  Portuguese Constants .cpy  |
 | ICI05 |               |                     |   **X**   | Source Code Ing - Main Menu |
 | ICI06 |               |                     |   **X**   |  Source Code Ing - Register |
 | ICI07 |               |                     |   **X**   |    Source Code Ing - Edit   |
 | ICI08 |               |                     |   **X**   |   Source Code Ing - Delete  |
 | ICI09 |               |                     |   **X**   |    Source Code Ing - View   |
-| ICI10 |               |        **X**        |           |   Source Code Ing - Search  |
-| ICI11 |               |        **X**        |           |   Source Code Ing - Report  |
+| ICI10 |               |                     |   **X**   |   Source Code Ing - Search  |
+| ICI11 |               |                     |   **X**   |   Source Code Ing - Report  |
 | ICI12 |               |                     |   **X**   |   Source Code Cal - Search  |
 | ICI13 |               |                     |   **X**   |   Source Code Cal - Report  |
-| ICI14 |               |        **X**        |           |      Test Case Creation     |
-| ICI15 |               |        **X**        |           |      Intensive Testing      |
-| ICI16 |               |        **X**        |           |          Bug Fixing         |
+| ICI14 |               |                     |   **X**   |      Test Case Creation     |
+| ICI15 |               |                     |   **X**   |      Intensive Testing      |
+| ICI16 |               |                     |   **X**   |          Bug Fixing         |
 |       |               |                     |           |                             |
 |  IM   |               |                     |   **X**   |        Assigned to JF       |
 | IM01  |               |                     |   **X**   |       Activity Diagram      |
