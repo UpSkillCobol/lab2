@@ -41,6 +41,15 @@
        77 MAX-CAL1                 PIC 999 VALUE 999.
        77 MAX-CAL2                 PIC 999 VALUE 999.
        77 MAX-AGG                  PIC 999 VALUE 999.
+       01 CURRENT-DATE-REPORT.
+           05 DATE-REPORT.
+               10 DATE-REPORT-YEAR         PIC 9(004).
+               10 DATE-REPORT-MONTH        PIC 9(002).
+               10 DATE-REPORT-DAY          PIC 9(002).
+           05 TIME-REPORT.
+               10 HOUR-REPORT              PIC 9(002).
+               10 MIN-REPORT               PIC 9(002).
+               10 SEC-REPORT               PIC 9(002).
 
 
        01 TAB-CAL OCCURS 1 TO MAX-CAL TIMES
@@ -152,6 +161,18 @@
            02 LINE IS 49.
            03 COLUMN 60 PIC X(006) VALUE PAGECONST.
            03 COLUMN PLUS 1 PIC Z9 SOURCE PAGE-COUNTER.
+           03 COLUMN 03 VALUE REP-DATE.
+           03 COLUMN PLUS 2 PIC 9(002) SOURCE DATE-REPORT-DAY.
+           03 COLUMN PLUS 1 VALUE "/".
+           03 COLUMN PLUS 1 PIC 9(002) SOURCE DATE-REPORT-MONTH.
+           03 COLUMN PLUS 1 VALUE "/".
+           03 COLUMN PLUS 1 PIC 9(004) SOURCE DATE-REPORT-YEAR.
+           03 COLUMN PLUS 7 VALUE REP-TIME.
+           03 COLUMN PLUS 2 PIC 9(002) SOURCE HOUR-REPORT.
+           03 COLUMN PLUS 1 VALUE ":".
+           03 COLUMN PLUS 1 PIC 9(002) SOURCE MIN-REPORT.
+           03 COLUMN PLUS 1 VALUE ":".
+           03 COLUMN PLUS 1 PIC 9(002) SOURCE SEC-REPORT.
       ******************************************************************
        SCREEN SECTION.
        01  CLEAR-SCREEN.
@@ -347,21 +368,6 @@
                END-READ
            END-PERFORM
            CLOSE CALENDAR
-
-      *     OPEN INPUT CALENDAR
-      *     SET IND-CAL1 TO 0
-      *     PERFORM UNTIL EOF-DOWNTIME-ID
-      *         READ CALENDAR
-      *             AT END
-      *                 SET EOF-DOWNTIME-ID TO TRUE
-      *                 MOVE IND-CAL1 TO MAX-CAL2
-      *             NOT AT END
-      *                 SET IND-CAL1 UP BY 1
-      *                 PERFORM LOAD-TABLE1
-      *         END-READ
-      *     END-PERFORM
-      *     CLOSE CALENDAR
-
        EXIT SECTION.
 
 ************************************************************************
@@ -491,6 +497,7 @@
            OPEN OUTPUT REPORTFILE
            INITIATE CALENDAR-REPORT
            SET IND-CAL1 TO 0
+           MOVE CURRENT-DATE TO CURRENT-DATE-REPORT
            PERFORM UNTIL IND-CAL1 >= MAX-CAL2
               SET IND-CAL1 UP BY 1
               GENERATE REPORTLINE1
