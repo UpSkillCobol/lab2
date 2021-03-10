@@ -1,7 +1,7 @@
       ******************************************************************
       *    LAB | SECOND PART | DELICIOUSSANDWICH
       ******************************************************************
-      *    BREADWICH | MAIN PROGRAM | V0.1 | IN UPDATE | 03.02.2021
+      *    BREADWICH | MAIN PROGRAM | V2.0 | IN UPDATE | 2021.03.10
       ******************************************************************
 
        IDENTIFICATION DIVISION.
@@ -32,7 +32,7 @@
            05 VALUE ALL " " PIC X(120) LINE 25 COL 01.
            05 VALUE ALL " " PIC X(120) LINE 26 COL 01.
            05 VALUE ACCEPT-OPTION      LINE 25 COL 48.
-           05 SS-OPTION PIC 9(002)     LINE 25 COL PLUS 1
+           05 SS-OPTION PIC 9(002)     LINE 25 COL PLUS 2
               TO MAIN-OPTION BLANK WHEN ZERO.
 
       ******************************************************************
@@ -49,7 +49,7 @@
            05 VALUE ALL " " PIC X(020) LINE 08 COL 27.
            05 VALUE ALL " " PIC X(020) LINE 09 COL 27.
            05 VALUE ALL " " PIC X(020) LINE 10 COL 27.
-           05 VALUE OPTION-2           LINE 10 COL 29.
+           05 VALUE OPTION-2           LINE 10 COL 30.
            05 VALUE ALL " " PIC X(020) LINE 11 COL 27.
            05 VALUE ALL " " PIC X(020) LINE 12 COL 27.
 
@@ -84,7 +84,7 @@
            05 VALUE ALL " " PIC X(020) LINE 16 COL 27.
            05 VALUE ALL " " PIC X(020) LINE 17 COL 27.
            05 VALUE ALL " " PIC X(020) LINE 18 COL 27.
-           05 VALUE OPTION-7           LINE 18 COL 29.
+           05 VALUE OPTION-7           LINE 18 COL 31.
            05 VALUE ALL " " PIC X(020) LINE 19 COL 27.
            05 VALUE ALL " " PIC X(020) LINE 20 COL 27.
 
@@ -98,7 +98,8 @@
            05 VALUE ALL " " PIC X(020) LINE 16 COL 75.
            05 VALUE ALL " " PIC X(020) LINE 17 COL 75.
            05 VALUE ALL " " PIC X(020) LINE 18 COL 75.
-           05 VALUE OPTION-9           LINE 18 COL 77.
+           05 VALUE OPTION-9           LINE 18 COL 78
+               HIGHLIGHT FOREGROUND-COLOR 0.
            05 VALUE ALL " " PIC X(020) LINE 19 COL 75.
            05 VALUE ALL " " PIC X(020) LINE 20 COL 75.
 
@@ -154,7 +155,7 @@
 
        PROCEDURE DIVISION.
        MAIN SECTION.
-           PERFORM UNTIL MAIN-OPTION = 6
+           PERFORM UNTIL MAIN-OPTION = 10
 
               MOVE ZEROS TO SS-OPTION
               DISPLAY CLEAR-SCREEN
@@ -171,6 +172,9 @@
                  WHEN 3     CALL "INGREDIENTS"
                  WHEN 4     CALL "SUPPLIERS"
                  WHEN 5     CALL "CATEGORIES"
+                 WHEN 6     CALL "RSOMAIN"
+                 WHEN 7     CALL "SRMAIN"
+                 WHEN 8     CALL "MAIN-RIS"
 
               END-EVALUATE
 

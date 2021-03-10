@@ -3,7 +3,7 @@
       ******************************************************************
       *    BREADWICH | REGISTRATION OF SANDWICH ORDERS
       ******************************************************************
-      *    ENGLISH LANGUAGE | V0.5 | IN UPDATE | 09.03.2021
+      *    ENGLISH LANGUAGE | V0.6 | IN UPDATE | 10.03.2021
       ******************************************************************
 
        01  SAVE                                 PIC X(002).
@@ -156,6 +156,8 @@
 
        78  THROUGH-TEXT VALUE "THROUGH".
 
+       78  SEARCH-TEXT VALUE "             ORDER".
+
        78  NO-MORE-MATCHES VALUE "NO MORE RESULTS HAVE BEEN FOUND | PRES
       -    "S ANY KEY TO CONTINUE".
 
@@ -172,6 +174,8 @@
        78  REPORTORDERQUANTITY VALUE "QUANTITY".
        78  REPORTORDERDATE     VALUE "DATE".
        78  REPORTPAGE          VALUE "  PAGE:".
+       78  REP-DATE            VALUE "DATE:".
+       78  REP-TIME            VALUE "TIME:".
 
        78  REPORT-DONE VALUE "REPORT CREATED SUCESSFULLY | PRESS ANY KEY
       -    " TO CONTINUE".

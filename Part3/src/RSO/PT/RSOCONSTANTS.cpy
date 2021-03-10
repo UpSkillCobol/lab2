@@ -3,7 +3,7 @@
       ******************************************************************
       *    BREADWICH | REGISTRATION OF SANDWICH ORDERS
       ******************************************************************
-      *    PORTUGUESE LANGUAGE | V0.5 | IN UPDATE | 09.03.2021
+      *    PORTUGUESE LANGUAGE | V0.6 | IN UPDATE | 10.03.2021
       ******************************************************************
 
        01  SAVE                                 PIC X(002).
@@ -149,6 +149,8 @@
 
        78  THROUGH-TEXT VALUE "  ATE  ".
 
+       78  SEARCH-TEXT VALUE "         ENCOMENDA".
+
        78  NO-MORE-MATCHES
            VALUE "NAO FORAM ENCONTRADOS MAIS RESULTADOS".
 
@@ -165,5 +167,7 @@
        78  REPORTORDERQUANTITY VALUE "QUANTIDADE".
        78  REPORTORDERDATE     VALUE "DATA".
        78  REPORTPAGE          VALUE "PAGINA:".
+       78  REP-DATE            VALUE "DATA:".
+       78  REP-TIME            VALUE "HORA:".
 
        78  REPORT-DONE VALUE "RELATORIO CRIADO COM SUCESSO".

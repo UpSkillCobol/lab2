@@ -198,3 +198,7 @@
        78  F3                                   VALUE "1003".
        78 PAGECONST VALUE "PAGE:".
        78 REPORT-OK VALUE "REPORT CREATED SUCCESSFULLY".
+
+       78  REP-DATE VALUE "DATE:".
+
+       78  REP-TIME VALUE "TIME:".
