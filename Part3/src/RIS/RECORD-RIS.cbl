@@ -110,13 +110,14 @@
            INDEXED BY ING-INDEX.
            05 TABLEINGREDS-ID                  PIC 9(003).
            05 TABLEINGREDS-NAME                PIC X(030).
-      *>      05 TABLEINGREDS-DESCRIPTION         PIC X(050).
-      *>      05 TABLEINGREDS-UNIT-SUPPLIER       PIC X(003).
-      *>      05 TABLEINGREDS-UNIT-SANDWICH       PIC X(003).
+           05 TABLEINGREDS-DESCRIPTION         PIC X(050).
+           05 TABLEINGREDS-UNIT-SUPPLIER       PIC X(003).
+           05 TABLEINGREDS-UNIT-SANDWICH       PIC X(003).
       *>      05 TABLETRESHOLD                    PIC 9(003).
       *>      05 TABLEINGREDS-IS-ACTIVE           PIC 9(001).
        77 NUMBER-ING                           PIC 9(003) VALUE 999.
        01 FLAGTABLE                PIC 9(001).
+       77 TEMP-UNIT-SUPPLIER                   PIC X(003).
 
        78 MAX-SUPP                  VALUE 999.
        01 TABLE-SUPP OCCURS 1 TO MAX-SUPP TIMES
@@ -208,8 +209,8 @@
            05 VALUE ADD-SUPP-NAME  LINE 11 COL 13.
            05 VALUE ADD-MENU-TEXT1 LINE 13 COL 13.
            05 VALUE ADD-INGRED-NAME LINE 15 COL 13.
-           05 VALUE ADD-MENU-TEXT2 LINE 17 COL 13.
-           05 VALUE ADD-MENU-TEXT3 LINE 17 COL 31.
+      *     05 VALUE ADD-MENU-TEXT2 LINE 17 COL 13.
+      *     05 VALUE ADD-MENU-TEXT3 LINE 17 COL 31.
            05 VALUE ALL " " PIC X(055) LINE 7 COL 09
                BACKGROUND-COLOR 7.
            05 VALUE ALL " " PIC X(055) LINE 22 COL 09
@@ -222,19 +223,31 @@
                TO WS-RIS-ID-ING.
             05 INGRED-NAME-VIEW PIC X(30) LINE 15 COL 18
                    FROM VIEW-NAME-ING.
-           05 GET-PRICE PIC 9(003) LINE 17 COL 19
+           05 VALUE ADD-MENU-TEXT2 LINE 17 COL 13.
+           05 GET-PRICE PIC 9(003) LINE 17 COL PLUS 2
                TO WS-RIS-PRICE.
+           05 VALUE PRICE-EURO LINE 17 COL PLUS 2.
+           05 VALUE "/" LINE 17 COL PLUS 1.
+           05 GET-ING-SUPP-UNIT PIC X(003) LINE 17 COL PLUS 1
+               FROM TEMP-UNIT-SUPPLIER.
+           05 VALUE "|"  LINE 17 COL PLUS 02.
+           05 VALUE ADD-MENU-TEXT3 LINE 17 COL PLUS 2.
            05 GET-EXPIRATION-DATE.
-               10 GET-DAY PIC 9(002) LINE 17 COL 41
-                   TO WS-DIA.
-               10 GET-MONTH PIC 9(002) LINE 17 COL 44
-                   TO WS-MES.
-               10 GET-YEAR PIC 9(004) LINE 17 COL 47
-                   TO WS-ANO.
-           05 VALUE PRICE-EURO LINE 17 COL 23.
-           05 VALUE "/"  LINE 17 COL 43.
-           05 VALUE "/"  LINE 17 COL 46.
-           05 VALUE "|"  LINE 17 COL 29.
+               10 GET-DAY PIC 9(002) LINE 17 COL PLUS 2
+                   TO WS-DIA AUTO.
+               10 VALUE "/"  LINE 17 COL PLUS 1.
+               10 GET-MONTH PIC 9(002) LINE 17 COL PLUS 1
+                   TO WS-MES AUTO.
+               10 VALUE "/"  LINE 17 COL PLUS 1.
+               10 GET-YEAR PIC 9(004) LINE 17 COL PLUS 1
+                   TO WS-ANO AUTO.
+
+
+      *     05 VALUE "|"  LINE 17 COL 29.
+      *     05 VALUE PRICE-EURO LINE 17 COL 23.
+      *     05 VALUE "/" LINE 17 COL PLUS 2.
+      *     05 GET-ING-SUPP-UNIT PIC X(003) LINE 17 COL PLUS 2.
+
            05 VALUE "  " LINE 8 COL 09  BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 9 COL 09  BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 10 COL 09 BACKGROUND-COLOR 7.
@@ -400,8 +413,9 @@
 
            PERFORM WITH TEST AFTER UNTIL CHECK-SUPP-ING = "Y"
            MOVE SPACES TO VIEW-NAME-SUPP, VIEW-NAME-ING
+           TEMP-UNIT-SUPPLIER
            MOVE ZEROS TO GET-SUPPLIER-ID, GET-INGREDIENT-ID, GET-PRICE
-           GET-EXPIRATION-DATE
+           GET-DAY, GET-MONTH, GET-YEAR
            PERFORM GET-SUPPLIER
                 IF KEYSTATUS = F3 THEN
                    EXIT PROGRAM
@@ -541,12 +555,12 @@
            EXIT SECTION.
 
        SUPPLIER-LIST SECTION.
+           MOVE SPACES TO TEXT1
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY LIST-FRAME
            DISPLAY REGISTER-SCREEN
            MOVE ZEROES TO GET-SUPPLIER-ID
-           MOVE SPACES TO TRUE-YES
            SET SUPP-INDEX TO 0
            MOVE 10 TO ILIN
            MOVE 72 TO ICOL
@@ -568,10 +582,12 @@
                    END-IF
                    IF KEYSTATUS = F1 AND COUNTPAGE > 1
                        MOVE SPACES TO TEXT2
-                       DISPLAY LIST-FRAME
                        DISPLAY CLEAR-SCREEN
                        DISPLAY MAIN-SCREEN
                        DISPLAY LIST-FRAME
+                       DISPLAY REGISTER-SCREEN
+                       MOVE SUPP-RECORD TO INSTRUCTION-MESSAGE
+                       DISPLAY INSTRUCTION-MESSAGE
                        MOVE 10 TO ILIN
                        SET SUPP-INDEX DOWN BY MAXPERPAGE
                        SUBTRACT 1 FROM COUNTPAGE
@@ -584,10 +600,12 @@
                        IF KEYSTATUS = F2 THEN
                            MOVE PREVIOUS-PAGE TO TEXT1
                            MOVE NEXT-PAGE TO TEXT2
-                           DISPLAY LIST-FRAME
                            DISPLAY CLEAR-SCREEN
                            DISPLAY MAIN-SCREEN
                            DISPLAY LIST-FRAME
+                           DISPLAY REGISTER-SCREEN
+                           MOVE SUPP-RECORD TO INSTRUCTION-MESSAGE
+                           DISPLAY INSTRUCTION-MESSAGE
                            MOVE 10 TO ILIN
                            ADD 1 TO COUNTPAGE
                            MOVE 10 TO MAXPERPAGE
@@ -600,6 +618,8 @@
                IF SUPP-INDEX >= NUMBER-SUPP
                    MOVE LAST-PAGE TO TEXT2
                    DISPLAY LIST-FRAME
+                   DISPLAY MAIN-SCREEN
+                   DISPLAY REGISTER-SCREEN
                    MOVE SUPP-RECORD TO INSTRUCTION-MESSAGE
                    DISPLAY INSTRUCTION-MESSAGE
                    ACCEPT GET-SUPPLIER-ID
@@ -610,10 +630,17 @@
                        DISPLAY CLEAR-SCREEN
                        DISPLAY MAIN-SCREEN
                        DISPLAY LIST-FRAME
+                       DISPLAY REGISTER-SCREEN
+                       MOVE SUPP-RECORD TO INSTRUCTION-MESSAGE
+                       DISPLAY INSTRUCTION-MESSAGE
                        MOVE 10 TO ILIN
                        SET SUPP-INDEX DOWN BY MAXPERPAGE
                        SUBTRACT 1 FROM COUNTPAGE
                        MOVE 10 TO MAXPERPAGE
+                       IF COUNTPAGE = 1 THEN
+                           MOVE SPACES TO TEXT1
+                           DISPLAY LIST-FRAME
+                       END-IF
                    END-IF
 
                END-IF
@@ -623,6 +650,7 @@
 
           *> INGREDEINT SCREEN VIEW
            INGREDIENT-LIST SECTION.
+           MOVE SPACES TO TEXT1
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY LIST-FRAME
@@ -648,10 +676,12 @@
                    END-IF
                    IF KEYSTATUS = F1 AND COUNTPAGE > 1
                        MOVE SPACES TO TEXT2
-                       DISPLAY LIST-FRAME
                        DISPLAY CLEAR-SCREEN
                        DISPLAY MAIN-SCREEN
                        DISPLAY LIST-FRAME
+                       DISPLAY REGISTER-SCREEN
+                       MOVE INGRED-RECORD TO INSTRUCTION-MESSAGE
+                       DISPLAY INSTRUCTION-MESSAGE
                        MOVE 10 TO ILIN
                        SET ING-INDEX DOWN BY MAXPERPAGE
                        SUBTRACT 1 FROM COUNTPAGE
@@ -664,10 +694,12 @@
                        IF KEYSTATUS = F2 THEN
                            MOVE PREVIOUS-PAGE TO TEXT1
                            MOVE NEXT-PAGE TO TEXT2
-                           DISPLAY LIST-FRAME
                            DISPLAY CLEAR-SCREEN
                            DISPLAY MAIN-SCREEN
                            DISPLAY LIST-FRAME
+                           DISPLAY REGISTER-SCREEN
+                           MOVE INGRED-RECORD TO INSTRUCTION-MESSAGE
+                           DISPLAY INSTRUCTION-MESSAGE
                            MOVE 10 TO ILIN
                            ADD 1 TO COUNTPAGE
                            MOVE 10 TO MAXPERPAGE
@@ -679,6 +711,8 @@
                IF ING-INDEX >= NUMBER-ING
                    MOVE LAST-PAGE TO TEXT2
                    DISPLAY LIST-FRAME
+                   DISPLAY MAIN-SCREEN
+                   DISPLAY REGISTER-SCREEN
                    MOVE INGRED-RECORD TO INSTRUCTION-MESSAGE
                    DISPLAY INSTRUCTION-MESSAGE
                    ACCEPT GET-INGREDIENT-ID
@@ -689,10 +723,17 @@
                        DISPLAY CLEAR-SCREEN
                        DISPLAY MAIN-SCREEN
                        DISPLAY LIST-FRAME
+                       DISPLAY REGISTER-SCREEN
+                       MOVE INGRED-RECORD TO INSTRUCTION-MESSAGE
+                       DISPLAY INSTRUCTION-MESSAGE
                        MOVE 10 TO ILIN
                        SET ING-INDEX DOWN BY MAXPERPAGE
                        SUBTRACT 1 FROM COUNTPAGE
                        MOVE 10 TO MAXPERPAGE
+                       IF COUNTPAGE = 1 THEN
+                           MOVE SPACES TO TEXT1
+                           DISPLAY LIST-FRAME
+                       END-IF
                    END-IF
                END-IF
            END-PERFORM
@@ -761,6 +802,8 @@
                    MOVE "Y" TO INGREDEXIST
                    MOVE TABLEINGREDS-NAME (ING-INDEX)
                        TO VIEW-NAME-ING
+                   MOVE TABLEINGREDS-UNIT-SUPPLIER (ING-INDEX) TO
+                   TEMP-UNIT-SUPPLIER
                    MOVE NUMBER-ING TO ING-INDEX
                END-IF
                SET ING-INDEX UP BY 1
@@ -810,11 +853,18 @@
                IF KEYSTATUS = F3 THEN
                    EXIT SECTION
                END-IF
-
-           PERFORM VALID-DATE
            MOVE WS-DIA TO WS-RIS-DAY
            MOVE WS-MES TO WS-RIS-MONTH
            MOVE WS-ANO TO WS-RIS-YEAR
+           IF CURRENT-DATE (1:8) <= WS-RIS-DATE-VAL
+               PERFORM VALID-DATE
+           ELSE
+               MOVE INVALID-DATE TO ERROR-TEXT
+               ACCEPT ERROR-ZONE
+               IF KEYSTATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
+           END-IF
 
 
            END-PERFORM
@@ -846,6 +896,9 @@
            IF DATAVAL NOT = "S" THEN
                MOVE INVALID-DATE TO ERROR-TEXT
                ACCEPT ERROR-ZONE
+               IF KEYSTATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
            END-IF
            EXIT SECTION.
           *> VERIFICACAO DE ANO BISSEXTO
