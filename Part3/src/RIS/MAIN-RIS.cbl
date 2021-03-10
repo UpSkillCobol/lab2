@@ -16,7 +16,7 @@
        COPY CONSTANTS-RIS.
 
        01  WS-OPTION                           PIC 9(002).
-           88 VALID-OPTION                     VALUE 1 THRU 5.
+           88 VALID-OPTION                     VALUE 1, 2, 5.
        77  DUMMY                               PIC X(001).
 
        SCREEN SECTION.
@@ -51,7 +51,7 @@
       *>      03 VALUE MAIN-MENU-OPTION3 LINE 13 COL 50.
            03 VALUE MAIN-MENU-OPTION5 LINE 14 COL 50.
            03 VALUE MAIN-MENU-CHOICE LINE 20 COL 45 REVERSE-VIDEO.
-           03 MM-OPTION PIC 9(002) LINE 20 COL 62 TO WS-OPTION
+           03 MM-OPTION PIC 9(002) LINE 20 COL PLUS 2 TO WS-OPTION
                BLANK WHEN ZERO REVERSE-VIDEO.
 
        01 ERROR-MESSAGE FOREGROUND-COLOR 4 BACKGROUND-COLOR 7.
