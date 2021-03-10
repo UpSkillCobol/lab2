@@ -3,7 +3,7 @@
       ******************************************************************
       *    BREADWICH | REGISTRATION OF SANDWICH ORDERS
       ******************************************************************
-      *    REGISTER ORDERS | V0.4 | IN UPDATE | 08.03.2021
+      *    REGISTER ORDERS | V0.5 | IN UPDATE | 09.03.2021
       ******************************************************************
 
        IDENTIFICATION DIVISION.
@@ -215,11 +215,6 @@
                  FROM TAB-SR-S-DESCRIPTION (IND-SANDWICH).
               10 REG-QUANTITY2 PIC 9(003) LINE 18 COL 26
                  FROM WS-ORDERS-QUANTITY.
-              10 VALUE "|" LINE 18 COL 30.
-              10 VALUE PRICE LINE 18 COL 32.
-              10 REG-PRICE2 PIC Z(005) LINE 18 COL 45
-                 FROM PRICEQUANTITY.
-              10 VALUE EUROS LINE 18 COL 51.
               10 REG-ORDERS-DATE2.
                  15 REG-ORDERS-DAY2 PIC 9(002) LINE 19 COL 26 FROM
                     WS-ORDERS-DAY.
@@ -229,6 +224,10 @@
                  15 LINE 19 COL 31 VALUE "/".
                  15 REG-ORDERS-YEAR2 PIC 9(004) LINE 19 COL 32 FROM
                     WS-ORDERS-YEAR.
+              10 VALUE PRICE LINE 19 COL 49.
+              10 REG-PRICE2 PIC Z(005) LINE 19 COL 71
+                 FROM PRICEQUANTITY.
+              10 VALUE EUROS LINE 19 COL 77.
 
       ******************************************************************
 

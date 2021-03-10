@@ -15,12 +15,23 @@
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
            COPY "CP-SELECTS-SR".
+           SELECT REPORT-FILE ASSIGN TO "SANDWICH-REPORT.RPT".
+           SELECT TEST-FILE ASSIGN TO "TEST"
+           ORGANIZATION IS SEQUENTIAL
+           FILE STATUS IS FILE-STATUS.
        DATA DIVISION.
        FILE SECTION.
            COPY "FD-FS-SR".
+           FD  TEST-FILE.
+           01  TESTE.
+               05 TEST-TEXT PIC X(350).
+           FD  REPORT-FILE
+           REPORT IS SANDWICH-REPORT.
+
        WORKING-STORAGE SECTION.
        COPY "CB-WS-SR".
        COPY "SR-CONST".
+
        77  WS-ACCEPT-OPTION   PIC 9(003).
 
        01  SR-TABLE OCCURS 1 TO MAX-SR TIMES
@@ -74,8 +85,8 @@
                10 SHOW-SR-EID                         PIC X(005).
                10 SHOW-SR-S-DESC                      PIC X(025).
                10 SHOW-SR-L-DESC.
-                   15 SHOW-SR-L-DESC1                     PIC X(025).
-                   15 SHOW-SR-L-DESC2                     PIC X(025).
+                   15 SHOW-SR-L-DESC1                 PIC X(025).
+                   15 SHOW-SR-L-DESC2                 PIC X(025).
                10 SHOW-SR-PRICE                       PIC X(002).
            05 SHOW-INGREDIENTS.
                10 SHOW-INGREDIENT1                    PIC X(003).
@@ -111,6 +122,92 @@
                10 SHOW-CATEGORIE-NAME1                 PIC X(030).
                10 SHOW-CATEGORIE-NAME2                 PIC X(030).
                10 SHOW-CATEGORIE-NAME3                 PIC X(030).
+
+       REPORT SECTION.
+       RD  SANDWICH-REPORT
+           PAGE LIMIT IS 54
+           FIRST DETAIL 08
+           LAST DETAIL 46
+           FOOTING 48.
+       01  TYPE IS REPORT HEADING.
+           02 LINE 01.
+           03 COLUMN 02 VALUE REPORT-TITLE.
+       01  TYPE IS PAGE HEADING.
+           02 LINE IS PLUS 2.
+           03 COLUMN 03 VALUE REPORT-ID.
+           03 COLUMN PLUS 7 VALUE REPORT-S-DESCRIPTION.
+           03 COLUMN PLUS 10 VALUE REPORT-L-DESCRIPTION.
+           02 LINE IS PLUS 1.
+           03 COLUMN 03 VALUE REPORT-PRICE.
+           03 COLUMN PLUS 3 VALUE REPORT-CATEGORIES.
+           02 LINE IS PLUS 1.
+           03 COLUMN 03 VALUE REPORT-INGREDIENTS.
+           03 COLUMN PLUS 5 VALUE REPORT-QUANTITY.
+           03 COLUMN PLUS 2 VALUE REPORT-UNIT.
+
+       01  REPORTLINE1 TYPE IS DETAIL NEXT GROUP PLUS 1.
+           02 LINE IS PLUS 2.
+           03 COLUMN 02 PIC X(005) SOURCE SHOW-SR-EID (SHOW-INDEX).
+           03 COLUMN PLUS 7 PIC X(025)
+           SOURCE SHOW-SR-S-DESC (SHOW-INDEX).
+           03 COLUMN PLUS 10 PIC X(025)
+           SOURCE SHOW-SR-L-DESC1 (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(025)
+           SOURCE SHOW-SR-L-DESC2 (SHOW-INDEX).
+
+       01  REPORTLINE2 TYPE IS DETAIL.
+           02 LINE IS PLUS 1.
+           03 COLUMN 02 PIC X(002) SOURCE SHOW-SR-PRICE (SHOW-INDEX).
+           03 COLUMN PLUS 5 PIC X(030)
+           SOURCE SHOW-CATEGORIE-NAME1 (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(030)
+           SOURCE SHOW-CATEGORIE-NAME2 (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(030)
+           SOURCE SHOW-CATEGORIE-NAME3 (SHOW-INDEX).
+
+       01  REPORTLINE3 TYPE IS DETAIL.
+           02 LINE IS PLUS 1.
+           03 COLUMN 02 PIC X(030) SOURCE SHOW-ING-NAME1 (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(003)
+           SOURCE SHOW-INGREDIENT1-QTD (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(003)
+           SOURCE SHOW-ING-UNIT-SANDWICH1 (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(030)
+           SOURCE SHOW-ING-NAME2 (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(003)
+           SOURCE SHOW-INGREDIENT2-QTD (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(003)
+           SOURCE SHOW-ING-UNIT-SANDWICH2 (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(030)
+           SOURCE SHOW-ING-NAME3 (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(003)
+           SOURCE SHOW-INGREDIENT3-QTD (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(003)
+           SOURCE SHOW-ING-UNIT-SANDWICH3 (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(030)
+           SOURCE SHOW-ING-NAME4 (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(003)
+           SOURCE SHOW-INGREDIENT4-QTD (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(003)
+           SOURCE SHOW-ING-UNIT-SANDWICH4 (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(030)
+           SOURCE SHOW-ING-NAME5 (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(003)
+           SOURCE SHOW-INGREDIENT5-QTD (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(003)
+           SOURCE SHOW-ING-UNIT-SANDWICH5 (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(030)
+           SOURCE SHOW-ING-NAME6 (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(003)
+           SOURCE SHOW-INGREDIENT6-QTD (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(003)
+           SOURCE SHOW-ING-UNIT-SANDWICH6 (SHOW-INDEX).
+
+       01  TYPE IS PAGE FOOTING.
+           02 LINE IS 49.
+           03 COLUMN 60 PIC X(006) VALUE PAGECONST.
+           03 COLUMN PLUS 1 PIC ZZ SOURCE PAGE-COUNTER.
+
        SCREEN SECTION.
        01  CLEAR-SCREEN BACKGROUND-COLOR 0.
            05 VALUE " " BLANK SCREEN LINE 01 COL 01.
@@ -292,7 +389,7 @@
            BACKGROUND-COLOR 0, FOREGROUND-COLOR 7.
            05 VALUE SRCH-PRC-MENU-TEXT LINE 9 COL 17.
            05 VALUE SRCH-PRC-MENU-TEXT1 LINE 12 COL 13.
-           05 VALUE SRCH-PRC-MENU-TEXT1 LINE 13 COL 13.
+           05 VALUE SRCH-PRC-MENU-TEXT2 LINE 13 COL 13.
            05 VALUE ALL " " PIC X(055) LINE 7 COL 09
                BACKGROUND-COLOR 7.
            05 VALUE ALL " " PIC X(055) LINE 22 COL 09
@@ -326,7 +423,9 @@
            05 VALUE "  " LINE 20 COL 62 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 21 COL 62 BACKGROUND-COLOR 7.
            05 PRICE-MIN PIC 9(002) LINE 12 COL 32 TO WS-PRICE-MIN.
+           05 VALUE CONFIRM-TEXT7 LINE 12 COL PLUS 2.
            05 PRICE-MAX PIC 9(002) LINE 13 COL 32 TO WS-PRICE-MAX.
+           05 VALUE CONFIRM-TEXT7 LINE 13 COL PLUS 2.
       ******************************************************************
        01  CONFIRM-RECORD-SCREEN.
            05 VALUE ALL " " PIC X(107) LINE 6 col 05
@@ -671,7 +770,17 @@
                MOVE SR-TABLE(SR-INDEX) TO SHOW-SANDWICH (SHOW-INDEX)
                PERFORM 130-OBTAIN-SHOW-INGREDIENTS
                PERFORM 080-OBTAIN-SHOW-CATEGORIES
+               OPEN EXTEND TEST-FILE
+               IF FILE-STATUS = 35 THEN
+                   OPEN OUTPUT TEST-FILE
+                   CLOSE TEST-FILE
+                   OPEN EXTEND TEST-FILE
+               END-IF
+               MOVE SHOW-TABLE (SHOW-INDEX) TO TEST-TEXT
+               WRITE TESTE
+               CLOSE TEST-FILE
            END-PERFORM
+           MOVE SHOW-INDEX TO NUMBER-SHOW
            EXIT SECTION.
        080-OBTAIN-SHOW-CATEGORIES SECTION.
            SET SC-INDEX TO 0
@@ -895,7 +1004,7 @@
                                EXIT PROGRAM
                            END-IF
                        WHEN 5
-                           CALL "SR-RPT"
+                           PERFORM 330-GET-REPORT
                            MOVE RPT-DONE TO INSTRUCTION-MESSAGE
                            ACCEPT INSTRUCTIONS-SCREEN
                            IF KEY-STATUS = F3 THEN
@@ -913,6 +1022,9 @@
                PERFORM WITH TEST AFTER UNTIL WS-ING-EXISTS = 1
                OR WS-ING-ACCEPT = ZEROS
                    PERFORM 700-LIST-ING
+                   IF KEY-STATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
                    PERFORM 290-ING-EXISTS
                END-PERFORM
                    IF WS-ING-ACCEPT <> ZEROS THEN
@@ -923,6 +1035,9 @@
                        PERFORM WITH TEST AFTER UNTIL WS-ING-EXISTS = 1
                            OR WS-ING-ACCEPT = ZEROS
                            PERFORM 700-LIST-ING
+                           IF KEY-STATUS = F3 THEN
+                               EXIT SECTION
+                           END-IF
                            PERFORM 290-ING-EXISTS
                        END-PERFORM
                        IF WS-ING-ACCEPT <> ZEROS THEN
@@ -934,6 +1049,9 @@
                                WS-ING-EXISTS = 1 OR
                                WS-ING-ACCEPT = ZEROS
                                PERFORM 700-LIST-ING
+                               IF KEY-STATUS = F3 THEN
+                                   EXIT SECTION
+                               END-IF
                                PERFORM 290-ING-EXISTS
                            END-PERFORM
                            IF WS-ING-ACCEPT <> ZEROS
@@ -1087,6 +1205,9 @@
                PERFORM WITH TEST AFTER UNTIL WS-CAT-EXISTS = 1
                OR WS-CAT-ACCEPT = ZEROS
                    PERFORM 600-LIST-CAT
+                   IF KEY-STATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
                    PERFORM 300-CAT-EXISTS
                END-PERFORM
                    IF WS-CAT-ACCEPT <> ZEROS THEN
@@ -1097,6 +1218,9 @@
                        PERFORM WITH TEST AFTER UNTIL WS-CAT-EXISTS = 1
                        OR WS-CAT-ACCEPT = ZEROS
                            PERFORM 600-LIST-CAT
+                           IF KEY-STATUS = F3 THEN
+                               EXIT SECTION
+                           END-IF
                            PERFORM 300-CAT-EXISTS
                        END-PERFORM
                        IF WS-ING-ACCEPT <> ZEROS THEN
@@ -1108,6 +1232,9 @@
                            WS-CAT-EXISTS = 1
                            OR WS-CAT-ACCEPT = ZEROS
                                PERFORM 600-LIST-CAT
+                               IF KEY-STATUS = F3 THEN
+                                   EXIT SECTION
+                               END-IF
                                PERFORM 300-CAT-EXISTS
                            END-PERFORM
                            IF WS-CAT-ACCEPT <> ZEROS
@@ -1246,6 +1373,9 @@
            PERFORM WITH TEST AFTER UNTIL WS-SR-EXISTS = 1 OR
                WS-SR-ACCEPT IS ZEROS
                PERFORM 500-LIST-SANDWICH
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
                PERFORM 320-SANDWICH-EXISTS
            END-PERFORM
            IF WS-SR-ACCEPT <> ZEROS THEN
@@ -1349,6 +1479,19 @@
                    EXIT SECTION
                END-IF
            END-IF.
+           EXIT SECTION.
+       330-GET-REPORT SECTION.
+           OPEN OUTPUT REPORT-FILE
+           INITIATE SANDWICH-REPORT
+           SET SHOW-INDEX TO 0
+           PERFORM UNTIL SHOW-INDEX >= NUMBER-SHOW
+               SET SHOW-INDEX UP BY 1
+               GENERATE REPORTLINE1
+               GENERATE REPORTLINE2
+               GENERATE REPORTLINE3
+           END-PERFORM
+           TERMINATE SANDWICH-REPORT
+           CLOSE REPORT-FILE
            EXIT SECTION.
        500-LIST-SANDWICH SECTION.
            DISPLAY CLEAR-SCREEN
