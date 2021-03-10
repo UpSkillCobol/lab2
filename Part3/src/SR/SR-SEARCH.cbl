@@ -249,13 +249,13 @@
            03 VALUE ALL " " PIC X(50) LINE 15 COL 35.
            03 VALUE ALL " " PIC X(50) LINE 16 COL 35.
            03 VALUE ALL " " PIC X(50) LINE 17 COL 35.
-           03 VALUE ALL " " PIC X(50) LINE 18 COL 35.
+      *     03 VALUE ALL " " PIC X(50) LINE 18 COL 35.
            03 VALUE MAIN-SEARCH-OPTION1 LINE 11 COL 40.
            03 VALUE MAIN-SEARCH-OPTION2 LINE 12 COL 40.
            03 VALUE MAIN-SEARCH-OPTION3 LINE 13 COL 40.
            03 VALUE MAIN-SEARCH-OPTION4 LINE 14 COL 40.
            03 VALUE MAIN-SEARCH-OPTION5 LINE 15 COL 40.
-           03 VALUE MAIN-SEARCH-OPTION6 LINE 16 COL 40.
+      *     03 VALUE MAIN-SEARCH-OPTION6 LINE 16 COL 40.
            03 VALUE MAIN-SEARCH-CHOICE LINE 20 COL 45
            REVERSE-VIDEO.
            03 MP-OPTION PIC 9(02) LINE 20 COL 73 TO WS-OPTION
@@ -977,7 +977,7 @@
            END-PERFORM
            EXIT SECTION.
        210-MAIN SECTION.
-           PERFORM WITH TEST AFTER UNTIL WS-OPTION = 6
+           PERFORM WITH TEST AFTER UNTIL WS-OPTION = 5
                MOVE ZEROS TO MP-OPTION
                DISPLAY CLEAR-SCREEN
                DISPLAY MAIN-SCREEN
@@ -1003,13 +1003,6 @@
                            END-IF
                        WHEN 4
                            PERFORM 320-SEARCH-BY-PRICE
-                           IF KEY-STATUS = F3 THEN
-                               EXIT PROGRAM
-                           END-IF
-                       WHEN 5
-                           PERFORM 330-GET-REPORT
-                           MOVE RPT-DONE TO INSTRUCTION-MESSAGE
-                           ACCEPT INSTRUCTIONS-SCREEN
                            IF KEY-STATUS = F3 THEN
                                EXIT PROGRAM
                            END-IF
