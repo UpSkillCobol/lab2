@@ -1266,14 +1266,6 @@
                END-IF
            CLOSE SR-CAT
            MOVE ZEROS TO FILE-STATUS
-           OPEN I-O KEYS
-               IF FILE-STATUS = 35 THEN
-                   OPEN OUTPUT KEYS
-                       MOVE ZEROS TO REGKEY
-                       WRITE REGKEY
-                   CLOSE KEYS
-               END-IF
-           CLOSE KEYS
            EXIT SECTION.
       ******************************************************************
        900-CLEAR-VARIABLES SECTION.

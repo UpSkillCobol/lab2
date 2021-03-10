@@ -12,6 +12,3 @@
 
            FD SR-CAT.
            COPY "CB-FD-SR-CAT".
-
-           FD  KEYS.
-           COPY "FD-KEYS".
