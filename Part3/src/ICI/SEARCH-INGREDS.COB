@@ -56,6 +56,7 @@
        77 COUNTER                              PIC 9(003).
        78 MAX-TAB                              VALUE 999.
        77  INVENTORY                           PIC 9(003).
+
        01 TABLE-INGREDS OCCURS 1 TO MAX-TAB TIMES
            DEPENDING ON NUMBER-ING
            INDEXED BY ING-INDEX.
@@ -86,6 +87,16 @@
 
        77 NUMBER-INV                           PIC 9(003) VALUE 999.
        77 TEMPQUANT                            PIC 9(002).
+
+       01 CURRENT-DATE-REPORT.
+           05 DATE-REPORT.
+               10 DATE-REPORT-YEAR         PIC 9(004).
+               10 DATE-REPORT-MONTH        PIC 9(002).
+               10 DATE-REPORT-DAY          PIC 9(002).
+           05 TIME-REPORT.
+               10 HOUR-REPORT              PIC 9(002).
+               10 MIN-REPORT               PIC 9(002).
+               10 SEC-REPORT               PIC 9(002).
 
        REPORT SECTION.
        RD INGREDIENT-REPORT
@@ -137,6 +148,18 @@
            02 LINE IS 49.
            03 COLUMN 60 PIC X(006) VALUE PAGECONST.
            03 COLUMN PLUS 1 PIC Z9 SOURCE PAGE-COUNTER.
+           03 COLUMN 03 VALUE REP-DATE.
+           03 COLUMN PLUS 2 PIC 9(002) SOURCE DATE-REPORT-DAY.
+           03 COLUMN PLUS 1 VALUE "/".
+           03 COLUMN PLUS 1 PIC 9(002) SOURCE DATE-REPORT-MONTH.
+           03 COLUMN PLUS 1 VALUE "/".
+           03 COLUMN PLUS 1 PIC 9(004) SOURCE DATE-REPORT-YEAR.
+           03 COLUMN PLUS 7 VALUE REP-TIME.
+           03 COLUMN PLUS 2 PIC 9(002) SOURCE HOUR-REPORT.
+           03 COLUMN PLUS 1 VALUE ":".
+           03 COLUMN PLUS 1 PIC 9(002) SOURCE MIN-REPORT.
+           03 COLUMN PLUS 1 VALUE ":".
+           03 COLUMN PLUS 1 PIC 9(002) SOURCE SEC-REPORT.
       ******************************************************************
 
        SCREEN SECTION.
@@ -209,12 +232,17 @@
            05 VALUE MANUALLY-ADD-TRESHOLD LINE 20 COL 11.
            05 REG-TRESHOLD PIC X(003) LINE 20 COL PLUS 1
                FROM TABLETRESHOLD (ING-INDEX).
-           05 PIC X(001) LINE 25 COL 1 TO DUMMY.
+           05 REG-UNIT-SUPPLIER1 PIC X(003) LINE 20 COL PLUS 2
+               FROM TABLEINGREDS-UNIT-SUPPLIER (ING-INDEX).
+           05 PIC X(001) LINE 25 COL PLUS 2 TO DUMMY.
       ******************************************************************
        01 VIEW-INVENTORY.
-           05 VALUE SEARCH-INVENTORY PIC X(12) LINE 20 COL 40.
-           05 PIC 9(003) LINE 20 COL PLUS 1 FROM TEMPQUANT
+           05 VALUE SEARCH-INVENTORY PIC X(12) LINE 20 COL 46.
+           05 PIC 9(003) LINE 20 COL PLUS 1 FROM INVENTORY
             FOREGROUND-COLOR 4.
+           05 REG-UNIT-SUPPLIER2 PIC X(003) LINE 20 COL PLUS 2
+               FROM TABLEINGREDS-UNIT-SUPPLIER (ING-INDEX)
+               FOREGROUND-COLOR 4.
       ******************************************************************
        01 VIEW-SEARCH-MENU
            BACKGROUND-COLOR 7, FOREGROUND-COLOR 0, AUTO, REQUIRED.
@@ -329,18 +357,17 @@
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
            PERFORM 050-FILL-TABLES
-      *     PERFORM SHOW-TABLE
            PERFORM WITH TEST AFTER UNTIL SEARCH-OPTION = 4
                MOVE ZERO TO VMS-OPTION SEARCH-OPTION
                DISPLAY CLEAR-SCREEN MAIN-SCREEN
                ACCEPT VIEW-SEARCH-MENU
-               IF KEYSTATUS = 1003 THEN
+               IF KEYSTATUS = F3 THEN
                    EXIT PROGRAM
                END-IF
                IF NOT VIEW-SEARCH-OPTION
                    MOVE VIEW-INGREDS-MENU-ERROR TO ERROR-TEXT
                    ACCEPT ERROR-ZONE
-                   IF KEYSTATUS = 1003 THEN
+                   IF KEYSTATUS = F3 THEN
                        EXIT PROGRAM
                    END-IF
                END-IF
@@ -370,14 +397,6 @@
 
        EXIT SECTION.
 
-      * SHOW-TABLE SECTION.
-      * SET INV-INDEX TO 0
-      * PERFORM UNTIL INV-INDEX >= NUMBER-INV
-      *    SET INV-INDEX UP BY 1
-      *    DISPLAY TABLE-INV (INV-INDEX) AT 0101 ACCEPT OMITTED
-      * END-PERFORM
-      * EXIT SECTION.
-
        210-GET-INGREDIENT SECTION.
            DISPLAY LIST-FRAME
            DISPLAY MAIN-SCREEN
@@ -394,6 +413,7 @@
        EXIT SECTION.
 
        215-LIST-INGREDIENT SECTION.
+           MOVE SPACES TO TEXT1
            MOVE ZERO TO GET-INGREDIENT-VALID GET-INGREDIENT-ID
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
@@ -466,6 +486,10 @@
                        SET ING-INDEX DOWN BY MAXPERPAGE
                        SUBTRACT 1 FROM COUNTPAGE
                        MOVE 10 TO MAXPERPAGE
+                       IF COUNTPAGE = 1 THEN
+                           MOVE SPACES TO TEXT1
+                           DISPLAY LIST-FRAME
+                       END-IF
                    END-IF
                END-IF
            END-PERFORM
@@ -494,16 +518,31 @@
            EVALUATE SEARCH-OPTION
                WHEN 1
                    PERFORM 200-SEARCH-1
+                   IF KEYSTATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
                WHEN 2
                    PERFORM 300-SEARCH-2
+                   IF KEYSTATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
                WHEN 3
                    PERFORM 400-REPORT1
+                   IF KEYSTATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
            END-EVALUATE
        EXIT SECTION.
 
        200-SEARCH-1 SECTION.
            PERFORM 210-GET-INGREDIENT
+           IF KEYSTATUS = F3 THEN
+               EXIT SECTION
+           END-IF
            PERFORM 250-RESULTS-SEARCH-1
+           IF KEYSTATUS = F3 THEN
+               EXIT SECTION
+           END-IF
        EXIT SECTION.
 
        250-RESULTS-SEARCH-1 SECTION.
@@ -515,6 +554,9 @@
                    DISPLAY CLEAR-SCREEN
                    DISPLAY MAIN-SCREEN
                    ACCEPT VIEW-INGREDS
+                   IF KEYSTATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
                    MOVE NUMBER-ING TO ING-INDEX
                END-IF
            END-PERFORM
@@ -527,11 +569,14 @@
            PERFORM UNTIL ING-INDEX >= NUMBER-ING
                SET ING-INDEX UP BY 1
                PERFORM 305-CHECK-ING-INVENTORY
-               IF TEMPQUANT < TABLETRESHOLD (ING-INDEX)
+               IF INVENTORY < TABLETRESHOLD (ING-INDEX)
                    DISPLAY CLEAR-SCREEN
                    DISPLAY MAIN-SCREEN
                    DISPLAY VIEW-INVENTORY
                    ACCEPT VIEW-INGREDS
+                   IF KEYSTATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
                END-IF
            END-PERFORM
            IF COUNTER = 0 THEN
@@ -551,6 +596,8 @@
 
        305-CHECK-ING-INVENTORY SECTION.
            SET INV-INDEX TO 0
+           MOVE ZERO TO TEMPQUANT
+           MOVE ZERO TO INVENTORY
            PERFORM UNTIL INV-INDEX >= NUMBER-INV
                SET INV-INDEX UP BY 1
                IF TABLEINGREDS-ID (ING-INDEX) = TABLEIDING (INV-INDEX)
@@ -569,6 +616,7 @@
            OPEN OUTPUT REPORTFILE
            INITIATE INGREDIENT-REPORT
            SET ING-INDEX TO 0
+           MOVE CURRENT-DATE TO CURRENT-DATE-REPORT
            PERFORM UNTIL ING-INDEX >= NUMBER-ING
               SET ING-INDEX UP BY 1
               GENERATE REPORTLINE1
@@ -581,4 +629,7 @@
            DISPLAY MAIN-SCREEN
            MOVE REPORT-OK TO ERROR-TEXT
            ACCEPT ERROR-ZONE
+           IF KEYSTATUS = F3 THEN
+               EXIT SECTION
+           END-IF
        EXIT SECTION.
