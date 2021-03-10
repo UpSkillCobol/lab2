@@ -135,3 +135,10 @@
        77  WS-PRICE-MIN                    PIC 9(002).
        77  WS-PRICE-MAX                    PIC 9(002).
        77  WS-RECORDS-SHOWN                PIC 9(003).
+       01  REPORT-DATE.
+           05  REPORT-YEAR                 PIC 9(004).
+           05  REPORT-MONTH                PIC 9(002).
+           05  REPORT-DAY                  PIC 9(002).
+           05  REPORT-HOUR                 PIC 9(002).
+           05  REPORT-MIN                  PIC 9(002).
+           05  REPORT-SEC                  PIC 9(002).
