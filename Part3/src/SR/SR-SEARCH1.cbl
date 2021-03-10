@@ -5,7 +5,7 @@
       * Tectonics: cobc
       ******************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. SR-SEARCH.
+       PROGRAM-ID. SR-SEARCH IS INITIAL.
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
        SPECIAL-NAMES.
@@ -249,13 +249,13 @@
            03 VALUE ALL " " PIC X(50) LINE 15 COL 35.
            03 VALUE ALL " " PIC X(50) LINE 16 COL 35.
            03 VALUE ALL " " PIC X(50) LINE 17 COL 35.
-      *     03 VALUE ALL " " PIC X(50) LINE 18 COL 35.
+           03 VALUE ALL " " PIC X(50) LINE 18 COL 35.
            03 VALUE MAIN-SEARCH-OPTION1 LINE 11 COL 40.
            03 VALUE MAIN-SEARCH-OPTION2 LINE 12 COL 40.
            03 VALUE MAIN-SEARCH-OPTION3 LINE 13 COL 40.
            03 VALUE MAIN-SEARCH-OPTION4 LINE 14 COL 40.
            03 VALUE MAIN-SEARCH-OPTION5 LINE 15 COL 40.
-      *     03 VALUE MAIN-SEARCH-OPTION6 LINE 16 COL 40.
+           03 VALUE MAIN-SEARCH-OPTION6 LINE 16 COL 40.
            03 VALUE MAIN-SEARCH-CHOICE LINE 20 COL 45
            REVERSE-VIDEO.
            03 MP-OPTION PIC 9(02) LINE 20 COL 73 TO WS-OPTION
@@ -782,6 +782,15 @@
                MOVE SR-TABLE(SR-INDEX) TO SHOW-SANDWICH (SHOW-INDEX)
                PERFORM 130-OBTAIN-SHOW-INGREDIENTS
                PERFORM 080-OBTAIN-SHOW-CATEGORIES
+               OPEN EXTEND TEST-FILE
+               IF FILE-STATUS = 35 THEN
+                   OPEN OUTPUT TEST-FILE
+                   CLOSE TEST-FILE
+                   OPEN EXTEND TEST-FILE
+               END-IF
+               MOVE SHOW-TABLE (SHOW-INDEX) TO TEST-TEXT
+               WRITE TESTE
+               CLOSE TEST-FILE
            END-PERFORM
            MOVE SHOW-INDEX TO NUMBER-SHOW
            EXIT SECTION.
@@ -977,7 +986,7 @@
            END-PERFORM
            EXIT SECTION.
        210-MAIN SECTION.
-           PERFORM WITH TEST AFTER UNTIL WS-OPTION = 5
+           PERFORM WITH TEST AFTER UNTIL WS-OPTION = 6
                MOVE ZEROS TO MP-OPTION
                DISPLAY CLEAR-SCREEN
                DISPLAY MAIN-SCREEN
@@ -1006,6 +1015,13 @@
                            IF KEY-STATUS = F3 THEN
                                EXIT PROGRAM
                            END-IF
+                       WHEN 5
+                           PERFORM 330-GET-REPORT
+                           MOVE RPT-DONE TO INSTRUCTION-MESSAGE
+                           ACCEPT INSTRUCTIONS-SCREEN
+                           IF KEY-STATUS = F3 THEN
+                               EXIT PROGRAM
+                           END-IF
                    END-EVALUATE
            END-PERFORM
            EXIT PROGRAM.
@@ -1016,7 +1032,7 @@
                WS-INGREDIENT1 WS-INGREDIENT2 WS-INGREDIENT3
            PERFORM UNTIL WS-CONTROL = 1
                PERFORM WITH TEST AFTER UNTIL WS-ING-EXISTS = 1
-               OR WS-ING-ACCEPT = 999
+               OR WS-ING-ACCEPT = ZEROS
                    PERFORM 700-LIST-ING
                    IF KEY-STATUS = F3 THEN
                        EXIT SECTION
@@ -1026,13 +1042,13 @@
                        EXIT SECTION
                    END-IF
                END-PERFORM
-                   IF WS-ING-ACCEPT <> 999 THEN
+                   IF WS-ING-ACCEPT <> ZEROS THEN
                        ADD 1 TO COUNT-ING
                        MOVE WS-ING-ACCEPT TO WS-INGREDIENT1
                        MOVE WS-ING-ACCEPT-NAME TO WS-ING-NAME1
                        DISPLAY REGISTER-ING-SCREEN
                        PERFORM WITH TEST AFTER UNTIL WS-ING-EXISTS = 1
-                           OR WS-ING-ACCEPT = 999
+                           OR WS-ING-ACCEPT = ZEROS
                            PERFORM 700-LIST-ING
                            IF KEY-STATUS = F3 THEN
                                EXIT SECTION
@@ -1042,14 +1058,14 @@
                                EXIT SECTION
                            END-IF
                        END-PERFORM
-                       IF WS-ING-ACCEPT <> 999 THEN
+                       IF WS-ING-ACCEPT <> ZEROS THEN
                            ADD 1 TO COUNT-ING
                            MOVE WS-ING-ACCEPT TO WS-INGREDIENT2
                            MOVE WS-ING-ACCEPT-NAME TO WS-ING-NAME2
                            DISPLAY REGISTER-ING-SCREEN
                            PERFORM WITH TEST AFTER UNTIL
                                WS-ING-EXISTS = 1 OR
-                               WS-ING-ACCEPT = 999
+                               WS-ING-ACCEPT = ZEROS
                                PERFORM 700-LIST-ING
                                IF KEY-STATUS = F3 THEN
                                    EXIT SECTION
@@ -1059,7 +1075,7 @@
                                    EXIT SECTION
                                END-IF
                            END-PERFORM
-                           IF WS-ING-ACCEPT <> 999
+                           IF WS-ING-ACCEPT <> ZEROS
                                ADD 1 TO COUNT-ING
                                MOVE WS-ING-ACCEPT TO WS-INGREDIENT3
                                MOVE WS-ING-ACCEPT-NAME TO WS-ING-NAME3
@@ -1072,27 +1088,18 @@
                        EXIT SECTION
                    END-IF
            END-PERFORM
-      *>      DISPLAY CLEAR-SCREEN
-      *>      DISPLAY COUNT-ING AT 0101
-      *>      DISPLAY WS-INGREDIENT1 AT 0201
-      *>      DISPLAY WS-INGREDIENT2 AT 0301
-      *>      DISPLAY WS-INGREDIENT3 AT 0401
-      *>      ACCEPT OMITTED
            EVALUATE COUNT-ING
                WHEN 1
-      *>              DISPLAY "1" AT 0501 ACCEPT OMITTED
                    PERFORM 230-SEARCH-1-ING
                    IF KEY-STATUS = F3 THEN
                        EXIT SECTION
                    END-IF
                WHEN 2
-      *>          DISPLAY "2" AT 0501 ACCEPT OMITTED
                    PERFORM 240-SEARCH-2-ING
                    IF KEY-STATUS = F3 THEN
                        EXIT SECTION
                    END-IF
                WHEN 3
-      *>          DISPLAY "3" AT 0501 ACCEPT OMITTED
                    PERFORM 250-SEARCH-3-ING
                    IF KEY-STATUS = F3 THEN
                        EXIT SECTION
@@ -1226,7 +1233,7 @@
                WS-CAT-NAME1 WS-CAT-NAME2 WS-CAT-NAME3
            PERFORM UNTIL WS-CONTROL = 1
                PERFORM WITH TEST AFTER UNTIL WS-CAT-EXISTS = 1
-               OR WS-CAT-ACCEPT = 999
+               OR WS-CAT-ACCEPT = ZEROS
                    PERFORM 600-LIST-CAT
                    IF KEY-STATUS = F3 THEN
                        EXIT SECTION
@@ -1236,13 +1243,13 @@
                        EXIT SECTION
                    END-IF
                END-PERFORM
-                   IF WS-CAT-ACCEPT <> 999 THEN
+                   IF WS-CAT-ACCEPT <> ZEROS THEN
                        ADD 1 TO COUNT-ING
                        MOVE WS-CAT-ACCEPT TO WS-CATEGORIE1
                        MOVE WS-CAT-ACCEPT-NAME TO WS-CAT-NAME1
                        DISPLAY REGISTER-CAT-SCREEN
                        PERFORM WITH TEST AFTER UNTIL WS-CAT-EXISTS = 1
-                       OR WS-CAT-ACCEPT = 999
+                       OR WS-CAT-ACCEPT = ZEROS
                            PERFORM 600-LIST-CAT
                            IF KEY-STATUS = F3 THEN
                                EXIT SECTION
@@ -1252,14 +1259,14 @@
                                EXIT SECTION
                            END-IF
                        END-PERFORM
-                       IF WS-CAT-ACCEPT <> 999 THEN
+                       IF WS-ING-ACCEPT <> ZEROS THEN
                            ADD 1 TO COUNT-ING
                            MOVE WS-CAT-ACCEPT TO WS-CATEGORIE2
                            MOVE WS-CAT-ACCEPT-NAME TO WS-CAT-NAME2
                            DISPLAY REGISTER-CAT-SCREEN
                            PERFORM WITH TEST AFTER UNTIL
                            WS-CAT-EXISTS = 1
-                           OR WS-CAT-ACCEPT = 999
+                           OR WS-CAT-ACCEPT = ZEROS
                                PERFORM 600-LIST-CAT
                                IF KEY-STATUS = F3 THEN
                                    EXIT SECTION
@@ -1269,7 +1276,7 @@
                                    EXIT SECTION
                                END-IF
                            END-PERFORM
-                           IF WS-CAT-ACCEPT <> 999
+                           IF WS-CAT-ACCEPT <> ZEROS
                                ADD 1 TO COUNT-ING
                                MOVE WS-CAT-ACCEPT TO WS-CATEGORIE3
                                MOVE WS-CAT-ACCEPT-NAME TO WS-CAT-NAME3
@@ -1364,7 +1371,7 @@
            END-IF
            EXIT SECTION.
        290-ING-EXISTS SECTION.
-           IF WS-ING-ACCEPT = 999 THEN
+           IF WS-ING-ACCEPT = ZEROS THEN
                MOVE 1 TO WS-ING-EXISTS
                EXIT SECTION
            END-IF
@@ -1390,7 +1397,7 @@
            END-IF
            EXIT SECTION.
        300-CAT-EXISTS SECTION.
-           IF WS-CAT-ACCEPT = 999 THEN
+           IF WS-CAT-ACCEPT = ZEROS THEN
                MOVE 1 TO WS-CAT-EXISTS
                EXIT SECTION
            END-IF
@@ -1406,15 +1413,10 @@
                    SET CAT-INDEX UP BY 1
                END-IF
            END-PERFORM
-           IF WS-CAT-EXISTS = 0 THEN
-               MOVE WRONG-CAT TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
-               IF KEY-STATUS = F3 THEN
-                   EXIT SECTION
-               END-IF
-           END-IF
            EXIT SECTION.
        310-SEARCH-BY-SANDWICH SECTION.
-           PERFORM WITH TEST AFTER UNTIL WS-SR-EXISTS = 1
+           PERFORM WITH TEST AFTER UNTIL WS-SR-EXISTS = 1 OR
+               WS-SR-ACCEPT IS ZEROS
                PERFORM 500-LIST-SANDWICH
                IF KEY-STATUS = F3 THEN
                    EXIT SECTION
@@ -1541,7 +1543,6 @@
            CLOSE REPORT-FILE
            EXIT SECTION.
        500-LIST-SANDWICH SECTION.
-           MOVE SPACES TO TEXT1
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY LIST-FRAME
@@ -1615,15 +1616,10 @@
                        SET SR-INDEX DOWN BY MAXPERPAGE
                        SUBTRACT 1 FROM COUNTPAGE
                        MOVE 10 TO MAXPERPAGE
-                       IF COUNTPAGE = 1 THEN
-                           MOVE SPACES TO TEXT1
-                           DISPLAY LIST-FRAME
-                       END-IF
                    END-IF
                END-IF
            END-PERFORM.
        600-LIST-CAT SECTION.
-           MOVE SPACES TO TEXT1
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY LIST-FRAME
@@ -1674,7 +1670,6 @@
                            MOVE 10 TO ILIN
                            ADD 1 TO COUNTPAGE
                            MOVE 10 TO MAXPERPAGE
-
                        ELSE
                            EXIT SECTION
                        END-IF
@@ -1698,15 +1693,10 @@
                        SET CAT-INDEX DOWN BY MAXPERPAGE
                        SUBTRACT 1 FROM COUNTPAGE
                        MOVE 10 TO MAXPERPAGE
-                       IF COUNTPAGE = 1 THEN
-                           MOVE SPACES TO TEXT1
-                           DISPLAY LIST-FRAME
-                       END-IF
                    END-IF
                END-IF
            END-PERFORM.
        700-LIST-ING SECTION.
-           MOVE SPACES TO TEXT1
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY LIST-FRAME
@@ -1780,17 +1770,12 @@
                        SET ING-INDEX DOWN BY MAXPERPAGE
                        SUBTRACT 1 FROM COUNTPAGE
                        MOVE 10 TO MAXPERPAGE
-                       IF COUNTPAGE = 1 THEN
-                           MOVE SPACES TO TEXT1
-                           DISPLAY LIST-FRAME
-                       END-IF
-               END-IF
+                   END-IF
                END-IF
            END-PERFORM
        EXIT SECTION.
       ******************************************************************
        800-FILE-CHECK SECTION.
-
            MOVE ZEROS TO FILE-STATUS
            OPEN I-O SANDWICHES
                IF FILE-STATUS = 35 THEN

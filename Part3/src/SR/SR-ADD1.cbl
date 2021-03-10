@@ -5,7 +5,7 @@
       * Tectonics: cobc
       ******************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. SR-ADD.
+       PROGRAM-ID. SR-ADD IS INITIAL.
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
        SPECIAL-NAMES.
@@ -514,7 +514,7 @@
            SET CAT-INDEX UP BY 1
            EXIT SECTION.
        100-MAIN SECTION.
-           PERFORM 900-CLEAR-VARIABLES
+      *     PERFORM 900-CLEAR-VARIABLES
            DISPLAY MAIN-SCREEN
            DISPLAY REGISTER-SCREEN
            PERFORM 110-REGISTER
@@ -523,7 +523,6 @@
                END-IF
            EXIT PROGRAM.
        110-REGISTER SECTION.
-           PERFORM 900-CLEAR-VARIABLES
            PERFORM 120-OBTAIN-IID
            IF KEY-STATUS = F3 THEN
                EXIT SECTION
@@ -567,6 +566,7 @@
            IF WS-SR-IID NOT NUMERIC
                MOVE ZEROS TO WS-SR-IID
            END-IF
+           ADD 1 TO WS-SR-IID
            EXIT SECTION.
        130-OBTAIN-EID SECTION.
            PERFORM WITH TEST AFTER UNTIL REG-UNIQUE = 1 AND EID-VLD
@@ -587,9 +587,9 @@
                    END-IF
                END-IF
                PERFORM 190-EID-EXISTS
-               IF KEY-STATUS = F3 THEN
-                   EXIT SECTION
-               END-IF
+                   IF KEY-STATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
            END-PERFORM
            MOVE SPACES TO LINK-TEXT
            MOVE UPPER-CASE(WS-SR-EID) TO WS-SR-EID
@@ -658,21 +658,21 @@
            DISPLAY MAIN-SCREEN
            DISPLAY REGISTER-CAT-SCREEN
            PERFORM 260-OBTAIN-CATEGORIES
-           IF WS-CAT-ACCEPT = 999 OR KEY-STATUS = F3 THEN
+           IF WS-CAT-ACCEPT = ZEROS OR KEY-STATUS = F3 THEN
                EXIT SECTION
            END-IF
            MOVE WS-CAT-ACCEPT TO WS-CATEGORIE1
            MOVE WS-CAT-ACCEPT-NAME TO WS-CAT-NAME1
            DISPLAY REGISTER-CAT-SCREEN
            PERFORM 260-OBTAIN-CATEGORIES
-           IF WS-CAT-ACCEPT = 999 OR KEY-STATUS = F3 THEN
+           IF WS-CAT-ACCEPT = ZEROS OR KEY-STATUS = F3 THEN
                EXIT SECTION
            END-IF
            MOVE WS-CAT-ACCEPT TO WS-CATEGORIE2
            MOVE WS-CAT-ACCEPT-NAME TO WS-CAT-NAME2
            DISPLAY REGISTER-CAT-SCREEN
            PERFORM 260-OBTAIN-CATEGORIES
-           IF WS-CAT-ACCEPT = 999 THEN
+           IF WS-CAT-ACCEPT = ZEROS THEN
                EXIT SECTION
            END-IF
            MOVE WS-CAT-ACCEPT TO WS-CATEGORIE3
@@ -702,7 +702,7 @@
       *    OBTAIN THE OTHER INGREDIENTS, IT CAN BE NULL.
       *    SO IF IT IS ZEROS IT JUST LEAVES THIS SECTION.
            PERFORM 240-OBTAIN-ING-2-6
-           IF WS-ING-ACCEPT = 999 OR KEY-STATUS = F3 THEN
+           IF WS-ING-ACCEPT = ZEROS OR KEY-STATUS = F3 THEN
                EXIT SECTION
            END-IF
            MOVE WS-ING-ACCEPT TO WS-INGREDIENT2
@@ -714,7 +714,7 @@
                EXIT SECTION
            END-IF
            PERFORM 240-OBTAIN-ING-2-6
-           IF WS-ING-ACCEPT = 999 OR KEY-STATUS = F3 THEN
+           IF WS-ING-ACCEPT = ZEROS OR KEY-STATUS = F3 THEN
                EXIT SECTION
            END-IF
            MOVE WS-ING-ACCEPT TO WS-INGREDIENT3
@@ -726,7 +726,7 @@
                EXIT SECTION
            END-IF
            PERFORM 240-OBTAIN-ING-2-6
-           IF WS-ING-ACCEPT = 999 OR KEY-STATUS = F3 THEN
+           IF WS-ING-ACCEPT = ZEROS OR KEY-STATUS = F3 THEN
                EXIT SECTION
            END-IF
            MOVE WS-ING-ACCEPT TO WS-INGREDIENT4
@@ -738,7 +738,7 @@
                EXIT SECTION
            END-IF
            PERFORM 240-OBTAIN-ING-2-6
-           IF WS-ING-ACCEPT = 999 OR KEY-STATUS = F3 THEN
+           IF WS-ING-ACCEPT = ZEROS OR KEY-STATUS = F3 THEN
                EXIT SECTION
            END-IF
            MOVE WS-ING-ACCEPT TO WS-INGREDIENT5
@@ -750,7 +750,7 @@
                EXIT SECTION
            END-IF
            PERFORM 240-OBTAIN-ING-2-6
-           IF WS-ING-ACCEPT = 999 OR KEY-STATUS = F3 THEN
+           IF WS-ING-ACCEPT = ZEROS OR KEY-STATUS = F3 THEN
                EXIT SECTION
            END-IF
            MOVE WS-ING-ACCEPT TO WS-INGREDIENT6
@@ -764,21 +764,21 @@
            EXIT SECTION.
        190-EID-EXISTS SECTION.
            MOVE WS-SR-EID TO SR-EID
-           MOVE 1 TO REG-UNIQUE
-           SET SR-INDEX TO 0
-           PERFORM UNTIL SR-INDEX >= NUMBER-SR
-               SET SR-INDEX UP BY 1
-               IF WS-SR-EID = TABLE-SR-EID (SR-INDEX) THEN
-                   MOVE ZERO TO REG-UNIQUE
-                   MOVE ERROR-EID TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
-                   IF KEY-STATUS = F3 THEN
-                       EXIT SECTION
-                   END-IF
-               END-IF
-           END-PERFORM
+           OPEN INPUT SANDWICHES
+               READ SANDWICHES
+                   NOT INVALID KEY
+                       MOVE ZERO TO REG-UNIQUE
+                       MOVE ERROR-EID TO ERROR-MESSAGE
+                       ACCEPT ERROR-SCREEN
+                           IF KEY-STATUS = F3 THEN
+                               EXIT SECTION
+                           END-IF
+                   INVALID KEY
+                       MOVE 1 TO REG-UNIQUE
+               END-READ
+           CLOSE SANDWICHES
            EXIT SECTION.
        200-LIST-ING SECTION.
-           MOVE SPACES TO TEXT1
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY LIST-FRAME
@@ -853,16 +853,11 @@
                        SET ING-INDEX DOWN BY MAXPERPAGE
                        SUBTRACT 1 FROM COUNTPAGE
                        MOVE 10 TO MAXPERPAGE
-                       IF COUNTPAGE = 1 THEN
-                           MOVE SPACES TO TEXT1
-                           DISPLAY LIST-FRAME
-                       END-IF
                    END-IF
                END-IF
            END-PERFORM
        EXIT SECTION.
        210-LIST-CAT SECTION.
-           MOVE SPACES TO TEXT1
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY LIST-FRAME
@@ -896,7 +891,7 @@
                        DISPLAY MAIN-SCREEN
                        DISPLAY LIST-FRAME
                        MOVE 10 TO ILIN
-                       SET CAT-INDEX DOWN BY MAXPERPAGE
+                       SET ING-INDEX DOWN BY MAXPERPAGE
                        SUBTRACT 1 FROM COUNTPAGE
                        MOVE 10 TO MAXPERPAGE
                            IF COUNTPAGE = 1 THEN
@@ -934,13 +929,9 @@
                        DISPLAY MAIN-SCREEN
                        DISPLAY LIST-FRAME
                        MOVE 10 TO ILIN
-                       SET CAT-INDEX DOWN BY MAXPERPAGE
+                       SET ING-INDEX DOWN BY MAXPERPAGE
                        SUBTRACT 1 FROM COUNTPAGE
                        MOVE 10 TO MAXPERPAGE
-                       IF COUNTPAGE = 1 THEN
-                           MOVE SPACES TO TEXT1
-                           DISPLAY LIST-FRAME
-                       END-IF
                    END-IF
                END-IF
            END-PERFORM.
@@ -962,12 +953,13 @@
            EXIT SECTION.
        230-OBTAIN-ING-1 SECTION.
            MOVE ZEROS TO ING-ACCEPT WS-ING-ACCEPT
-           PERFORM WITH TEST AFTER UNTIL WS-ING-EXISTS = 1
+           PERFORM WITH TEST AFTER UNTIL WS-ING-ACCEPT NOT ZEROS
+               AND WS-ING-EXISTS = 1
                PERFORM 200-LIST-ING
                IF KEY-STATUS = F3 THEN
                    EXIT SECTION
                END-IF
-               IF WS-ING-ACCEPT = 999 THEN
+               IF WS-ING-ACCEPT = ZEROS THEN
                    MOVE ING-ZERO TO ERROR-MESSAGE
                    ACCEPT ERROR-SCREEN
                    IF KEY-STATUS = F3 THEN
@@ -992,13 +984,13 @@
            EXIT SECTION.
        240-OBTAIN-ING-2-6 SECTION.
            MOVE ZEROS TO ING-ACCEPT WS-ING-ACCEPT
-           PERFORM WITH TEST AFTER UNTIL WS-ING-ACCEPT = 999 OR
+           PERFORM WITH TEST AFTER UNTIL WS-ING-ACCEPT = ZEROS OR
                (WS-ING-EXISTS = 1 AND WS-ING-DUPLICATE = 1)
                PERFORM 200-LIST-ING
                IF KEY-STATUS = F3 THEN
                    EXIT SECTION
                END-IF
-               IF WS-ING-ACCEPT = 999 THEN
+               IF WS-ING-ACCEPT = ZEROS THEN
                    EXIT SECTION
                ELSE
                    PERFORM 220-ING-EXISTS
@@ -1028,18 +1020,15 @@
            END-IF
            EXIT SECTION.
        260-OBTAIN-CATEGORIES SECTION.
-           MOVE ZERO TO CAT-ACCEPT WS-CAT-ACCEPT
-           PERFORM WITH TEST AFTER UNTIL WS-CAT-ACCEPT = 999 OR
+           MOVE ZEROS TO CAT-ACCEPT WS-CAT-ACCEPT
+           PERFORM WITH TEST AFTER UNTIL WS-CAT-ACCEPT = ZEROS OR
                (WS-CAT-EXISTS = 1 AND WS-CAT-DUPLICATE = 1)
                PERFORM 210-LIST-CAT
                IF KEY-STATUS = F3 THEN
                    EXIT SECTION
                END-IF
-      *         IF KEY-STATUS <> F1 OR F2 THEN
-                   IF WS-CAT-ACCEPT = 999 THEN
-                       EXIT SECTION
-      *             END-IF
-      *         END-IF
+               IF WS-CAT-ACCEPT = ZEROS THEN
+                   EXIT SECTION
                ELSE
                    PERFORM 270-CHECK-CAT-EXISTS
                    IF WS-CAT-EXISTS = 1 THEN
@@ -1058,7 +1047,7 @@
                            EXIT SECTION
                        END-IF
                    END-IF
-      *         END-IF
+               END-IF
            END-PERFORM
            EXIT SECTION.
        270-CHECK-CAT-EXISTS SECTION.
@@ -1287,13 +1276,7 @@
            REG-ING4 REG-ING5 REG-ING6 WS-ING-ACCEPT WS-ING-EXISTS
            WS-CAT-ACCEPT WS-CAT-EXISTS WS-ING-DUPLICATE WS-CAT-DUPLICATE
            REG-ING-QTD1 REG-ING-QTD2 REG-ING-QTD3 REG-ING-QTD4
-           REG-ING-QTD5 REG-ING-QTD6 KEY-STATUS WS-INGREDIENT1
-           WS-INGREDIENT2 WS-INGREDIENT2 WS-INGREDIENT3 WS-INGREDIENT4
-           WS-INGREDIENT5 WS-INGREDIENT6 WS-INGREDIENT-QTD1
-           WS-INGREDIENT-QTD2 WS-INGREDIENT-QTD3 WS-INGREDIENT-QTD4
-           WS-INGREDIENT-QTD5 WS-INGREDIENT-QTD6 REG-ING-QTD1
-           REG-ING-QTD2 REG-ING-QTD3 REG-ING-QTD4 REG-ING-QTD5
-           REG-ING-QTD6 WS-SR-PRICE CONFIRM-PRICE
+           REG-ING-QTD5 REG-ING-QTD6 KEY-STATUS
            MOVE SPACES TO WS-SR-EID WS-SR-S-DESCRIPTION
            WS-SR-L-DESCRIPTION REG-EID REG-S-DESCRIPTION
            REG-L-DESCRIPTION REG-ING-NAME1 REG-ING-NAME2 REG-ING-NAME3
@@ -1305,14 +1288,7 @@
            WS-INGREDIENTS-STRING2 WS-INGREDIENTS-STRING3 WS-REG
            WS-CAT-ACCEPT-NAME WS-ING-ACCEPT-NAME REG-ING-UNIT1
            REG-ING-UNIT2 REG-ING-UNIT3 REG-ING-UNIT4 REG-ING-UNIT5
-           REG-ING-UNIT6 WS-SR-S-DESCRIPTION WS-SR-L-DESCRIPTION1
-           WS-SR-L-DESCRIPTION2 REG-L-DESIGNATION1 REG-L-DESIGNATION2
-           REG-S-DESCRIPTION WS-ING-NAME1 WS-ING-NAME2 WS-ING-NAME3
-           WS-ING-NAME4 WS-ING-NAME5 WS-ING-NAME6 WS-INGREDIENT-UNIT1
-           WS-INGREDIENT-UNIT2 WS-INGREDIENT-UNIT3 WS-INGREDIENT-UNIT4
-           WS-INGREDIENT-UNIT5 WS-INGREDIENT-UNIT6 REG-ING-UNIT1
-           REG-ING-UNIT2 REG-ING-UNIT3 REG-ING-UNIT4 REG-ING-UNIT5
-           REG-ING-UNIT6 CONFIRM-REG-MESSAGE WS-REG
+           REG-ING-UNIT6
 
            EXIT SECTION.
        END PROGRAM SR-ADD.
