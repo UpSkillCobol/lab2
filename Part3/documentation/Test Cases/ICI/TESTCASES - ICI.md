@@ -1,12 +1,17 @@
-##Test Cases
+# Test Cases
+## Ingredients and Calendar Improvement
 
-| UC | INPUT | OUTPUT/ EXPECTED RESULT | DEVELOPER | TESTER | TEST DATE | TEST OUTPUT (PASSED OR FAILED) | COMMENTS
-|:------:|:------:|:------:|:------:|:------:|:------:|:------:|:------:|
-| CAM01 | List of unavailabilities (202103271000 - 202103302359) (202103261000 - 202103271000) (202103280000 - 202103282359) | Aggregated unavailabilities (202103261000 - 202103302359) | FB | DL |  |  |  |
-| CAM02 | List of unavailabilities (202103271001 - 202103302359) (202103261000 - 202103271000) (202103280000 - 202103282359) | Aggregated unavailabilities (202103261000 - 202103271000) (202103271001 - 202103302359) | FB | DL |  |  |  |
-| CAM03 | List of unavailabilities (202103270959 - 202103302359) (202103261000 - 202103271000) (202103280000 - 202103282359) | Aggregated unavailabilities (202103261000 - 202103302359) | FB | CC |  |  |  |
-| CAM04 | List of unavailabilities (202104011000 - 202104051000) (202103120800 - 202103162359) (202104021000 - 202104062359) (202103130800 - 202103182359) | Aggregated unavailabilities (202103120800 - 202103182359) (202104011000 - 202104062359) | FB | CC |  |  |  |
-| CAM05 | List of unavailabilities (202104011000 - 202104051000) (202103120800 - 202103162359) (202104021000 - 202104062359) (202103100800 - 202103120759)| Aggregated unavailabilities (202103100800 - 202103120759) (202103120800 - 202103182359) (202104011000 - 202104062359) | FB | BL |  |  |  |
-| CAM06 | List of unavailabilities (202104011000 - end not defined) (202103170800 - 202103192359) (202104021000 - 202104062359) (202103100800 - 202103180759)| Aggregated unavailabilities (202103100800 - 202103192359) (202104011000 - end not defined) | FB | BL |  |  |  |
-| CAM07 | List of unavailabilities (202104011000 - end not defined) (202103170800 - 202103192359) (202103281000 - 202104062359) (202103100800 - 202103180759)| Aggregated unavailabilities (202103100800 - 202103192359) (202103281000 - end not defined) | FB | JF |  |  |  |
-| CAM08 | List of unavailabilities (202104010800 - 202104082359) (202103260000 - 202104032359) (202103200000 - 202103262359) | Aggregated unavailabilities (202103200000 - 202104082359) | FB | JF |  |  |  |
+| UC | MODULE | INPUT | OUTPUT/ EXPECTED RESULT | DEVELOPER | TESTER | TEST DATE | TEST OUTPUT (PASSED OR FAILED) | COMMENTS
+|:------:|:------:|:------:|:------:|:------:|:------:|:------:|:------:|:------:|
+| ICI01 | CALENDAR | List of unavailabilities (202103271000 - 202103302359) (202103261000 - 202103271000) (202103280000 - 202103282359) | Aggregated unavailabilities (202103261000 - 202103302359) | FB | DL | 10/03/2021 | PASSED - Aggregated unavailabilities (202103261000 - 202103302359) | X |
+| ICI02 | CALENDAR | List of unavailabilities (202103271001 - 202103302359) (202103261000 - 202103271000) (202103280000 - 202103282359) | Aggregated unavailabilities (202103261000 - 202103271000) (202103271001 - 202103302359) | FB | DL | 10/03/2021 | PASSED - Aggregated unavailabilities (202103261000 - 202103271000) (202103271001 - 202103302359) | X |
+| ICI03 | CALENDAR | List of unavailabilities (202103270959 - 202103302359) (202103261000 - 202103271000) (202103280000 - 202103282359) | Aggregated unavailabilities (202103261000 - 202103302359) | FB | CC | 10/03/2021 | PASSED - Aggregated unavailabilities (202103261000 - 202103302359) | X |
+| ICI04 | CALENDAR | List of unavailabilities (202104011000 - 202104051000) (202103120800 - 202103162359) (202104021000 - 202104062359) (202103130800 - 202103182359) | Aggregated unavailabilities (202103120800 - 202103182359) (202104011000 - 202104062359) | FB | CC | 10/03/2021 | PASSED - Aggregated unavailabilities (202103120800 - 202103182359) (202104011000 - 202104062359) | X |
+| ICI05 | CALENDAR | List of unavailabilities (202104011000 - 202104051000) (202103120800 - 202103162359) (202104021000 - 202104062359) (202103100800 - 202103120759) | Aggregated unavailabilities (202103100800 - 202103120759) (202103120800 - 202103182359) (202104011000 - 202104062359) | FB | BL | 10/03/2021 | PASSED - Aggregated unavailabilities (202103100800 - 202103120759) (202103120800 - 202103182359) | X |
+| ICI06 | CALENDAR | List of unavailabilities (202104011000 - end not defined) (202103170800 - 202103192359) (202104021000 - 202104062359) (202103100800 - 202103180759) | Aggregated unavailabilities (202103100800 - 202103192359) (202104011000 - end not defined) | FB | JF |  |  |  |
+| ICI07 | CALENDAR | List of unavailabilities (202104011000 - end not defined) (202103170800 - 202103192359) (202103281000 - 202104062359) (202103110800 - 202103180759) | Aggregated unavailabilities (202103110800 - 202103192359) (202103281000 - end not defined) | FB | BL | 10/03/2021 | PASSED - Aggregated unavailabilities (202103110800 - 202103192359) (202103281000 - end not defined) | X |
+| ICI08 | CALENDAR | List of unavailabilities (202104010800 - 202104082359) (202103260000 - 202104032359) (202103200000 - 202103262359) | Aggregated unavailabilities (202103200000 - 202104082359) | FB | JF |  |  |  |
+| ICI09 | CALENDAR | Create Report | Creation of report file | FB | BL | 10/03/2021 | PASSED - Creation of report file | X |
+| ICI10 | INGREDIENTS | Search by threshold | All records with inventory lower than threshold | FB | CC | 10/03/2021 | FAILED - Not all records with inventory lower than threshold | X |
+| ICI11 | INGREDIENTS | Search by threshold | All records with inventory lower than threshold | FB | DL | 10/03/2021 | PASSED - All records with inventory lower than threshold | Bug fixed |
+| ICI12 | INGREDIENTS | Test F3 anytime | Back to main menu | FB | DL | 10/03/2021 | PASSED - Back to main menu | X |
