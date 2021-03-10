@@ -472,14 +472,14 @@
                 END-READ
             END-PERFORM
             CLOSE FXINGRED
-
+           MOVE ZEROS TO RIS-INDEX, NUMBER-RIS
             SET RIS-INDEX TO 0
            OPEN INPUT FXRISUPPLY
            PERFORM UNTIL EOF-RIS
                READ FXRISUPPLY NEXT RECORD
                    AT END
                        SET EOF-RIS TO TRUE
-      *>                  MOVE RIS-INDEX TO NUMBER-RIS
+                        MOVE RIS-INDEX TO NUMBER-RIS
 
                    NOT AT END
                     SET RIS-INDEX UP BY 1
