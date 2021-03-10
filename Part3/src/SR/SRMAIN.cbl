@@ -5,7 +5,7 @@
       * Tectonics: cobc
       ******************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. SR-MAIN.
+       PROGRAM-ID. SRMAIN.
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
        SPECIAL-NAMES.
@@ -93,4 +93,4 @@
            END-EVALUATE
            END-PERFORM
            EXIT PROGRAM.
-       END PROGRAM SR-MAIN.
+       END PROGRAM SRMAIN.
