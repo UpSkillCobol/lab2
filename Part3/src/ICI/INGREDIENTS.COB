@@ -16,7 +16,7 @@
        COPY CONSTANTS-INGREDS.
 
        01  WS-OPTION                           PIC 9(002).
-           88 VALID-OPTION                     VALUE 1 THRU 5.
+           88 VALID-OPTION                     VALUE 1 THRU 6.
        77  DUMMY                               PIC X(001).
 
        SCREEN SECTION.
