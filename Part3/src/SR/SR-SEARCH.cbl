@@ -15,12 +15,23 @@
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
            COPY "CP-SELECTS-SR".
+           SELECT REPORT-FILE ASSIGN TO "SANDWICH-REPORT.RPT".
+           SELECT TEST-FILE ASSIGN TO "TEST"
+           ORGANIZATION IS SEQUENTIAL
+           FILE STATUS IS FILE-STATUS.
        DATA DIVISION.
        FILE SECTION.
            COPY "FD-FS-SR".
+           FD  TEST-FILE.
+           01  TESTE.
+               05 TEST-TEXT PIC X(350).
+           FD  REPORT-FILE
+           REPORT IS SANDWICH-REPORT.
+
        WORKING-STORAGE SECTION.
        COPY "CB-WS-SR".
        COPY "SR-CONST".
+
        77  WS-ACCEPT-OPTION   PIC 9(003).
 
        01  SR-TABLE OCCURS 1 TO MAX-SR TIMES
@@ -74,8 +85,8 @@
                10 SHOW-SR-EID                         PIC X(005).
                10 SHOW-SR-S-DESC                      PIC X(025).
                10 SHOW-SR-L-DESC.
-                   15 SHOW-SR-L-DESC1                     PIC X(025).
-                   15 SHOW-SR-L-DESC2                     PIC X(025).
+                   15 SHOW-SR-L-DESC1                 PIC X(025).
+                   15 SHOW-SR-L-DESC2                 PIC X(025).
                10 SHOW-SR-PRICE                       PIC X(002).
            05 SHOW-INGREDIENTS.
                10 SHOW-INGREDIENT1                    PIC X(003).
@@ -111,6 +122,92 @@
                10 SHOW-CATEGORIE-NAME1                 PIC X(030).
                10 SHOW-CATEGORIE-NAME2                 PIC X(030).
                10 SHOW-CATEGORIE-NAME3                 PIC X(030).
+
+       REPORT SECTION.
+       RD  SANDWICH-REPORT
+           PAGE LIMIT IS 54
+           FIRST DETAIL 08
+           LAST DETAIL 46
+           FOOTING 48.
+       01  TYPE IS REPORT HEADING.
+           02 LINE 01.
+           03 COLUMN 02 VALUE REPORT-TITLE.
+       01  TYPE IS PAGE HEADING.
+           02 LINE IS PLUS 2.
+           03 COLUMN 03 VALUE REPORT-ID.
+           03 COLUMN PLUS 7 VALUE REPORT-S-DESCRIPTION.
+           03 COLUMN PLUS 10 VALUE REPORT-L-DESCRIPTION.
+           02 LINE IS PLUS 1.
+           03 COLUMN 03 VALUE REPORT-PRICE.
+           03 COLUMN PLUS 3 VALUE REPORT-CATEGORIES.
+           02 LINE IS PLUS 1.
+           03 COLUMN 03 VALUE REPORT-INGREDIENTS.
+           03 COLUMN PLUS 5 VALUE REPORT-QUANTITY.
+           03 COLUMN PLUS 2 VALUE REPORT-UNIT.
+
+       01  REPORTLINE1 TYPE IS DETAIL NEXT GROUP PLUS 1.
+           02 LINE IS PLUS 2.
+           03 COLUMN 02 PIC X(005) SOURCE SHOW-SR-EID (SHOW-INDEX).
+           03 COLUMN PLUS 7 PIC X(025)
+           SOURCE SHOW-SR-S-DESC (SHOW-INDEX).
+           03 COLUMN PLUS 10 PIC X(025)
+           SOURCE SHOW-SR-L-DESC1 (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(025)
+           SOURCE SHOW-SR-L-DESC2 (SHOW-INDEX).
+
+       01  REPORTLINE2 TYPE IS DETAIL.
+           02 LINE IS PLUS 1.
+           03 COLUMN 02 PIC X(002) SOURCE SHOW-SR-PRICE (SHOW-INDEX).
+           03 COLUMN PLUS 5 PIC X(030)
+           SOURCE SHOW-CATEGORIE-NAME1 (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(030)
+           SOURCE SHOW-CATEGORIE-NAME2 (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(030)
+           SOURCE SHOW-CATEGORIE-NAME3 (SHOW-INDEX).
+
+       01  REPORTLINE3 TYPE IS DETAIL.
+           02 LINE IS PLUS 1.
+           03 COLUMN 02 PIC X(030) SOURCE SHOW-ING-NAME1 (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(003)
+           SOURCE SHOW-INGREDIENT1-QTD (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(003)
+           SOURCE SHOW-ING-UNIT-SANDWICH1 (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(030)
+           SOURCE SHOW-ING-NAME2 (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(003)
+           SOURCE SHOW-INGREDIENT2-QTD (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(003)
+           SOURCE SHOW-ING-UNIT-SANDWICH2 (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(030)
+           SOURCE SHOW-ING-NAME3 (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(003)
+           SOURCE SHOW-INGREDIENT3-QTD (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(003)
+           SOURCE SHOW-ING-UNIT-SANDWICH3 (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(030)
+           SOURCE SHOW-ING-NAME4 (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(003)
+           SOURCE SHOW-INGREDIENT4-QTD (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(003)
+           SOURCE SHOW-ING-UNIT-SANDWICH4 (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(030)
+           SOURCE SHOW-ING-NAME5 (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(003)
+           SOURCE SHOW-INGREDIENT5-QTD (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(003)
+           SOURCE SHOW-ING-UNIT-SANDWICH5 (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(030)
+           SOURCE SHOW-ING-NAME6 (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(003)
+           SOURCE SHOW-INGREDIENT6-QTD (SHOW-INDEX).
+           03 COLUMN PLUS 1 PIC X(003)
+           SOURCE SHOW-ING-UNIT-SANDWICH6 (SHOW-INDEX).
+
+       01  TYPE IS PAGE FOOTING.
+           02 LINE IS 49.
+           03 COLUMN 60 PIC X(006) VALUE PAGECONST.
+           03 COLUMN PLUS 1 PIC ZZ SOURCE PAGE-COUNTER.
+
        SCREEN SECTION.
        01  CLEAR-SCREEN BACKGROUND-COLOR 0.
            05 VALUE " " BLANK SCREEN LINE 01 COL 01.
@@ -205,7 +302,7 @@
       ******************************************************************
        01  REGISTER-CAT-SCREEN
            BACKGROUND-COLOR 0, FOREGROUND-COLOR 7.
-           05 VALUE ADD-CAT-MENU-TEXT LINE 9 COL 17.
+           05 VALUE SRCH-CAT-MENU-TEXT LINE 9 COL 17.
            05 VALUE ADD-CAT-MENU-TEXT1 LINE 12 COL 13.
            05 VALUE ALL " " PIC X(055) LINE 7 COL 09
                BACKGROUND-COLOR 7.
@@ -249,6 +346,86 @@
                BLANK WHEN ZERO.
                10 REG-CAT-NAME2 PIC X(030) LINE 14 COL 23
                FROM WS-CAT-NAME2.
+      ******************************************************************
+       01  REGISTER-SR-SCREEN
+           BACKGROUND-COLOR 0, FOREGROUND-COLOR 7.
+           05 VALUE SRCH-SR-MENU-TEXT LINE 9 COL 17.
+           05 VALUE SRCH-SR-MENU-TEXT1 LINE 12 COL 13.
+           05 VALUE ALL " " PIC X(055) LINE 7 COL 09
+               BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(055) LINE 22 COL 09
+               BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 8 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 9 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 8 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 9 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 62 BACKGROUND-COLOR 7.
+           05 SR-ACCEPT PIC X(005) LINE 12 COL 32 TO WS-SR-ACCEPT.
+      ******************************************************************
+       01  REGISTER-PRICE-SCREEN
+           BACKGROUND-COLOR 0, FOREGROUND-COLOR 7.
+           05 VALUE SRCH-PRC-MENU-TEXT LINE 9 COL 17.
+           05 VALUE SRCH-PRC-MENU-TEXT1 LINE 12 COL 13.
+           05 VALUE SRCH-PRC-MENU-TEXT2 LINE 13 COL 13.
+           05 VALUE ALL " " PIC X(055) LINE 7 COL 09
+               BACKGROUND-COLOR 7.
+           05 VALUE ALL " " PIC X(055) LINE 22 COL 09
+               BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 8 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 9 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 09 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 8 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 9 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 62 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 62 BACKGROUND-COLOR 7.
+           05 PRICE-MIN PIC 9(002) LINE 12 COL 32 TO WS-PRICE-MIN.
+           05 VALUE CONFIRM-TEXT7 LINE 12 COL PLUS 2.
+           05 PRICE-MAX PIC 9(002) LINE 13 COL 32 TO WS-PRICE-MAX.
+           05 VALUE CONFIRM-TEXT7 LINE 13 COL PLUS 2.
       ******************************************************************
        01  CONFIRM-RECORD-SCREEN.
            05 VALUE ALL " " PIC X(107) LINE 6 col 05
@@ -429,10 +606,10 @@
                FROM TABLE-CAT-NAME (CAT-INDEX).
       ******************************************************************
        01  SANDWICH-LIST1.
-           05 LIST-SR-ID1 PIC 9(003) LINE ILIN COL ICOL
+           05 LIST-SR-ID1 PIC X(005) LINE ILIN COL ICOL
                FROM TABLE-SR-EID (SR-INDEX).
            05 VALUE "|" LINE ILIN COL PLUS 1.
-           05 LIST-SR-NAME1 PIC X(030) LINE ILIN COL PLUS 1
+           05 LIST-SR-NAME1 PIC X(025) LINE ILIN COL PLUS 1
                FROM TABLE-SR-S-DESC (SR-INDEX).
       ******************************************************************
        01  PREVIOUS-NEXT-TEXT.
@@ -593,7 +770,17 @@
                MOVE SR-TABLE(SR-INDEX) TO SHOW-SANDWICH (SHOW-INDEX)
                PERFORM 130-OBTAIN-SHOW-INGREDIENTS
                PERFORM 080-OBTAIN-SHOW-CATEGORIES
+               OPEN EXTEND TEST-FILE
+               IF FILE-STATUS = 35 THEN
+                   OPEN OUTPUT TEST-FILE
+                   CLOSE TEST-FILE
+                   OPEN EXTEND TEST-FILE
+               END-IF
+               MOVE SHOW-TABLE (SHOW-INDEX) TO TEST-TEXT
+               WRITE TESTE
+               CLOSE TEST-FILE
            END-PERFORM
+           MOVE SHOW-INDEX TO NUMBER-SHOW
            EXIT SECTION.
        080-OBTAIN-SHOW-CATEGORIES SECTION.
            SET SC-INDEX TO 0
@@ -792,23 +979,52 @@
                DISPLAY CLEAR-SCREEN
                DISPLAY MAIN-SCREEN
                ACCEPT MAIN-SEARCH-SCREEN
+                   IF KEY-STATUS = F3 THEN
+                       EXIT PROGRAM
+                   END-IF
                    EVALUATE WS-OPTION
                        WHEN 1
                            PERFORM 220-SEARCH-BY-ING
+                           IF KEY-STATUS = F3 THEN
+                               EXIT PROGRAM
+                           END-IF
                        WHEN 2
+                           PERFORM 260-SEARCH-BY-CAT
+                           IF KEY-STATUS = F3 THEN
+                               EXIT PROGRAM
+                           END-IF
                        WHEN 3
+                           PERFORM 310-SEARCH-BY-SANDWICH
+                           IF KEY-STATUS = F3 THEN
+                               EXIT PROGRAM
+                           END-IF
                        WHEN 4
+                           PERFORM 320-SEARCH-BY-PRICE
+                           IF KEY-STATUS = F3 THEN
+                               EXIT PROGRAM
+                           END-IF
                        WHEN 5
+                           PERFORM 330-GET-REPORT
+                           MOVE RPT-DONE TO INSTRUCTION-MESSAGE
+                           ACCEPT INSTRUCTIONS-SCREEN
+                           IF KEY-STATUS = F3 THEN
+                               EXIT PROGRAM
+                           END-IF
                    END-EVALUATE
            END-PERFORM
            EXIT PROGRAM.
        220-SEARCH-BY-ING SECTION.
            MOVE SPACES TO REG-ING-NAME1 REG-ING-NAME2 REG-ING-NAME3
-           MOVE 0 TO WS-CONTROL COUNT-ING REG-ING1 REG-ING2 REG-ING3
+               WS-ING-NAME1 WS-ING-NAME2 WS-ING-NAME3
+           MOVE ZEROS TO WS-CONTROL COUNT-ING REG-ING1 REG-ING2 REG-ING3
+               WS-INGREDIENT1 WS-INGREDIENT2 WS-INGREDIENT3
            PERFORM UNTIL WS-CONTROL = 1
                PERFORM WITH TEST AFTER UNTIL WS-ING-EXISTS = 1
                OR WS-ING-ACCEPT = ZEROS
                    PERFORM 700-LIST-ING
+                   IF KEY-STATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
                    PERFORM 290-ING-EXISTS
                END-PERFORM
                    IF WS-ING-ACCEPT <> ZEROS THEN
@@ -819,6 +1035,9 @@
                        PERFORM WITH TEST AFTER UNTIL WS-ING-EXISTS = 1
                            OR WS-ING-ACCEPT = ZEROS
                            PERFORM 700-LIST-ING
+                           IF KEY-STATUS = F3 THEN
+                               EXIT SECTION
+                           END-IF
                            PERFORM 290-ING-EXISTS
                        END-PERFORM
                        IF WS-ING-ACCEPT <> ZEROS THEN
@@ -830,6 +1049,9 @@
                                WS-ING-EXISTS = 1 OR
                                WS-ING-ACCEPT = ZEROS
                                PERFORM 700-LIST-ING
+                               IF KEY-STATUS = F3 THEN
+                                   EXIT SECTION
+                               END-IF
                                PERFORM 290-ING-EXISTS
                            END-PERFORM
                            IF WS-ING-ACCEPT <> ZEROS
@@ -856,7 +1078,7 @@
            EXIT SECTION.
        230-SEARCH-1-ING SECTION.
            SET SHOW-INDEX TO 0
-           MOVE ZEROS TO WS-CONTROL
+           MOVE ZEROS TO WS-CONTROL WS-RECORDS-SHOWN
            PERFORM WITH TEST AFTER UNTIL SHOW-INDEX >= NUMBER-SHOW
                SET SHOW-INDEX UP BY 1
                IF WS-INGREDIENT1 = SHOW-INGREDIENT1(SHOW-INDEX) OR
@@ -865,19 +1087,31 @@
                    SHOW-INGREDIENT4 (SHOW-INDEX) OR
                    SHOW-INGREDIENT5 (SHOW-INDEX) OR
                    SHOW-INGREDIENT6 (SHOW-INDEX) THEN
+                       ADD 1 TO WS-RECORDS-SHOWN
                        DISPLAY CLEAR-SCREEN
                        DISPLAY MAIN-SCREEN
                        ACCEPT CONFIRM-RECORD-SCREEN
-               ELSE
-                   ADD 1 TO WS-CONTROL
+                       IF KEY-STATUS = F3 THEN
+                           EXIT SECTION
+                       END-IF
                END-IF
            END-PERFORM
-           IF WS-CONTROL <> 0
-               MOVE NO-MATCH TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
+           IF WS-RECORDS-SHOWN = 0 THEN
+               MOVE NO-RECORDS TO CONFIRM-MESSAGE
+               ACCEPT CONFIRM-SCREEN
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
+           ELSE
+               MOVE NO-MATCH TO CONFIRM-MESSAGE
+               ACCEPT CONFIRM-SCREEN
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
            END-IF
            EXIT SECTION.
        240-SEARCH-2-ING SECTION.
-           MOVE ZEROS TO WS-CONTROL
+           MOVE ZEROS TO WS-CONTROL WS-RECORDS-SHOWN
            SET SHOW-INDEX TO 0
            PERFORM WITH TEST AFTER UNTIL SHOW-INDEX >= NUMBER-SHOW
                SET SHOW-INDEX UP BY 1
@@ -893,19 +1127,31 @@
                    SHOW-INGREDIENT4 (SHOW-INDEX) OR
                    SHOW-INGREDIENT5 (SHOW-INDEX) OR
                    SHOW-INGREDIENT6 (SHOW-INDEX)) THEN
+                       ADD 1 TO WS-RECORDS-SHOWN
                        DISPLAY CLEAR-SCREEN
                        DISPLAY MAIN-SCREEN
                        ACCEPT CONFIRM-RECORD-SCREEN
-               ELSE
-                   ADD 1 TO WS-CONTROL
+                       IF KEY-STATUS = F3 THEN
+                           EXIT SECTION
+                       END-IF
                END-IF
            END-PERFORM
-           IF WS-CONTROL <> 0
-               MOVE NO-MATCH TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
+           IF WS-RECORDS-SHOWN = 0 THEN
+               MOVE NO-RECORDS TO CONFIRM-MESSAGE
+               ACCEPT CONFIRM-SCREEN
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
+           ELSE
+               MOVE NO-MATCH TO CONFIRM-MESSAGE
+               ACCEPT CONFIRM-SCREEN
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
            END-IF
            EXIT SECTION.
        250-SEARCH-3-ING SECTION.
-           MOVE ZEROS TO WS-CONTROL
+           MOVE ZEROS TO WS-CONTROL WS-RECORDS-SHOWN
            SET SHOW-INDEX TO 0
            PERFORM WITH TEST AFTER UNTIL SHOW-INDEX >= NUMBER-SHOW
                SET SHOW-INDEX UP BY 1
@@ -927,24 +1173,163 @@
                    SHOW-INGREDIENT4 (SHOW-INDEX) OR
                    SHOW-INGREDIENT5 (SHOW-INDEX) OR
                    SHOW-INGREDIENT6 (SHOW-INDEX)) THEN
+                       ADD 1 TO WS-RECORDS-SHOWN
                        DISPLAY CLEAR-SCREEN
                        DISPLAY MAIN-SCREEN
                        ACCEPT CONFIRM-RECORD-SCREEN
-               ELSE
-                   ADD 1 TO WS-CONTROL
+                       IF KEY-STATUS = F3 THEN
+                           EXIT SECTION
+                       END-IF
                END-IF
            END-PERFORM
-           IF WS-CONTROL <> 0
-               MOVE NO-MATCH TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
+           IF WS-RECORDS-SHOWN = 0 THEN
+               MOVE NO-RECORDS TO CONFIRM-MESSAGE
+               ACCEPT CONFIRM-SCREEN
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
+           ELSE
+               MOVE NO-MATCH TO CONFIRM-MESSAGE
+               ACCEPT CONFIRM-SCREEN
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
            END-IF
            EXIT SECTION.
        260-SEARCH-BY-CAT SECTION.
            MOVE ZEROS TO REG-CAT1 REG-CAT2 WS-CONTROL COUNT-ING
+               WS-CATEGORIE1 WS-CATEGORIE2 WS-CATEGORIE3
            MOVE SPACES TO REG-CAT-NAME1 REG-CAT-NAME2
+               WS-CAT-NAME1 WS-CAT-NAME2 WS-CAT-NAME3
+           PERFORM UNTIL WS-CONTROL = 1
+               PERFORM WITH TEST AFTER UNTIL WS-CAT-EXISTS = 1
+               OR WS-CAT-ACCEPT = ZEROS
+                   PERFORM 600-LIST-CAT
+                   IF KEY-STATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
+                   PERFORM 300-CAT-EXISTS
+               END-PERFORM
+                   IF WS-CAT-ACCEPT <> ZEROS THEN
+                       ADD 1 TO COUNT-ING
+                       MOVE WS-CAT-ACCEPT TO WS-CATEGORIE1
+                       MOVE WS-CAT-ACCEPT-NAME TO WS-CAT-NAME1
+                       DISPLAY REGISTER-CAT-SCREEN
+                       PERFORM WITH TEST AFTER UNTIL WS-CAT-EXISTS = 1
+                       OR WS-CAT-ACCEPT = ZEROS
+                           PERFORM 600-LIST-CAT
+                           IF KEY-STATUS = F3 THEN
+                               EXIT SECTION
+                           END-IF
+                           PERFORM 300-CAT-EXISTS
+                       END-PERFORM
+                       IF WS-ING-ACCEPT <> ZEROS THEN
+                           ADD 1 TO COUNT-ING
+                           MOVE WS-CAT-ACCEPT TO WS-CATEGORIE2
+                           MOVE WS-CAT-ACCEPT-NAME TO WS-CAT-NAME2
+                           DISPLAY REGISTER-CAT-SCREEN
+                           PERFORM WITH TEST AFTER UNTIL
+                           WS-CAT-EXISTS = 1
+                           OR WS-CAT-ACCEPT = ZEROS
+                               PERFORM 600-LIST-CAT
+                               IF KEY-STATUS = F3 THEN
+                                   EXIT SECTION
+                               END-IF
+                               PERFORM 300-CAT-EXISTS
+                           END-PERFORM
+                           IF WS-CAT-ACCEPT <> ZEROS
+                               ADD 1 TO COUNT-ING
+                               MOVE WS-CAT-ACCEPT TO WS-CATEGORIE3
+                               MOVE WS-CAT-ACCEPT-NAME TO WS-CAT-NAME3
+                               DISPLAY REGISTER-CAT-SCREEN
+                           END-IF
+                           MOVE 1 TO WS-CONTROL
+                       ELSE
+                           MOVE 1 TO WS-CONTROL
+                   ELSE
+                       EXIT SECTION
+                   END-IF
+           END-PERFORM
+           EVALUATE COUNT-ING
+               WHEN 1
+                   PERFORM 270-SEARCH-1-CAT
+               WHEN 2
+                   PERFORM 280-SEARCH-2-CAT
+           END-EVALUATE
            EXIT SECTION.
-       270-SEARCH-BY-1-CAT SECTION.
-       280-SEARCH-BY-2-CAT SECTION.
+           EXIT SECTION.
+       270-SEARCH-1-CAT SECTION.
+           SET SHOW-INDEX TO 0
+           MOVE ZEROS TO WS-CONTROL WS-RECORDS-SHOWN
+           PERFORM WITH TEST AFTER UNTIL SHOW-INDEX >= NUMBER-SHOW
+               SET SHOW-INDEX UP BY 1
+               IF WS-CATEGORIE1 = SHOW-CATEGORIE1(SHOW-INDEX) OR
+                   SHOW-CATEGORIE2 (SHOW-INDEX) OR
+                   SHOW-CATEGORIE3 (SHOW-INDEX) THEN
+                       ADD 1 TO WS-RECORDS-SHOWN
+                       DISPLAY CLEAR-SCREEN
+                       DISPLAY MAIN-SCREEN
+                       ACCEPT CONFIRM-RECORD-SCREEN
+                       IF KEY-STATUS = F3 THEN
+                           EXIT SECTION
+                       END-IF
+               ELSE
+                   ADD 1 TO WS-CONTROL
+               END-IF
+           END-PERFORM
+           IF WS-RECORDS-SHOWN = 0 THEN
+               MOVE NO-RECORDS TO CONFIRM-MESSAGE
+               ACCEPT CONFIRM-SCREEN
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
+           ELSE
+               MOVE NO-MATCH TO CONFIRM-MESSAGE
+               ACCEPT CONFIRM-SCREEN
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
+           END-IF
+           EXIT SECTION.
+       280-SEARCH-2-CAT SECTION.
+           SET SHOW-INDEX TO 0
+           MOVE ZEROS TO WS-CONTROL WS-RECORDS-SHOWN
+           PERFORM WITH TEST AFTER UNTIL SHOW-INDEX >= NUMBER-SHOW
+               SET SHOW-INDEX UP BY 1
+               IF (WS-CATEGORIE1 = SHOW-CATEGORIE1(SHOW-INDEX) OR
+                   SHOW-CATEGORIE2 (SHOW-INDEX) OR
+                   SHOW-CATEGORIE3 (SHOW-INDEX)) AND
+                   (WS-CATEGORIE2 = SHOW-CATEGORIE1(SHOW-INDEX) OR
+                   SHOW-CATEGORIE2 (SHOW-INDEX) OR
+                   SHOW-CATEGORIE3 (SHOW-INDEX))THEN
+                       ADD 1 TO WS-RECORDS-SHOWN
+                       DISPLAY CLEAR-SCREEN
+                       DISPLAY MAIN-SCREEN
+                       ACCEPT CONFIRM-RECORD-SCREEN
+                       IF KEY-STATUS = F3 THEN
+                           EXIT SECTION
+                       END-IF
+               END-IF
+           END-PERFORM
+           IF WS-RECORDS-SHOWN = 0 THEN
+               MOVE NO-RECORDS TO CONFIRM-MESSAGE
+               ACCEPT CONFIRM-SCREEN
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
+           ELSE
+               MOVE NO-MATCH TO CONFIRM-MESSAGE
+               ACCEPT CONFIRM-SCREEN
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
+           END-IF
+           EXIT SECTION.
        290-ING-EXISTS SECTION.
+           IF WS-ING-ACCEPT = ZEROS THEN
+               MOVE 1 TO WS-ING-EXISTS
+               EXIT SECTION
+           END-IF
            MOVE 0 TO WS-ING-EXISTS
            MOVE SPACES TO WS-ING-ACCEPT-NAME WS-ING-UNIT
            SET ING-INDEX TO 1
@@ -961,9 +1346,16 @@
            END-PERFORM
            IF WS-ING-EXISTS = 0 THEN
                MOVE WRONG-ING TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
            END-IF
            EXIT SECTION.
-       300-CHECK-CAT-EXISTS SECTION.
+       300-CAT-EXISTS SECTION.
+           IF WS-CAT-ACCEPT = ZEROS THEN
+               MOVE 1 TO WS-CAT-EXISTS
+               EXIT SECTION
+           END-IF
            MOVE 0 TO WS-CAT-EXISTS
            MOVE SPACES TO WS-CAT-ACCEPT-NAME
            SET CAT-INDEX TO 1
@@ -977,13 +1369,213 @@
                END-IF
            END-PERFORM
            EXIT SECTION.
+       310-SEARCH-BY-SANDWICH SECTION.
+           PERFORM WITH TEST AFTER UNTIL WS-SR-EXISTS = 1 OR
+               WS-SR-ACCEPT IS ZEROS
+               PERFORM 500-LIST-SANDWICH
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
+               PERFORM 320-SANDWICH-EXISTS
+           END-PERFORM
+           IF WS-SR-ACCEPT <> ZEROS THEN
+               MOVE ZEROS TO WS-CONTROL WS-RECORDS-SHOWN
+               SET SHOW-INDEX TO 0
+               PERFORM WITH TEST AFTER UNTIL SHOW-INDEX >= NUMBER-SHOW
+                   OR WS-CONTROL = 1
+                   SET SHOW-INDEX UP BY 1
+                   IF WS-SR-ACCEPT = SHOW-SR-EID (SHOW-INDEX) THEN
+                       ADD 1 TO WS-RECORDS-SHOWN
+                       DISPLAY CLEAR-SCREEN
+                       DISPLAY MAIN-SCREEN
+                       ACCEPT CONFIRM-RECORD-SCREEN
+                       IF KEY-STATUS = F3 THEN
+                           EXIT SECTION
+                       END-IF
+                       MOVE 1 TO WS-CONTROL
+                   END-IF
+               END-PERFORM
+           ELSE
+               EXIT SECTION
+           END-IF
+           IF WS-RECORDS-SHOWN = 0 THEN
+               MOVE NO-RECORDS TO CONFIRM-MESSAGE
+               ACCEPT CONFIRM-SCREEN
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
+           ELSE
+               MOVE NO-MATCH TO CONFIRM-MESSAGE
+               ACCEPT CONFIRM-SCREEN
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
+           END-IF.
+           EXIT SECTION.
+       320-SANDWICH-EXISTS SECTION.
+           IF WS-SR-ACCEPT = ZEROS THEN
+               MOVE 1 TO WS-SR-EXISTS
+               EXIT SECTION
+           END-IF
+           MOVE 0 TO WS-SR-EXISTS
+           SET SR-INDEX TO 1
+           PERFORM UNTIL SR-INDEX >= NUMBER-SR
+               IF WS-SR-ACCEPT = TABLE-SR-EID (SR-INDEX) THEN
+                   MOVE 1 TO WS-SR-EXISTS
+                   EXIT SECTION
+               ELSE
+                   SET SR-INDEX UP BY 1
+               END-IF
+           END-PERFORM
+           EXIT SECTION.
+       320-SEARCH-BY-PRICE SECTION.
+           MOVE ZEROS TO WS-PRICE-MIN WS-PRICE-MAX PRICE-MIN PRICE-MAX
+           DISPLAY CLEAR-SCREEN
+           DISPLAY MAIN-SCREEN
+           MOVE PRICE-INSTR TO INSTRUCTION-MESSAGE
+           DISPLAY INSTRUCTIONS-SCREEN
+           DISPLAY REGISTER-PRICE-SCREEN
+           ACCEPT PRICE-MIN
+           IF KEY-STATUS = F3 OR WS-PRICE-MIN IS ZEROS THEN
+               EXIT SECTION
+           END-IF
+           ACCEPT PRICE-MAX
+           IF KEY-STATUS = F3 OR WS-PRICE-MAX IS ZEROS THEN
+               EXIT SECTION
+           END-IF
+           IF WS-PRICE-MAX < WS-PRICE-MIN THEN
+               MOVE PRICE-ERROR TO CONFIRM-MESSAGE
+               ACCEPT CONFIRM-SCREEN
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
+               EXIT SECTION
+           END-IF
+           MOVE ZEROS TO WS-RECORDS-SHOWN
+           SET SHOW-INDEX TO 0
+           PERFORM WITH TEST AFTER UNTIL SHOW-INDEX >= NUMBER-SHOW
+               SET SHOW-INDEX UP BY 1
+               IF SHOW-SR-PRICE (SHOW-INDEX) >= WS-PRICE-MIN AND
+                   SHOW-SR-PRICE (SHOW-INDEX) <= WS-PRICE-MAX THEN
+                   ADD 1 TO WS-RECORDS-SHOWN
+                   DISPLAY CLEAR-SCREEN
+                   DISPLAY MAIN-SCREEN
+                   ACCEPT CONFIRM-RECORD-SCREEN
+                   IF KEY-STATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
+               END-IF
+           END-PERFORM
+           IF WS-RECORDS-SHOWN = 0 THEN
+               MOVE NO-RECORDS TO CONFIRM-MESSAGE
+               ACCEPT CONFIRM-SCREEN
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
+           ELSE
+               MOVE NO-MATCH TO CONFIRM-MESSAGE
+               ACCEPT CONFIRM-SCREEN
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
+           END-IF.
+           EXIT SECTION.
+       330-GET-REPORT SECTION.
+           OPEN OUTPUT REPORT-FILE
+           INITIATE SANDWICH-REPORT
+           SET SHOW-INDEX TO 0
+           PERFORM UNTIL SHOW-INDEX >= NUMBER-SHOW
+               SET SHOW-INDEX UP BY 1
+               GENERATE REPORTLINE1
+               GENERATE REPORTLINE2
+               GENERATE REPORTLINE3
+           END-PERFORM
+           TERMINATE SANDWICH-REPORT
+           CLOSE REPORT-FILE
+           EXIT SECTION.
+       500-LIST-SANDWICH SECTION.
+           DISPLAY CLEAR-SCREEN
+           DISPLAY MAIN-SCREEN
+           DISPLAY LIST-FRAME
+           DISPLAY REGISTER-SR-SCREEN
+           MOVE SPACES TO SR-ACCEPT WS-SR-ACCEPT
+           SET SR-INDEX TO 1
+           MOVE 10 TO ILIN
+           MOVE 72 TO ICOL
+           MOVE 1 TO COUNTPAGE
+           MOVE 10 TO MAXPERPAGE
+           PERFORM WITH TEST AFTER UNTIL SR-INDEX >= NUMBER-SR
+               DISPLAY SANDWICH-LIST1
+               DISPLAY REGISTER-SR-SCREEN
+               SET SR-INDEX UP BY 1
+               ADD 1 TO ILIN
+               ADD 1 TO MAXPERPAGE
+               IF ILIN = 20 THEN
+                   MOVE NEXT-PAGE TO TEXT2
+                   DISPLAY LIST-FRAME
+                   MOVE SR-INSTR TO INSTRUCTION-MESSAGE
+                   DISPLAY INSTRUCTION-MESSAGE
+                   ACCEPT SR-ACCEPT
+                   IF KEY-STATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
+                   IF KEY-STATUS = F1 AND COUNTPAGE > 1
+                       MOVE SPACE TO TEXT2
+                       DISPLAY CLEAR-SCREEN
+                       DISPLAY REGISTER-SR-SCREEN
+                       DISPLAY MAIN-SCREEN
+                       DISPLAY LIST-FRAME
+                       MOVE 10 TO ILIN
+                       SET SR-INDEX DOWN BY MAXPERPAGE
+                       SUBTRACT 1 FROM COUNTPAGE
+                       MOVE 10 TO MAXPERPAGE
+                           IF COUNTPAGE = 1 THEN
+                               MOVE SPACES TO TEXT1
+                               DISPLAY LIST-FRAME
+                           END-IF
+                   ELSE
+                       IF KEY-STATUS = F2 THEN
+                           MOVE PREVIOUS-PAGE TO TEXT1
+                           MOVE NEXT-PAGE TO TEXT2
+                           DISPLAY CLEAR-SCREEN
+                           DISPLAY REGISTER-SR-SCREEN
+                           DISPLAY MAIN-SCREEN
+                           DISPLAY LIST-FRAME
+                           MOVE 10 TO ILIN
+                           ADD 1 TO COUNTPAGE
+                           MOVE 10 TO MAXPERPAGE
+                       ELSE
+                           EXIT SECTION
+                       END-IF
+                   END-IF
+               END-IF
+               IF SR-INDEX >= NUMBER-SR
+                   MOVE LAST-PAGE TO TEXT2
+                   DISPLAY LIST-FRAME
+                   MOVE SR-INSTR TO INSTRUCTION-MESSAGE
+                   DISPLAY INSTRUCTION-MESSAGE
+                   ACCEPT SR-ACCEPT
+                   IF KEY-STATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
+                   IF KEY-STATUS = F1 AND COUNTPAGE > 1
+                       DISPLAY CLEAR-SCREEN
+                       DISPLAY REGISTER-SR-SCREEN
+                       DISPLAY MAIN-SCREEN
+                       DISPLAY LIST-FRAME
+                       MOVE 10 TO ILIN
+                       SET SR-INDEX DOWN BY MAXPERPAGE
+                       SUBTRACT 1 FROM COUNTPAGE
+                       MOVE 10 TO MAXPERPAGE
+                   END-IF
+               END-IF
+           END-PERFORM.
        600-LIST-CAT SECTION.
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY LIST-FRAME
            DISPLAY REGISTER-CAT-SCREEN
-           MOVE ZEROES TO NEW-INGREDID
-           MOVE SPACES TO TRUE-YES
+           MOVE ZEROES TO CAT-ACCEPT WS-CAT-ACCEPT
            SET CAT-INDEX TO 1
            MOVE 10 TO ILIN
            MOVE 72 TO ICOL
@@ -1011,7 +1603,7 @@
                        DISPLAY MAIN-SCREEN
                        DISPLAY LIST-FRAME
                        MOVE 10 TO ILIN
-                       SET ING-INDEX DOWN BY MAXPERPAGE
+                       SET CAT-INDEX DOWN BY MAXPERPAGE
                        SUBTRACT 1 FROM COUNTPAGE
                        MOVE 10 TO MAXPERPAGE
                            IF COUNTPAGE = 1 THEN
@@ -1049,7 +1641,7 @@
                        DISPLAY MAIN-SCREEN
                        DISPLAY LIST-FRAME
                        MOVE 10 TO ILIN
-                       SET ING-INDEX DOWN BY MAXPERPAGE
+                       SET CAT-INDEX DOWN BY MAXPERPAGE
                        SUBTRACT 1 FROM COUNTPAGE
                        MOVE 10 TO MAXPERPAGE
                    END-IF

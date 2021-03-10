@@ -81,7 +81,7 @@
               EVALUATE MAIN-OPTION
                  WHEN 1     CALL "RSOREGISTER"
                  WHEN 2     CALL "RSOSEARCH"
-      *>            WHEN 3     CALL "RSOREPORT"
+                 WHEN 3     CALL "RSOREPORT"
               END-EVALUATE
 
            END-PERFORM

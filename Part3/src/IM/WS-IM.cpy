@@ -1,4 +1,7 @@
        01  WS-INVENTORY.
+
+           05 WS-QTD-TOTAL                            PIC 9(003).
+
            05 WS-MOVE-DETAILS.
                10 WS-MOVE-IN-ID                       PIC X(002).
                10 WS-MOVE-OUT-ID                      PIC X(002).

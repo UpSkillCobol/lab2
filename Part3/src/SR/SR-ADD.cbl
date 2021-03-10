@@ -20,7 +20,7 @@
            COPY "FD-FS-SR".
        WORKING-STORAGE SECTION.
        COPY "CB-WS-SR".
-       COPY "SR-CONST-PT".
+       COPY "SR-CONST".
 
        01  SR-TABLE OCCURS 1 TO MAX-SR TIMES
            DEPENDING ON NUMBER-SR

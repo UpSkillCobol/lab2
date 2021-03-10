@@ -48,7 +48,7 @@
            03 VALUE ALL " " PIC X(50) LINE 17 COL 35.
            03 VALUE MAIN-MENU-OPTION1 LINE 11 COL 50.
            03 VALUE MAIN-MENU-OPTION2 LINE 12 COL 50.
-           03 VALUE MAIN-MENU-OPTION3 LINE 13 COL 50.
+      *>      03 VALUE MAIN-MENU-OPTION3 LINE 13 COL 50.
            03 VALUE MAIN-MENU-OPTION5 LINE 14 COL 50.
            03 VALUE MAIN-MENU-CHOICE LINE 20 COL 45 REVERSE-VIDEO.
            03 MM-OPTION PIC 9(002) LINE 20 COL 62 TO WS-OPTION
@@ -79,8 +79,8 @@
            EVALUATE WS-OPTION
                WHEN 1
                    CALL "RECORD-RIS"
-      *>          WHEN 2
-      *>              CALL "SEARCH-RIS"
+               WHEN 2
+                   CALL "SEARCH-RIS"
       *>          WHEN 3
       *>              CALL "REPORT-RIS"
 
