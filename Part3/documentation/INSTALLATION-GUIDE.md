@@ -17,7 +17,7 @@ This file is a tutorial which explains all the procedures for the installing of 
 #### STEPS:
 </br>
 
-1️⃣ Download the folder by clicking this [link](Part3/src/Breadwich V3.0.7z).
+1️⃣ Download the folder by clicking this [link](https://github.com/UpSkillCobol/lab2/blob/main/Part3/src/Breadwich%20V3.0.7z).
 </br>
 
 2️⃣ Extract all files to another folder in your own computer.
