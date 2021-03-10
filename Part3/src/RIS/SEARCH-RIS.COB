@@ -76,7 +76,7 @@
        01  GET-INGREDIENT-VALID                PIC 9(003).
        01  COUNTER                             PIC 9(003).
        01  WS-OPTION                           PIC 9(002).
-           88 VALID-OPTION                     VALUE 1 THRU 3.
+           88 VALID-OPTION                     VALUE 1, 2, 3, 5.
        77  DUMMY                               PIC X(001).
        77  INGRED-STATUS                       PIC 9(002).
        77  KEYSTATUS                           PIC 9(004).
@@ -219,7 +219,7 @@
            03 VALUE MAIN-MENU-OPTION3   LINE 13 COL 42.
            03 VALUE MAIN-MENU-OPTION5   LINE 14 COL 42.
            03 VALUE MAIN-MENU-CHOICE LINE 20 COL 45 REVERSE-VIDEO.
-           03 SC-OPTION PIC 9(002) LINE 20 COL 62 TO WS-OPTION
+           03 SC-OPTION PIC 9(002) LINE 20 COL PLUS 2 TO WS-OPTION
                BLANK WHEN ZERO REVERSE-VIDEO.
 
        01  GET-SEARCH-SCREEN
@@ -228,8 +228,6 @@
            05 VALUE ADD-SUPP-NAME  LINE 11 COL 13.
      >      05 VALUE ADD-MENU-TEXT1 LINE 13 COL 13.
             05 VALUE ADD-INGRED-NAME LINE 15 COL 13.
-           05 VALUE ADD-MENU-TEXT2 LINE 17 COL 13.
-           05 VALUE ADD-MENU-TEXT3 LINE 17 COL 31.
            05 VALUE ALL " " PIC X(055) LINE 7 COL 09
                BACKGROUND-COLOR 7.
            05 VALUE ALL " " PIC X(055) LINE 22 COL 09
@@ -238,22 +236,28 @@
                 FROM SEARCH-RIS-ID-SUPP (SEARCH-INDEX).
             05 SUPP-NAME-VIEW PIC X(30) LINE 11 COL 18
                    FROM SEARCH-SUPP-NAME (SEARCH-INDEX).
-
+           05 GET-INGREDIENT-ID PIC 9(003) LINE 13 COL 28
+               FROM SEARCH-RIS-ID-ING (SEARCH-INDEX).
             05 INGRED-NAME-VIEW PIC X(30) LINE 15 COL 18
                    FROM SEARCH-INGRED-NAME (SEARCH-INDEX).
-           05 GET-PRICE PIC 9(003) LINE 17 COL 19
+           05 VALUE ADD-MENU-TEXT2 LINE 17 COL 13.
+           05 GET-PRICE PIC 9(003) LINE 17 COL PLUS 2
                FROM SEARCH-RIS-PRICE (SEARCH-INDEX).
+           05 VALUE PRICE-EURO LINE 17 COL PLUS 2.
+           05 VALUE "/"  LINE 17 COL PLUS 1.
+           05 PIC X(003) LINE 17 COL PLUS 1 FROM
+               SEARCH-UNIT-SUPPLIER (SEARCH-INDEX).
+           05 VALUE "|"  LINE 17 COL PLUS 3.
+           05 VALUE ADD-MENU-TEXT3 LINE 17 COL PLUS 2.
            05 GET-EXPIRATION-DATE.
-               10 GET-DAY PIC 9(002) LINE 17 COL 41
+               10 GET-DAY PIC 9(002) LINE 17 COL PLUS 2
                    FROM SEARCH-RIS-DAY (SEARCH-INDEX).
-               10 GET-MONTH PIC 9(002) LINE 17 COL 44
+               10 VALUE "/"  LINE 17 COL PLUS 1.
+               10 GET-MONTH PIC 9(002) LINE 17 COL PLUS 1
                    FROM SEARCH-RIS-MONTH (SEARCH-INDEX).
-               10 GET-YEAR PIC 9(004) LINE 17 COL 47
+               10 VALUE "/"  LINE 17 COL PLUS 1.
+               10 GET-YEAR PIC 9(004) LINE 17 COL PLUS 1
                    FROM SEARCH-RIS-YEAR (SEARCH-INDEX).
-           05 VALUE PRICE-EURO LINE 17 COL 23.
-           05 VALUE "/"  LINE 17 COL 43.
-           05 VALUE "/"  LINE 17 COL 46.
-           05 VALUE "|"  LINE 17 COL 29.
            05 VALUE "  " LINE 8 COL 09  BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 9 COL 09  BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 10 COL 09 BACKGROUND-COLOR 7.
@@ -298,8 +302,8 @@
            05 VALUE LIST-FRAME2 LINE 08  COL PLUS 4 FOREGROUND-COLOR 5.
            05 VALUE ALL "Ä" PIC X(042) LINE 09 COL 70.
            05 VALUE ALL "Ä" PIC X(042) LINE 20 COL 70.
-           05 TEXT1 PIC X(020)   LINE 21 COL 70 FOREGROUND-COLOR 5 .
-           05 TEXT2 PIC X(019)   LINE 21 COL 90 FOREGROUND-COLOR 5 .
+           05 TEXT1 PIC X(020)   LINE 21 COL 71 FOREGROUND-COLOR 5 .
+           05 TEXT2 PIC X(019)   LINE 21 COL 92 FOREGROUND-COLOR 5 .
            05 VALUE "  " LINE 07 COL 68  BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 08 COL 68  BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 09 COL 68  BACKGROUND-COLOR 7.
@@ -426,7 +430,6 @@
            END-PERFORM
            EXIT PROGRAM.
        SEARCH-EVALUATE SECTION.
-           ACCEPT SC-OPTION
                EVALUATE WS-OPTION
                    WHEN  1
                        PERFORM SEARCH-VALID-PRICE
@@ -476,7 +479,11 @@
                        IF GET-INGREDIENT-VALID = SEARCH-RIS-ID-ING
                            (SEARCH-INDEX)
                            ADD 1 TO COUNTER
-                         ACCEPT GET-SEARCH-SCREEN
+                           DISPLAY CLEAR-SCREEN
+                           DISPLAY MAIN-SCREEN
+                           MOVE SPACES TO INSTRUCTIONS-TEXT
+                           DISPLAY INSTRUCTIONS-ZONE
+                           ACCEPT GET-SEARCH-SCREEN
                        END-IF
             END-PERFORM
            IF COUNTER = 0 THEN
