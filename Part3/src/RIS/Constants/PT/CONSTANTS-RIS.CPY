@@ -3,7 +3,7 @@
       ******************************************************************
       *    BREADWICH | INGREDIENTS SUPPLIERS MANAGEMENT
       ******************************************************************
-      *    ALL CONSTANTS
+      *    ALL CONSTANTS PT
       ******************************************************************
       *     V1 | EM ATUALIZAÇÃO | 04.03.2021
       ******************************************************************
@@ -23,10 +23,12 @@
        78 MODULE-NAME-REPORT  VALUE "RELATORIO ".
 
        *>SEARCH-MENU
-       78 SEARCH-MENU-OPTION1 VALUE "1 - PROCURA POR PRECOS VALIDOS".
+       78 SEARCH-MENU-OPTION1 VALUE "1 - PROCURAR POR PRECOS COM DATAS I
+      -    "NVALIDAS".
 
-       78 SEARCH-MENU-OPTION2 VALUE "2 - PROCURAR INGREDIENTE POR FORNEC
-      -    "EDOR".
+       78 SEARCH-MENU-OPTION2 VALUE "2 - PROCURAR FORNECEDOR POR INGREDI
+      -    "ENTE".
+
       *BACK
        78 BACK-EXIT            VALUE "F3 - MENU PRICIPAL".
       * MAIN MENU OPTION 1
@@ -153,8 +155,15 @@
 
        78  LAST-PAGE VALUE "      ULTIMA PAGINA".
 
+        78  LIST-AGG-FRAME VALUE "ID  |  NAME".
+
        78  ERROR-SEARCH
            VALUE "NO RESULTS FOUND | PRESS ANY KEY TO CONTINUE".
 
        78  NO-MORE-MATCHES VALUE "NO MORE RESULTS HAVE BEEN FOUND | PRES
       -    "S ANY KEY TO CONTINUE".
+
+       78  REPORT-DONE VALUE "REPORT CREATED SUCESSFULLY | PRESS ANY KEY
+      -    " TO CONTINUE".
+
+       78  SC-GET-INGRED VALUE "INGREDIENT ID:".

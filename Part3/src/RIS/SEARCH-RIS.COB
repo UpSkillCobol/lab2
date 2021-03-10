@@ -242,8 +242,8 @@
            BACKGROUND-COLOR 0, FOREGROUND-COLOR 7.
            05 VALUE ADD-MENU-TEXT  LINE 09 COL 13.
            05 VALUE ADD-SUPP-NAME  LINE 11 COL 13.
-           05 VALUE ADD-MENU-TEXT1 LINE 13 COL 13.
-           05 VALUE ADD-INGRED-NAME LINE 15 COL 13.
+     >      05 VALUE ADD-MENU-TEXT1 LINE 13 COL 13.
+            05 VALUE ADD-INGRED-NAME LINE 15 COL 13.
            05 VALUE ADD-MENU-TEXT2 LINE 17 COL 13.
            05 VALUE ADD-MENU-TEXT3 LINE 17 COL 31.
            05 VALUE ALL " " PIC X(055) LINE 7 COL 09
@@ -301,8 +301,8 @@
            05 PIC X(01) TO DUMMY.
       ******************************************************************
        01  GET-SEARCH-INGREDIENT.
-
-       05 GET-INGREDIENT-ID PIC 9(003) LINE 13 COL 28
+           05 VALUE ADD-MENU-TEXT1 LINE 13 COL 13.
+           05 GET-INGREDIENT-ID PIC 9(003) LINE 13 COL 28
                TO GET-INGREDIENT-VALID.
 
        01  LIST-FRAME.
@@ -426,11 +426,14 @@
            PERFORM CHECK-FILES-OK
            PERFORM FILL-TABLES
            PERFORM WITH TEST AFTER UNTIL WS-OPTION = 3
-               MOVE ZERO TO WS-OPTION
+               MOVE ZERO TO WS-OPTION, SC-OPTION
                DISPLAY CLEAR-SCREEN
                DISPLAY MAIN-SCREEN
                DISPLAY SEARCH-MENU-SCREEN
                ACCEPT SC-OPTION
+                   IF KEYSTATUS = F3 THEN
+                   EXIT PROGRAM
+               END-IF
                IF NOT VALID-OPTION
                    MOVE MAIN-MENU-ERROR TO ERROR-TEXT
                    ACCEPT ERROR-ZONE
@@ -460,6 +463,9 @@
                           > SEARCH-RIS-DATE-VAL (SEARCH-INDEX)
                        ADD 1 TO COUNTER
                        ACCEPT GET-SEARCH-SCREEN
+                           IF KEYSTATUS = F3 THEN
+                   EXIT PROGRAM
+               END-IF
                    END-IF
            END-PERFORM
            IF COUNTER = 0 THEN
@@ -612,6 +618,7 @@
       *>  EXIT SECTION.
 
        GET-INGREDIENT SECTION.
+
            DISPLAY LIST-FRAME
            DISPLAY MAIN-SCREEN
       *>      DISPLAY REGISTER-SCREEN

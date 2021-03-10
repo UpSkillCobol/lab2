@@ -3,7 +3,7 @@
       ******************************************************************
       *    BREADWICH | INGREDIENTS SUPPLIERS MANAGEMENT
       ******************************************************************
-      *    ALL CONSTANTS
+      *    ALL CONSTANTS - ENG
       ******************************************************************
       *     V1 | EM ATUALIZAÇÃO | 04.03.2021
       ******************************************************************
@@ -24,9 +24,10 @@
       *BACK
 
        *>SEARCH-MENU
-       78 SEARCH-MENU-OPTION1 VALUE "1 - SEARCH VALID PRICE".
+       78 SEARCH-MENU-OPTION1 VALUE "1 - SEARCH FOR PRICES WITH INVALID
+      -     "DATES".
 
-       78 SEARCH-MENU-OPTION2 VALUE "2 - SEARCH INGREDIENT BY SUPPLIER".
+       78 SEARCH-MENU-OPTION2 VALUE "2 - SEARCH SUPPLIER BY INGREDIENT".
 
        78 BACK-EXIT            VALUE "F3 - MAIN MENU".
       * MAIN MENU OPTION 1
