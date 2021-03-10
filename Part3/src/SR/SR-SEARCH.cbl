@@ -1038,6 +1038,9 @@
                        EXIT SECTION
                    END-IF
                    PERFORM 290-ING-EXISTS
+                   IF KEY-STATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
                END-PERFORM
                    IF WS-ING-ACCEPT <> ZEROS THEN
                        ADD 1 TO COUNT-ING
@@ -1051,6 +1054,9 @@
                                EXIT SECTION
                            END-IF
                            PERFORM 290-ING-EXISTS
+                           IF KEY-STATUS = F3 THEN
+                               EXIT SECTION
+                           END-IF
                        END-PERFORM
                        IF WS-ING-ACCEPT <> ZEROS THEN
                            ADD 1 TO COUNT-ING
@@ -1065,6 +1071,9 @@
                                    EXIT SECTION
                                END-IF
                                PERFORM 290-ING-EXISTS
+                               IF KEY-STATUS = F3 THEN
+                                   EXIT SECTION
+                               END-IF
                            END-PERFORM
                            IF WS-ING-ACCEPT <> ZEROS
                                ADD 1 TO COUNT-ING
@@ -1082,10 +1091,19 @@
            EVALUATE COUNT-ING
                WHEN 1
                    PERFORM 230-SEARCH-1-ING
+                   IF KEY-STATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
                WHEN 2
                    PERFORM 240-SEARCH-2-ING
+                   IF KEY-STATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
                WHEN 3
                    PERFORM 250-SEARCH-3-ING
+                   IF KEY-STATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
            END-EVALUATE
            EXIT SECTION.
        230-SEARCH-1-ING SECTION.
@@ -1221,6 +1239,9 @@
                        EXIT SECTION
                    END-IF
                    PERFORM 300-CAT-EXISTS
+                   IF KEY-STATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
                END-PERFORM
                    IF WS-CAT-ACCEPT <> ZEROS THEN
                        ADD 1 TO COUNT-ING
@@ -1234,6 +1255,9 @@
                                EXIT SECTION
                            END-IF
                            PERFORM 300-CAT-EXISTS
+                           IF KEY-STATUS = F3 THEN
+                               EXIT SECTION
+                           END-IF
                        END-PERFORM
                        IF WS-ING-ACCEPT <> ZEROS THEN
                            ADD 1 TO COUNT-ING
@@ -1248,6 +1272,9 @@
                                    EXIT SECTION
                                END-IF
                                PERFORM 300-CAT-EXISTS
+                               IF KEY-STATUS = F3 THEN
+                                   EXIT SECTION
+                               END-IF
                            END-PERFORM
                            IF WS-CAT-ACCEPT <> ZEROS
                                ADD 1 TO COUNT-ING
@@ -1265,8 +1292,14 @@
            EVALUATE COUNT-ING
                WHEN 1
                    PERFORM 270-SEARCH-1-CAT
+                   IF KEY-STATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
                WHEN 2
                    PERFORM 280-SEARCH-2-CAT
+                   IF KEY-STATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
            END-EVALUATE
            EXIT SECTION.
            EXIT SECTION.
@@ -1389,6 +1422,9 @@
                    EXIT SECTION
                END-IF
                PERFORM 320-SANDWICH-EXISTS
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
            END-PERFORM
            IF WS-SR-ACCEPT <> ZEROS THEN
                MOVE ZEROS TO WS-CONTROL WS-RECORDS-SHOWN
