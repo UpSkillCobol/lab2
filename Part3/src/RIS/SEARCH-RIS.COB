@@ -231,8 +231,9 @@
            03 VALUE ALL " " PIC X(50) LINE 16 COL 35.
            03 VALUE ALL " " PIC X(50) LINE 17 COL 35.
            03 VALUE SEARCH-MENU-OPTION1 LINE 11 COL 42.
-           03 VALUE SEARCH-MENU-OPTION2 LINE 13 COL 42.
-            03 VALUE MAIN-MENU-OPTION5 LINE  15 COL 42.
+           03 VALUE SEARCH-MENU-OPTION2 LINE 12 COL 42.
+           03 VALUE MAIN-MENU-OPTION3   LINE 13 COL 42.
+           03 VALUE MAIN-MENU-OPTION5   LINE 14 COL 42.
            03 VALUE MAIN-MENU-CHOICE LINE 20 COL 45 REVERSE-VIDEO.
            03 SC-OPTION PIC 9(002) LINE 20 COL 62 TO WS-OPTION
                BLANK WHEN ZERO REVERSE-VIDEO.
@@ -422,7 +423,6 @@
                FOREGROUND-COLOR 4 BACKGROUND-COLOR 7 TO SAVE-OPTION.
       ******************************************************************
        PROCEDURE DIVISION.
-
            PERFORM CHECK-FILES-OK
            PERFORM FILL-TABLES
            PERFORM WITH TEST AFTER UNTIL WS-OPTION = 3
@@ -438,19 +438,17 @@
                PERFORM SEARCH-EVALUATE
            END-PERFORM
            EXIT PROGRAM.
-
        SEARCH-EVALUATE SECTION.
            ACCEPT SC-OPTION
-
                EVALUATE WS-OPTION
                    WHEN  1
                        PERFORM SEARCH-VALID-PRICE
                    WHEN 2
                        PERFORM SEARCH-BY-INGREDIENT
+                   WHEN 3
+                       CALL "REPORT-RIS"
                END-EVALUATE
-
            EXIT SECTION.
-
        SEARCH-VALID-PRICE SECTION.
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
@@ -463,7 +461,6 @@
                        ADD 1 TO COUNTER
                        ACCEPT GET-SEARCH-SCREEN
                    END-IF
-
            END-PERFORM
            IF COUNTER = 0 THEN
               MOVE ERROR-SEARCH TO ERROR-TEXT
@@ -481,7 +478,6 @@
            EXIT SECTION.
 
        SEARCH-BY-INGREDIENT SECTION.
-
            PERFORM GET-INGREDIENT
            MOVE ZEROS TO COUNTER
            SET SEARCH-INDEX TO 0
@@ -508,35 +504,6 @@
            END-IF
            EXIT SECTION.
 
-
-      *>      PERFORM CHECK-FILES-OK
-      *>      PERFORM FILL-TABLES
-      *>      PERFORM SHOW-TABLE
-
-      *>      MOVE SPACES TO VIEW-NAME-SUPP, VIEW-NAME-ING
-      *>      MOVE ZEROS TO GET-SUPPLIER-ID, GET-INGREDIENT-ID, GET-PRICE
-      *>      GET-EXPIRATION-DATE
-      *>      DISPLAY CLEAR-SCREEN
-      *>      DISPLAY MAIN-SCREEN
-      *> *>      DISPLAY REGISTER-SCREEN
-      *> *>      PERFORM GET-SUPPLIER
-      *>           IF KEYSTATUS = F3 THEN
-      *>              EXIT PROGRAM
-      *>           END-IF
-      *>      PERFORM GET-INGREDIENT
-      *>      IF KEYSTATUS = F3 THEN
-      *>              EXIT PROGRAM
-      *>           END-IF
-      *>      PERFORM CHECK-PRICE
-      *>      IF KEYSTATUS = F3 THEN
-      *>              EXIT PROGRAM
-      *>           END-IF
-      *>      PERFORM GET-DATE
-      *>      IF KEYSTATUS = F3 THEN
-      *>              EXIT PROGRAM
-      *>           END-IF
-
-      *>      EXIT PROGRAM.
        FILL-TABLES SECTION.
 
            SET SUPP-INDEX TO 0
@@ -581,8 +548,7 @@
       *>                  SET RIS-INDEX UP BY 1
       *>                  PERFORM LOAD-RIS-TABLE
                        PERFORM LOAD-SEARCH-TABLE
-                       DISPLAY TABLE-SEARCH (SEARCH-INDEX) AT 0101
-                       ACCEPT OMITTED
+
                 END-READ
            END-PERFORM
            CLOSE FXRISUPPLY
