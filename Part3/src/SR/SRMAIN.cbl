@@ -5,7 +5,7 @@
       * Tectonics: cobc
       ******************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. SR-MAIN.
+       PROGRAM-ID. SRMAIN.
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
        SPECIAL-NAMES.
@@ -40,9 +40,11 @@
            03 VALUE ALL " " PIC X(50) LINE 13 COL 35.
            03 VALUE ALL " " PIC X(50) LINE 14 COL 35.
            03 VALUE ALL " " PIC X(50) LINE 15 COL 35.
+           03 VALUE ALL " " PIC X(50) LINE 16 COL 35.
            03 VALUE MAIN-MENU-OPTION1 LINE 11 COL 50.
            03 VALUE MAIN-MENU-OPTION2 LINE 12 COL 50.
-           03 VALUE MAIN-MENU-OPTION4 LINE 13 COL 50.
+           03 VALUE MAIN-MENU-OPTION3 LINE 13 COL 50.
+           03 VALUE MAIN-MENU-OPTION4 LINE 14 COL 50.
            03 VALUE MAIN-MENU-CHOICE LINE 20 COL 45
            REVERSE-VIDEO.
            03 MP-OPTION PIC 9(02) LINE 20 COL 73 TO WS-OPTION
@@ -66,7 +68,7 @@
       *    MAIN SECTION WHERE THE USER DECIDES WHAT TO DO, THE DECISION
       *    TRIGGERS A CALL OF A MODULE RESPONSIBLE FOR THE OPTION THAT
       *    THE USER DID CHOOSE
-           PERFORM WITH TEST AFTER UNTIL WS-OPTION = 3
+           PERFORM WITH TEST AFTER UNTIL WS-OPTION = 4
            MOVE ZEROS TO KEY-STATUS
            MOVE ZERO TO MP-OPTION
            DISPLAY CLEAR-SCREEN
@@ -90,7 +92,12 @@
                        IF KEY-STATUS = F3 THEN
                            EXIT PROGRAM
                        END-IF
+               WHEN 3
+                       CALL "SR-REPORT"
+                       IF KEY-STATUS = F3 THEN
+                           EXIT PROGRAM
+                       END-IF
            END-EVALUATE
            END-PERFORM
            EXIT PROGRAM.
-       END PROGRAM SR-MAIN.
+       END PROGRAM SRMAIN.

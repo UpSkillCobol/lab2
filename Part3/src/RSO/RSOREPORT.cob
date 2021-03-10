@@ -3,7 +3,7 @@
       ******************************************************************
       *    BREADWICH | REGISTRATION OF SANDWICH ORDERS
       ******************************************************************
-      *    CREATE REPORT | V0.2 | IN UPDATE | 09.03.2021
+      *    CREATE REPORT | V0.3 | IN UPDATE | 10.03.2021
       ******************************************************************
 
        IDENTIFICATION DIVISION.
@@ -104,6 +104,18 @@
            02 LINE IS 49.
               03 COLUMN 60 PIC X(007) VALUE REPORTPAGE.
               03 COLUMN PLUS 1 PIC Z9 SOURCE PAGE-COUNTER.
+              03 COLUMN 03 VALUE REP-DATE.
+              03 COLUMN PLUS 2 PIC 9(002) SOURCE DATE-REPORT-DAY.
+              03 COLUMN PLUS 1 VALUE "/".
+              03 COLUMN PLUS 1 PIC 9(002) SOURCE DATE-REPORT-MONTH.
+              03 COLUMN PLUS 1 VALUE "/".
+              03 COLUMN PLUS 1 PIC 9(004) SOURCE DATE-REPORT-YEAR.
+              03 COLUMN PLUS 7 VALUE REP-TIME.
+              03 COLUMN PLUS 2 PIC 9(002) SOURCE HOUR-REPORT.
+              03 COLUMN PLUS 1 VALUE ":".
+              03 COLUMN PLUS 1 PIC 9(002) SOURCE MIN-REPORT.
+              03 COLUMN PLUS 1 VALUE ":".
+              03 COLUMN PLUS 1 PIC 9(002) SOURCE SEC-REPORT.
 
       ******************************************************************
 
@@ -169,6 +181,7 @@
       ******************************************************************
 
        CREATE-REPORT SECTION.
+           MOVE FUNCTION CURRENT-DATE TO CURRENT-DATE-REPORT
            OPEN OUTPUT FILEREPORT
            INITIATE RSOREPORT
            SET IND-ORDERS TO 0

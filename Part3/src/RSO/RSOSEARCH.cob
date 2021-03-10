@@ -3,7 +3,7 @@
       ******************************************************************
       *    BREADWICH | REGISTRATION OF SANDWICH ORDERS
       ******************************************************************
-      *    SEARCH ORDERS | V0.2 | IN UPDATE | 09.03.2021
+      *    SEARCH ORDERS | V0.3 | IN UPDATE | 10.03.2021
       ******************************************************************
 
        IDENTIFICATION DIVISION.
@@ -158,7 +158,7 @@
            05 VALUE "  " LINE 19 COL 91 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 20 COL 91 BACKGROUND-COLOR 7.
            05 VALUE "  " LINE 21 COL 91 BACKGROUND-COLOR 7.
-           05 VALUE REGISTER-TEXT               LINE 09 COL 33.
+           05 VALUE SEARCH-TEXT                 LINE 09 COL 33.
            05 VALUE REGISTER-TEXT-ID            LINE 13 COL 05.
            05 VALUE REGISTER-TEXT-DELIVERY-DATE LINE 15 COL 05.
            05 VALUE REGISTER-TEXT-SCHOOL        LINE 16 COL 05.
@@ -855,7 +855,7 @@
               READ ORDERS
                  AT END
                     SET EOFORDERS TO TRUE
-                    MOVE IND-ORDERS TO MAX-ORDERS
+      *>               MOVE IND-ORDERS TO MAX-ORDERS
                  NOT AT END
                     SET IND-ORDERS UP BY 1
                     PERFORM LOAD-TABLE-ORDERS
@@ -872,6 +872,7 @@
 
        LIST-SCHOOLS SECTION.
            DISPLAY CLEAR-LIST
+           MOVE SPACES TO TEXT1
            MOVE LIST-FRAME1 TO TEXT0
            DISPLAY LIST-FRAME
            SET IND-SCHOOL TO 0
@@ -933,6 +934,10 @@
                     SET IND-SCHOOL DOWN BY MAXPERPAGE
                     SUBTRACT 1 FROM COUNTPAGE
                     MOVE 10 TO MAXPERPAGE
+                    IF COUNTPAGE = 1 THEN
+                       MOVE SPACES TO TEXT1
+                       DISPLAY LIST-FRAME
+                    END-IF
                  END-IF
               END-IF
            END-PERFORM
@@ -959,6 +964,7 @@
 
        LIST-SANDWICHS SECTION.
            DISPLAY CLEAR-LIST
+           MOVE SPACES TO TEXT1
            MOVE LIST-FRAME1 TO TEXT0
            DISPLAY LIST-FRAME
            SET IND-SANDWICH TO 0
@@ -1020,6 +1026,10 @@
                     SET IND-SANDWICH DOWN BY MAXPERPAGE
                     SUBTRACT 1 FROM COUNTPAGE
                     MOVE 10 TO MAXPERPAGE
+                    IF COUNTPAGE = 1 THEN
+                       MOVE SPACES TO TEXT1
+                       DISPLAY LIST-FRAME
+                    END-IF
                  END-IF
               END-IF
            END-PERFORM

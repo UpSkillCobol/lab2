@@ -45,3 +45,12 @@
                10  SEARCH-DAY2                  PIC 9(002).
        01  SEARCH-SCHOOL-INTERNAL-ID            PIC 9(003).
        01  SEARCH-SANDWICH-INTERNAL-ID          PIC 9(003).
+       01  CURRENT-DATE-REPORT.
+           05 DATE-REPORT.
+              10 DATE-REPORT-YEAR         PIC 9(004).
+              10 DATE-REPORT-MONTH        PIC 9(002).
+              10 DATE-REPORT-DAY          PIC 9(002).
+           05 TIME-REPORT.
+              10 HOUR-REPORT              PIC 9(002).
+              10 MIN-REPORT               PIC 9(002).
+              10 SEC-REPORT               PIC 9(002).
