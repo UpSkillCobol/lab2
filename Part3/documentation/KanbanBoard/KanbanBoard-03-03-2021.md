@@ -24,8 +24,8 @@
 |       |               |                     |           |                      |
 |  IM   |               |                     |   **X**   |    Assigned to JF    |
 | IM01  |               |                     |   **X**   |   Activity Diagram   |
-| IM02  |     **X**     |                     |           | Variables Definition |
-| IM03  |     **X**     |                     |           |      Source Code     |
+| IM02  |               |        **X**        |           | Variables Definition |
+| IM03  |               |        **X**        |           |      Source Code     |
 
 </br>
 
