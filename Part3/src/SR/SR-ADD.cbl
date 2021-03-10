@@ -447,17 +447,9 @@
                MOVE NO-INGREDIENTS TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
                EXIT PROGRAM
            END-IF.
-        010-OBTAIN-TABLES SECTION.
+       010-OBTAIN-TABLES SECTION.
            SET SR-INDEX TO 1
            OPEN INPUT SANDWICHES
-      *     MOVE 001 TO SR-IID
-      *     START SANDWICHES KEY IS GREATER OR EQUAL SR-IID
-      *         INVALID KEY
-      *         MOVE 1 TO SANDWICH-EMPTY
-      *         CLOSE SANDWICHES
-      *         MOVE NO-SANDWICHES TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
-      *         EXIT PROGRAM
-      *     END-START
            PERFORM UNTIL SR-EOF
                READ SANDWICHES NEXT RECORD
                    AT END
@@ -556,11 +548,14 @@
                END-IF
            ELSE
                MOVE NO-CATEGORIES TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
-           END-IF
-           PERFORM 170-OBTAIN-INGREDIENTS
                IF KEY-STATUS = F3 THEN
                    EXIT SECTION
                END-IF
+           END-IF
+           PERFORM 170-OBTAIN-INGREDIENTS
+           IF KEY-STATUS = F3 THEN
+               EXIT SECTION
+           END-IF
            PERFORM 290-CHECK-RECORD
            IF KEY-STATUS = F3 THEN
                EXIT SECTION
@@ -581,12 +576,15 @@
                MOVE EID-INSTR TO INSTRUCTION-MESSAGE
                    DISPLAY INSTRUCTIONS-SCREEN
                ACCEPT REG-EID
-                   IF KEY-STATUS = F3 THEN
-                       EXIT SECTION
-                   END-IF
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
                IF WS-SR-EID(1:1) NOT ALPHABETIC THEN
                    MOVE 1 TO WS-ALPHABETIC
                    MOVE ALPHA-ERROR TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
+                   IF KEY-STATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
                END-IF
                PERFORM 190-EID-EXISTS
                    IF KEY-STATUS = F3 THEN
@@ -607,14 +605,17 @@
                MOVE ZEROS TO WS-ALPHABETIC
                MOVE SPACES TO REG-S-DESCRIPTION
                MOVE S-DESCR-INSTR TO INSTRUCTION-MESSAGE
-                   DISPLAY INSTRUCTIONS-SCREEN
+               DISPLAY INSTRUCTIONS-SCREEN
                ACCEPT REG-S-DESCRIPTION
-                   IF KEY-STATUS = F3 THEN
-                       EXIT SECTION
-                   END-IF
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
                IF WS-SR-S-DESCRIPTION(1:1) NOT ALPHABETIC THEN
                    MOVE 1 TO WS-ALPHABETIC
                    MOVE ALPHA-ERROR TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
+                   IF KEY-STATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
                END-IF
            END-PERFORM
            MOVE UPPER-CASE(WS-SR-S-DESCRIPTION) TO WS-SR-S-DESCRIPTION
@@ -632,12 +633,15 @@
                MOVE L-DESCR-INSTR TO INSTRUCTION-MESSAGE
                    DISPLAY INSTRUCTIONS-SCREEN
                ACCEPT REG-L-DESCRIPTION
-                   IF KEY-STATUS = F3 THEN
-                       EXIT SECTION
-                   END-IF
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
                IF WS-SR-L-DESCRIPTION(1:1) NOT ALPHABETIC THEN
                    MOVE 1 TO WS-ALPHABETIC
                    MOVE ALPHA-ERROR TO ERROR-MESSAGE ACCEPT ERROR-SCREEN
+                   IF KEY-STATUS = F3 THEN
+                       EXIT SECTION
+                   END-IF
                END-IF
            END-PERFORM
            MOVE UPPER-CASE(WS-SR-L-DESCRIPTION) TO WS-SR-L-DESCRIPTION
@@ -654,14 +658,14 @@
            DISPLAY MAIN-SCREEN
            DISPLAY REGISTER-CAT-SCREEN
            PERFORM 260-OBTAIN-CATEGORIES
-           IF WS-CAT-ACCEPT = ZEROS THEN
+           IF WS-CAT-ACCEPT = ZEROS OR KEY-STATUS = F3 THEN
                EXIT SECTION
            END-IF
            MOVE WS-CAT-ACCEPT TO WS-CATEGORIE1
            MOVE WS-CAT-ACCEPT-NAME TO WS-CAT-NAME1
            DISPLAY REGISTER-CAT-SCREEN
            PERFORM 260-OBTAIN-CATEGORIES
-           IF WS-CAT-ACCEPT = ZEROS THEN
+           IF WS-CAT-ACCEPT = ZEROS OR KEY-STATUS = F3 THEN
                EXIT SECTION
            END-IF
            MOVE WS-CAT-ACCEPT TO WS-CATEGORIE2
@@ -676,6 +680,9 @@
            DISPLAY REGISTER-CAT-SCREEN
            MOVE CATEGORIES-FILLED TO CONFIRM-MESSAGE
            ACCEPT CONFIRM-SCREEN
+           IF KEY-STATUS = F3 THEN
+               EXIT SECTION
+           END-IF
            EXIT SECTION.
        170-OBTAIN-INGREDIENTS SECTION.
            MOVE ZEROS TO REG-ING-REC
@@ -689,10 +696,13 @@
            MOVE WS-ING-UNIT TO WS-INGREDIENT-UNIT1
            DISPLAY REGISTER-ING-SCREEN
            ACCEPT REG-ING-QTD1
+           IF KEY-STATUS = F3 THEN
+               EXIT SECTION
+           END-IF
       *    OBTAIN THE OTHER INGREDIENTS, IT CAN BE NULL.
       *    SO IF IT IS ZEROS IT JUST LEAVES THIS SECTION.
            PERFORM 240-OBTAIN-ING-2-6
-           IF WS-ING-ACCEPT = ZEROS THEN
+           IF WS-ING-ACCEPT = ZEROS OR KEY-STATUS = F3 THEN
                EXIT SECTION
            END-IF
            MOVE WS-ING-ACCEPT TO WS-INGREDIENT2
@@ -700,8 +710,11 @@
            MOVE WS-ING-UNIT TO WS-INGREDIENT-UNIT2
            DISPLAY REGISTER-ING-SCREEN
            ACCEPT REG-ING-QTD2
+           IF KEY-STATUS = F3 THEN
+               EXIT SECTION
+           END-IF
            PERFORM 240-OBTAIN-ING-2-6
-           IF WS-ING-ACCEPT = ZEROS THEN
+           IF WS-ING-ACCEPT = ZEROS OR KEY-STATUS = F3 THEN
                EXIT SECTION
            END-IF
            MOVE WS-ING-ACCEPT TO WS-INGREDIENT3
@@ -709,8 +722,11 @@
            MOVE WS-ING-UNIT TO WS-INGREDIENT-UNIT3
            DISPLAY REGISTER-ING-SCREEN
            ACCEPT REG-ING-QTD3
+           IF KEY-STATUS = F3 THEN
+               EXIT SECTION
+           END-IF
            PERFORM 240-OBTAIN-ING-2-6
-           IF WS-ING-ACCEPT = ZEROS THEN
+           IF WS-ING-ACCEPT = ZEROS OR KEY-STATUS = F3 THEN
                EXIT SECTION
            END-IF
            MOVE WS-ING-ACCEPT TO WS-INGREDIENT4
@@ -718,8 +734,11 @@
            MOVE WS-ING-UNIT TO WS-INGREDIENT-UNIT4
            DISPLAY REGISTER-ING-SCREEN
            ACCEPT REG-ING-QTD4
+           IF KEY-STATUS = F3 THEN
+               EXIT SECTION
+           END-IF
            PERFORM 240-OBTAIN-ING-2-6
-           IF WS-ING-ACCEPT = ZEROS THEN
+           IF WS-ING-ACCEPT = ZEROS OR KEY-STATUS = F3 THEN
                EXIT SECTION
            END-IF
            MOVE WS-ING-ACCEPT TO WS-INGREDIENT5
@@ -727,8 +746,11 @@
            MOVE WS-ING-UNIT TO WS-INGREDIENT-UNIT5
            DISPLAY REGISTER-ING-SCREEN
            ACCEPT REG-ING-QTD5
+           IF KEY-STATUS = F3 THEN
+               EXIT SECTION
+           END-IF
            PERFORM 240-OBTAIN-ING-2-6
-           IF WS-ING-ACCEPT = ZEROS THEN
+           IF WS-ING-ACCEPT = ZEROS OR KEY-STATUS = F3 THEN
                EXIT SECTION
            END-IF
            MOVE WS-ING-ACCEPT TO WS-INGREDIENT6
@@ -736,6 +758,9 @@
            MOVE WS-ING-UNIT TO WS-INGREDIENT-UNIT6
            DISPLAY REGISTER-ING-SCREEN
            ACCEPT REG-ING-QTD6
+           IF KEY-STATUS = F3 THEN
+               EXIT SECTION
+           END-IF
            EXIT SECTION.
        190-EID-EXISTS SECTION.
            MOVE WS-SR-EID TO SR-EID
@@ -949,6 +974,9 @@
                    IF WS-ING-EXISTS <> 1 THEN
                        MOVE ING-ERROR TO ERROR-MESSAGE
                        ACCEPT ERROR-SCREEN
+                       IF KEY-STATUS = F3 THEN
+                           EXIT SECTION
+                       END-IF
                    END-IF
                END-IF
            END-PERFORM
@@ -971,6 +999,9 @@
                            IF WS-ING-DUPLICATE <> 1 THEN
                                MOVE ING-DUPLICATE-ERROR TO ERROR-MESSAGE
                                ACCEPT ERROR-SCREEN
+                               IF KEY-STATUS = F3 THEN
+                                   EXIT SECTION
+                               END-IF
                            END-IF
                    ELSE
                        MOVE ING-ERROR TO ERROR-MESSAGE
@@ -1005,10 +1036,16 @@
                            IF WS-CAT-DUPLICATE <> 1 THEN
                                MOVE CAT-DUPLICATE-ERROR TO ERROR-MESSAGE
                                ACCEPT ERROR-SCREEN
+                               IF KEY-STATUS = F3 THEN
+                                   EXIT SECTION
+                               END-IF
                            END-IF
                    ELSE
                        MOVE CAT-ERROR TO ERROR-MESSAGE
                        ACCEPT ERROR-SCREEN
+                       IF KEY-STATUS = F3 THEN
+                           EXIT SECTION
+                       END-IF
                    END-IF
                END-IF
            END-PERFORM
@@ -1063,6 +1100,9 @@
            PERFORM WITH TEST AFTER UNTIL WS-SR-PRICE > ZEROS
                AND WS-SR-PRICE < 99
                ACCEPT PRICE-SCREEN
+               IF KEY-STATUS = F3 THEN
+                   EXIT SECTION
+               END-IF
            END-PERFORM
            PERFORM WITH TEST AFTER UNTIL REG-OPTION-VLD
                MOVE WANT-TO-SAVE TO CONFIRM-REG-MESSAGE

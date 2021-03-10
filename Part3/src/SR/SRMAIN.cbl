@@ -73,6 +73,9 @@
            DISPLAY MAIN-SCREEN
            DISPLAY MAIN-MENU
            ACCEPT MP-OPTION
+           IF KEY-STATUS = F3 THEN
+               EXIT SECTION
+           END-IF
            EVALUATE WS-OPTION
                WHEN 1
       *    OPTION 1 CALLS ADD MODULE THAT REGISTERS NEW RECORDS ON THE FILE
