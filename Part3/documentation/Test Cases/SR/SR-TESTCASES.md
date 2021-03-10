@@ -20,3 +20,5 @@
 | SR14  | Search by Price | Search between two prices (01/02) Expected 3 records shown | CC | CC | 09/03/2021 | PASSED (3 records shown) | SR13 Bug fixed |
 | SR15  | Search by Sandwich | Search a non existent sandwich, expected error | CC | CC | 09/03/2021 | PASSED (no records shown, message of no records to show obtained) | X |
 | SR16  | Search by Sandwich | Search an existent sandwich | CC | CC | 09/03/2021 | PASSED (record shown) | X |
+| SR17  | Compile program through CMD | Fully compile | CC | FB | 10/03/2021 | FAILED (Errors compiling) | X |
+| SR18  | Compile program through CMD | Fully compile | CC | FB | 10/03/2021 | PASSED(Fully Compiled) | X |
