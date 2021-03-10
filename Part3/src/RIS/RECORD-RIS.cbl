@@ -394,14 +394,14 @@
        MAIN-PROCEDURE.
            PERFORM CHECK-FILES-OK
            PERFORM FILL-TABLES
-           MOVE SPACES TO VIEW-NAME-SUPP, VIEW-NAME-ING
-           MOVE ZEROS TO GET-SUPPLIER-ID, GET-INGREDIENT-ID, GET-PRICE
-           GET-EXPIRATION-DATE
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY REGISTER-SCREEN
 
            PERFORM WITH TEST AFTER UNTIL CHECK-SUPP-ING = "Y"
+           MOVE SPACES TO VIEW-NAME-SUPP, VIEW-NAME-ING
+           MOVE ZEROS TO GET-SUPPLIER-ID, GET-INGREDIENT-ID, GET-PRICE
+           GET-EXPIRATION-DATE
            PERFORM GET-SUPPLIER
                 IF KEYSTATUS = F3 THEN
                    EXIT PROGRAM
@@ -479,32 +479,28 @@
                READ FXRISUPPLY NEXT RECORD
                    AT END
                        SET EOF-RIS TO TRUE
-                       MOVE RIS-INDEX TO NUMBER-RIS
+      *>                  MOVE RIS-INDEX TO NUMBER-RIS
 
                    NOT AT END
-
                     SET RIS-INDEX UP BY 1
-                  PERFORM LOAD-RIS-TABLE
-
+                    PERFORM LOAD-RIS-TABLE
 
                 END-READ
            END-PERFORM
            CLOSE FXRISUPPLY
-
-
        EXIT SECTION.
 
        LOAD-INGRED-TABLE SECTION.
            MOVE INGREDS-DETAILS TO TABLE-INGREDS (ING-INDEX)
+           EXIT SECTION.
 
-       EXIT SECTION.
        LOAD-SUPP-TABLE SECTION.
            MOVE SUPPLIER-DETAILS TO TABLE-SUPP (SUPP-INDEX)
-       EXIT SECTION.
+           EXIT SECTION.
 
-         LOAD-RIS-TABLE SECTION.
-            MOVE RIS-DETAILS TO TABLE-RIS (RIS-INDEX)
-            EXIT SECTION.
+       LOAD-RIS-TABLE SECTION.
+           MOVE RIS-DETAILS TO TABLE-RIS (RIS-INDEX)
+           EXIT SECTION.
 
        GET-INGREDIENT SECTION.
            DISPLAY LIST-FRAME
@@ -520,7 +516,6 @@
                 IF KEYSTATUS = F3 THEN
                    EXIT SECTION
                END-IF
-
 
            END-PERFORM
 
