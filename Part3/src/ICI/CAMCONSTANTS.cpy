@@ -186,3 +186,15 @@
        78  LIST-AGG-FRAME2 VALUE "LIST OF PERIODS OF UNAVAILABILITY".
 
        78  UNTIL-LIST VALUE "        UNTIL        ".
+
+       78 REPORTID VALUE "ID".
+       78 REPORT-START-DATE VALUE "START DATE|HOUR".
+       78 REPORT-END-DATE VALUE "END DATE|HOUR".
+       78 REPORT-DESCRIPTION    VALUE "DESCRIPTION".
+       78 REPORTTITLECONST
+           VALUE "B R E A D W I C H   D O W N T I M E S   R E P O R T".
+       78  F1                                   VALUE "1001".
+       78  F2                                   VALUE "1002".
+       78  F3                                   VALUE "1003".
+       78 PAGECONST VALUE "PAGE:".
+       78 REPORT-OK VALUE "REPORT CREATED SUCCESSFULLY".

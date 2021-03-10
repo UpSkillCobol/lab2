@@ -24,11 +24,14 @@
               RECORD KEY IS FD-DOWNTIME-ID
               ALTERNATE KEY IS FD-START-DOWNTIME WITH DUPLICATES
               FILE STATUS IS CALENDAR-TEST.
+           SELECT REPORTFILE ASSIGN TO "CALENDAR-REPORT.RPT".
 
        DATA DIVISION.
        FILE SECTION.
        FD  CALENDAR.
        COPY FDCALENDAR.
+       FD REPORTFILE
+       REPORT IS CALENDAR-REPORT.
 
        WORKING-STORAGE SECTION.
        COPY CAMCONSTANTS.
@@ -36,7 +39,9 @@
        COPY WSVAR.
        78 MAX-CAL                  VALUE 999.
        77 MAX-CAL1                 PIC 999 VALUE 999.
+       77 MAX-CAL2                 PIC 999 VALUE 999.
        77 MAX-AGG                  PIC 999 VALUE 999.
+
 
        01 TAB-CAL OCCURS 1 TO MAX-CAL TIMES
            DEPENDING ON MAX-CAL1 INDEXED BY IND-CAL.
@@ -59,6 +64,95 @@
                10 AGG-END-MIN      PIC X(002).
            77 DUMMY PIC X.
 
+       01 TAB-CAL1 OCCURS 1 TO MAX-CAL TIMES
+       DEPENDING ON MAX-CAL2 INDEXED BY IND-CAL1.
+           05  TAB-DOWNTIME-ID                      PIC 9(003).
+           05  TAB-START-DOWNTIME.
+               10  TAB-START-DT-YEAR                PIC 9(004).
+               10  TAB-START-DT-MONTH               PIC 9(002).
+               10  TAB-START-DT-DAY                 PIC 9(002).
+           05  TAB-START-TIME.
+               10  TAB-START-HOUR                   PIC 9(002).
+               10  TAB-START-MINUTE                 PIC 9(002).
+           05  TAB-END-DOWNTIME.
+               10  TAB-END-DT-YEAR                  PIC 9(004).
+               10  TAB-END-DT-MONTH                 PIC 9(002).
+               10  TAB-END-DT-DAY                   PIC 9(002).
+           05  TAB-END-TIME.
+               10  TAB-END-HOUR                     PIC 9(002).
+               10  TAB-END-MINUTE                   PIC 9(002).
+           05  TAB-DOWNTIME-DESCRIPTION.
+               10  TAB-DOWNTIME-DESCRIPTION1        PIC X(050).
+               10  TAB-DOWNTIME-DESCRIPTION2        PIC X(050).
+
+       REPORT SECTION.
+       RD CALENDAR-REPORT
+      *>      CONTROLS ARE TBSUPPLIER-NUMBER (IND)
+      * PAGE LIMIT IS THE MAX NUMBER OF LINES PER PAGE.
+           PAGE LIMIT IS 54
+      * FIRST DETAIL IS THE FIRST LINE WHERE THE TYPE IS DETAIL STARTS
+           FIRST DETAIL 6
+      * LAST DETAIL IS THE LAST LINE OF THE TYPE IS DETAIL
+           LAST DETAIL 46
+      * FOOTING IS THE LINE WHERE THE FOOTER STARTS
+           FOOTING 48.
+      * TYPE IS REPORT IS THE REPORTS NAME STRUCTURE. IN THE BREADWICH PROJECT
+      *EACH WORD IS SEPARATED BY 3 SPACES AND EACH LETTER BY 1.
+       01 TYPE IS REPORT HEADING.
+           02 LINE 1.
+           03 COLUMN 02 VALUE REPORTTITLECONST.
+      *TYPE IS PAGE DEFINES THE HEADER STRUCTURE OF EVERY PAGE
+       01 TYPE IS PAGE HEADING.
+           02 LINE IS PLUS 2.
+           03 COLUMN 03 VALUE REPORTID.
+           03 COLUMN PLUS 4 VALUE REPORT-START-DATE.
+           03 COLUMN PLUS 6 VALUE REPORT-END-DATE.
+           02 LINE IS PLUS 1.
+           03 COLUMN 6 VALUE REPORT-DESCRIPTION.
+
+       01 REPORTLINE1 TYPE IS DETAIL NEXT GROUP PLUS 1.
+           02 LINE IS PLUS 2.
+           03 COLUMN 02 PIC Z(003) SOURCE TAB-DOWNTIME-ID (IND-CAL1).
+           03 COLUMN PLUS 4 PIC X(002)
+              SOURCE TAB-START-DT-DAY (IND-CAL1).
+           03 COLUMN PLUS 1 VALUE "-".
+           03 COLUMN PLUS 1 PIC 9(002)
+              SOURCE TAB-START-DT-MONTH (IND-CAL1).
+           03 COLUMN PLUS 1 VALUE "-".
+           03 COLUMN PLUS 1 PIC 9(004)
+              SOURCE TAB-START-DT-YEAR (IND-CAL1).
+           03 COLUMN PLUS 2 PIC 9(002) SOURCE TAB-START-HOUR (IND-CAL1).
+           03 COLUMN PLUS 1 VALUE ":".
+           03 COLUMN PLUS 1 PIC 9(002)
+              SOURCE TAB-START-MINUTE (IND-CAL1).
+           03 COLUMN PLUS 5 PIC 9(002)
+              SOURCE TAB-END-DT-DAY (IND-CAL1).
+           03 COLUMN PLUS 1 VALUE "-".
+           03 COLUMN PLUS 1 PIC 9(002)
+              SOURCE TAB-END-DT-MONTH (IND-CAL1).
+           03 COLUMN PLUS 1 VALUE "-".
+           03 COLUMN PLUS 1 PIC 9(004)
+              SOURCE TAB-END-DT-YEAR (IND-CAL1).
+           03 COLUMN PLUS 2 PIC 9(002) SOURCE TAB-END-HOUR (IND-CAL1).
+           03 COLUMN PLUS 1 VALUE ":".
+           03 COLUMN PLUS 1 PIC 9(002)
+              SOURCE TAB-END-MINUTE (IND-CAL1).
+
+       01 REPORTLINE2 TYPE IS DETAIL.
+           02 LINE IS PLUS 1.
+           03 COLUMN 06 PIC X(050)
+              SOURCE TAB-DOWNTIME-DESCRIPTION1 (IND-CAL1).
+
+       01 REPORTLINE3 TYPE IS DETAIL.
+           02 LINE IS PLUS 1.
+           03 COLUMN 06 PIC X(050)
+              SOURCE TAB-DOWNTIME-DESCRIPTION2 (IND-CAL1).
+
+       01 TYPE IS PAGE FOOTING.
+           02 LINE IS 49.
+           03 COLUMN 60 PIC X(006) VALUE PAGECONST.
+           03 COLUMN PLUS 1 PIC Z9 SOURCE PAGE-COUNTER.
+      ******************************************************************
        SCREEN SECTION.
        01  CLEAR-SCREEN.
            05 BLANK SCREEN.
@@ -122,46 +216,46 @@
            05 LINE 01 COL 01 PIC X TO PRESS-KEY AUTO.
       ******************************************************************
        01  LIST-FRAME.
-           05 VALUE ALL " " PIC X(064) LINE 07 COL 54
+           05 VALUE ALL " " PIC X(064) LINE 07 COL 24
               BACKGROUND-COLOR 7.
-           05 VALUE ALL " " PIC X(064) LINE 22 COL 54
+           05 VALUE ALL " " PIC X(064) LINE 22 COL 24
               BACKGROUND-COLOR 7.
-           05 TEXT0 PIC X(038)  LINE 08 COL 58 FOREGROUND-COLOR 5.
-           05 VALUE ALL "Ä" PIC X(064) LINE 09 COL 54.
-           05 VALUE ALL "Ä" PIC X(064) LINE 20 COL 54.
-           05 TEXT1 PIC X(020)    LINE 21 COL 58  FOREGROUND-COLOR 5.
-           05 TEXT2 PIC X(019)    LINE 21 COL 97 FOREGROUND-COLOR 5.
-           05 VALUE "  " LINE 07 COL 54  BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 08 COL 54  BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 09 COL 54  BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 10 COL 54  BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 11 COL 54  BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 12 COL 54  BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 13 COL 54  BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 14 COL 54  BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 15 COL 54  BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 16 COL 54  BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 17 COL 54  BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 18 COL 54  BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 19 COL 54  BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 20 COL 54  BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 21 COL 54  BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 07 COL 118 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 08 COL 118 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 09 COL 118 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 10 COL 118 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 11 COL 118 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 12 COL 118 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 13 COL 118 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 14 COL 118 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 15 COL 118 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 16 COL 118 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 17 COL 118 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 18 COL 118 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 19 COL 118 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 20 COL 118 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 21 COL 118 BACKGROUND-COLOR 7.
-           05 VALUE "  " LINE 22 COL 118 BACKGROUND-COLOR 7.
+           05 TEXT0 PIC X(038)  LINE 08 COL 28 FOREGROUND-COLOR 5.
+           05 VALUE ALL "Ä" PIC X(064) LINE 09 COL 24.
+           05 VALUE ALL "Ä" PIC X(064) LINE 20 COL 24.
+           05 TEXT1 PIC X(020)    LINE 21 COL 28  FOREGROUND-COLOR 5.
+           05 TEXT2 PIC X(019)    LINE 21 COL 67 FOREGROUND-COLOR 5.
+           05 VALUE "  " LINE 07 COL 24  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 08 COL 24  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 09 COL 24  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 24  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 24  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 24  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 24  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 24  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 24  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 24  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 24  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 24  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 24  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 24  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 24  BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 07 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 08 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 09 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 10 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 11 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 12 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 13 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 14 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 15 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 16 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 17 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 18 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 19 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 20 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 21 COL 88 BACKGROUND-COLOR 7.
+           05 VALUE "  " LINE 22 COL 88 BACKGROUND-COLOR 7.
 
       ******************************************************************
 
@@ -190,16 +284,16 @@
       ******************************************************************
 
        01  CLEAR-LIST.
-           05 VALUE ALL " " PIC X(060) LINE 10 COL 56.
-           05 VALUE ALL " " PIC X(060) LINE 11 COL 56.
-           05 VALUE ALL " " PIC X(060) LINE 12 COL 56.
-           05 VALUE ALL " " PIC X(060) LINE 13 COL 56.
-           05 VALUE ALL " " PIC X(060) LINE 14 COL 56.
-           05 VALUE ALL " " PIC X(060) LINE 15 COL 56.
-           05 VALUE ALL " " PIC X(060) LINE 16 COL 56.
-           05 VALUE ALL " " PIC X(060) LINE 17 COL 56.
-           05 VALUE ALL " " PIC X(060) LINE 18 COL 56.
-           05 VALUE ALL " " PIC X(060) LINE 19 COL 56.
+           05 VALUE ALL " " PIC X(060) LINE 10 COL 26.
+           05 VALUE ALL " " PIC X(060) LINE 11 COL 26.
+           05 VALUE ALL " " PIC X(060) LINE 12 COL 26.
+           05 VALUE ALL " " PIC X(060) LINE 13 COL 26.
+           05 VALUE ALL " " PIC X(060) LINE 14 COL 26.
+           05 VALUE ALL " " PIC X(060) LINE 15 COL 26.
+           05 VALUE ALL " " PIC X(060) LINE 16 COL 26.
+           05 VALUE ALL " " PIC X(060) LINE 17 COL 26.
+           05 VALUE ALL " " PIC X(060) LINE 18 COL 26.
+           05 VALUE ALL " " PIC X(060) LINE 19 COL 26.
 
       ******************************************************************
 
@@ -208,8 +302,6 @@
            PERFORM FILL-TABLES.
            PERFORM SORT-ASCENDING
            PERFORM AGG-TABLE
-      *     PERFORM SHOW-TABLE
-      *     PERFORM SHOW-AGG
            PERFORM WITH TEST AFTER UNTIL VIEW-OPTION = 3
               DISPLAY CLEAR-SCREEN
               MOVE ZEROS TO SS-OPTION
@@ -240,17 +332,36 @@
        FILL-TABLES SECTION.
            OPEN INPUT CALENDAR
            SET IND-CAL TO 0
+           SET IND-CAL1 TO 0
            PERFORM UNTIL EOF-DOWNTIME-ID
                READ CALENDAR
                    AT END
                        SET EOF-DOWNTIME-ID TO TRUE
                        MOVE IND-CAL TO MAX-CAL1
+                       MOVE IND-CAL1 TO MAX-CAL2
                    NOT AT END
                        SET IND-CAL UP BY 1
+                       SET IND-CAL1 UP BY 1
                        PERFORM LOAD-TABLE
+                       PERFORM LOAD-TABLE1
                END-READ
            END-PERFORM
            CLOSE CALENDAR
+
+      *     OPEN INPUT CALENDAR
+      *     SET IND-CAL1 TO 0
+      *     PERFORM UNTIL EOF-DOWNTIME-ID
+      *         READ CALENDAR
+      *             AT END
+      *                 SET EOF-DOWNTIME-ID TO TRUE
+      *                 MOVE IND-CAL1 TO MAX-CAL2
+      *             NOT AT END
+      *                 SET IND-CAL1 UP BY 1
+      *                 PERFORM LOAD-TABLE1
+      *         END-READ
+      *     END-PERFORM
+      *     CLOSE CALENDAR
+
        EXIT SECTION.
 
 ************************************************************************
@@ -268,6 +379,12 @@
 
       ******************************************************************
 
+       LOAD-TABLE1 SECTION.
+           MOVE FD-CALENDAR TO TAB-CAL1 (IND-CAL1)
+      *     DISPLAY TAB-CAL1 (IND-CAL1) AT 0101 ACCEPT OMITTED
+       EXIT SECTION.
+
+      ******************************************************************
        SORT-ASCENDING SECTION.
            SORT TAB-CAL
            ON ASCENDING TAB-BEGIN
@@ -305,7 +422,7 @@
            DISPLAY LIST-FRAME
            SET IND-AGG TO 0
            MOVE 10 TO ILIN
-           MOVE 58 TO ICOL
+           MOVE 28 TO ICOL
            MOVE 1 TO COUNTPAGE
            MOVE 10 TO MAXPERPAGE
            PERFORM WITH TEST AFTER UNTIL IND-AGG >= MAX-AGG
@@ -371,7 +488,21 @@
       ******************************************************************
 
        CREATE-REPORT SECTION.
-
+           OPEN OUTPUT REPORTFILE
+           INITIATE CALENDAR-REPORT
+           SET IND-CAL1 TO 0
+           PERFORM UNTIL IND-CAL1 >= MAX-CAL2
+              SET IND-CAL1 UP BY 1
+              GENERATE REPORTLINE1
+              GENERATE REPORTLINE2
+              GENERATE REPORTLINE3
+           END-PERFORM
+           TERMINATE CALENDAR-REPORT
+           CLOSE REPORTFILE
+           DISPLAY CLEAR-SCREEN
+           DISPLAY MAIN-SCREEN
+           MOVE REPORT-OK TO COMMENT-TEXT
+           ACCEPT COMMENTS-SCREEN
        EXIT SECTION.
 
       ******************************************************************

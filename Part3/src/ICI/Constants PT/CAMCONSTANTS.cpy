@@ -177,3 +177,15 @@
 
        78  LIST-AGG-FRAME2 VALUE "LISTA DE PERIODOS DE INDISPONIBILIDADE
       -    "".
+       78 REPORTID VALUE "ID".
+       78 REPORT-START-DATE VALUE "INICIO DATA|HORA".
+       78 REPORT-END-DATE VALUE "FIM DATA|HORA".
+       78 REPORT-DESCRIPTION    VALUE "DESCRICAO".
+       78 REPORTTITLECONST
+           VALUE "B R E A D W I C H   I N D I S P O N I B I L I D A D E
+      -    "S".
+       78  F1                                   VALUE "1001".
+       78  F2                                   VALUE "1002".
+       78  F3                                   VALUE "1003".
+       78 PAGECONST VALUE "PAG.:".
+       78 REPORT-OK VALUE "RELATORIO CRIADO COM SUCESSO".
