@@ -35,4 +35,4 @@
               10 MOVES-ACTZ-MONTH           PIC 9(002).
               10 MOVES-ACTZ-DAY             PIC 9(002).
               10 MOVES-ACTZ-HOUR            PIC 9(002).
-              10 MOVES-ACTZ-MINUTE          PIC 9(002).
+              10 MOVES-ACTZ-MIN          PIC 9(002).
