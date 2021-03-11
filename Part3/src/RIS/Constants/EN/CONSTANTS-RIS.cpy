@@ -147,9 +147,9 @@
 
        78  PREVIOUS-PAGE VALUE "F1 - PREVIOUS PAGE".
 
-       78  NEXT-PAGE VALUE "     F2 - NEXT PAGE".
+       78  NEXT-PAGE VALUE "   F2 - NEXT PAGE".
 
-       78  LAST-PAGE VALUE "          LAST PAGE".
+       78  LAST-PAGE VALUE "        LAST PAGE".
 
        78  LIST-AGG-FRAME VALUE "ID  |  NAME".
 

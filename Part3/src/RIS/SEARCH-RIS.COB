@@ -290,7 +290,7 @@
       ******************************************************************
        01  GET-SEARCH-INGREDIENT.
            05 VALUE ADD-MENU-TEXT1 LINE 13 COL 13.
-           05 GET-INGREDIENT-ID PIC 9(003) LINE 13 COL 28
+           05 GET-INGREDIENT-ID1 PIC 9(003) LINE 13 COL 28
                TO GET-INGREDIENT-VALID.
 
        01  LIST-FRAME.
@@ -615,6 +615,7 @@
       *>      DISPLAY REGISTER-SCREEN
 
            PERFORM WITH TEST AFTER UNTIL INGREDEXIST-YES
+               MOVE ZEROS TO GET-INGREDIENT-VALID GET-INGREDIENT-ID1
                PERFORM INGREDIENT-LIST
                IF KEYSTATUS = F3 THEN
                    EXIT SECTION
@@ -650,6 +651,7 @@
            EXIT SECTION.
 
        SUPPLIER-LIST SECTION.
+
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY LIST-FRAME
@@ -732,6 +734,7 @@
 
           *> INGREDEINT SCREEN VIEW
            INGREDIENT-LIST SECTION.
+           MOVE SPACES TO TEXT1
            DISPLAY CLEAR-SCREEN
            DISPLAY MAIN-SCREEN
            DISPLAY LIST-FRAME
